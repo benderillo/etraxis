@@ -35,6 +35,7 @@
         <whitelist>
             <directory>src/</directory>
             <exclude>
+                <directory>src/*Domain/Model/DataFixtures</directory>
                 <file>src/Kernel.php</file>
             </exclude>
         </whitelist>
