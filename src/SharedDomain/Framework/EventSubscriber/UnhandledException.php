@@ -13,11 +13,13 @@
 
 namespace eTraxis\SharedDomain\Framework\EventSubscriber;
 
+use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -27,17 +29,20 @@ class UnhandledException implements EventSubscriberInterface
 {
     protected $logger;
     protected $translator;
+    protected $normalizer;
 
     /**
      * Dependency Injection constructor.
      *
      * @param LoggerInterface     $logger
      * @param TranslatorInterface $translator
+     * @param NormalizerInterface $normalizer
      */
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, NormalizerInterface $normalizer)
     {
         $this->logger     = $logger;
         $this->translator = $translator;
+        $this->normalizer = $normalizer;
     }
 
     /**
@@ -62,7 +67,13 @@ class UnhandledException implements EventSubscriberInterface
 
         if ($request->isXmlHttpRequest() || $request->getContentType() === 'json') {
 
-            if ($exception instanceof HttpException) {
+            if ($exception instanceof InvalidCommandException) {
+                $violations = $this->normalizer->normalize($exception->getViolations());
+                $this->logger->error('Validation exception', [$exception->getMessage(), $violations]);
+                $response = new JsonResponse($violations, JsonResponse::HTTP_BAD_REQUEST);
+                $event->setResponse($response);
+            }
+            elseif ($exception instanceof HttpException) {
                 $message = $exception->getMessage() ?: $this->getHttpErrorMessage($exception->getStatusCode());
                 $this->logger->error('HTTP exception', [$message]);
                 $response = new JsonResponse($message, $exception->getStatusCode());

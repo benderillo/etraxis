@@ -1,0 +1,22 @@
+# Library documentation: http://tactician.thephpleague.com/
+# Bundle documentation: https://github.com/thephpleague/tactician-bundle/blob/v1.0/README.md
+tactician:
+    commandbus:
+        default:
+            middleware:
+                - tactician.middleware.timing
+                - tactician.middleware.validator
+                - tactician.middleware.locking
+                - tactician.middleware.doctrine
+                - tactician.middleware.command_handler
+
+services:
+
+    League\Tactician\CommandBus: '@tactician.commandbus'
+
+    tactician.middleware.timing: '@eTraxis\SharedDomain\Framework\CommandBus\TimingMiddleware'
+
+    eTraxis\:
+        autowire: true
+        resource: '../../src/{SecurityDomain}/Application/CommandHandler'
+        tags: [{ name: tactician.handler, typehints: true }]

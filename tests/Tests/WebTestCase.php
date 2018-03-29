@@ -29,6 +29,9 @@ class WebTestCase extends SymfonyWebTestCase
     /** @var \Symfony\Bridge\Doctrine\RegistryInterface */
     protected $doctrine;
 
+    /** @var \League\Tactician\CommandBus */
+    protected $commandbus;
+
     /**
      * Boots the kernel and retrieve most often used services.
      */
@@ -38,7 +41,8 @@ class WebTestCase extends SymfonyWebTestCase
 
         $this->client = static::createClient();
 
-        $this->doctrine = $this->client->getContainer()->get('doctrine');
+        $this->doctrine   = $this->client->getContainer()->get('doctrine');
+        $this->commandbus = $this->client->getContainer()->get('League\Tactician\CommandBus');
     }
 
     /**

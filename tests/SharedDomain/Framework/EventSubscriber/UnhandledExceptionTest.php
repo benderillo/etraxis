@@ -13,6 +13,8 @@
 
 namespace eTraxis\SharedDomain\Framework\EventSubscriber;
 
+use eTraxis\SharedDomain\Framework\Serializer\ConstraintViolationsNormalizer;
+use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +27,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 
 class UnhandledExceptionTest extends TestCase
 {
@@ -47,8 +52,10 @@ class UnhandledExceptionTest extends TestCase
                 ['http_error.404.description', [], null, null, 'User-friendly 404 error message.'],
             ]);
 
+        $normalizer = new ConstraintViolationsNormalizer();
+
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
-        $this->subscriber = new UnhandledException($logger, $translator);
+        $this->subscriber = new UnhandledException($logger, $translator, $normalizer);
     }
 
     public function testGetSubscribedEvents()
@@ -79,6 +86,56 @@ class UnhandledExceptionTest extends TestCase
         $response = $event->getResponse();
 
         self::assertNull($response);
+    }
+
+    public function testInvalidCommandException()
+    {
+        $expected = [
+            [
+                'property' => 'property',
+                'value'    => '0',
+                'message'  => 'This value should be "1" or more.',
+            ],
+        ];
+
+        $request = new Request();
+        $request->headers->add(['X-Requested-With' => 'XMLHttpRequest']);
+
+        /** @var HttpKernelInterface $kernel */
+        $kernel = $this->createMock(HttpKernelInterface::class);
+
+        $command = new class() {
+            /** @Range(min="1", max="100") */
+            public $property = 0;
+        };
+
+        $violations = new ConstraintViolationList();
+        $violations->add(new ConstraintViolation(
+            'This value should be "1" or more.',
+            'This value should be {{ limit }} or more.',
+            [
+                '{{ value }}' => '"0"',
+                '{{ limit }}' => '"1"',
+            ],
+            $command,
+            'property',
+            '0'
+        ));
+
+        $event = new GetResponseForExceptionEvent(
+            $kernel,
+            $request,
+            HttpKernelInterface::SUB_REQUEST,
+            InvalidCommandException::onCommand($command, $violations)
+        );
+
+        $this->subscriber->onException($event);
+
+        $response = $event->getResponse();
+        $content  = $response->getContent();
+
+        self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        self::assertSame($expected, json_decode($content, true));
     }
 
     public function testHttp401Exception()
