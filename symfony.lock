@@ -86,6 +86,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "league/iso3166": {
+        "version": "2.1.0"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },

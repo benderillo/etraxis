@@ -125,6 +125,18 @@ class UserTest extends TestCase
         self::assertSame('emerald', $user->theme);
     }
 
+    public function testTimezone()
+    {
+        $user = new User();
+        self::assertSame('UTC', $user->timezone);
+
+        $user->timezone = 'Pacific/Auckland';
+        self::assertSame('Pacific/Auckland', $user->timezone);
+
+        $user->timezone = 'Unknown';
+        self::assertSame('Pacific/Auckland', $user->timezone);
+    }
+
     public function testCanAccountBeLocked()
     {
         $user = new User();

@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
 use eTraxis\SecurityDomain\Model\Dictionary\Theme;
+use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use LazySec\Entity\DisableAccountTrait;
 use LazySec\Entity\LockAccountTrait;
 use LazySec\Entity\UserTrait;
@@ -45,6 +46,7 @@ use Webinarium\PropertyTrait;
  * @property      AccountInfo $account     User's account.
  * @property      string      $locale      User's locale (see the "Locale" dictionary).
  * @property      string      $theme       User's theme (see the "Theme" dictionary).
+ * @property      string      $timezone    User's timezone (see the "Timezone" dictionary).
  */
 class User implements AdvancedUserInterface, EncoderAwareInterface
 {
@@ -198,6 +200,10 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
             'theme' => function (): string {
                 return $this->settings['theme'] ?? Theme::FALLBACK;
             },
+
+            'timezone' => function (): string {
+                return $this->settings['timezone'] ?? Timezone::FALLBACK;
+            },
         ];
     }
 
@@ -221,6 +227,12 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
             'theme' => function (string $value): void {
                 if (Theme::has($value)) {
                     $this->settings['theme'] = $value;
+                }
+            },
+
+            'timezone' => function (string $value): void {
+                if (Timezone::has($value)) {
+                    $this->settings['timezone'] = $value;
                 }
             },
         ];
