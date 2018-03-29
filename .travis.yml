@@ -1,0 +1,20 @@
+language: php
+
+php:
+    - 7.1
+
+env:
+    - DB=mysql
+    - DB=pgsql
+
+install:
+    - cp config/travis/.env.$DB .env
+    - cp config/travis/phpunit.$DB.xml phpunit.xml
+    - composer --no-interaction install
+
+before_script:
+    - ./bin/console --no-interaction doctrine:database:create
+    - ./bin/console --no-interaction doctrine:schema:create
+
+script:
+    - ./bin/phpunit
