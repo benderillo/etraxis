@@ -11,3 +11,4 @@ services:
 
     eTraxis\SharedDomain\:
         resource: '../src/SharedDomain/{Framework,Application}/*'
+        exclude:  '../src/SharedDomain/Framework/{Doctrine}'
