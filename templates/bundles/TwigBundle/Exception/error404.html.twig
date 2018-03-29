@@ -1,0 +1,6 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div>{{ 'http_error.404.description' | trans }}</div>
+    <div>{{ 'http_error.404.suggestion' | trans({ '%url%': url('homepage') }) | raw }}</div>
+{% endblock %}

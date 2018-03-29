@@ -1,5 +1,11 @@
 'Authentication required.': 'Your session has expired. Please log in again.'
 button.login: Login
+http_error.403.description: 'You don''t have permission to access to this resource.'
+http_error.403.suggestion: 'Ask your manager or system administrator to grant you access to this resource.'
+http_error.404.description: 'We couldn''t find the page you requested.'
+http_error.404.suggestion: 'Check out any misspelling in the URL or <a href="%url%">go back to the homepage</a>.'
+http_error.description: 'There was an unknown error that prevented to complete your request.'
+http_error.suggestion: 'Try loading this page again in few minutes or <a href="%url%">go back to the homepage</a>.'
 input.required: 'required field'
 security.remember_me: 'Remember me'
 user.email: Email
