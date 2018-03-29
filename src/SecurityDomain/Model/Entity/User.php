@@ -14,29 +14,39 @@
 namespace eTraxis\SecurityDomain\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
+use LazySec\Entity\DisableAccountTrait;
+use LazySec\Entity\LockAccountTrait;
 use LazySec\Entity\UserTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Webinarium\PropertyTrait;
 
 /**
  * User.
  *
- * @ORM\Table(name="users")
+ * @ORM\Table(
+ *     name="users",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(columns={"account_provider", "account_uid"})
+ *     })
  * @ORM\Entity(repositoryClass="eTraxis\SecurityDomain\Model\Repository\UserRepository")
  * @Assert\UniqueEntity(fields={"email"}, message="user.conflict.email")
  *
- * @property-read int    $id          Unique ID.
- * @property      string $email       Email address.
- * @property      string $password    Password.
- * @property      string $fullname    Full name.
- * @property      string $description Optional description of the user.
- * @property      bool   $isAdmin     Whether the user has administrator privileges.
+ * @property-read int         $id          Unique ID.
+ * @property      string      $email       Email address.
+ * @property      string      $password    Password.
+ * @property      string      $fullname    Full name.
+ * @property      string      $description Optional description of the user.
+ * @property      bool        $isAdmin     Whether the user has administrator privileges.
+ * @property      AccountInfo $account     User's account.
  */
-class User implements UserInterface
+class User implements AdvancedUserInterface
 {
     use PropertyTrait;
     use UserTrait;
+    use DisableAccountTrait;
+    use LockAccountTrait;
 
     // Roles.
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -92,11 +102,26 @@ class User implements UserInterface
     protected $role;
 
     /**
+     * @var AccountInfo
+     *
+     * @ORM\Embedded(class="AccountInfo")
+     */
+    protected $account;
+
+    /**
+     * @var array User's settings.
+     *
+     * @ORM\Column(name="settings", type="json_array", nullable=true)
+     */
+    protected $settings;
+
+    /**
      * Creates new user.
      */
     public function __construct()
     {
-        $this->role = self::ROLE_USER;
+        $this->role    = self::ROLE_USER;
+        $this->account = new AccountInfo();
     }
 
     /**
@@ -124,6 +149,16 @@ class User implements UserInterface
     }
 
     /**
+     * Checks whether the account is loaded from 3rd party provider.
+     *
+     * @return bool
+     */
+    public function isAccountExternal(): bool
+    {
+        return $this->account->provider !== AccountProvider::ETRAXIS;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getters(): array
@@ -147,5 +182,13 @@ class User implements UserInterface
                 $this->role = $value ? self::ROLE_ADMIN : self::ROLE_USER;
             },
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function canAccountBeLocked(): bool
+    {
+        return !$this->isAccountExternal();
     }
 }

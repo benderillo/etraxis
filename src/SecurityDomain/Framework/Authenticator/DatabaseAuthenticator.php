@@ -89,7 +89,14 @@ class DatabaseAuthenticator extends AbstractGuardAuthenticator
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         try {
-            return $userProvider->loadUserByUsername($credentials['username']);
+            /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+            $user = $userProvider->loadUserByUsername($credentials['username']);
+
+            if ($user->isAccountExternal()) {
+                throw new UsernameNotFoundException();
+            }
+
+            return $user;
         }
         catch (UsernameNotFoundException $e) {
             throw new AuthenticationException('Bad credentials.');

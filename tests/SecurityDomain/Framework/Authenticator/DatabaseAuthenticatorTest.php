@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Authenticator;
 
+use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -136,6 +137,28 @@ class DatabaseAuthenticatorTest extends TestCase
 
         /** @var UserProviderInterface $provider */
         self::assertSame($this->user, $this->authenticator->getUser($credentials, $provider));
+    }
+
+    public function testGetUserExternal()
+    {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Bad credentials.');
+
+        $credentials = [
+            'username' => 'admin',
+            'password' => 'secret',
+        ];
+
+        $this->user->account->provider = AccountProvider::LDAP;
+
+        $provider = $this->createMock(UserProviderInterface::class);
+        $provider
+            ->method('loadUserByUsername')
+            ->with('admin')
+            ->willReturn($this->user);
+
+        /** @var UserProviderInterface $provider */
+        $this->authenticator->getUser($credentials, $provider);
     }
 
     public function testGetUserNotFound()
