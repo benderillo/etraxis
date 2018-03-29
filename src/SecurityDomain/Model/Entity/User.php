@@ -16,6 +16,7 @@ namespace eTraxis\SecurityDomain\Model\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
+use eTraxis\SecurityDomain\Model\Dictionary\Theme;
 use LazySec\Entity\DisableAccountTrait;
 use LazySec\Entity\LockAccountTrait;
 use LazySec\Entity\UserTrait;
@@ -43,6 +44,7 @@ use Webinarium\PropertyTrait;
  * @property      bool        $isAdmin     Whether the user has administrator privileges.
  * @property      AccountInfo $account     User's account.
  * @property      string      $locale      User's locale (see the "Locale" dictionary).
+ * @property      string      $theme       User's theme (see the "Theme" dictionary).
  */
 class User implements AdvancedUserInterface, EncoderAwareInterface
 {
@@ -192,6 +194,10 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
             'locale' => function (): string {
                 return $this->settings['locale'] ?? Locale::FALLBACK;
             },
+
+            'theme' => function (): string {
+                return $this->settings['theme'] ?? Theme::FALLBACK;
+            },
         ];
     }
 
@@ -209,6 +215,12 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
             'locale' => function (string $value): void {
                 if (Locale::has($value)) {
                     $this->settings['locale'] = $value;
+                }
+            },
+
+            'theme' => function (string $value): void {
+                if (Theme::has($value)) {
+                    $this->settings['theme'] = $value;
                 }
             },
         ];
