@@ -98,6 +98,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "paragonie/random_compat": {
+        "version": "v2.0.11"
+    },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
     },
@@ -121,6 +124,9 @@
     },
     "psr/simple-cache": {
         "version": "1.0.1"
+    },
+    "ramsey/uuid": {
+        "version": "3.7.3"
     },
     "sensio/framework-extra-bundle": {
         "version": "4.0",
