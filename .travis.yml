@@ -17,4 +17,6 @@ before_script:
     - ./bin/console --no-interaction doctrine:schema:create
 
 script:
-    - ./bin/phpunit
+    - ./bin/phpunit --coverage-clover=coverage.clover
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
