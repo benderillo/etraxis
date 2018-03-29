@@ -15,6 +15,7 @@
         <env name="APP_SECRET" value="s$cretf0rt3st" />
         <env name="SHELL_VERBOSITY" value="-1" />
         <!-- define your env variables for the test env here -->
+        <env name="ETRAXIS_LOCALE" value="en_US" />
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL" value="mysql://root:secret@127.0.0.1/etraxis?charset=utf8mb4&amp;server_version=5.7" />

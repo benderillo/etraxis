@@ -1,3 +1,6 @@
+parameters:
+    env(ETRAXIS_LOCALE): en_US
+
 framework:
     default_locale: '%locale%'
     translator:

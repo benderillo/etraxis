@@ -1,6 +1,6 @@
 parameters:
 
-    locale: 'en'
+    locale: '%env(ETRAXIS_LOCALE)%'
 
     mailer.address:  '%env(MAILER_ADDRESS)%'
     mailer.name:     '%env(MAILER_NAME)%'

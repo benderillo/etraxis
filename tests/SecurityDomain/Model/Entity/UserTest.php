@@ -101,6 +101,18 @@ class UserTest extends TestCase
         self::assertFalse($user->isAdmin);
     }
 
+    public function testLocale()
+    {
+        $user = new User();
+        self::assertSame('en_US', $user->locale);
+
+        $user->locale = 'ru';
+        self::assertSame('ru', $user->locale);
+
+        $user->locale = 'xx';
+        self::assertSame('ru', $user->locale);
+    }
+
     public function testCanAccountBeLocked()
     {
         $user = new User();
