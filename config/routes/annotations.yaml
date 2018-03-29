@@ -1,0 +1,3 @@
+SharedDomain:
+    resource: '../../src/SharedDomain/Framework/Controller/'
+    type: annotation
