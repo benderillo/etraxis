@@ -1,3 +1,8 @@
+parameters:
+    env(MAILER_ADDRESS):  etraxis@example.com
+    env(MAILER_NAME):     eTraxis
+    env(MAILER_DELIVERY): ~
+
 swiftmailer:
     url: '%env(MAILER_URL)%'
     spool: { type: 'memory' }

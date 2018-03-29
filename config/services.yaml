@@ -2,6 +2,10 @@ parameters:
 
     locale: 'en'
 
+    mailer.address:  '%env(MAILER_ADDRESS)%'
+    mailer.name:     '%env(MAILER_NAME)%'
+    mailer.delivery: '%env(MAILER_DELIVERY)%'
+
 services:
 
     _defaults:
@@ -12,3 +16,8 @@ services:
     eTraxis\SharedDomain\:
         resource: '../src/SharedDomain/{Framework,Application}/*'
         exclude:  '../src/SharedDomain/Framework/{Doctrine}'
+
+    # autowiring hints
+    eTraxis\SharedDomain\Application\Mailer\Mailer:
+        $address: '%mailer.address%'
+        $name:    '%mailer.name%'
