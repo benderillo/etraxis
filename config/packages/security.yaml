@@ -2,6 +2,10 @@ security:
 
     encoders:
         eTraxis\SecurityDomain\Model\Entity\User: bcrypt
+        legacy.md5:
+            id: eTraxis\SecurityDomain\Framework\Encoder\Md5PasswordEncoder
+        legacy.sha1:
+            id: eTraxis\SecurityDomain\Framework\Encoder\Sha1PasswordEncoder
 
     providers:
         etraxis_provider:

@@ -19,6 +19,7 @@ use LazySec\Entity\DisableAccountTrait;
 use LazySec\Entity\LockAccountTrait;
 use LazySec\Entity\UserTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Webinarium\PropertyTrait;
 
@@ -41,7 +42,7 @@ use Webinarium\PropertyTrait;
  * @property      bool        $isAdmin     Whether the user has administrator privileges.
  * @property      AccountInfo $account     User's account.
  */
-class User implements AdvancedUserInterface
+class User implements AdvancedUserInterface, EncoderAwareInterface
 {
     use PropertyTrait;
     use UserTrait;
@@ -156,6 +157,23 @@ class User implements AdvancedUserInterface
     public function isAccountExternal(): bool
     {
         return $this->account->provider !== AccountProvider::ETRAXIS;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @todo Remove in 4.1
+     */
+    public function getEncoderName()
+    {
+        switch (mb_strlen($this->password)) {
+            case 32:
+                return 'legacy.md5';
+            case 28:
+                return 'legacy.sha1';
+        }
+
+        return null;
     }
 
     /**
