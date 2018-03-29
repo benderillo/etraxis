@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "894c7cf05940b40433833ef43fe70db9",
+    "content-hash": "4db43eb998a9be7237c32e8b75d35825",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4226,6 +4226,83 @@
                 "templating"
             ],
             "time": "2018-03-20T04:31:17+00:00"
+        },
+        {
+            "name": "webinarium/php-dictionary",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinarium/php-dictionary.git",
+                "reference": "f98ca023be9e151a4e9bdc0c6165afabb607e621"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinarium/php-dictionary/zipball/f98ca023be9e151a4e9bdc0c6165afabb607e621",
+                "reference": "f98ca023be9e151a4e9bdc0c6165afabb607e621",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.1",
+                "phpunit/phpunit": "^5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dictionary\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Static dictionary implementation for PHP",
+            "homepage": "https://github.com/webinarium/php-dictionary",
+            "keywords": [
+                "dictionary"
+            ],
+            "time": "2017-03-23T21:00:26+00:00"
+        },
+        {
+            "name": "webinarium/php-properties",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinarium/php-properties.git",
+                "reference": "4836ad53b3b5be6e13d4d505a6813640c1e44842"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinarium/php-properties/zipball/4836ad53b3b5be6e13d4d505a6813640c1e44842",
+                "reference": "4836ad53b3b5be6e13d4d505a6813640c1e44842",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.3",
+                "phpunit/phpunit": "^5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webinarium\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Automatic properties implementation for PHP",
+            "homepage": "https://github.com/webinarium/php-properties",
+            "keywords": [
+                "annotations",
+                "properties"
+            ],
+            "time": "2017-08-28T22:06:10+00:00"
         },
         {
             "name": "webmozart/assert",
