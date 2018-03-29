@@ -13,6 +13,9 @@
 
 namespace eTraxis;
 
+use Doctrine\ORM\Query;
+use eTraxis\SharedDomain\Framework\Doctrine\SortableNullsWalker;
+use eTraxis\SharedDomain\Model\Dictionary\DatabasePlatform;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
@@ -25,6 +28,25 @@ class Kernel extends BaseKernel
     use MicroKernelTrait;
 
     protected const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+
+    /**
+     * {@inheritdoc}
+     */
+    public function boot()
+    {
+        parent::boot();
+
+        /** @noinspection PhpUndefinedMethodInspection */
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->container->get('doctrine.orm.entity_manager');
+
+        if ($manager->getConnection()->getDatabasePlatform()->getName() === DatabasePlatform::POSTGRESQL) {
+            $manager->getConfiguration()->setDefaultQueryHint(
+                Query::HINT_CUSTOM_OUTPUT_WALKER,
+                SortableNullsWalker::class
+            );
+        }
+    }
 
     /**
      * {@inheritdoc}
