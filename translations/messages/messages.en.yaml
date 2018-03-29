@@ -1,0 +1,6 @@
+'Authentication required.': 'Your session has expired. Please log in again.'
+button.login: Login
+input.required: 'required field'
+security.remember_me: 'Remember me'
+user.email: Email
+user.password: Password

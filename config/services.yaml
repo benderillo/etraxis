@@ -13,6 +13,9 @@ services:
         autoconfigure: true
         public:        false
 
+    eTraxis\:
+        resource: '../src/{SecurityDomain}/{Framework,Model/Repository,Application/EventSubscriber,Application/Voter}'
+
     eTraxis\SharedDomain\:
         resource: '../src/SharedDomain/{Framework,Application}/*'
         exclude:  '../src/SharedDomain/Framework/{Doctrine}'

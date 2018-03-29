@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+
+    <form action="{{ path('login') }}" method="post">
+
+        {% if error != null %}
+            <div>{{ error.message | trans }}</div>
+        {% endif %}
+
+        <div>
+            <label for="username" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+            <input type="text" id="username" name="_username" value="{{ username }}" placeholder="{{ 'input.required' | trans }}">
+        </div>
+
+        <div>
+            <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
+            <input type="password" id="password" name="_password" placeholder="{{ 'input.required' | trans }}">
+        </div>
+
+        <div>
+            <label for="remember_me" title="{{ 'security.remember_me' | trans }}">
+                <input type="checkbox" id="remember_me" name="_remember_me">
+                <span>{{ 'security.remember_me' | trans }}</span>
+            </label>
+        </div>
+
+        <div>
+            <button type="submit">{{ 'button.login' | trans }}</button>
+        </div>
+
+    </form>
+
+{% endblock %}

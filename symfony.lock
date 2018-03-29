@@ -371,6 +371,15 @@
     "webinarium/php-properties": {
         "version": "1.0.0"
     },
+    "webinarium/symfony-lazysec": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "803b262a199f69b5360dca85c2d57d8dd80f815a"
+        }
+    },
     "webmozart/assert": {
         "version": "1.3.0"
     },

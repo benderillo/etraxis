@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0eedc0febe3117d602f74c5a01331651",
+    "content-hash": "27bf82fea3ee5bafa484a39c5a2d74bf",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4431,6 +4431,49 @@
                 "properties"
             ],
             "time": "2017-08-28T22:06:10+00:00"
+        },
+        {
+            "name": "webinarium/symfony-lazysec",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webinarium/symfony-lazysec.git",
+                "reference": "ffa504cbe70584b2bf9a7864cd95be043f8462d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webinarium/symfony-lazysec/zipball/ffa504cbe70584b2bf9a7864cd95be043f8462d0",
+                "reference": "ffa504cbe70584b2bf9a7864cd95be043f8462d0",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/common": "^2.7",
+                "doctrine/orm": "^2.5",
+                "php": ">=7.1",
+                "ramsey/uuid": "^3.7",
+                "symfony/security-core": "^2.7|^3.0|^4.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.9",
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LazySec\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Symfony library with a bunch of security related features",
+            "homepage": "https://github.com/webinarium/symfony-lazysec",
+            "keywords": [
+                "security",
+                "symfony"
+            ],
+            "time": "2018-01-10T04:30:52+00:00"
         },
         {
             "name": "webmozart/assert",

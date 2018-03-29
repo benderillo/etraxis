@@ -13,7 +13,7 @@
 
 namespace eTraxis\SharedDomain\Framework\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class DefaultControllerTest extends WebTestCase
@@ -22,19 +22,30 @@ class DefaultControllerTest extends WebTestCase
     {
         $uri = '/';
 
-        $client = self::createClient();
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isRedirect('/login'));
 
-        $client->request(Request::METHOD_GET, $uri);
-        self::assertTrue($client->getResponse()->isOk());
+        $this->loginAs('artem@example.com');
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isOk());
     }
 
     public function testAdmin()
     {
         $uri = '/admin/';
 
-        $client = self::createClient();
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isRedirect('/login'));
 
-        $client->request(Request::METHOD_GET, $uri);
-        self::assertTrue($client->getResponse()->isOk());
+        $this->loginAs('artem@example.com');
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isForbidden());
+
+        $this->loginAs('admin@example.com');
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isOk());
     }
 }

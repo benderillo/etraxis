@@ -1,7 +1,11 @@
 security:
 
+    encoders:
+        eTraxis\SecurityDomain\Model\Entity\User: bcrypt
+
     providers:
-        in_memory: { memory: ~ }
+        etraxis_provider:
+            id: LazySec\Provider\GenericUserProvider
 
     firewalls:
         dev:
@@ -9,3 +13,19 @@ security:
             security: false
         main:
             anonymous: ~
+            logout:    ~
+            guard:
+                authenticators:
+                    - eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
+            remember_me:
+                secret:   '%kernel.secret%'
+                lifetime: 2592000
+                path:     /
+
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
+    access_control:
+        - { path: ^/login,  roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, roles: ROLE_ADMIN                   }
+        - { path: ^/,       roles: ROLE_USER                    }

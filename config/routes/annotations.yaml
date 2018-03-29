@@ -1,3 +1,7 @@
+SecurityDomain:
+    resource: '../../src/SecurityDomain/Framework/Controller/'
+    type: annotation
+
 SharedDomain:
     resource: '../../src/SharedDomain/Framework/Controller/'
     type: annotation

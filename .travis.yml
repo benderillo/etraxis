@@ -15,6 +15,7 @@ install:
 before_script:
     - ./bin/console --no-interaction doctrine:database:create
     - ./bin/console --no-interaction doctrine:schema:create
+    - ./bin/console --no-interaction doctrine:fixtures:load
 
 script:
     - ./bin/phpunit --coverage-clover=coverage.clover
