@@ -19,7 +19,7 @@
         <env name="ETRAXIS_THEME" value="azure" />
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
-        <env name="DATABASE_URL" value="mysql://root@127.0.0.1/etraxis?charset=utf8mb4" />
+        <env name="DATABASE_URL" value="mysql://root@127.0.0.1/etraxis?charset=utf8" />
         <!-- ###- doctrine/doctrine-bundle ### -->
 
         <!-- ###+ symfony/swiftmailer-bundle ### -->
