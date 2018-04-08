@@ -32,6 +32,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
+    public function persist(User $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function findOneByUsername(string $username): ?UserInterface
     {
         /** @var UserInterface $user */
