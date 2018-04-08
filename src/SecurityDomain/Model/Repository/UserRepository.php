@@ -40,6 +40,14 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     /**
      * {@inheritdoc}
      */
+    public function remove(User $entity): void
+    {
+        $this->getEntityManager()->remove($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function refresh(User $entity): void
     {
         $this->getEntityManager()->refresh($entity);
