@@ -53,6 +53,7 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, null, [GroupVoter::CREATE_GROUP]));
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, $group, [GroupVoter::UPDATE_GROUP]));
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, $group, [GroupVoter::DELETE_GROUP]));
+        self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, $group, [GroupVoter::MANAGE_MEMBERSHIP]));
     }
 
     public function testCreate()
@@ -90,5 +91,19 @@ class GroupVoterTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(GroupVoter::DELETE_GROUP, $group));
+    }
+
+    public function testManageMembership()
+    {
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
+        $repository = $this->doctrine->getRepository(Group::class);
+
+        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(GroupVoter::MANAGE_MEMBERSHIP, $group));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(GroupVoter::MANAGE_MEMBERSHIP, $group));
     }
 }

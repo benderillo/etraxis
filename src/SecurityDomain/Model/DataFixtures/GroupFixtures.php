@@ -31,6 +31,7 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
     {
         return [
             ProjectFixtures::class,
+            UserFixtures::class,
         ];
     }
 
@@ -46,26 +47,125 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
             'support'    => 'Support Engineers',
         ];
 
+        $members = [
+
+            'a' => [
+                'managers'   => [
+                    'ldoyle@example.com',
+                    'dorcas.ernser@example.com',
+                    'berenice.oconnell@example.com',
+                    'dangelo.hill@example.com',
+                ],
+                'developers' => [
+                    'fdooley@example.com',
+                    'labshire@example.com',
+                    'dquigley@example.com',
+                    'christy.mcdermott@example.com',
+                ],
+                'clients'    => [
+                    'lucas.oconnell@example.com',
+                    'clegros@example.com',
+                    'jmueller@example.com',
+                    'hstroman@example.com',
+                ],
+                'support'    => [
+                    'tmarquardt@example.com',
+                    'bkemmer@example.com',
+                    'cbatz@example.com',
+                    'kschultz@example.com',
+                    'nhills@example.com',
+                    'jkiehn@example.com',
+                ],
+            ],
+
+            'b' => [
+                'managers'   => [
+                    'ldoyle@example.com',
+                    'dorcas.ernser@example.com',
+                    'carolyn.hill@example.com',
+                    'emmanuelle.bartell@example.com',
+                ],
+                'developers' => [
+                    'fdooley@example.com',
+                    'labshire@example.com',
+                    'akoepp@example.com',
+                    'amarvin@example.com',
+                    'jkiehn@example.com',
+                ],
+                'clients'    => [
+                    'lucas.oconnell@example.com',
+                    'clegros@example.com',
+                    'dtillman@example.com',
+                    'aschinner@example.com',
+                ],
+                'support'    => [
+                    'tmarquardt@example.com',
+                    'bkemmer@example.com',
+                    'kbahringer@example.com',
+                    'vparker@example.com',
+                    'nhills@example.com',
+                ],
+            ],
+
+            'c' => [
+                'managers'   => [
+                    'ldoyle@example.com',
+                    'berenice.oconnell@example.com',
+                    'carolyn.hill@example.com',
+                    'jgoodwin@example.com',
+                    'jkiehn@example.com',
+                ],
+                'developers' => [
+                    'fdooley@example.com',
+                    'dquigley@example.com',
+                    'akoepp@example.com',
+                    'mbogisich@example.com',
+                    'nhills@example.com',
+                ],
+                'clients'    => [
+                    'lucas.oconnell@example.com',
+                    'jmueller@example.com',
+                    'dtillman@example.com',
+                    'dmurazik@example.com',
+                ],
+                'support'    => [
+                    'tmarquardt@example.com',
+                    'cbatz@example.com',
+                    'kbahringer@example.com',
+                    'tbuckridge@example.com',
+                ],
+            ],
+        ];
+
         $globals = [
-            'staff',
-            'clients',
+            'staff'   => [],
+            'clients' => [],
         ];
 
         // Project groups.
 
-        foreach (['a', 'b', 'c'] as $pref) {
+        foreach ($members as $ref => $row) {
+
+            $globals['staff']   = array_merge($globals['staff'], $row['managers'], $row['developers'], $row['support']);
+            $globals['clients'] = array_merge($globals['clients'], $row['clients']);
 
             /** @var \eTraxis\TemplatesDomain\Model\Entity\Project $project */
-            $project = $this->getReference('project:' . $pref);
+            $project = $this->getReference('project:' . $ref);
 
-            foreach ($data as $gref => $name) {
+            foreach ($row as $name => $emails) {
 
                 $group = new Group($project);
 
-                $group->name        = $name;
-                $group->description = sprintf('%s %s', $name, mb_strtoupper($pref));
+                $group->name        = $data[$name];
+                $group->description = sprintf('%s %s', $data[$name], mb_strtoupper($ref));
 
-                $this->addReference(sprintf('%s:%s', $gref, $pref), $group);
+                $this->addReference(sprintf('%s:%s', $name, $ref), $group);
+
+                foreach ($emails as $email) {
+                    /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+                    $user = $this->getReference('user:' . $email);
+                    $group->addMember($user);
+                }
 
                 $manager->persist($group);
             }
@@ -73,13 +173,21 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
 
         // Global groups.
 
-        foreach ($globals as $ref) {
+        foreach ($globals as $ref => $row) {
 
             $group = new Group();
 
             $group->name = 'Company ' . ucwords($ref);
 
             $this->addReference($ref, $group);
+
+            $members = array_unique($row);
+
+            foreach ($members as $email) {
+                /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+                $user = $this->getReference('user:' . $email);
+                $group->addMember($user);
+            }
 
             $manager->persist($group);
         }

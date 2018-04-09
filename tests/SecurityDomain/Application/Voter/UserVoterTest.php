@@ -53,7 +53,7 @@ class UserVoterTest extends TransactionalTestCase
 
         $nhills = $repository->findOneByUsername('nhills@example.com');
 
-        self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::CREATE_USER]));
+        self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, null, [UserVoter::CREATE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::UPDATE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::DELETE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::DISABLE_USER]));

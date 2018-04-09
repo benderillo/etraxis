@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
@@ -34,6 +35,7 @@ use Webinarium\PropertyTrait;
  * @property      string  $name        Name of the group.
  * @property      string  $description Optional description of the group.
  * @property-read bool    $isGlobal    Whether the group is a global one.
+ * @property-read User[]  $members     List of members.
  */
 class Group
 {
@@ -75,6 +77,18 @@ class Group
     protected $description;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\User", inversedBy="groupsCollection")
+     * @ORM\JoinTable(
+     *     name="membership",
+     *     joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")})
+     * @ORM\OrderBy({"fullname": "ASC", "email": "ASC"})
+     */
+    protected $membersCollection;
+
+    /**
      * Creates new group in the specified project (NULL creates a global group).
      *
      * @param null|Project $project
@@ -82,6 +96,38 @@ class Group
     public function __construct(?Project $project = null)
     {
         $this->project = $project;
+
+        $this->membersCollection = new ArrayCollection();
+    }
+
+    /**
+     * Adds user to the group.
+     *
+     * @param User $user
+     *
+     * @return self
+     */
+    public function addMember(User $user): self
+    {
+        if (!$this->membersCollection->contains($user)) {
+            $this->membersCollection[] = $user;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes user from the group.
+     *
+     * @param User $user
+     *
+     * @return self
+     */
+    public function removeMember(User $user): self
+    {
+        $this->membersCollection->removeElement($user);
+
+        return $this;
     }
 
     /**
@@ -93,6 +139,10 @@ class Group
 
             'isGlobal' => function (): bool {
                 return $this->project === null;
+            },
+
+            'members' => function (): array {
+                return $this->membersCollection->getValues();
             },
         ];
     }

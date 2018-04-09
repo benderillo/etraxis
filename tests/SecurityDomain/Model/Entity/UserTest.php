@@ -144,6 +144,19 @@ class UserTest extends TestCase
         self::assertSame('Pacific/Auckland', $user->timezone);
     }
 
+    public function testGroups()
+    {
+        $user = new User();
+        self::assertSame([], $user->groups);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $groups */
+        $groups = $this->getProperty($user, 'groupsCollection');
+        $groups->add('Group A');
+        $groups->add('Group B');
+
+        self::assertSame(['Group A', 'Group B'], $user->groups);
+    }
+
     public function testCanAccountBeLocked()
     {
         $user = new User();

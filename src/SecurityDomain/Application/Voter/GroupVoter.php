@@ -15,7 +15,6 @@ namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\SecurityDomain\Model\Entity\User;
-use eTraxis\TemplatesDomain\Model\Entity\Project;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -24,9 +23,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class GroupVoter extends Voter
 {
-    public const CREATE_GROUP = 'group.create';
-    public const UPDATE_GROUP = 'group.update';
-    public const DELETE_GROUP = 'group.delete';
+    public const CREATE_GROUP      = 'group.create';
+    public const UPDATE_GROUP      = 'group.update';
+    public const DELETE_GROUP      = 'group.delete';
+    public const MANAGE_MEMBERSHIP = 'group.membership';
 
     /**
      * {@inheritdoc}
@@ -34,9 +34,10 @@ class GroupVoter extends Voter
     protected function supports($attribute, $subject)
     {
         $attributes = [
-            self::CREATE_GROUP => null,
-            self::UPDATE_GROUP => Group::class,
-            self::DELETE_GROUP => Group::class,
+            self::CREATE_GROUP      => null,
+            self::UPDATE_GROUP      => Group::class,
+            self::DELETE_GROUP      => Group::class,
+            self::MANAGE_MEMBERSHIP => Group::class,
         ];
 
         // Whether the attribute is supported.
@@ -79,6 +80,9 @@ class GroupVoter extends Voter
             case self::DELETE_GROUP:
                 return $this->isDeleteGranted($subject, $user);
 
+            case self::MANAGE_MEMBERSHIP:
+                return $this->isManageMembershipGranted($subject, $user);
+
             default:
                 return false;
         }
@@ -118,6 +122,19 @@ class GroupVoter extends Voter
      * @return bool
      */
     protected function isDeleteGranted(Group $subject, User $user): bool
+    {
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether list of members of the specified group can be managed.
+     *
+     * @param Group $subject Subject group.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isManageMembershipGranted(Group $subject, User $user): bool
     {
         return $user->isAdmin;
     }

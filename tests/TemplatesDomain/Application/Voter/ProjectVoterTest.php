@@ -50,7 +50,7 @@ class ProjectVoterTest extends TransactionalTestCase
 
         $project = $repository->findOneBy(['name' => 'Distinctio']);
 
-        self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::CREATE_PROJECT]));
+        self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, null, [ProjectVoter::CREATE_PROJECT]));
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::UPDATE_PROJECT]));
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::DELETE_PROJECT]));
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::SUSPEND_PROJECT]));

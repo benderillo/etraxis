@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
@@ -48,6 +49,7 @@ use Webinarium\PropertyTrait;
  * @property      string      $locale      User's locale (see the "Locale" dictionary).
  * @property      string      $theme       User's theme (see the "Theme" dictionary).
  * @property      string      $timezone    User's timezone (see the "Timezone" dictionary).
+ * @property-read Group[]     $groups      List of groups the user is member of.
  */
 class User implements AdvancedUserInterface, EncoderAwareInterface
 {
@@ -125,12 +127,21 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
     protected $settings;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group", mappedBy="membersCollection")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $groupsCollection;
+
+    /**
      * Creates new user.
      */
     public function __construct()
     {
-        $this->role    = self::ROLE_USER;
-        $this->account = new AccountInfo();
+        $this->role             = self::ROLE_USER;
+        $this->account          = new AccountInfo();
+        $this->groupsCollection = new ArrayCollection();
     }
 
     /**
@@ -205,6 +216,10 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
 
             'timezone' => function (): string {
                 return $this->settings['timezone'] ?? Timezone::FALLBACK;
+            },
+
+            'groups' => function (): array {
+                return $this->groupsCollection->getValues();
             },
         ];
     }
