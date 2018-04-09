@@ -76,6 +76,9 @@ class ProjectVoter extends Voter
             case self::CREATE_PROJECT:
                 return $this->isCreateGranted($user);
 
+            case self::UPDATE_PROJECT:
+                return $this->isUpdateGranted($subject, $user);
+
             default:
                 return false;
         }
@@ -89,6 +92,19 @@ class ProjectVoter extends Voter
      * @return bool
      */
     protected function isCreateGranted(User $user): bool
+    {
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether the specified project can be updated.
+     *
+     * @param Project $subject Subject project.
+     * @param User    $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isUpdateGranted(Project $subject, User $user): bool
     {
         return $user->isAdmin;
     }
