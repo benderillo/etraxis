@@ -13,7 +13,9 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use eTraxis\SecurityDomain\Model\Entity\Group;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Webinarium\PropertyTrait;
 
@@ -24,12 +26,13 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\TemplatesDomain\Model\Repository\ProjectRepository")
  * @Assert\UniqueEntity(fields={"name"}, message="project.conflict.name")
  *
- * @property-read int    $id          Unique ID.
- * @property      string $name        Name of the project.
- * @property      string $description Optional description of the project.
- * @property-read int    $createdAt   Unix Epoch timestamp when the project has been registered.
- * @property      bool   $isSuspended Whether the project is suspended.
- *                                    When project is suspended, its issues are read-only, and new issues cannot be created.
+ * @property-read int     $id          Unique ID.
+ * @property      string  $name        Name of the project.
+ * @property      string  $description Optional description of the project.
+ * @property-read int     $createdAt   Unix Epoch timestamp when the project has been registered.
+ * @property      bool    $isSuspended Whether the project is suspended.
+ *                                     When project is suspended, its issues are read-only, and new issues cannot be created.
+ * @property-read Group[] $groups      List of project groups.
  */
 class Project
 {
@@ -77,10 +80,33 @@ class Project
     protected $isSuspended;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group", mappedBy="project")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $groupsCollection;
+
+    /**
      * Creates new project.
      */
     public function __construct()
     {
         $this->createdAt = time();
+
+        $this->groupsCollection = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getters(): array
+    {
+        return [
+
+            'groups' => function (): array {
+                return $this->groupsCollection->getValues();
+            },
+        ];
     }
 }
