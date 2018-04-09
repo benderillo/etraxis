@@ -79,6 +79,9 @@ class ProjectVoter extends Voter
             case self::UPDATE_PROJECT:
                 return $this->isUpdateGranted($subject, $user);
 
+            case self::DELETE_PROJECT:
+                return $this->isDeleteGranted($subject, $user);
+
             default:
                 return false;
         }
@@ -106,6 +109,21 @@ class ProjectVoter extends Voter
      */
     protected function isUpdateGranted(Project $subject, User $user): bool
     {
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether the specified project can be deleted.
+     *
+     * @param Project $subject Subject project.
+     * @param User    $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isDeleteGranted(Project $subject, User $user): bool
+    {
+        /** @todo Can't delete project if there is at least one issue there. */
+
         return $user->isAdmin;
     }
 }

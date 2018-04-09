@@ -79,4 +79,18 @@ class ProjectVoterTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(ProjectVoter::UPDATE_PROJECT, $project));
     }
+
+    public function testDelete()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
+        $repository = $this->doctrine->getRepository(Project::class);
+
+        $project = $repository->findOneBy(['name' => 'Distinctio']);
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $project));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $project));
+    }
 }
