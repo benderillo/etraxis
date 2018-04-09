@@ -39,13 +39,20 @@ class UserTest extends TestCase
         self::assertSame('anna@example.com', $user->getUsername());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testPassword()
     {
         $user = new User();
         self::assertNotSame('secret', $user->getPassword());
 
+        $token = $user->generateResetToken(new \DateInterval('PT2H'));
+        self::assertTrue($user->isResetTokenValid($token));
+
         $user->password = 'secret';
         self::assertSame('secret', $user->getPassword());
+        self::assertFalse($user->isResetTokenValid($token));
     }
 
     public function testRoles()

@@ -20,6 +20,7 @@ use eTraxis\SecurityDomain\Model\Dictionary\Theme;
 use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use LazySec\Entity\DisableAccountTrait;
 use LazySec\Entity\LockAccountTrait;
+use LazySec\Entity\ResetPasswordTrait;
 use LazySec\Entity\UserTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
@@ -54,6 +55,7 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
     use UserTrait;
     use DisableAccountTrait;
     use LockAccountTrait;
+    use ResetPasswordTrait;
 
     // Roles.
     public const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -213,6 +215,11 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
     protected function setters(): array
     {
         return [
+
+            'password' => function (?string $password): void {
+                $this->password = $password;
+                $this->clearResetToken();
+            },
 
             'isAdmin' => function (bool $value): void {
                 $this->role = $value ? self::ROLE_ADMIN : self::ROLE_USER;
