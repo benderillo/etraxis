@@ -56,4 +56,13 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::SUSPEND_PROJECT]));
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::RESUME_PROJECT]));
     }
+
+    public function testCreate()
+    {
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(ProjectVoter::CREATE_PROJECT));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(ProjectVoter::CREATE_PROJECT));
+    }
 }

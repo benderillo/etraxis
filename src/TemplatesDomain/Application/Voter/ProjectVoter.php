@@ -73,8 +73,23 @@ class ProjectVoter extends Voter
         /** @var Project $subject */
         switch ($attribute) {
 
+            case self::CREATE_PROJECT:
+                return $this->isCreateGranted($user);
+
             default:
                 return false;
         }
+    }
+
+    /**
+     * Whether the current user can create a new project.
+     *
+     * @param User $user Current user.
+     *
+     * @return bool
+     */
+    protected function isCreateGranted(User $user): bool
+    {
+        return $user->isAdmin;
     }
 }
