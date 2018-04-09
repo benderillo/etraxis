@@ -59,6 +59,7 @@ class UserVoterTest extends TransactionalTestCase
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::DISABLE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::ENABLE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::UNLOCK_USER]));
+        self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::SET_PASSWORD]));
     }
 
     public function testCreate()
@@ -155,5 +156,27 @@ class UserVoterTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(UserVoter::UNLOCK_USER, $nhills));
         self::assertFalse($this->security->isGranted(UserVoter::UNLOCK_USER, $zapp));
+    }
+
+    public function testSetPassword()
+    {
+        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
+        $repository = $this->doctrine->getRepository(User::class);
+
+        $nhills   = $repository->findOneByUsername('nhills@example.com');
+        $einstein = $repository->findOneByUsername('einstein@ldap.forumsys.com');
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(UserVoter::SET_PASSWORD, $nhills));
+        self::assertFalse($this->security->isGranted(UserVoter::SET_PASSWORD, $einstein));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(UserVoter::SET_PASSWORD, $nhills));
+
+        $this->loginAs('nhills@example.com');
+        self::assertTrue($this->security->isGranted(UserVoter::SET_PASSWORD, $nhills));
+
+        $this->loginAs('einstein@ldap.forumsys.com');
+        self::assertFalse($this->security->isGranted(UserVoter::SET_PASSWORD, $einstein));
     }
 }

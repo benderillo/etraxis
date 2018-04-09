@@ -28,6 +28,7 @@ class UserVoter extends Voter
     public const DISABLE_USER = 'user.disable';
     public const ENABLE_USER  = 'user.enable';
     public const UNLOCK_USER  = 'user.unlock';
+    public const SET_PASSWORD = 'user.password';
 
     /**
      * {@inheritdoc}
@@ -41,6 +42,7 @@ class UserVoter extends Voter
             self::DISABLE_USER => User::class,
             self::ENABLE_USER  => User::class,
             self::UNLOCK_USER  => User::class,
+            self::SET_PASSWORD => User::class,
         ];
 
         // Whether the attribute is supported.
@@ -91,6 +93,9 @@ class UserVoter extends Voter
 
             case self::UNLOCK_USER:
                 return $this->isUnlockGranted($subject, $user);
+
+            case self::SET_PASSWORD:
+                return $this->isSetPasswordGranted($subject, $user);
 
             default:
                 return false;
@@ -184,5 +189,23 @@ class UserVoter extends Voter
     protected function isUnlockGranted(User $subject, User $user): bool
     {
         return $user->isAdmin;
+    }
+
+    /**
+     * Whether a password of the specified user can be set.
+     *
+     * @param User $subject Subject user.
+     * @param User $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isSetPasswordGranted(User $subject, User $user): bool
+    {
+        // Can't set password of an external account.
+        if ($subject->isAccountExternal()) {
+            return false;
+        }
+
+        return $user->isAdmin || $subject->id === $user->id;
     }
 }
