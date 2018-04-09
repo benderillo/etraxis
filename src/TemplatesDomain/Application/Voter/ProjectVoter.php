@@ -85,6 +85,9 @@ class ProjectVoter extends Voter
             case self::SUSPEND_PROJECT:
                 return $this->isSuspendGranted($subject, $user);
 
+            case self::RESUME_PROJECT:
+                return $this->isResumeGranted($subject, $user);
+
             default:
                 return false;
         }
@@ -139,6 +142,19 @@ class ProjectVoter extends Voter
      * @return bool
      */
     protected function isSuspendGranted(Project $subject, User $user): bool
+    {
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether the specified project can be resumed.
+     *
+     * @param Project $subject Subject project.
+     * @param User    $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isResumeGranted(Project $subject, User $user): bool
     {
         return $user->isAdmin;
     }
