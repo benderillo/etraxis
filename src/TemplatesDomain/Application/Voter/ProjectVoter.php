@@ -82,6 +82,9 @@ class ProjectVoter extends Voter
             case self::DELETE_PROJECT:
                 return $this->isDeleteGranted($subject, $user);
 
+            case self::SUSPEND_PROJECT:
+                return $this->isSuspendGranted($subject, $user);
+
             default:
                 return false;
         }
@@ -124,6 +127,19 @@ class ProjectVoter extends Voter
     {
         /** @todo Can't delete project if there is at least one issue there. */
 
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether the specified project can be suspended.
+     *
+     * @param Project $subject Subject project.
+     * @param User    $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isSuspendGranted(Project $subject, User $user): bool
+    {
         return $user->isAdmin;
     }
 }
