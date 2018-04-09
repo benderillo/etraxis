@@ -1,1 +1,2 @@
+project.conflict.name: 'Project with specified name already exists.'
 user.conflict.email: 'Account with specified email already exists.'

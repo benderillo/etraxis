@@ -15,7 +15,7 @@ services:
         public:        false
 
     eTraxis\:
-        resource: '../src/{SecurityDomain}/{Framework,Model/Repository,Application/EventSubscriber,Application/Voter}'
+        resource: '../src/{SecurityDomain,TemplatesDomain}/{Framework,Model/Repository,Application/EventSubscriber,Application/Voter}'
 
     eTraxis\SharedDomain\:
         resource: '../src/SharedDomain/{Framework,Application}/*'

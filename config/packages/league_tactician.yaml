@@ -18,5 +18,5 @@ services:
 
     eTraxis\:
         autowire: true
-        resource: '../../src/{SecurityDomain}/Application/CommandHandler'
+        resource: '../../src/{SecurityDomain,TemplatesDomain}/Application/CommandHandler'
         tags: [{ name: tactician.handler, typehints: true }]

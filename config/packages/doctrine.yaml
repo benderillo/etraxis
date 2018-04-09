@@ -15,3 +15,9 @@ doctrine:
                 dir: '%kernel.project_dir%/src/SecurityDomain/Model/Entity'
                 prefix: 'eTraxis\SecurityDomain\Model\Entity'
                 alias: SecurityDomain
+            TemplatesDomain:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/TemplatesDomain/Model/Entity'
+                prefix: 'eTraxis\TemplatesDomain\Model\Entity'
+                alias: TemplatesDomain
