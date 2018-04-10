@@ -1,4 +1,7 @@
 build:
+    dependencies:
+        before:
+            - 'cp config/travis/.env.mysql .env'
     tests:
         override:
             - php-scrutinizer-run
