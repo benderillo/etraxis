@@ -1,5 +1,7 @@
-checks:
-    php: true
+build:
+    tests:
+        override:
+            - php-scrutinizer-run
 
 tools:
     external_code_coverage:
@@ -8,12 +10,12 @@ tools:
 
 filter:
     excluded_paths:
-        - 'bin/*'
-        - 'config/*'
-        - 'public/*'
-        - 'src/*Domain/Model/DataFixtures/*'
-        - 'templates/*'
-        - 'tests/*'
-        - 'translations/*'
-        - 'var/*'
-        - 'vendor/*'
+        - 'bin/'
+        - 'config/'
+        - 'public/'
+        - 'templates/'
+        - 'tests/'
+        - 'translations/'
+        - 'var/'
+    dependency_paths:
+        - 'vendor/'
