@@ -68,7 +68,6 @@ class GroupVoter extends Voter
             return false;
         }
 
-        /** @var Group $subject */
         switch ($attribute) {
 
             case self::CREATE_GROUP:
@@ -89,7 +88,7 @@ class GroupVoter extends Voter
     }
 
     /**
-     * Whether a new group can be created in the specified project.
+     * Whether the current user can create a new group.
      *
      * @param User $user Current user.
      *

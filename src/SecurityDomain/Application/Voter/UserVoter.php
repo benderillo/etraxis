@@ -73,7 +73,6 @@ class UserVoter extends Voter
             return false;
         }
 
-        /** @var User $subject */
         switch ($attribute) {
 
             case self::CREATE_USER:

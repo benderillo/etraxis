@@ -70,7 +70,6 @@ class ProjectVoter extends Voter
             return false;
         }
 
-        /** @var Project $subject */
         switch ($attribute) {
 
             case self::CREATE_PROJECT:

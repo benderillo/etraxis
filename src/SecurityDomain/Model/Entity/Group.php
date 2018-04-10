@@ -79,7 +79,7 @@ class Group
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\User", inversedBy="groupsCollection")
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="groupsCollection")
      * @ORM\JoinTable(
      *     name="membership",
      *     joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")},

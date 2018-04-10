@@ -129,7 +129,7 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group", mappedBy="membersCollection")
+     * @ORM\ManyToMany(targetEntity="Group", mappedBy="membersCollection")
      * @ORM\OrderBy({"name": "ASC"})
      */
     protected $groupsCollection;

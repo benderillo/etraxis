@@ -13,7 +13,6 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
-use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -33,22 +32,11 @@ class ProjectTest extends TestCase
         $project = new Project();
         self::assertSame([], $project->groups);
 
-        /** @var \Doctrine\Common\Collections\ArrayCollection $collection */
-        $collection = $this->getProperty($project, 'groupsCollection');
+        /** @var \Doctrine\Common\Collections\ArrayCollection $groups */
+        $groups = $this->getProperty($project, 'groupsCollection');
+        $groups->add('Group A');
+        $groups->add('Group B');
 
-        $group1 = new Group();
-        $group2 = new Group();
-
-        $this->setProperty($group1, 'id', 1);
-        $this->setProperty($group2, 'id', 2);
-
-        $collection->add($group1);
-        $collection->add($group2);
-
-        self::assertSame([$group1, $group2], $project->groups);
-
-        $collection->removeElement($group1);
-
-        self::assertSame([$group2], $project->groups);
+        self::assertSame(['Group A', 'Group B'], $project->groups);
     }
 }
