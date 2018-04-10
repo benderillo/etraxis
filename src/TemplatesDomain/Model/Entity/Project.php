@@ -26,13 +26,14 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\TemplatesDomain\Model\Repository\ProjectRepository")
  * @Assert\UniqueEntity(fields={"name"}, message="project.conflict.name")
  *
- * @property-read int     $id          Unique ID.
- * @property      string  $name        Name of the project.
- * @property      string  $description Optional description of the project.
- * @property-read int     $createdAt   Unix Epoch timestamp when the project has been registered.
- * @property      bool    $isSuspended Whether the project is suspended.
- *                                     When project is suspended, its issues are read-only, and new issues cannot be created.
- * @property-read Group[] $groups      List of project groups.
+ * @property-read int        $id          Unique ID.
+ * @property      string     $name        Name of the project.
+ * @property      string     $description Optional description of the project.
+ * @property-read int        $createdAt   Unix Epoch timestamp when the project has been registered.
+ * @property      bool       $isSuspended Whether the project is suspended.
+ *                                        When project is suspended, its issues are read-only, and new issues cannot be created.
+ * @property-read Group[]    $groups      List of project groups.
+ * @property-read Template[] $templates   List of project templates.
  */
 class Project
 {
@@ -88,13 +89,22 @@ class Project
     protected $groupsCollection;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Template", mappedBy="project")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $templatesCollection;
+
+    /**
      * Creates new project.
      */
     public function __construct()
     {
         $this->createdAt = time();
 
-        $this->groupsCollection = new ArrayCollection();
+        $this->groupsCollection    = new ArrayCollection();
+        $this->templatesCollection = new ArrayCollection();
     }
 
     /**
@@ -106,6 +116,10 @@ class Project
 
             'groups' => function (): array {
                 return $this->groupsCollection->getValues();
+            },
+
+            'templates' => function (): array {
+                return $this->templatesCollection->getValues();
             },
         ];
     }

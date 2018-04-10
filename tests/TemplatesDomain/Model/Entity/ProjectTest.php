@@ -39,4 +39,17 @@ class ProjectTest extends TestCase
 
         self::assertSame(['Group A', 'Group B'], $project->groups);
     }
+
+    public function testTemplates()
+    {
+        $project = new Project();
+        self::assertSame([], $project->templates);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $templates */
+        $templates = $this->getProperty($project, 'templatesCollection');
+        $templates->add('Template A');
+        $templates->add('Template B');
+
+        self::assertSame(['Template A', 'Template B'], $project->templates);
+    }
 }
