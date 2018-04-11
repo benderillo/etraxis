@@ -1,5 +1,6 @@
 group.conflict.name: 'Group with specified name already exists.'
 project.conflict.name: 'Project with specified name already exists.'
+state.conflict.name: 'State with specified name already exists.'
 template.conflict.name: 'Template with specified name already exists.'
 template.conflict.prefix: 'Template with specified prefix already exists.'
 user.conflict.email: 'Account with specified email already exists.'

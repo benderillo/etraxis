@@ -45,6 +45,7 @@ use Webinarium\PropertyTrait;
  *                                                            amount of days after its closure. After that issue will become read-only.
  *                                                            If this attribute is not specified, issue will never become read-only.
  * @property      bool                      $isLocked         Whether the template is locked for edition.
+ * @property-read State[]                   $states           List of template states.
  * @property-read TemplateRolePermission[]  $rolePermissions  List of template role permissions.
  * @property-read TemplateGroupPermission[] $groupPermissions List of template group permissions.
  */
@@ -119,6 +120,14 @@ class Template
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="State", mappedBy="template")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $statesCollection;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="TemplateRolePermission", mappedBy="template")
      */
     protected $rolePermissionsCollection;
@@ -139,6 +148,7 @@ class Template
     {
         $this->project = $project;
 
+        $this->statesCollection           = new ArrayCollection();
         $this->rolePermissionsCollection  = new ArrayCollection();
         $this->groupPermissionsCollection = new ArrayCollection();
     }
@@ -149,6 +159,10 @@ class Template
     protected function getters(): array
     {
         return [
+
+            'states' => function (): array {
+                return $this->statesCollection->getValues();
+            },
 
             'rolePermissions' => function (): array {
                 return $this->rolePermissionsCollection->getValues();

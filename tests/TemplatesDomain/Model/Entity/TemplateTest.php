@@ -29,6 +29,19 @@ class TemplateTest extends TestCase
         self::assertSame($project, $this->getProperty($template, 'project'));
     }
 
+    public function testStates()
+    {
+        $template = new Template(new Project());
+        self::assertSame([], $template->states);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $states */
+        $states = $this->getProperty($template, 'statesCollection');
+        $states->add('State A');
+        $states->add('State B');
+
+        self::assertSame(['State A', 'State B'], $template->states);
+    }
+
     public function testRolePermissions()
     {
         $template = new Template(new Project());
