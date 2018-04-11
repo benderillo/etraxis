@@ -28,4 +28,30 @@ class TemplateTest extends TestCase
         $template = new Template($project);
         self::assertSame($project, $this->getProperty($template, 'project'));
     }
+
+    public function testRolePermissions()
+    {
+        $template = new Template(new Project());
+        self::assertSame([], $template->rolePermissions);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $permissions */
+        $permissions = $this->getProperty($template, 'rolePermissionsCollection');
+        $permissions->add('Role permission A');
+        $permissions->add('Role permission B');
+
+        self::assertSame(['Role permission A', 'Role permission B'], $template->rolePermissions);
+    }
+
+    public function testGroupPermissions()
+    {
+        $template = new Template(new Project());
+        self::assertSame([], $template->groupPermissions);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $permissions */
+        $permissions = $this->getProperty($template, 'groupPermissionsCollection');
+        $permissions->add('Group permission A');
+        $permissions->add('Group permission B');
+
+        self::assertSame(['Group permission A', 'Group permission B'], $template->groupPermissions);
+    }
 }

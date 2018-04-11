@@ -24,11 +24,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class TemplateVoter extends Voter
 {
-    public const CREATE_TEMPLATE = 'template.create';
-    public const UPDATE_TEMPLATE = 'template.update';
-    public const DELETE_TEMPLATE = 'template.delete';
-    public const LOCK_TEMPLATE   = 'template.lock';
-    public const UNLOCK_TEMPLATE = 'template.unlock';
+    public const CREATE_TEMPLATE    = 'template.create';
+    public const UPDATE_TEMPLATE    = 'template.update';
+    public const DELETE_TEMPLATE    = 'template.delete';
+    public const LOCK_TEMPLATE      = 'template.lock';
+    public const UNLOCK_TEMPLATE    = 'template.unlock';
+    public const MANAGE_PERMISSIONS = 'template.permissions';
 
     /**
      * {@inheritdoc}
@@ -36,11 +37,12 @@ class TemplateVoter extends Voter
     protected function supports($attribute, $subject)
     {
         $attributes = [
-            self::CREATE_TEMPLATE => Project::class,
-            self::UPDATE_TEMPLATE => Template::class,
-            self::DELETE_TEMPLATE => Template::class,
-            self::LOCK_TEMPLATE   => Template::class,
-            self::UNLOCK_TEMPLATE => Template::class,
+            self::CREATE_TEMPLATE    => Project::class,
+            self::UPDATE_TEMPLATE    => Template::class,
+            self::DELETE_TEMPLATE    => Template::class,
+            self::LOCK_TEMPLATE      => Template::class,
+            self::UNLOCK_TEMPLATE    => Template::class,
+            self::MANAGE_PERMISSIONS => Template::class,
         ];
 
         // Whether the attribute is supported.
@@ -82,6 +84,9 @@ class TemplateVoter extends Voter
 
             case self::UNLOCK_TEMPLATE:
                 return $this->isUnlockGranted($subject, $user);
+
+            case self::MANAGE_PERMISSIONS:
+                return $this->isManagePermissionsGranted($subject, $user);
 
             default:
                 return false;
@@ -151,6 +156,19 @@ class TemplateVoter extends Voter
      * @return bool
      */
     protected function isUnlockGranted(Template $subject, User $user): bool
+    {
+        return $user->isAdmin;
+    }
+
+    /**
+     * Whether permissions of the specified template can be changed.
+     *
+     * @param Template $subject Subject template.
+     * @param User     $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isManagePermissionsGranted(Template $subject, User $user): bool
     {
         return $user->isAdmin;
     }

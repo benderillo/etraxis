@@ -7,6 +7,24 @@ http_error.404.suggestion: 'Check out any misspelling in the URL or <a href="%ur
 http_error.description: 'There was an unknown error that prevented to complete your request.'
 http_error.suggestion: 'Try loading this page again in few minutes or <a href="%url%">go back to the homepage</a>.'
 input.required: 'required field'
+role.any: 'Any user'
+role.author: Author
+role.responsible: Responsible
 security.remember_me: 'Remember me'
+template.permission.add_comments: 'Add comments'
+template.permission.add_dependencies: 'Add dependencies'
+template.permission.add_files: 'Add files'
+template.permission.create_issues: 'Create issues'
+template.permission.delete_files: 'Delete files'
+template.permission.delete_issues: 'Delete issues'
+template.permission.edit_issues: 'Edit issues'
+template.permission.private_comments: 'Add/read private comments'
+template.permission.reassign_issues: 'Reassign issues'
+template.permission.remove_dependencies: 'Remove dependencies'
+template.permission.reopen_issues: 'Reopen issues'
+template.permission.resume_issues: 'Resume issues'
+template.permission.send_reminders: 'Send reminders'
+template.permission.suspend_issues: 'Suspend issues'
+template.permission.view_issues: 'View issues'
 user.email: Email
 user.password: Password

@@ -61,6 +61,7 @@ class TemplateVoterTest extends TransactionalTestCase
         self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $template, [TemplateVoter::DELETE_TEMPLATE]));
         self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $template, [TemplateVoter::LOCK_TEMPLATE]));
         self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $template, [TemplateVoter::UNLOCK_TEMPLATE]));
+        self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $template, [TemplateVoter::MANAGE_PERMISSIONS]));
     }
 
     public function testCreate()
@@ -135,5 +136,19 @@ class TemplateVoterTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(TemplateVoter::UNLOCK_TEMPLATE, $templateA));
         self::assertFalse($this->security->isGranted(TemplateVoter::UNLOCK_TEMPLATE, $templateC));
+    }
+
+    public function testManagePermissions()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
+        $repository = $this->doctrine->getRepository(Template::class);
+
+        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(TemplateVoter::MANAGE_PERMISSIONS, $template));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(TemplateVoter::MANAGE_PERMISSIONS, $template));
     }
 }
