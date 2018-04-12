@@ -123,6 +123,29 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
+    public function testUnknownGroup()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+
+        $this->loginAs('admin@example.com');
+
+        /** @var Template $template */
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+
+        /** @var Group $group */
+        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'DESC']);
+
+        $command = new SetGroupsPermissionCommand([
+            'id'         => $template->id,
+            'permission' => TemplatePermission::DELETE_FILES,
+            'groups'     => [
+                $group->id,
+            ],
+        ]);
+
+        $this->commandbus->handle($command);
+    }
+
     /**
      * @param TemplateGroupPermission[] $permissions
      * @param int                       $groupId

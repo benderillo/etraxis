@@ -21,11 +21,7 @@ use Webinarium\PropertyTrait;
 /**
  * Template permission for system role.
  *
- * @ORM\Table(
- *     name="template_role_permissions",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(columns={"template_id", "role", "permission"})
- *     })
+ * @ORM\Table(name="template_role_permissions")
  * @ORM\Entity
  *
  * @property-read Template $template   Template.
@@ -37,17 +33,9 @@ class TemplateRolePermission
     use PropertyTrait;
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
      * @var Template
      *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Template", inversedBy="rolePermissionsCollection")
      * @ORM\JoinColumn(name="template_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
@@ -56,6 +44,7 @@ class TemplateRolePermission
     /**
      * @var string
      *
+     * @ORM\Id
      * @ORM\Column(name="role", type="string", length=20)
      */
     protected $role;
@@ -63,6 +52,7 @@ class TemplateRolePermission
     /**
      * @var string
      *
+     * @ORM\Id
      * @ORM\Column(name="permission", type="string", length=20)
      */
     protected $permission;
@@ -76,14 +66,16 @@ class TemplateRolePermission
      */
     public function __construct(Template $template, string $role, string $permission)
     {
-        $this->template = $template;
-
-        if (SystemRole::has($role)) {
-            $this->role = $role;
+        if (!SystemRole::has($role)) {
+            throw new \UnexpectedValueException('Unknown system role: ' . $role);
         }
 
-        if (TemplatePermission::has($permission)) {
-            $this->permission = $permission;
+        if (!TemplatePermission::has($permission)) {
+            throw new \UnexpectedValueException('Unknown permission: ' . $permission);
         }
+
+        $this->template   = $template;
+        $this->role       = $role;
+        $this->permission = $permission;
     }
 }

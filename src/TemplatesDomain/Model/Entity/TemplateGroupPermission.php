@@ -21,11 +21,7 @@ use Webinarium\PropertyTrait;
 /**
  * Template permission for group.
  *
- * @ORM\Table(
- *     name="template_group_permissions",
- *     uniqueConstraints={
- *         @ORM\UniqueConstraint(columns={"template_id", "group_id", "permission"})
- *     })
+ * @ORM\Table(name="template_group_permissions")
  * @ORM\Entity
  *
  * @property-read Template $template   Template.
@@ -37,17 +33,9 @@ class TemplateGroupPermission
     use PropertyTrait;
 
     /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
-
-    /**
      * @var Template
      *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Template", inversedBy="groupPermissionsCollection")
      * @ORM\JoinColumn(name="template_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
@@ -56,6 +44,7 @@ class TemplateGroupPermission
     /**
      * @var Group
      *
+     * @ORM\Id
      * @ORM\ManyToOne(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group")
      * @ORM\JoinColumn(name="group_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
@@ -64,6 +53,7 @@ class TemplateGroupPermission
     /**
      * @var string
      *
+     * @ORM\Id
      * @ORM\Column(name="permission", type="string", length=20)
      */
     protected $permission;
@@ -77,14 +67,16 @@ class TemplateGroupPermission
      */
     public function __construct(Template $template, Group $group, string $permission)
     {
-        $this->template = $template;
-
-        if ($group->isGlobal || $group->project === $template->project) {
-            $this->group = $group;
+        if (!$group->isGlobal && $group->project !== $template->project) {
+            throw new \UnexpectedValueException('Unknown group: ' . $group->name);
         }
 
-        if (TemplatePermission::has($permission)) {
-            $this->permission = $permission;
+        if (!TemplatePermission::has($permission)) {
+            throw new \UnexpectedValueException('Unknown permission: ' . $permission);
         }
+
+        $this->template   = $template;
+        $this->group      = $group;
+        $this->permission = $permission;
     }
 }

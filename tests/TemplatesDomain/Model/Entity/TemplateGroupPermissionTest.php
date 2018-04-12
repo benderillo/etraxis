@@ -39,8 +39,11 @@ class TemplateGroupPermissionTest extends TestCase
         self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
     }
 
-    public function testConstructorFailed()
+    public function testConstructorExceptionGroup()
     {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown group: foo');
+
         $project1 = new Project();
         $this->setProperty($project1, 'id', 1);
 
@@ -52,10 +55,25 @@ class TemplateGroupPermissionTest extends TestCase
 
         $group = new Group($project2);
         $this->setProperty($group, 'id', 4);
+        $group->name = 'foo';
 
-        $permission = new TemplateGroupPermission($template, $group, TemplatePermission::EDIT_ISSUES);
-        self::assertSame($template, $this->getProperty($permission, 'template'));
-        self::assertNull($this->getProperty($permission, 'group'));
-        self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
+        new TemplateGroupPermission($template, $group, TemplatePermission::EDIT_ISSUES);
+    }
+
+    public function testConstructorExceptionPermission()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown permission: bar');
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $group = new Group($project);
+        $this->setProperty($group, 'id', 3);
+
+        new TemplateGroupPermission($template, $group, 'bar');
     }
 }

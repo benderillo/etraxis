@@ -36,17 +36,31 @@ class TemplateRolePermissionTest extends TestCase
         self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
     }
 
-    public function testConstructorFailed()
+    public function testConstructorExceptionRole()
     {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown system role: foo');
+
         $project = new Project();
         $this->setProperty($project, 'id', 1);
 
         $template = new Template($project);
         $this->setProperty($template, 'id', 2);
 
-        $permission = new TemplateRolePermission($template, 'unknown', TemplatePermission::EDIT_ISSUES);
-        self::assertSame($template, $this->getProperty($permission, 'template'));
-        self::assertNull($this->getProperty($permission, 'role'));
-        self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
+        new TemplateRolePermission($template, 'foo', TemplatePermission::EDIT_ISSUES);
+    }
+
+    public function testConstructorExceptionPermission()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown permission: bar');
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        new TemplateRolePermission($template, SystemRole::AUTHOR, 'bar');
     }
 }
