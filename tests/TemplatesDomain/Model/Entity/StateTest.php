@@ -120,4 +120,30 @@ class StateTest extends TestCase
 
         $state->nextState = $nextState;
     }
+
+    public function testRolePermissions()
+    {
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        self::assertSame([], $state->roleTransitions);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $transitions */
+        $transitions = $this->getProperty($state, 'roleTransitionsCollection');
+        $transitions->add('Role transition A');
+        $transitions->add('Role transition B');
+
+        self::assertSame(['Role transition A', 'Role transition B'], $state->roleTransitions);
+    }
+
+    public function testGroupPermissions()
+    {
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        self::assertSame([], $state->groupTransitions);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $transitions */
+        $transitions = $this->getProperty($state, 'groupTransitionsCollection');
+        $transitions->add('Group transition A');
+        $transitions->add('Group transition B');
+
+        self::assertSame(['Group transition A', 'Group transition B'], $state->groupTransitions);
+    }
 }

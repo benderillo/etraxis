@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
@@ -30,12 +31,14 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\TemplatesDomain\Model\Repository\StateRepository")
  * @Assert\UniqueEntity(fields={"template", "name"}, message="state.conflict.name")
  *
- * @property-read int      $id          Unique ID.
- * @property-read Template $template    Template of the state.
- * @property      string   $name        Name of the state.
- * @property-read string   $type        Type of the state (see the "StateType" dictionary).
- * @property      string   $responsible Type of responsibility management (see the "StateResponsible" dictionary).
- * @property      State    $nextState   Next state by default (optional).
+ * @property-read int                    $id               Unique ID.
+ * @property-read Template               $template         Template of the state.
+ * @property      string                 $name             Name of the state.
+ * @property-read string                 $type             Type of the state (see the "StateType" dictionary).
+ * @property      string                 $responsible      Type of responsibility management (see the "StateResponsible" dictionary).
+ * @property      State                  $nextState        Next state by default (optional).
+ * @property-read StateRoleTransition[]  $roleTransitions  List of state role transitions.
+ * @property-read StateGroupTransition[] $groupTransitions List of state group transitions.
  */
 class State
 {
@@ -91,6 +94,20 @@ class State
     protected $nextState;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="StateRoleTransition", mappedBy="fromState")
+     */
+    protected $roleTransitionsCollection;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="StateGroupTransition", mappedBy="fromState")
+     */
+    protected $groupTransitionsCollection;
+
+    /**
      * Creates new state in the specified template.
      *
      * @param Template $template
@@ -104,6 +121,9 @@ class State
 
         $this->template = $template;
         $this->type     = $type;
+
+        $this->roleTransitionsCollection  = new ArrayCollection();
+        $this->groupTransitionsCollection = new ArrayCollection();
     }
 
     /**
@@ -119,6 +139,14 @@ class State
 
             'nextState' => function (): ?State {
                 return $this->type === StateType::FINAL ? null : $this->nextState;
+            },
+
+            'roleTransitions' => function (): array {
+                return $this->roleTransitionsCollection->getValues();
+            },
+
+            'groupTransitions' => function (): array {
+                return $this->groupTransitionsCollection->getValues();
             },
         ];
     }

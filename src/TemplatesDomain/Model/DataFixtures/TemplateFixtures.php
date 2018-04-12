@@ -62,7 +62,7 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
             $support->description = 'Support ' . mb_strtoupper($ref);
             $support->criticalAge = 3;
             $support->frozenTime  = 7;
-            $support->isLocked    = false;
+            $support->isLocked    = $ref === 'a';
 
             $this->addReference('task:' . $ref, $development);
             $this->addReference('issue:' . $ref, $support);

@@ -60,6 +60,7 @@ class StateVoterTest extends TransactionalTestCase
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::UPDATE_STATE]));
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::DELETE_STATE]));
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::SET_INITIAL]));
+        self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::MANAGE_TRANSITIONS]));
     }
 
     public function testCreate()
@@ -124,5 +125,31 @@ class StateVoterTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(StateVoter::SET_INITIAL, $stateA));
         self::assertFalse($this->security->isGranted(StateVoter::SET_INITIAL, $stateC));
+    }
+
+    public function testManageTransitions()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
+        $repository = $this->doctrine->getRepository(State::class);
+
+        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
+
+        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
     }
 }

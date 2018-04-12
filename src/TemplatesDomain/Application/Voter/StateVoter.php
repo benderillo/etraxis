@@ -15,6 +15,7 @@ namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
+use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -27,16 +28,18 @@ class StateVoter extends Voter
 {
     use VoterTrait;
 
-    public const CREATE_STATE = 'state.create';
-    public const UPDATE_STATE = 'state.update';
-    public const DELETE_STATE = 'state.delete';
-    public const SET_INITIAL  = 'state.set_initial';
+    public const CREATE_STATE       = 'state.create';
+    public const UPDATE_STATE       = 'state.update';
+    public const DELETE_STATE       = 'state.delete';
+    public const SET_INITIAL        = 'state.set_initial';
+    public const MANAGE_TRANSITIONS = 'state.transitions';
 
     protected $attributes = [
-        self::CREATE_STATE => Template::class,
-        self::UPDATE_STATE => State::class,
-        self::DELETE_STATE => State::class,
-        self::SET_INITIAL  => State::class,
+        self::CREATE_STATE       => Template::class,
+        self::UPDATE_STATE       => State::class,
+        self::DELETE_STATE       => State::class,
+        self::SET_INITIAL        => State::class,
+        self::MANAGE_TRANSITIONS => State::class,
     ];
 
     /**
@@ -66,6 +69,9 @@ class StateVoter extends Voter
 
             case self::SET_INITIAL:
                 return $this->isSetInitialGranted($subject, $user);
+
+            case self::MANAGE_TRANSITIONS:
+                return $this->isManageTransitionsGranted($subject, $user);
 
             default:
                 return false;
@@ -124,5 +130,18 @@ class StateVoter extends Voter
     protected function isSetInitialGranted(State $subject, User $user): bool
     {
         return $user->isAdmin && $subject->template->isLocked;
+    }
+
+    /**
+     * Whether transitions of the specified state can be changed.
+     *
+     * @param State $subject Subject state.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isManageTransitionsGranted(State $subject, User $user): bool
+    {
+        return $user->isAdmin && $subject->template->isLocked && $subject->type !== StateType::FINAL;
     }
 }
