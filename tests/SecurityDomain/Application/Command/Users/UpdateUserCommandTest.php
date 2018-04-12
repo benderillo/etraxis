@@ -21,15 +21,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateUserCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         self::assertSame('Nikko Hills', $user->fullname);
         self::assertNotEmpty($user->description);
@@ -40,7 +47,7 @@ class UpdateUserCommandTest extends TransactionalTestCase
         self::assertSame('UTC', $user->timezone);
 
         $command = new UpdateUserCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'email'    => 'chaim.willms@example.com',
             'fullname' => 'Chaim Willms',
             'admin'    => true,
@@ -70,14 +77,11 @@ class UpdateUserCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         $command = new UpdateUserCommand([
-            'id'          => $user->id,
+            'user'        => $user->id,
             'email'       => $user->email,
             'fullname'    => $user->fullname,
             'description' => $user->description,
@@ -98,7 +102,7 @@ class UpdateUserCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UpdateUserCommand([
-            'id'       => self::UNKNOWN_ENTITY_ID,
+            'user'     => self::UNKNOWN_ENTITY_ID,
             'email'    => 'chaim.willms@example.com',
             'fullname' => 'Chaim Willms',
             'admin'    => true,
@@ -118,14 +122,11 @@ class UpdateUserCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         $command = new UpdateUserCommand([
-            'id'          => $user->id,
+            'user'        => $user->id,
             'email'       => 'vparker@example.com',
             'fullname'    => $user->fullname,
             'description' => $user->description,

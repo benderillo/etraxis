@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Deletes specified group.
  *
- * @property int $id Group ID.
+ * @property int $group Group ID.
  */
 class DeleteGroupCommand
 {
@@ -29,5 +29,5 @@ class DeleteGroupCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $group;
 }

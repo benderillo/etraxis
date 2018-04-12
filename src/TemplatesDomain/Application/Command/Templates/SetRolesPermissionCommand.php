@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Sets specified roles permission for the template.
  *
- * @property int      $id         Template ID.
+ * @property int      $template   Template ID.
  * @property string   $permission Template permission.
  * @property string[] $roles      Granted system roles.
  */
@@ -31,7 +31,7 @@ class SetRolesPermissionCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $template;
 
     /**
      * @Assert\NotBlank,

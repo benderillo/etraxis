@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Deletes specified template.
  *
- * @property int $id Template ID.
+ * @property int $template Template ID.
  */
 class DeleteTemplateCommand
 {
@@ -29,5 +29,5 @@ class DeleteTemplateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $template;
 }

@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Sets specified state as initial in its template.
  *
- * @property int $id State ID.
+ * @property int $state State ID.
  */
 class SetInitialStateCommand
 {
@@ -29,5 +29,5 @@ class SetInitialStateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $state;
 }

@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Unlocks specified account.
  *
- * @property int $id User ID.
+ * @property int $user User ID.
  */
 class UnlockUserCommand
 {
@@ -29,5 +29,5 @@ class UnlockUserCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $user;
 }

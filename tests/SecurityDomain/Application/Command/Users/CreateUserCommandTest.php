@@ -23,15 +23,22 @@ use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class CreateUserCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('anna@example.com');
+        $user = $this->repository->findOneByUsername('anna@example.com');
         self::assertNull($user);
 
         $command = new CreateUserCommand([
@@ -49,7 +56,7 @@ class CreateUserCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var User $user */
-        $user = $repository->findOneByUsername('anna@example.com');
+        $user = $this->repository->findOneByUsername('anna@example.com');
         self::assertInstanceOf(User::class, $user);
         self::assertSame($result, $user);
 

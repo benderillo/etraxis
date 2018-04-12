@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Sets password for specified account.
  *
- * @property int    $id       User ID.
+ * @property int    $user     User ID.
  * @property string $password New password.
  */
 class SetPasswordCommand
@@ -30,7 +30,7 @@ class SetPasswordCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $user;
 
     /**
      * @Assert\NotBlank

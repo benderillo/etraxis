@@ -49,7 +49,7 @@ class DeleteStateHandler
     public function handle(DeleteStateCommand $command): void
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
-        $state = $this->repository->find($command->id);
+        $state = $this->repository->find($command->state);
 
         if ($state) {
 

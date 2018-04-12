@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Suspends specified project.
  *
- * @property int $id Project ID.
+ * @property int $project Project ID.
  */
 class SuspendProjectCommand
 {
@@ -29,5 +29,5 @@ class SuspendProjectCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $project;
 }

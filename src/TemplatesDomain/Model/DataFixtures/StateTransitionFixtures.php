@@ -79,7 +79,7 @@ class StateTransitionFixtures extends Fixture implements DependentFixtureInterfa
 
         foreach (['a', 'b', 'c'] as $pref) {
 
-            foreach ($data as $tref => $groups) {
+            foreach ($data as $groups) {
 
                 foreach ($groups as $gref => $transitions) {
 

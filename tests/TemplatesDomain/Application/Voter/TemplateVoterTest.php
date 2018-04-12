@@ -23,19 +23,20 @@ class TemplateVoterTest extends TransactionalTestCase
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->security = $this->client->getContainer()->get('security.authorization_checker');
+        $this->security   = $this->client->getContainer()->get('security.authorization_checker');
+        $this->repository = $this->doctrine->getRepository(Template::class);
     }
 
     public function testUnsupportedAttribute()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $template));
@@ -46,15 +47,9 @@ class TemplateVoterTest extends TransactionalTestCase
         $voter = new TemplateVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
+        $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
-
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $project, [TemplateVoter::CREATE_TEMPLATE]));
         self::assertSame(TemplateVoter::ACCESS_DENIED, $voter->vote($token, $template, [TemplateVoter::UPDATE_TEMPLATE]));
@@ -66,10 +61,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testCreate()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::CREATE_TEMPLATE, $project));
@@ -80,10 +72,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testUpdate()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::UPDATE_TEMPLATE, $template));
@@ -94,10 +83,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $template));
@@ -108,10 +94,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testLock()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$templateA, /* skipping */, $templateC] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$templateA, /* skipping */, $templateC] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::LOCK_TEMPLATE, $templateA));
@@ -124,10 +107,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testUnlock()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$templateA, /* skipping */, $templateC] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$templateA, /* skipping */, $templateC] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::UNLOCK_TEMPLATE, $templateA));
@@ -140,10 +120,7 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testManagePermissions()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(TemplateVoter::MANAGE_PERMISSIONS, $template));

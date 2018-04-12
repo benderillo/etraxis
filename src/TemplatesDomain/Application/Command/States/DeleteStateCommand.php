@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Deletes specified state.
  *
- * @property int $id State ID.
+ * @property int $state State ID.
  */
 class DeleteStateCommand
 {
@@ -29,5 +29,5 @@ class DeleteStateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $state;
 }

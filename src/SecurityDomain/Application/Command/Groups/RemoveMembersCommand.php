@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Removes specified users to the group.
  *
- * @property int   $id    Group ID.
+ * @property int   $group Group ID.
  * @property int[] $users User IDs.
  */
 class RemoveMembersCommand
@@ -30,7 +30,7 @@ class RemoveMembersCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $group;
 
     /**
      * @Assert\NotBlank

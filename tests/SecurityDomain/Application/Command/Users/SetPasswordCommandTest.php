@@ -22,6 +22,16 @@ use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class SetPasswordCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccessAsAdmin()
     {
         $this->loginAs('admin@example.com');
@@ -29,16 +39,13 @@ class SetPasswordCommandTest extends TransactionalTestCase
         /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
         $encoder = $this->client->getContainer()->get('security.password_encoder');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         self::assertTrue($encoder->isPasswordValid($user, 'secret'));
 
         $command = new SetPasswordCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'password' => 'newone',
         ]);
 
@@ -57,16 +64,13 @@ class SetPasswordCommandTest extends TransactionalTestCase
         /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
         $encoder = $this->client->getContainer()->get('security.password_encoder');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         self::assertTrue($encoder->isPasswordValid($user, 'secret'));
 
         $command = new SetPasswordCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'password' => 'newone',
         ]);
 
@@ -84,14 +88,11 @@ class SetPasswordCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('admin@example.com');
+        $user = $this->repository->findOneByUsername('admin@example.com');
 
         $command = new SetPasswordCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'password' => 'secret',
         ]);
 
@@ -105,7 +106,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new SetPasswordCommand([
-            'id'       => self::UNKNOWN_ENTITY_ID,
+            'user'     => self::UNKNOWN_ENTITY_ID,
             'password' => 'secret',
         ]);
 
@@ -118,14 +119,11 @@ class SetPasswordCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('einstein@ldap.forumsys.com');
+        $user = $this->repository->findOneByUsername('einstein@ldap.forumsys.com');
 
         $command = new SetPasswordCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'password' => 'secret',
         ]);
 
@@ -139,14 +137,11 @@ class SetPasswordCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         $command = new SetPasswordCommand([
-            'id'       => $user->id,
+            'user'     => $user->id,
             'password' => str_repeat('*', BCryptPasswordEncoder::MAX_PASSWORD_LENGTH + 1),
         ]);
 

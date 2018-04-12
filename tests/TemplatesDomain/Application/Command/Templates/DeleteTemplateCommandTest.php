@@ -19,26 +19,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeleteTemplateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
         self::assertNotNull($template);
 
         $command = new DeleteTemplateCommand([
-            'id' => $template->id,
+            'template' => $template->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $template = $repository->find($command->id);
+        $template = $this->repository->find($command->template);
         self::assertNull($template);
     }
 
@@ -47,7 +54,7 @@ class DeleteTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DeleteTemplateCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'template' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -61,14 +68,11 @@ class DeleteTemplateCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new DeleteTemplateCommand([
-            'id' => $template->id,
+            'template' => $template->id,
         ]);
 
         $this->commandbus->handle($command);

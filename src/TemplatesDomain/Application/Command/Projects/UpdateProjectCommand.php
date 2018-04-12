@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified project.
  *
- * @property int    $id          Project ID.
+ * @property int    $project     Project ID.
  * @property string $name        New name.
  * @property string $description New description.
  * @property bool   $suspended   New status.
@@ -32,7 +32,7 @@ class UpdateProjectCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $project;
 
     /**
      * @Assert\NotBlank

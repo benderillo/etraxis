@@ -21,6 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AddGroupsCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -46,11 +56,8 @@ class AddGroupsCommandTest extends TransactionalTestCase
         $devB = $groupRepository->findOneBy(['description' => 'Developers B']);
         $devC = $groupRepository->findOneBy(['description' => 'Developers C']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('labshire@example.com');
+        $user = $this->repository->findOneByUsername('labshire@example.com');
 
         $groups = array_map(function (Group $group) {
             return $group->description ?? $group->name;
@@ -60,7 +67,7 @@ class AddGroupsCommandTest extends TransactionalTestCase
         self::assertSame($before, $groups);
 
         $command = new AddGroupsCommand([
-            'id'     => $user->id,
+            'user'   => $user->id,
             'groups' => [
                 $devB->id,
                 $devC->id,
@@ -88,14 +95,11 @@ class AddGroupsCommandTest extends TransactionalTestCase
         /** @var Group $devC */
         $devC = $this->doctrine->getRepository(Group::class)->findOneBy(['description' => 'Developers C']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('labshire@example.com');
+        $user = $this->repository->findOneByUsername('labshire@example.com');
 
         $command = new AddGroupsCommand([
-            'id'     => $user->id,
+            'user'   => $user->id,
             'groups' => [
                 $devC->id,
             ],
@@ -114,7 +118,7 @@ class AddGroupsCommandTest extends TransactionalTestCase
         $devC = $this->doctrine->getRepository(Group::class)->findOneBy(['description' => 'Developers C']);
 
         $command = new AddGroupsCommand([
-            'id'     => self::UNKNOWN_ENTITY_ID,
+            'user'   => self::UNKNOWN_ENTITY_ID,
             'groups' => [
                 $devC->id,
             ],

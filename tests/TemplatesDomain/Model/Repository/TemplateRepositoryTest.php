@@ -18,10 +18,18 @@ use eTraxis\Tests\WebTestCase;
 
 class TemplateRepositoryTest extends WebTestCase
 {
+    /** @var TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testRepository()
     {
-        $repository = $this->doctrine->getRepository(Template::class);
-
-        self::assertInstanceOf(TemplateRepository::class, $repository);
+        self::assertInstanceOf(TemplateRepository::class, $this->repository);
     }
 }

@@ -22,19 +22,20 @@ class GroupVoterTest extends TransactionalTestCase
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->security = $this->client->getContainer()->get('security.authorization_checker');
+        $this->security   = $this->client->getContainer()->get('security.authorization_checker');
+        $this->repository = $this->doctrine->getRepository(Group::class);
     }
 
     public function testUnsupportedAttribute()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $group));
@@ -45,10 +46,7 @@ class GroupVoterTest extends TransactionalTestCase
         $voter = new GroupVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, null, [GroupVoter::CREATE_GROUP]));
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, $group, [GroupVoter::UPDATE_GROUP]));
@@ -67,10 +65,7 @@ class GroupVoterTest extends TransactionalTestCase
 
     public function testUpdate()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(GroupVoter::UPDATE_GROUP, $group));
@@ -81,10 +76,7 @@ class GroupVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(GroupVoter::DELETE_GROUP, $group));
@@ -95,10 +87,7 @@ class GroupVoterTest extends TransactionalTestCase
 
     public function testManageMembership()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(GroupVoter::MANAGE_MEMBERSHIP, $group));

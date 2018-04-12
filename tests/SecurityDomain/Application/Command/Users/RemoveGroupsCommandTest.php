@@ -21,6 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RemoveGroupsCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -44,11 +54,8 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
         $devA = $groupRepository->findOneBy(['description' => 'Developers A']);
         $devC = $groupRepository->findOneBy(['description' => 'Developers C']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('labshire@example.com');
+        $user = $this->repository->findOneByUsername('labshire@example.com');
 
         $groups = array_map(function (Group $group) {
             return $group->description ?? $group->name;
@@ -58,7 +65,7 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
         self::assertSame($before, $groups);
 
         $command = new RemoveGroupsCommand([
-            'id'     => $user->id,
+            'user'   => $user->id,
             'groups' => [
                 $devA->id,
                 $devC->id,
@@ -86,14 +93,11 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
         /** @var Group $devA */
         $devA = $this->doctrine->getRepository(Group::class)->findOneBy(['description' => 'Developers A']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('labshire@example.com');
+        $user = $this->repository->findOneByUsername('labshire@example.com');
 
         $command = new RemoveGroupsCommand([
-            'id'     => $user->id,
+            'user'   => $user->id,
             'groups' => [
                 $devA->id,
             ],
@@ -112,7 +116,7 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
         $devA = $this->doctrine->getRepository(Group::class)->findOneBy(['description' => 'Developers A']);
 
         $command = new RemoveGroupsCommand([
-            'id'     => self::UNKNOWN_ENTITY_ID,
+            'user'   => self::UNKNOWN_ENTITY_ID,
             'groups' => [
                 $devA->id,
             ],

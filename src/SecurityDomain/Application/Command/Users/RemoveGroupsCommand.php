@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Removes account from specified groups.
  *
- * @property int   $id     User ID.
+ * @property int   $user   User ID.
  * @property int[] $groups Group IDs.
  */
 class RemoveGroupsCommand
@@ -30,7 +30,7 @@ class RemoveGroupsCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $user;
 
     /**
      * @Assert\NotBlank

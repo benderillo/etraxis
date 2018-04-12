@@ -18,20 +18,25 @@ use eTraxis\Tests\WebTestCase;
 
 class UserRepositoryTest extends WebTestCase
 {
+    /** @var UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testRepository()
     {
-        $repository = $this->doctrine->getRepository(User::class);
-
-        self::assertInstanceOf(UserRepository::class, $repository);
+        self::assertInstanceOf(UserRepository::class, $this->repository);
     }
 
     public function testFindOneByUsernameSuccess()
     {
-        /** @var UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('admin@example.com');
+        $user = $this->repository->findOneByUsername('admin@example.com');
 
         self::assertInstanceOf(User::class, $user);
         self::assertSame('eTraxis Admin', $user->fullname);
@@ -39,11 +44,8 @@ class UserRepositoryTest extends WebTestCase
 
     public function testFindOneByUsernameUnknown()
     {
-        /** @var UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('404@example.com');
+        $user = $this->repository->findOneByUsername('404@example.com');
 
         self::assertNull($user);
     }

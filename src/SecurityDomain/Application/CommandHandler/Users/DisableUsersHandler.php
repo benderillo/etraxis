@@ -54,7 +54,7 @@ class DisableUsersHandler
      */
     public function handle(DisableUsersCommand $command): void
     {
-        $ids = array_unique($command->ids);
+        $ids = array_unique($command->users);
 
         /** @var \eTraxis\SecurityDomain\Model\Entity\User[] $accounts */
         $accounts = $this->repository->findBy([

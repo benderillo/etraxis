@@ -21,18 +21,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateTemplateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new UpdateTemplateCommand([
-            'id'          => $template->id,
+            'template'    => $template->id,
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
@@ -43,7 +50,7 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Template $template */
-        $template = $repository->find($template->id);
+        $template = $this->repository->find($template->id);
 
         self::assertSame('Bugfix', $template->name);
         self::assertSame('bug', $template->prefix);
@@ -58,14 +65,11 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new UpdateTemplateCommand([
-            'id'          => $template->id,
+            'template'    => $template->id,
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
@@ -83,7 +87,7 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UpdateTemplateCommand([
-            'id'          => self::UNKNOWN_ENTITY_ID,
+            'template'    => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
@@ -101,14 +105,11 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new UpdateTemplateCommand([
-            'id'          => $template->id,
+            'template'    => $template->id,
             'name'        => 'Support',
             'prefix'      => 'bug',
             'description' => 'Error reports',
@@ -126,14 +127,11 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new UpdateTemplateCommand([
-            'id'          => $template->id,
+            'template'    => $template->id,
             'name'        => 'Bugfix',
             'prefix'      => 'issue',
             'description' => 'Error reports',

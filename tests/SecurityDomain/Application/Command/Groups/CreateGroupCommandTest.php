@@ -22,6 +22,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreateGroupCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testLocalSuccess()
     {
         $this->loginAs('admin@example.com');
@@ -29,11 +39,8 @@ class CreateGroupCommandTest extends TransactionalTestCase
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Testers']);
+        $group = $this->repository->findOneBy(['name' => 'Testers']);
         self::assertNull($group);
 
         $command = new CreateGroupCommand([
@@ -45,7 +52,7 @@ class CreateGroupCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Testers']);
+        $group = $this->repository->findOneBy(['name' => 'Testers']);
         self::assertInstanceOf(Group::class, $group);
         self::assertSame($result, $group);
 
@@ -58,11 +65,8 @@ class CreateGroupCommandTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Testers']);
+        $group = $this->repository->findOneBy(['name' => 'Testers']);
         self::assertNull($group);
 
         $command = new CreateGroupCommand([
@@ -73,7 +77,7 @@ class CreateGroupCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Testers']);
+        $group = $this->repository->findOneBy(['name' => 'Testers']);
         self::assertInstanceOf(Group::class, $group);
         self::assertSame($result, $group);
 

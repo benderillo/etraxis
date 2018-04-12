@@ -49,7 +49,7 @@ class DeleteProjectHandler
     public function handle(DeleteProjectCommand $command)
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Project $project */
-        $project = $this->repository->find($command->id);
+        $project = $this->repository->find($command->project);
 
         if ($project) {
 

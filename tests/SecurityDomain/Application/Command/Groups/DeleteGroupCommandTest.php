@@ -19,26 +19,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeleteGroupCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
         self::assertNotNull($group);
 
         $command = new DeleteGroupCommand([
-            'id' => $group->id,
+            'group' => $group->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $group = $repository->find($command->id);
+        $group = $this->repository->find($command->group);
         self::assertNull($group);
     }
 
@@ -47,7 +54,7 @@ class DeleteGroupCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DeleteGroupCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'group' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -61,14 +68,11 @@ class DeleteGroupCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new DeleteGroupCommand([
-            'id' => $group->id,
+            'group' => $group->id,
         ]);
 
         $this->commandbus->handle($command);

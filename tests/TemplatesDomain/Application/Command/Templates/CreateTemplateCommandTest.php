@@ -22,6 +22,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreateTemplateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
@@ -29,11 +39,8 @@ class CreateTemplateCommandTest extends TransactionalTestCase
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        $template = $repository->findOneBy(['name' => 'Bugfix']);
+        $template = $this->repository->findOneBy(['name' => 'Bugfix']);
         self::assertNull($template);
 
         $command = new CreateTemplateCommand([
@@ -48,7 +55,7 @@ class CreateTemplateCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var Template $template */
-        $template = $repository->findOneBy(['name' => 'Bugfix']);
+        $template = $this->repository->findOneBy(['name' => 'Bugfix']);
         self::assertInstanceOf(Template::class, $template);
         self::assertSame($result, $template);
 

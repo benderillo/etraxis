@@ -23,6 +23,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SetGroupsPermissionCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -46,7 +56,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
@@ -54,7 +64,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         self::assertSame($before, $this->permissionsToArray($template->groupPermissions, $group->id));
 
         $command = new SetGroupsPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::DELETE_FILES,
             'groups'     => [
                 $group->id,
@@ -67,7 +77,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         [$group2] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['id' => 'ASC']);
 
         $command = new SetGroupsPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::PRIVATE_COMMENTS,
             'groups'     => [
                 $group2->id,
@@ -87,13 +97,13 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new SetGroupsPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::DELETE_FILES,
             'groups'     => [
                 $group->id,
@@ -113,7 +123,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new SetGroupsPermissionCommand([
-            'id'         => self::UNKNOWN_ENTITY_ID,
+            'template'   => self::UNKNOWN_ENTITY_ID,
             'permission' => TemplatePermission::DELETE_FILES,
             'groups'     => [
                 $group->id,
@@ -130,13 +140,13 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'DESC']);
 
         $command = new SetGroupsPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::DELETE_FILES,
             'groups'     => [
                 $group->id,

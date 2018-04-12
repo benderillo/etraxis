@@ -20,20 +20,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResumeProjectCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Project::class);
+    }
+
     public function testResumeProject()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         self::assertTrue($project->isSuspended);
 
         $command = new ResumeProjectCommand([
-            'id' => $project->id,
+            'project' => $project->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -46,16 +53,13 @@ class ResumeProjectCommandTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Molestiae']);
+        $project = $this->repository->findOneBy(['name' => 'Molestiae']);
 
         self::assertFalse($project->isSuspended);
 
         $command = new ResumeProjectCommand([
-            'id' => $project->id,
+            'project' => $project->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -70,14 +74,11 @@ class ResumeProjectCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $command = new ResumeProjectCommand([
-            'id' => $project->id,
+            'project' => $project->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -90,7 +91,7 @@ class ResumeProjectCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new ResumeProjectCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'project' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);

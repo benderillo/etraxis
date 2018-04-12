@@ -62,7 +62,7 @@ class SetInitialStateHandler
     public function handle(SetInitialStateCommand $command): void
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
-        $state = $this->repository->find($command->id);
+        $state = $this->repository->find($command->state);
 
         if (!$state) {
             throw new NotFoundHttpException('Unknown state.');

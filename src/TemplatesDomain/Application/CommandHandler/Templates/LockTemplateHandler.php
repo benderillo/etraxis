@@ -51,7 +51,7 @@ class LockTemplateHandler
     public function handle(LockTemplateCommand $command): void
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Template $template */
-        $template = $this->repository->find($command->id);
+        $template = $this->repository->find($command->template);
 
         if (!$template) {
             throw new NotFoundHttpException();

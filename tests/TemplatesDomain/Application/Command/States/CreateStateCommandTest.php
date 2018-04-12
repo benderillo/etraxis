@@ -24,6 +24,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CreateStateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(State::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
@@ -31,14 +41,11 @@ class CreateStateCommandTest extends TransactionalTestCase
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
         /** @var State $nextState */
-        [$nextState] = $repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         /** @var State $state */
-        $state = $repository->findOneBy(['name' => 'Started']);
+        $state = $this->repository->findOneBy(['name' => 'Started']);
         self::assertNull($state);
 
         $command = new CreateStateCommand([
@@ -52,7 +59,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var State $state */
-        $state = $repository->findOneBy(['name' => 'Started']);
+        $state = $this->repository->findOneBy(['name' => 'Started']);
         self::assertInstanceOf(State::class, $state);
         self::assertSame($result, $state);
 
@@ -70,15 +77,12 @@ class CreateStateCommandTest extends TransactionalTestCase
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
         /** @var State $initial */
-        [$initial] = $repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [$initial] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
         self::assertSame(StateType::INITIAL, $initial->type);
 
         /** @var State $state */
-        $state = $repository->findOneBy(['name' => 'Created']);
+        $state = $this->repository->findOneBy(['name' => 'Created']);
         self::assertNull($state);
 
         $command = new CreateStateCommand([
@@ -91,7 +95,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $result = $this->commandbus->handle($command);
 
         /** @var State $state */
-        $state = $repository->findOneBy(['name' => 'Created']);
+        $state = $this->repository->findOneBy(['name' => 'Created']);
         self::assertInstanceOf(State::class, $state);
         self::assertSame($result, $state);
 
@@ -154,7 +158,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var State $nextState */
-        [$nextState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Completed'], ['id' => 'DESC']);
+        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'DESC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,

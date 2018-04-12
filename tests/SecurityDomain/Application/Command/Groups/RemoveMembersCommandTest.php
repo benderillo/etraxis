@@ -21,6 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RemoveMembersCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -46,11 +56,8 @@ class RemoveMembersCommandTest extends TransactionalTestCase
         $fdooley = $userRepository->findOneByUsername('fdooley@example.com');
         $nhills  = $userRepository->findOneByUsername('nhills@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $members = array_map(function (User $user) {
             return $user->email;
@@ -60,7 +67,7 @@ class RemoveMembersCommandTest extends TransactionalTestCase
         self::assertSame($before, $members);
 
         $command = new RemoveMembersCommand([
-            'id'    => $group->id,
+            'group' => $group->id,
             'users' => [
                 $fdooley->id,
                 $nhills->id,
@@ -70,7 +77,7 @@ class RemoveMembersCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->find($group->id);
+        $group = $this->repository->find($group->id);
 
         $members = array_map(function (User $user) {
             return $user->email;
@@ -89,14 +96,11 @@ class RemoveMembersCommandTest extends TransactionalTestCase
         /** @var User $fdooley */
         $fdooley = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new RemoveMembersCommand([
-            'id'    => $group->id,
+            'group' => $group->id,
             'users' => [
                 $fdooley->id,
             ],
@@ -115,7 +119,7 @@ class RemoveMembersCommandTest extends TransactionalTestCase
         $fdooley = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
 
         $command = new RemoveMembersCommand([
-            'id'    => self::UNKNOWN_ENTITY_ID,
+            'group' => self::UNKNOWN_ENTITY_ID,
             'users' => [
                 $fdooley->id,
             ],

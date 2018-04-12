@@ -19,26 +19,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeleteUserCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
         self::assertNotNull($user);
 
         $command = new DeleteUserCommand([
-            'id' => $user->id,
+            'user' => $user->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
         self::assertNull($user);
     }
 
@@ -47,7 +54,7 @@ class DeleteUserCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DeleteUserCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'user' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -61,14 +68,11 @@ class DeleteUserCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         $command = new DeleteUserCommand([
-            'id' => $user->id,
+            'user' => $user->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -80,14 +84,11 @@ class DeleteUserCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('admin@example.com');
+        $user = $this->repository->findOneByUsername('admin@example.com');
 
         $command = new DeleteUserCommand([
-            'id' => $user->id,
+            'user' => $user->id,
         ]);
 
         $this->commandbus->handle($command);

@@ -22,17 +22,23 @@ use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 class ResetPasswordCommandTest extends TransactionalTestCase
 {
-    /** @throws \Exception */
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
         $encoder = $this->client->getContainer()->get('security.password_encoder');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         $token = $user->generateResetToken(new \DateInterval('PT1M'));
 
@@ -68,16 +74,12 @@ class ResetPasswordCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
-    /** @throws \Exception */
     public function testExpiredToken()
     {
         $this->expectException(NotFoundHttpException::class);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         $token = $user->generateResetToken(new \DateInterval('PT0M'));
 
@@ -94,17 +96,13 @@ class ResetPasswordCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
-    /** @throws \Exception */
     public function testInvalidPassword()
     {
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('Invalid password.');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         $token = $user->generateResetToken(new \DateInterval('PT1M'));
 

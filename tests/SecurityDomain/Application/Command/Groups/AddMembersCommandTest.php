@@ -21,6 +21,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AddMembersCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -48,11 +58,8 @@ class AddMembersCommandTest extends TransactionalTestCase
         $fdooley = $userRepository->findOneByUsername('fdooley@example.com');
         $nhills  = $userRepository->findOneByUsername('nhills@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $members = array_map(function (User $user) {
             return $user->email;
@@ -62,7 +69,7 @@ class AddMembersCommandTest extends TransactionalTestCase
         self::assertSame($before, $members);
 
         $command = new AddMembersCommand([
-            'id'    => $group->id,
+            'group' => $group->id,
             'users' => [
                 $fdooley->id,
                 $nhills->id,
@@ -72,7 +79,7 @@ class AddMembersCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->find($group->id);
+        $group = $this->repository->find($group->id);
 
         $members = array_map(function (User $user) {
             return $user->email;
@@ -91,14 +98,11 @@ class AddMembersCommandTest extends TransactionalTestCase
         /** @var User $nhills */
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new AddMembersCommand([
-            'id'    => $group->id,
+            'group' => $group->id,
             'users' => [
                 $nhills->id,
             ],
@@ -117,7 +121,7 @@ class AddMembersCommandTest extends TransactionalTestCase
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
         $command = new AddMembersCommand([
-            'id'    => self::UNKNOWN_ENTITY_ID,
+            'group' => self::UNKNOWN_ENTITY_ID,
             'users' => [
                 $nhills->id,
             ],

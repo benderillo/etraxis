@@ -226,12 +226,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ],
         ];
 
+        $password = $this->encoder->encodePassword(new User(), 'secret');
+
         foreach ($data as $email => $row) {
 
             $user = new User();
 
             $user->email       = $email;
-            $user->password    = $this->encoder->encodePassword($user, 'secret');
+            $user->password    = $password;
             $user->fullname    = $row['fullname'];
             $user->description = $row['description'] ?? null;
 

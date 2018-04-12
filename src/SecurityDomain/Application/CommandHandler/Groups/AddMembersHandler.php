@@ -60,7 +60,7 @@ class AddMembersHandler
     public function handle(AddMembersCommand $command): void
     {
         /** @var \eTraxis\SecurityDomain\Model\Entity\Group $group */
-        $group = $this->repository->find($command->id);
+        $group = $this->repository->find($command->group);
 
         if (!$group) {
             throw new NotFoundHttpException();

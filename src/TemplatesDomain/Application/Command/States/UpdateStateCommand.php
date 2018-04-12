@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified state.
  *
- * @property int    $id          State ID.
+ * @property int    $state       State ID.
  * @property string $name        New state name.
  * @property int    $responsible New type of responsibility management.
  * @property int    $nextState   ID of the state which is next by default.
@@ -32,7 +32,7 @@ class UpdateStateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $state;
 
     /**
      * @Assert\NotBlank

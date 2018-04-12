@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Deletes specified project.
  *
- * @property int $id Project ID.
+ * @property int $project Project ID.
  */
 class DeleteProjectCommand
 {
@@ -29,5 +29,5 @@ class DeleteProjectCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $project;
 }

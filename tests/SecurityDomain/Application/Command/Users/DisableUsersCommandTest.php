@@ -20,23 +20,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DisableUsersCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $nhills */
         /** @var User $tberge */
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $tberge = $repository->findOneByUsername('tberge@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $tberge = $this->repository->findOneByUsername('tberge@example.com');
 
         self::assertTrue($nhills->isEnabled());
         self::assertFalse($tberge->isEnabled());
 
         $command = new DisableUsersCommand([
-            'ids' => [
+            'users' => [
                 $nhills->id,
                 $tberge->id,
             ],
@@ -57,14 +64,11 @@ class DisableUsersCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         $command = new DisableUsersCommand([
-            'ids' => [
+            'users' => [
                 $user->id,
             ],
         ]);
@@ -79,7 +83,7 @@ class DisableUsersCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DisableUsersCommand([
-            'ids' => [
+            'users' => [
                 self::UNKNOWN_ENTITY_ID,
             ],
         ]);
@@ -93,14 +97,11 @@ class DisableUsersCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $admin */
-        $admin = $repository->findOneByUsername('admin@example.com');
+        $admin = $this->repository->findOneByUsername('admin@example.com');
 
         $command = new DisableUsersCommand([
-            'ids' => [
+            'users' => [
                 $admin->id,
             ],
         ]);

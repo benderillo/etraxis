@@ -20,20 +20,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UnlockTemplateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testUnlockTemplate()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         self::assertTrue($template->isLocked);
 
         $command = new UnlockTemplateCommand([
-            'id' => $template->id,
+            'template' => $template->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -46,16 +53,13 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
 
         self::assertFalse($template->isLocked);
 
         $command = new UnlockTemplateCommand([
-            'id' => $template->id,
+            'template' => $template->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -70,14 +74,11 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
-
         /** @var Template $template */
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new UnlockTemplateCommand([
-            'id' => $template->id,
+            'template' => $template->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -90,7 +91,7 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UnlockTemplateCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'template' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);

@@ -61,7 +61,7 @@ class UpdateProjectHandler
     public function handle(UpdateProjectCommand $command)
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Project $project */
-        $project = $this->repository->find($command->id);
+        $project = $this->repository->find($command->project);
 
         if (!$project) {
             throw new NotFoundHttpException();

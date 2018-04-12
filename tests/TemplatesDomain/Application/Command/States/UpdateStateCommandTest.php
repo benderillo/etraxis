@@ -22,22 +22,29 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateStateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(State::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
         /** @var State $nextState */
-        [$nextState] = $repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         /** @var State $state */
-        [$state] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
         self::assertNull($state->nextState);
 
         $command = new UpdateStateCommand([
-            'id'          => $state->id,
+            'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
             'nextState'   => $nextState->id,
@@ -46,7 +53,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var State $state */
-        $state = $repository->find($state->id);
+        $state = $this->repository->find($state->id);
 
         self::assertSame('Forwarded', $state->name);
         self::assertSame(StateResponsible::KEEP, $state->responsible);
@@ -61,10 +68,10 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
-            'id'          => $state->id,
+            'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
             'nextState'   => self::UNKNOWN_ENTITY_ID,
@@ -81,13 +88,13 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var State $nextState */
-        [$nextState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Completed'], ['id' => 'DESC']);
+        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'DESC']);
 
         $command = new UpdateStateCommand([
-            'id'          => $state->id,
+            'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
             'nextState'   => $nextState->id,
@@ -103,10 +110,10 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
-            'id'          => $state->id,
+            'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
         ]);
@@ -121,7 +128,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UpdateStateCommand([
-            'id'          => self::UNKNOWN_ENTITY_ID,
+            'state'       => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
         ]);
@@ -137,10 +144,10 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
-            'id'          => $state->id,
+            'state'       => $state->id,
             'name'        => 'Completed',
             'responsible' => StateResponsible::KEEP,
         ]);

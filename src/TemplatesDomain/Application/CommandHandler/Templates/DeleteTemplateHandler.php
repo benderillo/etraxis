@@ -49,7 +49,7 @@ class DeleteTemplateHandler
     public function handle(DeleteTemplateCommand $command): void
     {
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Template $template */
-        $template = $this->repository->find($command->id);
+        $template = $this->repository->find($command->template);
 
         if ($template) {
 

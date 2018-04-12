@@ -39,9 +39,6 @@ class UserTest extends TestCase
         self::assertSame('anna@example.com', $user->getUsername());
     }
 
-    /**
-     * @throws \Exception
-     */
     public function testPassword()
     {
         $user = new User();

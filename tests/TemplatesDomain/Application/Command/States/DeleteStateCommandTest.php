@@ -19,26 +19,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeleteStateCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(State::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
         /** @var State $state */
-        [$state] = $repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
         self::assertNotNull($state);
 
         $command = new DeleteStateCommand([
-            'id' => $state->id,
+            'state' => $state->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $state = $repository->find($command->id);
+        $state = $this->repository->find($command->state);
         self::assertNull($state);
     }
 
@@ -47,7 +54,7 @@ class DeleteStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DeleteStateCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'state' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -62,10 +69,10 @@ class DeleteStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         $command = new DeleteStateCommand([
-            'id' => $state->id,
+            'state' => $state->id,
         ]);
 
         $this->commandbus->handle($command);

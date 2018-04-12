@@ -19,26 +19,33 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeleteProjectCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Project::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
         self::assertNotNull($project);
 
         $command = new DeleteProjectCommand([
-            'id' => $project->id,
+            'project' => $project->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
         self::assertNull($project);
     }
 
@@ -47,7 +54,7 @@ class DeleteProjectCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new DeleteProjectCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'project' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -61,14 +68,11 @@ class DeleteProjectCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $command = new DeleteProjectCommand([
-            'id' => $project->id,
+            'project' => $project->id,
         ]);
 
         $this->commandbus->handle($command);

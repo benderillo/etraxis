@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified account.
  *
- * @property int    $id          User ID.
+ * @property int    $user        User ID.
  * @property string $email       New email address.
  * @property string $fullname    New full name.
  * @property string $description New description.
@@ -37,7 +37,7 @@ class UpdateUserCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $user;
 
     /**
      * @Assert\NotBlank

@@ -25,19 +25,20 @@ class UserVoterTest extends TransactionalTestCase
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->security = $this->client->getContainer()->get('security.authorization_checker');
+        $this->security   = $this->client->getContainer()->get('security.authorization_checker');
+        $this->repository = $this->doctrine->getRepository(User::class);
     }
 
     public function testUnsupportedAttribute()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $nhills));
@@ -48,10 +49,7 @@ class UserVoterTest extends TransactionalTestCase
         $voter = new UserVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
 
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, null, [UserVoter::CREATE_USER]));
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::UPDATE_USER]));
@@ -73,11 +71,8 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testUpdate()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $artem  = $repository->findOneByUsername('artem@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $artem  = $this->repository->findOneByUsername('artem@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::UPDATE_USER, $nhills));
@@ -89,11 +84,8 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $admin  = $repository->findOneByUsername('admin@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $admin  = $this->repository->findOneByUsername('admin@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::DELETE_USER, $nhills));
@@ -105,12 +97,9 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testDisable()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $tberge = $repository->findOneByUsername('tberge@example.com');
-        $admin  = $repository->findOneByUsername('admin@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $tberge = $this->repository->findOneByUsername('tberge@example.com');
+        $admin  = $this->repository->findOneByUsername('admin@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::DISABLE_USER, $nhills));
@@ -124,12 +113,9 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testEnable()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $tberge = $repository->findOneByUsername('tberge@example.com');
-        $admin  = $repository->findOneByUsername('admin@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $tberge = $this->repository->findOneByUsername('tberge@example.com');
+        $admin  = $this->repository->findOneByUsername('admin@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::ENABLE_USER, $nhills));
@@ -143,11 +129,8 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testUnlock()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $zapp   = $repository->findOneByUsername('jgutmann@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $zapp   = $this->repository->findOneByUsername('jgutmann@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::UNLOCK_USER, $nhills));
@@ -160,11 +143,8 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testSetPassword()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $nhills   = $repository->findOneByUsername('nhills@example.com');
-        $einstein = $repository->findOneByUsername('einstein@ldap.forumsys.com');
+        $nhills   = $this->repository->findOneByUsername('nhills@example.com');
+        $einstein = $this->repository->findOneByUsername('einstein@ldap.forumsys.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::SET_PASSWORD, $nhills));

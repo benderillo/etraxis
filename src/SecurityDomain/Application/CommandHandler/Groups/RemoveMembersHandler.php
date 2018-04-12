@@ -60,7 +60,7 @@ class RemoveMembersHandler
     public function handle(RemoveMembersCommand $command): void
     {
         /** @var \eTraxis\SecurityDomain\Model\Entity\Group $group */
-        $group = $this->repository->find($command->id);
+        $group = $this->repository->find($command->group);
 
         if (!$group) {
             throw new NotFoundHttpException();

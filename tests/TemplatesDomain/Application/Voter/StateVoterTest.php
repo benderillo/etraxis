@@ -23,19 +23,20 @@ class StateVoterTest extends TransactionalTestCase
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->security = $this->client->getContainer()->get('security.authorization_checker');
+        $this->security   = $this->client->getContainer()->get('security.authorization_checker');
+        $this->repository = $this->doctrine->getRepository(State::class);
     }
 
     public function testUnsupportedAttribute()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$state] = $repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $state));
@@ -46,15 +47,9 @@ class StateVoterTest extends TransactionalTestCase
         $voter = new StateVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
-        $repository = $this->doctrine->getRepository(Template::class);
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
-        [$template] = $repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$state] = $repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
 
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $template, [StateVoter::CREATE_STATE]));
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::UPDATE_STATE]));
@@ -81,10 +76,7 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testUpdate()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(StateVoter::UPDATE_STATE, $stateA));
@@ -97,10 +89,7 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(StateVoter::DELETE_STATE, $stateA));
@@ -113,10 +102,7 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testSetInitial()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(StateVoter::SET_INITIAL, $stateA));
@@ -129,10 +115,7 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testManageTransitions()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
-        $repository = $this->doctrine->getRepository(State::class);
-
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
@@ -142,7 +125,7 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
 
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));

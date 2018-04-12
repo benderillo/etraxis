@@ -18,6 +18,16 @@ use eTraxis\Tests\TransactionalTestCase;
 
 class ForgetPasswordCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $command = new ForgetPasswordCommand([
@@ -27,20 +37,14 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
         $token = $this->commandbus->handle($command);
         self::assertRegExp('/^([0-9a-f]{32}$)/', $token);
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
         self::assertTrue($user->isResetTokenValid($token));
     }
 
     public function testExternal()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $user = $repository->findOneByUsername('einstein@ldap.forumsys.com');
+        $user = $this->repository->findOneByUsername('einstein@ldap.forumsys.com');
         self::assertNotNull($user);
 
         $command = new ForgetPasswordCommand([
@@ -50,16 +54,13 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
         $token = $this->commandbus->handle($command);
         self::assertNull($token);
 
-        $users = $repository->findBy(['resetToken' => null]);
-        self::assertCount(count($repository->findAll()), $users);
+        $users = $this->repository->findBy(['resetToken' => null]);
+        self::assertCount(count($this->repository->findAll()), $users);
     }
 
     public function testUnknown()
     {
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
-        $user = $repository->findOneByUsername('404@example.com');
+        $user = $this->repository->findOneByUsername('404@example.com');
         self::assertNull($user);
 
         $command = new ForgetPasswordCommand([
@@ -69,7 +70,7 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
         $token = $this->commandbus->handle($command);
         self::assertNull($token);
 
-        $users = $repository->findBy(['resetToken' => null]);
-        self::assertCount(count($repository->findAll()), $users);
+        $users = $this->repository->findBy(['resetToken' => null]);
+        self::assertCount(count($this->repository->findAll()), $users);
     }
 }

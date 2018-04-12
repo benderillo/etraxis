@@ -66,7 +66,7 @@ class UpdateUserHandler
     public function handle(UpdateUserCommand $command): void
     {
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
-        $user = $this->repository->find($command->id);
+        $user = $this->repository->find($command->user);
 
         if (!$user) {
             throw new NotFoundHttpException();

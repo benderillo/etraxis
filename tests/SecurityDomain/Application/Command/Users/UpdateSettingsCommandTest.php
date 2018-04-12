@@ -19,15 +19,22 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class UpdateSettingsCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('artem@example.com');
+        $user = $this->repository->findOneByUsername('artem@example.com');
 
         self::assertSame('en_US', $user->locale);
         self::assertSame('azure', $user->theme);

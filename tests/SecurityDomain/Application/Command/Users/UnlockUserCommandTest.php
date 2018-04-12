@@ -20,19 +20,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UnlockUserCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testUnlockUser()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('jgutmann@example.com');
+        $user = $this->repository->findOneByUsername('jgutmann@example.com');
         self::assertFalse($user->isAccountNonLocked());
 
         $command = new UnlockUserCommand([
-            'id' => $user->id,
+            'user' => $user->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -47,14 +54,11 @@ class UnlockUserCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('jgutmann@example.com');
+        $user = $this->repository->findOneByUsername('jgutmann@example.com');
 
         $command = new UnlockUserCommand([
-            'id' => $user->id,
+            'user' => $user->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -67,7 +71,7 @@ class UnlockUserCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UnlockUserCommand([
-            'id' => self::UNKNOWN_ENTITY_ID,
+            'user' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);

@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified group.
  *
- * @property int    $id          Group ID.
+ * @property int    $group       Group ID.
  * @property string $name        New name.
  * @property string $description New description.
  */
@@ -31,7 +31,7 @@ class UpdateGroupCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $group;
 
     /**
      * @Assert\NotBlank

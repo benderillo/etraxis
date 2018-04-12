@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Resumes specified project.
  *
- * @property int $id Project ID.
+ * @property int $project Project ID.
  */
 class ResumeProjectCommand
 {
@@ -29,5 +29,5 @@ class ResumeProjectCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $project;
 }

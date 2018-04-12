@@ -20,15 +20,22 @@ use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
 class UpdateProfileCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('nhills@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('nhills@example.com');
+        $user = $this->repository->findOneByUsername('nhills@example.com');
 
         self::assertSame('nhills@example.com', $user->email);
         self::assertSame('Nikko Hills', $user->fullname);

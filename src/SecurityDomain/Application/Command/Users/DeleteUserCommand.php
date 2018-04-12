@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Deletes specified account.
  *
- * @property int $id User ID.
+ * @property int $user User ID.
  */
 class DeleteUserCommand
 {
@@ -29,5 +29,5 @@ class DeleteUserCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $user;
 }

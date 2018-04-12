@@ -20,23 +20,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class EnableUsersCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(User::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $nhills */
         /** @var User $tberge */
-        $nhills = $repository->findOneByUsername('nhills@example.com');
-        $tberge = $repository->findOneByUsername('tberge@example.com');
+        $nhills = $this->repository->findOneByUsername('nhills@example.com');
+        $tberge = $this->repository->findOneByUsername('tberge@example.com');
 
         self::assertTrue($nhills->isEnabled());
         self::assertFalse($tberge->isEnabled());
 
         $command = new EnableUsersCommand([
-            'ids' => [
+            'users' => [
                 $nhills->id,
                 $tberge->id,
             ],
@@ -57,14 +64,11 @@ class EnableUsersCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */
-        $repository = $this->doctrine->getRepository(User::class);
-
         /** @var User $user */
-        $user = $repository->findOneByUsername('tberge@example.com');
+        $user = $this->repository->findOneByUsername('tberge@example.com');
 
         $command = new EnableUsersCommand([
-            'ids' => [
+            'users' => [
                 $user->id,
             ],
         ]);
@@ -79,7 +83,7 @@ class EnableUsersCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new EnableUsersCommand([
-            'ids' => [
+            'users' => [
                 self::UNKNOWN_ENTITY_ID,
             ],
         ]);

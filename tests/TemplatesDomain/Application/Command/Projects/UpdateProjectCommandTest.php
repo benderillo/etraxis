@@ -21,18 +21,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateProjectCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Project::class);
+    }
+
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $command = new UpdateProjectCommand([
-            'id'          => $project->id,
+            'project'     => $project->id,
             'name'        => 'Awesome Express',
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
@@ -41,7 +48,7 @@ class UpdateProjectCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Project $project */
-        $project = $repository->find($project->id);
+        $project = $this->repository->find($project->id);
 
         self::assertSame('Awesome Express', $project->name);
         self::assertSame('Newspaper-delivery company', $project->description);
@@ -54,14 +61,11 @@ class UpdateProjectCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $command = new UpdateProjectCommand([
-            'id'          => $project->id,
+            'project'     => $project->id,
             'name'        => 'Awesome Express',
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
@@ -77,7 +81,7 @@ class UpdateProjectCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UpdateProjectCommand([
-            'id'          => self::UNKNOWN_ENTITY_ID,
+            'project'     => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Awesome Express',
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
@@ -93,14 +97,11 @@ class UpdateProjectCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
         /** @var Project $project */
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $command = new UpdateProjectCommand([
-            'id'        => $project->id,
+            'project'   => $project->id,
             'name'      => 'Molestiae',
             'suspended' => true,
         ]);

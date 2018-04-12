@@ -23,6 +23,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SetRolesPermissionCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Template::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -40,12 +50,12 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->permissionsToArray($template->rolePermissions, SystemRole::AUTHOR));
 
         $command = new SetRolesPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::PRIVATE_COMMENTS,
             'roles'      => [
                 SystemRole::AUTHOR,
@@ -56,7 +66,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         $command = new SetRolesPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::ADD_FILES,
             'roles'      => [
                 SystemRole::RESPONSIBLE,
@@ -76,10 +86,10 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new SetRolesPermissionCommand([
-            'id'         => $template->id,
+            'template'   => $template->id,
             'permission' => TemplatePermission::PRIVATE_COMMENTS,
             'roles'      => [
                 SystemRole::AUTHOR,
@@ -97,7 +107,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new SetRolesPermissionCommand([
-            'id'         => self::UNKNOWN_ENTITY_ID,
+            'template'   => self::UNKNOWN_ENTITY_ID,
             'permission' => TemplatePermission::PRIVATE_COMMENTS,
             'roles'      => [
                 SystemRole::AUTHOR,

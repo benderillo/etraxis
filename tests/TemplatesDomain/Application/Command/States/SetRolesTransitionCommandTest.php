@@ -22,6 +22,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SetRolesTransitionCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(State::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -37,10 +47,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->transitionsToArray($fromState->roleTransitions, $toState));
 
@@ -66,10 +76,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,
@@ -90,10 +100,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'DESC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'DESC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
+        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,
@@ -114,10 +124,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,
@@ -138,7 +148,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => self::UNKNOWN_ENTITY_ID,
@@ -159,7 +169,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,
@@ -181,10 +191,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
+        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,

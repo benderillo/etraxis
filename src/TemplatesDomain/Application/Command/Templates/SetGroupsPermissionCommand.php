@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Sets specified groups permission for the template.
  *
- * @property int    $id         Template ID.
+ * @property int    $template   Template ID.
  * @property string $permission Template permission.
  * @property int[]  $groups     Granted group IDs.
  */
@@ -31,7 +31,7 @@ class SetGroupsPermissionCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $template;
 
     /**
      * @Assert\NotBlank,

@@ -22,19 +22,20 @@ class ProjectVoterTest extends TransactionalTestCase
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository */
+    protected $repository;
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->security = $this->client->getContainer()->get('security.authorization_checker');
+        $this->security   = $this->client->getContainer()->get('security.authorization_checker');
+        $this->repository = $this->doctrine->getRepository(Project::class);
     }
 
     public function testUnsupportedAttribute()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $project));
@@ -45,10 +46,7 @@ class ProjectVoterTest extends TransactionalTestCase
         $voter = new ProjectVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, null, [ProjectVoter::CREATE_PROJECT]));
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::UPDATE_PROJECT]));
@@ -68,10 +66,7 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testUpdate()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(ProjectVoter::UPDATE_PROJECT, $project));
@@ -82,10 +77,7 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $project = $repository->findOneBy(['name' => 'Distinctio']);
+        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $project));
@@ -96,11 +88,8 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testSuspend()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $projectA = $repository->findOneBy(['name' => 'Distinctio']);
-        $projectB = $repository->findOneBy(['name' => 'Molestiae']);
+        $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);
+        $projectB = $this->repository->findOneBy(['name' => 'Molestiae']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(ProjectVoter::SUSPEND_PROJECT, $projectA));
@@ -113,11 +102,8 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testResume()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository $repository */
-        $repository = $this->doctrine->getRepository(Project::class);
-
-        $projectA = $repository->findOneBy(['name' => 'Distinctio']);
-        $projectB = $repository->findOneBy(['name' => 'Molestiae']);
+        $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);
+        $projectB = $this->repository->findOneBy(['name' => 'Molestiae']);
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(ProjectVoter::RESUME_PROJECT, $projectA));

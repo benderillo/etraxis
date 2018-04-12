@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Enables specified accounts.
  *
- * @property int[] $ids User IDs.
+ * @property int[] $users User IDs.
  */
 class EnableUsersCommand
 {
@@ -34,5 +34,5 @@ class EnableUsersCommand
      *     @Assert\Regex("/^\d+$/")
      * })
      */
-    public $ids;
+    public $users;
 }

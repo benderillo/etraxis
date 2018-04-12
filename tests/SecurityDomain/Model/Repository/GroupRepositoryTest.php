@@ -18,10 +18,18 @@ use eTraxis\Tests\WebTestCase;
 
 class GroupRepositoryTest extends WebTestCase
 {
+    /** @var GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testRepository()
     {
-        $repository = $this->doctrine->getRepository(Group::class);
-
-        self::assertInstanceOf(GroupRepository::class, $repository);
+        self::assertInstanceOf(GroupRepository::class, $this->repository);
     }
 }

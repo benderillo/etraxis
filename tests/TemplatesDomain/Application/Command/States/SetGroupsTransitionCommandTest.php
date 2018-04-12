@@ -22,6 +22,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SetGroupsTransitionCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(State::class);
+    }
+
     public function testSuccess()
     {
         $before = [
@@ -36,17 +46,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->transitionsToArray($fromState->groupTransitions, $toState));
 
@@ -71,17 +84,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,
@@ -101,17 +117,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'DESC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'DESC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'DESC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'DESC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'DESC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'DESC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'DESC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'DESC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,
@@ -131,17 +150,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,
@@ -161,14 +183,17 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => self::UNKNOWN_ENTITY_ID,
@@ -188,14 +213,17 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,
@@ -216,17 +244,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'DESC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'DESC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,
@@ -247,17 +278,20 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
+        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
+        $groupRepository = $this->doctrine->getRepository(Group::class);
+
         /** @var State $fromState */
-        [$fromState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
+        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
+        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'DESC']);
+        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'DESC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,

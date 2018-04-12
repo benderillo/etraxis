@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified template.
  *
- * @property int    $id          Template ID.
+ * @property int    $template    Template ID.
  * @property string $name        New name.
  * @property string $prefix      New prefix.
  * @property string $description New description.
@@ -34,7 +34,7 @@ class UpdateTemplateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $template;
 
     /**
      * @Assert\NotBlank

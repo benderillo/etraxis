@@ -21,18 +21,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateGroupCommandTest extends TransactionalTestCase
 {
+    /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */
+    protected $repository;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(Group::class);
+    }
+
     public function testLocalSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new UpdateGroupCommand([
-            'id'          => $group->id,
+            'group'       => $group->id,
             'name'        => 'Programmers',
             'description' => 'Software Engineers',
         ]);
@@ -40,7 +47,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->find($group->id);
+        $group = $this->repository->find($group->id);
 
         self::assertSame('Programmers', $group->name);
         self::assertSame('Software Engineers', $group->description);
@@ -50,14 +57,11 @@ class UpdateGroupCommandTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Company Staff']);
+        $group = $this->repository->findOneBy(['name' => 'Company Staff']);
 
         $command = new UpdateGroupCommand([
-            'id'          => $group->id,
+            'group'       => $group->id,
             'name'        => 'All my slaves',
             'description' => 'Human beings',
         ]);
@@ -65,7 +69,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         /** @var Group $group */
-        $group = $repository->find($group->id);
+        $group = $this->repository->find($group->id);
 
         self::assertSame('All my slaves', $group->name);
         self::assertSame('Human beings', $group->description);
@@ -77,14 +81,11 @@ class UpdateGroupCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new UpdateGroupCommand([
-            'id'          => $group->id,
+            'group'       => $group->id,
             'name'        => 'Programmers',
             'description' => 'Software Engineers',
         ]);
@@ -99,7 +100,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $command = new UpdateGroupCommand([
-            'id'          => self::UNKNOWN_ENTITY_ID,
+            'group'       => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Programmers',
             'description' => 'Software Engineers',
         ]);
@@ -114,15 +115,12 @@ class UpdateGroupCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        [$group] = $repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new UpdateGroupCommand([
-            'id'   => $group->id,
-            'name' => 'Company Staff',
+            'group' => $group->id,
+            'name'  => 'Company Staff',
         ]);
 
         try {
@@ -133,8 +131,8 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         }
 
         $command = new UpdateGroupCommand([
-            'id'   => $group->id,
-            'name' => 'Managers',
+            'group' => $group->id,
+            'name'  => 'Managers',
         ]);
 
         $this->commandbus->handle($command);
@@ -147,15 +145,12 @@ class UpdateGroupCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $repository */
-        $repository = $this->doctrine->getRepository(Group::class);
-
         /** @var Group $group */
-        $group = $repository->findOneBy(['name' => 'Company Staff']);
+        $group = $this->repository->findOneBy(['name' => 'Company Staff']);
 
         $command = new UpdateGroupCommand([
-            'id'   => $group->id,
-            'name' => 'Managers',
+            'group' => $group->id,
+            'name'  => 'Managers',
         ]);
 
         try {
@@ -166,8 +161,8 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         }
 
         $command = new UpdateGroupCommand([
-            'id'   => $group->id,
-            'name' => 'Company Clients',
+            'group' => $group->id,
+            'name'  => 'Company Clients',
         ]);
 
         $this->commandbus->handle($command);

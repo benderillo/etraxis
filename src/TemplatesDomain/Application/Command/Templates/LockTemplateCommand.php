@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Locks specified template.
  *
- * @property int $id Template ID.
+ * @property int $template Template ID.
  */
 class LockTemplateCommand
 {
@@ -29,5 +29,5 @@ class LockTemplateCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $template;
 }

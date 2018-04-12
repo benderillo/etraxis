@@ -53,7 +53,7 @@ class StateGroupTransition
      * @var Group
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group")
      * @ORM\JoinColumn(name="group_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $group;

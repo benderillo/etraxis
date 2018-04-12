@@ -19,7 +19,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Adds specified users to the group.
  *
- * @property int   $id    Group ID.
+ * @property int   $group Group ID.
  * @property int[] $users User IDs.
  */
 class AddMembersCommand
@@ -30,7 +30,7 @@ class AddMembersCommand
      * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $id;
+    public $group;
 
     /**
      * @Assert\NotBlank
