@@ -31,8 +31,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class CreateStateHandler
 {
-    protected $validator;
     protected $security;
+    protected $validator;
     protected $templateRepository;
     protected $stateRepository;
     protected $manager;
@@ -95,7 +95,7 @@ class CreateStateHandler
             /** @var State $nextState */
             $nextState = $this->stateRepository->find($command->nextState);
 
-            if (!$nextState || $nextState->template->id !== $command->template) {
+            if (!$nextState || $nextState->template !== $template) {
                 throw new NotFoundHttpException('Unknown next state.');
             }
 

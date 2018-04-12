@@ -70,7 +70,7 @@ class Template
     /**
      * @var Project
      *
-     * @ORM\ManyToOne(targetEntity="Project", inversedBy="templatesCollection")
+     * @ORM\ManyToOne(targetEntity="Project", inversedBy="templatesCollection", fetch="EAGER")
      * @ORM\JoinColumn(name="project_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $project;

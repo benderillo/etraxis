@@ -56,7 +56,7 @@ class State
     /**
      * @var Template
      *
-     * @ORM\ManyToOne(targetEntity="Template", inversedBy="statesCollection")
+     * @ORM\ManyToOne(targetEntity="Template", inversedBy="statesCollection", fetch="EAGER")
      * @ORM\JoinColumn(name="template_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $template;
@@ -98,8 +98,29 @@ class State
      */
     public function __construct(Template $template, string $type)
     {
+        if (!StateType::has($type)) {
+            throw new \UnexpectedValueException('Unknown state type: ' . $type);
+        }
+
         $this->template = $template;
-        $this->type     = StateType::has($type) ? $type : StateType::INTERMEDIATE;
+        $this->type     = $type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getters(): array
+    {
+        return [
+
+            'responsible' => function (): string {
+                return $this->type === StateType::FINAL ? StateResponsible::REMOVE : $this->responsible;
+            },
+
+            'nextState' => function (): ?State {
+                return $this->type === StateType::FINAL ? null : $this->nextState;
+            },
+        ];
     }
 
     /**
@@ -115,6 +136,15 @@ class State
                 }
                 else {
                     throw new \UnexpectedValueException('Unknown responsibility type: ' . $value);
+                }
+            },
+
+            'nextState' => function (?State $value): void {
+                if ($value === null || $value->template === $this->template) {
+                    $this->nextState = $value;
+                }
+                else {
+                    throw new \UnexpectedValueException('Unknown state: ' . $value->name);
                 }
             },
         ];

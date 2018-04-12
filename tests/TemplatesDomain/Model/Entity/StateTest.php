@@ -30,9 +30,17 @@ class StateTest extends TestCase
         $state = new State($template, StateType::INITIAL);
         self::assertSame($template, $state->template);
         self::assertSame(StateType::INITIAL, $state->type);
+    }
 
-        $state = new State($template, 'Unknown');
-        self::assertSame(StateType::INTERMEDIATE, $state->type);
+    public function testConstructorException()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown state type: foo');
+
+        $template = new Template(new Project());
+        $this->setProperty($template, 'id', 1);
+
+        new State($template, 'foo');
     }
 
     public function testResponsible()
@@ -43,6 +51,14 @@ class StateTest extends TestCase
         self::assertSame(StateResponsible::ASSIGN, $state->responsible);
     }
 
+    public function testResponsibleFinal()
+    {
+        $state = new State(new Template(new Project()), StateType::FINAL);
+
+        $state->responsible = StateResponsible::ASSIGN;
+        self::assertSame(StateResponsible::REMOVE, $state->responsible);
+    }
+
     public function testResponsibleException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -51,5 +67,57 @@ class StateTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $state->responsible = 'bar';
+    }
+
+    public function testNextState()
+    {
+        $template = new Template(new Project());
+        $this->setProperty($template, 'id', 1);
+
+        $nextState = new State($template, StateType::INTERMEDIATE);
+        $this->setProperty($nextState, 'id', 2);
+
+        $state = new State($template, StateType::INTERMEDIATE);
+        self::assertNull($state->nextState);
+
+        $state->nextState = $nextState;
+        self::assertSame($nextState, $state->nextState);
+
+        $state->nextState = null;
+        self::assertNull($state->nextState);
+    }
+
+    public function testNextStateFinal()
+    {
+        $template = new Template(new Project());
+        $this->setProperty($template, 'id', 1);
+
+        $nextState = new State($template, StateType::INTERMEDIATE);
+        $this->setProperty($nextState, 'id', 2);
+
+        $state = new State($template, StateType::FINAL);
+        self::assertNull($state->nextState);
+
+        $state->nextState = $nextState;
+        self::assertNull($state->nextState);
+    }
+
+    public function testNextStateException()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown state: alien');
+
+        $template1 = new Template(new Project());
+        $this->setProperty($template1, 'id', 1);
+
+        $template2 = new Template(new Project());
+        $this->setProperty($template2, 'id', 2);
+
+        $nextState = new State($template1, StateType::INTERMEDIATE);
+        $this->setProperty($nextState, 'name', 'alien');
+
+        $state = new State($template2, StateType::INTERMEDIATE);
+
+        $state->nextState = $nextState;
     }
 }
