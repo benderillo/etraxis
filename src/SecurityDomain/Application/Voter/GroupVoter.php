@@ -15,6 +15,7 @@ namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -23,36 +24,19 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class GroupVoter extends Voter
 {
+    use VoterTrait;
+
     public const CREATE_GROUP      = 'group.create';
     public const UPDATE_GROUP      = 'group.update';
     public const DELETE_GROUP      = 'group.delete';
     public const MANAGE_MEMBERSHIP = 'group.membership';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function supports($attribute, $subject)
-    {
-        $attributes = [
-            self::CREATE_GROUP      => null,
-            self::UPDATE_GROUP      => Group::class,
-            self::DELETE_GROUP      => Group::class,
-            self::MANAGE_MEMBERSHIP => Group::class,
-        ];
-
-        // Whether the attribute is supported.
-        if (!array_key_exists($attribute, $attributes)) {
-            return false;
-        }
-
-        // Whether the subject is not required.
-        if ($attributes[$attribute] === null) {
-            return true;
-        }
-
-        // The subject must be an object of expected class.
-        return is_object($subject) && get_class($subject) === $attributes[$attribute];
-    }
+    protected $attributes = [
+        self::CREATE_GROUP      => null,
+        self::UPDATE_GROUP      => Group::class,
+        self::DELETE_GROUP      => Group::class,
+        self::MANAGE_MEMBERSHIP => Group::class,
+    ];
 
     /**
      * {@inheritdoc}

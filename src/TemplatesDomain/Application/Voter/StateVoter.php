@@ -14,6 +14,7 @@
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -24,31 +25,19 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class StateVoter extends Voter
 {
+    use VoterTrait;
+
     public const CREATE_STATE = 'state.create';
     public const UPDATE_STATE = 'state.update';
     public const DELETE_STATE = 'state.delete';
     public const SET_INITIAL  = 'state.set_initial';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function supports($attribute, $subject)
-    {
-        $attributes = [
-            self::CREATE_STATE => Template::class,
-            self::UPDATE_STATE => State::class,
-            self::DELETE_STATE => State::class,
-            self::SET_INITIAL  => State::class,
-        ];
-
-        // Whether the attribute is supported.
-        if (!array_key_exists($attribute, $attributes)) {
-            return false;
-        }
-
-        // The subject must be an object of expected class.
-        return is_object($subject) && get_class($subject) === $attributes[$attribute];
-    }
+    protected $attributes = [
+        self::CREATE_STATE => Template::class,
+        self::UPDATE_STATE => State::class,
+        self::DELETE_STATE => State::class,
+        self::SET_INITIAL  => State::class,
+    ];
 
     /**
      * {@inheritdoc}

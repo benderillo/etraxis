@@ -14,6 +14,7 @@
 namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class UserVoter extends Voter
 {
+    use VoterTrait;
+
     public const CREATE_USER  = 'user.create';
     public const UPDATE_USER  = 'user.update';
     public const DELETE_USER  = 'user.delete';
@@ -30,34 +33,15 @@ class UserVoter extends Voter
     public const UNLOCK_USER  = 'user.unlock';
     public const SET_PASSWORD = 'user.password';
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function supports($attribute, $subject)
-    {
-        $attributes = [
-            self::CREATE_USER  => null,
-            self::UPDATE_USER  => User::class,
-            self::DELETE_USER  => User::class,
-            self::DISABLE_USER => User::class,
-            self::ENABLE_USER  => User::class,
-            self::UNLOCK_USER  => User::class,
-            self::SET_PASSWORD => User::class,
-        ];
-
-        // Whether the attribute is supported.
-        if (!array_key_exists($attribute, $attributes)) {
-            return false;
-        }
-
-        // Whether the subject is not required.
-        if ($attributes[$attribute] === null) {
-            return true;
-        }
-
-        // The subject must be an object of expected class.
-        return is_object($subject) && get_class($subject) === $attributes[$attribute];
-    }
+    protected $attributes = [
+        self::CREATE_USER  => null,
+        self::UPDATE_USER  => User::class,
+        self::DELETE_USER  => User::class,
+        self::DISABLE_USER => User::class,
+        self::ENABLE_USER  => User::class,
+        self::UNLOCK_USER  => User::class,
+        self::SET_PASSWORD => User::class,
+    ];
 
     /**
      * {@inheritdoc}
