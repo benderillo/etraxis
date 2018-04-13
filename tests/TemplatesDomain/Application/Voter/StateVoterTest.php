@@ -56,6 +56,7 @@ class StateVoterTest extends TransactionalTestCase
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::DELETE_STATE]));
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::SET_INITIAL]));
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::MANAGE_TRANSITIONS]));
+        self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::MANAGE_RESPONSIBLE_GROUPS]));
     }
 
     public function testCreate()
@@ -134,5 +135,28 @@ class StateVoterTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateA));
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
+    }
+
+    public function testManageResponsibleGroups()
+    {
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertTrue($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateC));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateC));
+
+        [$stateA, /* skipping */, $stateC] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateC));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateA));
+        self::assertFalse($this->security->isGranted(StateVoter::MANAGE_RESPONSIBLE_GROUPS, $stateC));
     }
 }

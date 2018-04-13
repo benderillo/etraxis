@@ -146,4 +146,17 @@ class StateTest extends TestCase
 
         self::assertSame(['Group transition A', 'Group transition B'], $state->groupTransitions);
     }
+
+    public function testResponsibleGroups()
+    {
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        self::assertSame([], $state->responsibleGroups);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $groups */
+        $groups = $this->getProperty($state, 'responsibleGroupsCollection');
+        $groups->add('Group A');
+        $groups->add('Group B');
+
+        self::assertSame(['Group A', 'Group B'], $state->responsibleGroups);
+    }
 }

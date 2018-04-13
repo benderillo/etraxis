@@ -31,14 +31,15 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\TemplatesDomain\Model\Repository\StateRepository")
  * @Assert\UniqueEntity(fields={"template", "name"}, message="state.conflict.name")
  *
- * @property-read int                    $id               Unique ID.
- * @property-read Template               $template         Template of the state.
- * @property      string                 $name             Name of the state.
- * @property-read string                 $type             Type of the state (see the "StateType" dictionary).
- * @property      string                 $responsible      Type of responsibility management (see the "StateResponsible" dictionary).
- * @property      State                  $nextState        Next state by default (optional).
- * @property-read StateRoleTransition[]  $roleTransitions  List of state role transitions.
- * @property-read StateGroupTransition[] $groupTransitions List of state group transitions.
+ * @property-read int                     $id                Unique ID.
+ * @property-read Template                $template          Template of the state.
+ * @property      string                  $name              Name of the state.
+ * @property-read string                  $type              Type of the state (see the "StateType" dictionary).
+ * @property      string                  $responsible       Type of responsibility management (see the "StateResponsible" dictionary).
+ * @property      State                   $nextState         Next state by default (optional).
+ * @property-read StateRoleTransition[]   $roleTransitions   List of state role transitions.
+ * @property-read StateGroupTransition[]  $groupTransitions  List of state group transitions.
+ * @property-read StateResponsibleGroup[] $responsibleGroups List of responsible groups.
  */
 class State
 {
@@ -108,6 +109,13 @@ class State
     protected $groupTransitionsCollection;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="StateResponsibleGroup", mappedBy="state")
+     */
+    protected $responsibleGroupsCollection;
+
+    /**
      * Creates new state in the specified template.
      *
      * @param Template $template
@@ -122,8 +130,9 @@ class State
         $this->template = $template;
         $this->type     = $type;
 
-        $this->roleTransitionsCollection  = new ArrayCollection();
-        $this->groupTransitionsCollection = new ArrayCollection();
+        $this->roleTransitionsCollection   = new ArrayCollection();
+        $this->groupTransitionsCollection  = new ArrayCollection();
+        $this->responsibleGroupsCollection = new ArrayCollection();
     }
 
     /**
@@ -147,6 +156,10 @@ class State
 
             'groupTransitions' => function (): array {
                 return $this->groupTransitionsCollection->getValues();
+            },
+
+            'responsibleGroups' => function (): array {
+                return $this->responsibleGroupsCollection->getValues();
             },
         ];
     }
