@@ -1,5 +1,14 @@
 'Authentication required.': 'Your session has expired. Please log in again.'
 button.login: Login
+field.type.checkbox: Checkbox
+field.type.date: Date
+field.type.decimal: Decimal
+field.type.duration: Duration
+field.type.issue: Issue
+field.type.list: List
+field.type.number: Number
+field.type.string: String
+field.type.text: Text
 http_error.403.description: 'You don''t have permission to access to this resource.'
 http_error.403.suggestion: 'Ask your manager or system administrator to grant you access to this resource.'
 http_error.404.description: 'We couldn''t find the page you requested.'

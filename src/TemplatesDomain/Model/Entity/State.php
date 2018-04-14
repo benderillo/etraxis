@@ -37,6 +37,7 @@ use Webinarium\PropertyTrait;
  * @property-read string                  $type              Type of the state (see the "StateType" dictionary).
  * @property      string                  $responsible       Type of responsibility management (see the "StateResponsible" dictionary).
  * @property      State                   $nextState         Next state by default (optional).
+ * @property-read Field[]                 $fields           List of state fields.
  * @property-read StateRoleTransition[]   $roleTransitions   List of state role transitions.
  * @property-read StateGroupTransition[]  $groupTransitions  List of state group transitions.
  * @property-read StateResponsibleGroup[] $responsibleGroups List of responsible groups.
@@ -97,6 +98,14 @@ class State
     /**
      * @var ArrayCollection
      *
+     * @ORM\OneToMany(targetEntity="Field", mappedBy="state")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected $fieldsCollection;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="StateRoleTransition", mappedBy="fromState")
      */
     protected $roleTransitionsCollection;
@@ -130,6 +139,7 @@ class State
         $this->template = $template;
         $this->type     = $type;
 
+        $this->fieldsCollection            = new ArrayCollection();
         $this->roleTransitionsCollection   = new ArrayCollection();
         $this->groupTransitionsCollection  = new ArrayCollection();
         $this->responsibleGroupsCollection = new ArrayCollection();
@@ -148,6 +158,10 @@ class State
 
             'nextState' => function (): ?State {
                 return $this->type === StateType::FINAL ? null : $this->nextState;
+            },
+
+            'fields' => function (): array {
+                return $this->fieldsCollection->getValues();
             },
 
             'roleTransitions' => function (): array {

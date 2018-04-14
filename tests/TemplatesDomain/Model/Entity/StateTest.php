@@ -121,6 +121,19 @@ class StateTest extends TestCase
         $state->nextState = $nextState;
     }
 
+    public function testFields()
+    {
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        self::assertSame([], $state->roleTransitions);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $fields */
+        $fields = $this->getProperty($state, 'fieldsCollection');
+        $fields->add('Field A');
+        $fields->add('Field B');
+
+        self::assertSame(['Field A', 'Field B'], $state->fields);
+    }
+
     public function testRolePermissions()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
