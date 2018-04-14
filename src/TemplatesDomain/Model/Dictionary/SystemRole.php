@@ -21,8 +21,8 @@ use Dictionary\StaticDictionary;
 class SystemRole extends StaticDictionary
 {
     public const ANYONE      = 'anyone';        // any authenticated user
-    public const AUTHOR      = 'author';        // creator of the record
-    public const RESPONSIBLE = 'responsible';   // user assigned to the record
+    public const AUTHOR      = 'author';        // creator of the issue
+    public const RESPONSIBLE = 'responsible';   // user assigned to the issue
 
     protected static $dictionary = [
         self::ANYONE      => 'role.any',

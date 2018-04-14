@@ -31,6 +31,7 @@ use Webinarium\PropertyTrait;
  * @Assert\UniqueEntity(fields={"field", "value"}, message="listitem.conflict.value")
  * @Assert\UniqueEntity(fields={"field", "text"}, message="listitem.conflict.text")
  *
+ * @property-read int    $id    Unique ID.
  * @property-read Field  $field Item's field.
  * @property      int    $value Item's value.
  * @property      string $text  Item's text.

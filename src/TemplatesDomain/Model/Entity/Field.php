@@ -19,8 +19,6 @@ use eTraxis\TemplatesDomain\Model\FieldTypes;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Webinarium\PropertyTrait;
 
-//use eTraxis\TemplatesDomain\Model\FieldTypes;
-
 /**
  * Field.
  *

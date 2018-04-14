@@ -52,11 +52,11 @@ class ListTraitTest extends TransactionalTestCase
 
         $field->setDefaultValue($item1);
         self::assertSame($item1, $field->getDefaultValue());
-        self::assertSame(1, $this->getProperty($parameters, 'defaultValue'));
+        self::assertSame($item1->id, $this->getProperty($parameters, 'defaultValue'));
 
         $field->setDefaultValue($item2);
         self::assertSame($item1, $field->getDefaultValue());
-        self::assertSame(1, $this->getProperty($parameters, 'defaultValue'));
+        self::assertSame($item1->id, $this->getProperty($parameters, 'defaultValue'));
 
         $field->setDefaultValue(null);
         self::assertNull($field->getDefaultValue());

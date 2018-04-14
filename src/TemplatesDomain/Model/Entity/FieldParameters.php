@@ -71,7 +71,7 @@ class FieldParameters
      *      string   - string value (foreign key to "StringValue" entity)
      *      text     - string value (foreign key to "TextValue" entity)
      *      checkbox - state of checkbox (0 - unchecked, 1 - checked)
-     *      list     - integer value of list item (see "ListItem" entity)
+     *      list     - integer value (foreign key to "ListItem" entity)
      *      issue    - NULL (not used)
      *      date     - default date value (amount of days since current date; negative value shifts to the past)
      *      duration - duration value (amount of minutes from 0:00 till 999999:59)

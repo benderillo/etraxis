@@ -60,7 +60,7 @@ trait ListTrait
                     $this->parameters->defaultValue = null;
                 }
                 elseif ($value->field->id === $this->field->id) {
-                    $this->parameters->defaultValue = $value->value;
+                    $this->parameters->defaultValue = $value->id;
                 }
 
                 return $this;
@@ -76,10 +76,7 @@ trait ListTrait
                 }
 
                 /** @var ListItem $item */
-                $item = $this->repository->findOneBy([
-                    'field' => $this->field,
-                    'value' => $this->parameters->defaultValue,
-                ]);
+                $item = $this->repository->find($this->parameters->defaultValue);
 
                 return $item;
             }
