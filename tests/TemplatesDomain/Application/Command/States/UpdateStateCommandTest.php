@@ -121,6 +121,24 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
+    public function testUnlockedTemplate()
+    {
+        $this->expectException(AccessDeniedHttpException::class);
+
+        $this->loginAs('admin@example.com');
+
+        /** @var State $state */
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'DESC']);
+
+        $command = new UpdateStateCommand([
+            'state'       => $state->id,
+            'name'        => 'Forwarded',
+            'responsible' => StateResponsible::KEEP,
+        ]);
+
+        $this->commandbus->handle($command);
+    }
+
     public function testUnknownState()
     {
         $this->expectException(NotFoundHttpException::class);

@@ -190,6 +190,25 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
+    public function testUnlockedTemplate()
+    {
+        $this->expectException(AccessDeniedHttpException::class);
+
+        $this->loginAs('admin@example.com');
+
+        /** @var Template $template */
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'DESC']);
+
+        $command = new CreateStateCommand([
+            'template'    => $template->id,
+            'name'        => 'Started',
+            'type'        => StateType::INTERMEDIATE,
+            'responsible' => StateResponsible::KEEP,
+        ]);
+
+        $this->commandbus->handle($command);
+    }
+
     public function testNameConflict()
     {
         $this->expectException(ConflictHttpException::class);

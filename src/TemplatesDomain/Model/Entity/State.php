@@ -37,7 +37,7 @@ use Webinarium\PropertyTrait;
  * @property-read string                  $type              Type of the state (see the "StateType" dictionary).
  * @property      string                  $responsible       Type of responsibility management (see the "StateResponsible" dictionary).
  * @property      State                   $nextState         Next state by default (optional).
- * @property-read Field[]                 $fields           List of state fields.
+ * @property-read Field[]                 $fields            List of state fields.
  * @property-read StateRoleTransition[]   $roleTransitions   List of state role transitions.
  * @property-read StateGroupTransition[]  $groupTransitions  List of state group transitions.
  * @property-read StateResponsibleGroup[] $responsibleGroups List of responsible groups.

@@ -4738,16 +4738,16 @@
         },
         {
             "name": "webinarium/php-properties",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinarium/php-properties.git",
-                "reference": "4836ad53b3b5be6e13d4d505a6813640c1e44842"
+                "reference": "9144bb0b571d9d1f1f9817ff8b76042c3c2e8abd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinarium/php-properties/zipball/4836ad53b3b5be6e13d4d505a6813640c1e44842",
-                "reference": "4836ad53b3b5be6e13d4d505a6813640c1e44842",
+                "url": "https://api.github.com/repos/webinarium/php-properties/zipball/9144bb0b571d9d1f1f9817ff8b76042c3c2e8abd",
+                "reference": "9144bb0b571d9d1f1f9817ff8b76042c3c2e8abd",
                 "shasum": ""
             },
             "require": {
@@ -4773,7 +4773,7 @@
                 "annotations",
                 "properties"
             ],
-            "time": "2017-08-28T22:06:10+00:00"
+            "time": "2018-04-17T06:46:38+00:00"
         },
         {
             "name": "webinarium/symfony-lazysec",
