@@ -11,50 +11,50 @@
 //
 //----------------------------------------------------------------------
 
-namespace eTraxis\TemplatesDomain\Application\Command\States;
+namespace eTraxis\TemplatesDomain\Application\Command\Fields;
 
-use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class DeleteStateCommandTest extends TransactionalTestCase
+class DeleteFieldCommandTest extends TransactionalTestCase
 {
-    /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */
+    /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository */
     protected $repository;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->repository = $this->doctrine->getRepository(State::class);
+        $this->repository = $this->doctrine->getRepository(Field::class);
     }
 
     public function testSuccess()
     {
         $this->loginAs('admin@example.com');
 
-        /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
-        self::assertNotNull($state);
+        /** @var Field $field */
+        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        self::assertNotNull($field);
 
-        $command = new DeleteStateCommand([
-            'state' => $state->id,
+        $command = new DeleteFieldCommand([
+            'field' => $field->id,
         ]);
 
         $this->commandbus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
-        $state = $this->repository->find($command->state);
-        self::assertNull($state);
+        $field = $this->repository->find($command->field);
+        self::assertNull($field);
     }
 
     public function testUnknown()
     {
         $this->loginAs('admin@example.com');
 
-        $command = new DeleteStateCommand([
-            'state' => self::UNKNOWN_ENTITY_ID,
+        $command = new DeleteFieldCommand([
+            'field' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandbus->handle($command);
@@ -68,11 +68,11 @@ class DeleteStateCommandTest extends TransactionalTestCase
 
         $this->loginAs('artem@example.com');
 
-        /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        /** @var Field $field */
+        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
-        $command = new DeleteStateCommand([
-            'state' => $state->id,
+        $command = new DeleteFieldCommand([
+            'field' => $field->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -84,11 +84,11 @@ class DeleteStateCommandTest extends TransactionalTestCase
 
         $this->loginAs('admin@example.com');
 
-        /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
+        /** @var Field $field */
+        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'DESC']);
 
-        $command = new DeleteStateCommand([
-            'state' => $state->id,
+        $command = new DeleteFieldCommand([
+            'field' => $field->id,
         ]);
 
         $this->commandbus->handle($command);
