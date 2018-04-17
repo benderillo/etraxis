@@ -138,7 +138,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
             'duplicated' => [
                 0 => [
                     'type'     => FieldType::ISSUE,
-                    'name'     => 'Issue ID',
+                    'name'     => 'Task ID',
                     'required' => true,
                     'deleted'  => true,
                 ],

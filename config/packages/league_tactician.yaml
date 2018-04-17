@@ -20,3 +20,29 @@ services:
         autowire: true
         resource: '../../src/{SecurityDomain,TemplatesDomain}/Application/CommandHandler'
         tags: [{ name: tactician.handler, typehints: true }]
+
+    eTraxis\TemplatesDomain\Application\CommandHandler\Fields\CreateFieldHandler:
+        autowire: true
+        tags:
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateCheckboxFieldCommand }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateDateFieldCommand     }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateDecimalFieldCommand  }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateDurationFieldCommand }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateIssueFieldCommand    }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateListFieldCommand     }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateNumberFieldCommand   }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateStringFieldCommand   }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\CreateTextFieldCommand     }
+
+    eTraxis\TemplatesDomain\Application\CommandHandler\Fields\UpdateFieldHandler:
+        autowire: true
+        tags:
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateCheckboxFieldCommand }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateDateFieldCommand     }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateDecimalFieldCommand  }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateDurationFieldCommand }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateIssueFieldCommand    }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateListFieldCommand     }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateNumberFieldCommand   }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateStringFieldCommand   }
+            - { name: tactician.handler, command: eTraxis\TemplatesDomain\Application\Command\Fields\UpdateTextFieldCommand     }
