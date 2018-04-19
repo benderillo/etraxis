@@ -64,6 +64,12 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                             ->setMaximumLength(TextInterface::MAX_LENGTH);
                     },
                 ],
+                0 => [
+                    'type'     => FieldType::CHECKBOX,
+                    'name'     => 'Error',
+                    'required' => false,
+                    'deleted'  => true,
+                ],
                 3 => [
                     'type'     => FieldType::CHECKBOX,
                     'name'     => 'New feature',
@@ -190,11 +196,10 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     }
 
                     if ($row['deleted'] ?? false) {
-                        $field->removedAt = time();
+                        $field->remove();
                     }
-                    else {
-                        $this->addReference(sprintf('%s:%s:%s', $sref, $pref, mb_strtolower($row['name'])), $field);
-                    }
+
+                    $this->addReference(sprintf('%s:%s:%s', $sref, $pref, mb_strtolower($row['name'])), $field);
 
                     $manager->persist($field);
                 }

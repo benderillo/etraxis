@@ -62,6 +62,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         self::assertSame($state, $field->state);
         self::assertSame('Task ID', $field->name);
         self::assertSame('ID of the duplicating task.', $field->description);
+        self::assertSame(2, $field->position);
         self::assertTrue($field->isRequired);
     }
 

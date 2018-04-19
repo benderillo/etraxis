@@ -51,7 +51,7 @@ class DeleteFieldHandler
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Field $field */
         $field = $this->repository->find($command->field);
 
-        if ($field) {
+        if ($field && !$field->isRemoved) {
 
             if (!$this->security->isGranted(FieldVoter::DELETE_FIELD, $field)) {
                 throw new AccessDeniedHttpException();

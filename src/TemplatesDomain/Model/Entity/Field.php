@@ -37,8 +37,8 @@ use Webinarium\PropertyTrait;
  * @property-read string $type        Type of the field (see the "FieldType" dictionary).
  * @property      string $description Optional description of the field.
  * @property      int    $position    Ordinal number of the field. No duplicates of this number among fields of the same state are allowed.
- * @property      int    $removedAt   Unix Epoch timestamp when the field has been removed (NULL while field is present).
  * @property      bool   $isRequired  Whether the field is required.
+ * @property      bool   $isRemoved   Whether the field is removed (soft-deleted).
  */
 class Field
 {
@@ -104,7 +104,7 @@ class Field
     protected $position;
 
     /**
-     * @var int
+     * @var int Unix Epoch timestamp when the field has been removed (NULL while field is present).
      *
      * @ORM\Column(name="removed_at", type="integer", nullable=true)
      */
@@ -148,5 +148,28 @@ class Field
 
         $this->pcre       = new FieldPCRE();
         $this->parameters = new FieldParameters();
+    }
+
+    /**
+     * Marks field as removed (soft-deleted).
+     */
+    public function remove(): void
+    {
+        if ($this->removedAt === null) {
+            $this->removedAt = time();
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getters(): array
+    {
+        return [
+
+            'isRemoved' => function (): bool {
+                return $this->removedAt !== null;
+            },
+        ];
     }
 }

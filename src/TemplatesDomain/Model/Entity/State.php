@@ -161,7 +161,9 @@ class State
             },
 
             'fields' => function (): array {
-                return $this->fieldsCollection->getValues();
+                return array_values(array_filter($this->fieldsCollection->getValues(), function (Field $field) {
+                    return !$field->isRemoved;
+                }));
             },
 
             'roleTransitions' => function (): array {

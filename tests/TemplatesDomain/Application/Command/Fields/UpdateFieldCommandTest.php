@@ -36,7 +36,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID', 'removedAt' => null], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -62,7 +62,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID', 'removedAt' => null], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -81,7 +81,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID', 'removedAt' => null], ['id' => 'DESC']);
+        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'DESC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -93,7 +93,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
-    public function testUnknownState()
+    public function testUnknownField()
     {
         $this->expectException(NotFoundHttpException::class);
 
@@ -101,6 +101,25 @@ class UpdateFieldCommandTest extends TransactionalTestCase
 
         $command = new UpdateIssueFieldCommand([
             'field'       => self::UNKNOWN_ENTITY_ID,
+            'name'        => 'Task ID',
+            'description' => 'ID of the duplicating task.',
+            'required'    => true,
+        ]);
+
+        $this->commandbus->handle($command);
+    }
+
+    public function testRemovedField()
+    {
+        $this->expectException(NotFoundHttpException::class);
+
+        $this->loginAs('admin@example.com');
+
+        /** @var Field $field */
+        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
+
+        $command = new UpdateIssueFieldCommand([
+            'field'       => $field->id,
             'name'        => 'Task ID',
             'description' => 'ID of the duplicating task.',
             'required'    => true,
@@ -117,7 +136,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority', 'removedAt' => null], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $command = new UpdateListFieldCommand([
             'field'       => $field->id,

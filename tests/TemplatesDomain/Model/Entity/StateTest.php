@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
@@ -128,10 +129,21 @@ class StateTest extends TestCase
 
         /** @var \Doctrine\Common\Collections\ArrayCollection $fields */
         $fields = $this->getProperty($state, 'fieldsCollection');
-        $fields->add('Field A');
-        $fields->add('Field B');
 
-        self::assertSame(['Field A', 'Field B'], $state->fields);
+        $field1 = new Field($state, FieldType::CHECKBOX);
+        $field2 = new Field($state, FieldType::CHECKBOX);
+
+        $this->setProperty($field1, 'id', 1);
+        $this->setProperty($field2, 'id', 2);
+
+        $fields->add($field1);
+        $fields->add($field2);
+
+        self::assertSame([$field1, $field2], $state->fields);
+
+        $field1->remove();
+
+        self::assertSame([$field2], $state->fields);
     }
 
     public function testRolePermissions()

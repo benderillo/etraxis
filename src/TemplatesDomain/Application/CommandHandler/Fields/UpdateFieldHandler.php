@@ -68,7 +68,7 @@ class UpdateFieldHandler
         /** @var \eTraxis\TemplatesDomain\Model\Entity\Field $field */
         $field = $this->repository->find($command->field);
 
-        if (!$field) {
+        if (!$field || $field->isRemoved) {
             throw new NotFoundHttpException();
         }
 

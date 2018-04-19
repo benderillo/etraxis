@@ -49,7 +49,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
     }
 
-    public function testUnknown()
+    public function testUnknownField()
     {
         $this->loginAs('admin@example.com');
 
@@ -60,6 +60,27 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
 
         self::assertTrue(true);
+    }
+
+    public function testRemovedField()
+    {
+        $this->loginAs('admin@example.com');
+
+        /** @var Field $field */
+        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
+
+        $command = new DeleteFieldCommand([
+            'field' => $field->id,
+        ]);
+
+        $this->commandbus->handle($command);
+
+        $this->doctrine->getManager()->clear();
+
+        $field = $this->repository->find($command->field);
+
+        self::assertNotNull($field);
+        self::assertTrue($field->isRemoved);
     }
 
     public function testAccessDenied()

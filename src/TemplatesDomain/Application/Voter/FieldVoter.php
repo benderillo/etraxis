@@ -27,16 +27,16 @@ class FieldVoter extends Voter
 {
     use VoterTrait;
 
-    public const CREATE_FIELD              = 'field.create';
-    public const UPDATE_FIELD              = 'field.update';
-    public const DELETE_FIELD              = 'field.delete';
-    public const MANAGE_PERMISSIONS        = 'field.permissions';
+    public const CREATE_FIELD       = 'field.create';
+    public const UPDATE_FIELD       = 'field.update';
+    public const DELETE_FIELD       = 'field.delete';
+    public const MANAGE_PERMISSIONS = 'field.permissions';
 
     protected $attributes = [
-        self::CREATE_FIELD              => State::class,
-        self::UPDATE_FIELD              => Field::class,
-        self::DELETE_FIELD              => Field::class,
-        self::MANAGE_PERMISSIONS        => Field::class,
+        self::CREATE_FIELD       => State::class,
+        self::UPDATE_FIELD       => Field::class,
+        self::DELETE_FIELD       => Field::class,
+        self::MANAGE_PERMISSIONS => Field::class,
     ];
 
     /**

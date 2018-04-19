@@ -42,4 +42,13 @@ class FieldTest extends TestCase
 
         new Field($state, 'foo');
     }
+
+    public function testIsRemoved()
+    {
+        $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);
+        self::assertFalse($field->isRemoved);
+
+        $field->remove();
+        self::assertTrue($field->isRemoved);
+    }
 }
