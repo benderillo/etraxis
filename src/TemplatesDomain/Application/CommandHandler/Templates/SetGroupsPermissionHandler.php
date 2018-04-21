@@ -71,6 +71,7 @@ class SetGroupsPermissionHandler
             throw new AccessDeniedHttpException();
         }
 
+        // Retrieve all groups specified in the command.
         $query = $this->manager->createQueryBuilder();
 
         $query
@@ -81,6 +82,7 @@ class SetGroupsPermissionHandler
 
         $requestedGroups = $query->getQuery()->getResult();
 
+        // Remove all groups which are supposed to not be granted with specified permission, but they currently are.
         $permissions = array_filter($template->groupPermissions, function (TemplateGroupPermission $permission) use ($command) {
             return $permission->permission === $command->permission;
         });
@@ -91,6 +93,7 @@ class SetGroupsPermissionHandler
             }
         }
 
+        // Add all groups which are supposed to be granted with specified permission, but they currently are not.
         $existingGroups = array_map(function (TemplateGroupPermission $permission) {
             return $permission->group;
         }, $permissions);

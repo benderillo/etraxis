@@ -70,6 +70,7 @@ class SetRolesPermissionHandler
             throw new AccessDeniedHttpException();
         }
 
+        // Remove all roles which are supposed to not be granted with specified permission, but they currently are.
         $permissions = array_filter($template->rolePermissions, function (TemplateRolePermission $permission) use ($command) {
             return $permission->permission === $command->permission;
         });
@@ -80,6 +81,7 @@ class SetRolesPermissionHandler
             }
         }
 
+        // Add all roles which are supposed to be granted with specified permission, but they currently are not.
         $existingRoles = array_map(function (TemplateRolePermission $permission) {
             return $permission->role;
         }, $permissions);

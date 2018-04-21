@@ -74,6 +74,7 @@ class SetGroupsTransitionHandler
             throw new AccessDeniedHttpException();
         }
 
+        // Retrieve all groups specified in the command.
         $query = $this->manager->createQueryBuilder();
 
         $query
@@ -84,6 +85,7 @@ class SetGroupsTransitionHandler
 
         $requestedGroups = $query->getQuery()->getResult();
 
+        // Remove all groups which are supposed to not be granted for specified transition, but they currently are.
         $transitions = array_filter($fromState->groupTransitions, function (StateGroupTransition $transition) use ($command) {
             return $transition->toState->id === $command->to;
         });
@@ -94,6 +96,7 @@ class SetGroupsTransitionHandler
             }
         }
 
+        // Add all groups which are supposed to be granted for specified transition, but they currently are not.
         $existingGroups = array_map(function (StateGroupTransition $transition) {
             return $transition->group;
         }, $transitions);

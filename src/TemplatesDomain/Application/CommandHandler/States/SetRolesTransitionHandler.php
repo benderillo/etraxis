@@ -73,6 +73,7 @@ class SetRolesTransitionHandler
             throw new AccessDeniedHttpException();
         }
 
+        // Remove all roles which are supposed to not be granted for specified transition, but they currently are.
         $transitions = array_filter($fromState->roleTransitions, function (StateRoleTransition $transition) use ($command) {
             return $transition->toState->id === $command->to;
         });
@@ -83,6 +84,7 @@ class SetRolesTransitionHandler
             }
         }
 
+        // Add all roles which are supposed to be granted for specified transition, but they currently are not.
         $existingRoles = array_map(function (StateRoleTransition $transition) {
             return $transition->role;
         }, $transitions);
