@@ -48,7 +48,7 @@ class ForgetPasswordHandler
      */
     public function handle(ForgetPasswordCommand $command): ?string
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->repository->findOneByUsername($command->email);
 
         if (!$user || $user->isAccountExternal()) {

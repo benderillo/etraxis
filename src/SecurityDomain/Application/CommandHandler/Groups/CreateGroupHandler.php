@@ -79,7 +79,7 @@ class CreateGroupHandler
             $project = $this->projectRepository->find($command->project);
 
             if (!$project) {
-                throw new NotFoundHttpException('Unknown project.');
+                throw new NotFoundHttpException();
             }
         }
 

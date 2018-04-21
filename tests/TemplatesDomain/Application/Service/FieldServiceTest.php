@@ -285,7 +285,6 @@ class FieldServiceTest extends TransactionalTestCase
     public function testCopyAsListUnknownItem()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown list item.');
 
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -300,7 +299,6 @@ class FieldServiceTest extends TransactionalTestCase
     public function testCopyAsListWrongItem()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown list item.');
 
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Priority'], ['id' => 'ASC']);

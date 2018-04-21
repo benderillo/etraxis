@@ -64,7 +64,7 @@ class AddGroupsHandler
      */
     public function handle(AddGroupsCommand $command): void
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->userRepository->find($command->user);
 
         if (!$user) {

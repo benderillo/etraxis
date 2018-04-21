@@ -74,11 +74,11 @@ class CreateStateHandler
      */
     public function handle(CreateStateCommand $command): State
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Template $template */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Template $template */
         $template = $this->templateRepository->find($command->template);
 
         if (!$template) {
-            throw new NotFoundHttpException('Unknown template.');
+            throw new NotFoundHttpException();
         }
 
         if (!$this->security->isGranted(StateVoter::CREATE_STATE, $template)) {
@@ -92,7 +92,7 @@ class CreateStateHandler
 
         if ($command->nextState) {
 
-            /** @var State $nextState */
+            /** @var null|State $nextState */
             $nextState = $this->stateRepository->find($command->nextState);
 
             if (!$nextState || $nextState->template !== $template) {

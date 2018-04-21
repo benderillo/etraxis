@@ -69,7 +69,6 @@ class CreateFieldCommandTest extends TransactionalTestCase
     public function testUnknownState()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown state.');
 
         $this->loginAs('admin@example.com');
 

@@ -133,7 +133,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
-    public function testUnknownGroup()
+    public function testWrongGroup()
     {
         $this->expectException(\UnexpectedValueException::class);
 

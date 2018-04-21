@@ -59,7 +59,7 @@ class SetRolesPermissionHandler
      */
     public function handle(SetRolesPermissionCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Template $template */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Template $template */
         $template = $this->repository->find($command->template);
 
         if (!$template) {

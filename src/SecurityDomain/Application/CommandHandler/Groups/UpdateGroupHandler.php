@@ -60,7 +60,7 @@ class UpdateGroupHandler
      */
     public function handle(UpdateGroupCommand $command): void
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\Group $group */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\Group $group */
         $group = $this->repository->find($command->group);
 
         if (!$group) {

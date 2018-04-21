@@ -40,7 +40,7 @@ class DecimalValueRepository extends ServiceEntityRepository
      */
     public function get(string $value): DecimalValue
     {
-        /** @var DecimalValue $entity */
+        /** @var null|DecimalValue $entity */
         $entity = $this->findOneBy([
             'value' => $value,
         ]);

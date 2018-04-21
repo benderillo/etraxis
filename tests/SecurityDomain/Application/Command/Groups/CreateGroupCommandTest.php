@@ -89,7 +89,6 @@ class CreateGroupCommandTest extends TransactionalTestCase
     public function testUnknownProject()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown project.');
 
         $this->loginAs('admin@example.com');
 

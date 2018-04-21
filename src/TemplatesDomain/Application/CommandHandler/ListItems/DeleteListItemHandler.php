@@ -48,7 +48,7 @@ class DeleteListItemHandler
      */
     public function handle(DeleteListItemCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
         $item = $this->repository->find($command->item);
 
         if ($item) {

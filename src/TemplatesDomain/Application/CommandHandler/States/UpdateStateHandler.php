@@ -61,11 +61,11 @@ class UpdateStateHandler
      */
     public function handle(UpdateStateCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $state */
         $state = $this->repository->find($command->state);
 
         if (!$state) {
-            throw new NotFoundHttpException('Unknown state.');
+            throw new NotFoundHttpException();
         }
 
         if (!$this->security->isGranted(StateVoter::UPDATE_STATE, $state)) {
@@ -77,7 +77,7 @@ class UpdateStateHandler
 
         if ($command->nextState) {
 
-            /** @var State $nextState */
+            /** @var null|State $nextState */
             $nextState = $this->repository->find($command->nextState);
 
             if (!$nextState || $nextState->template !== $state->template) {

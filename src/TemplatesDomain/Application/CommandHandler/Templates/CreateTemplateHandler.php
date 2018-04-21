@@ -68,11 +68,11 @@ class CreateTemplateHandler
      */
     public function handle(CreateTemplateCommand $command): Template
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Project $project */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Project $project */
         $project = $this->projectRepository->find($command->project);
 
         if (!$project) {
-            throw new NotFoundHttpException('Unknown project.');
+            throw new NotFoundHttpException();
         }
 
         if (!$this->security->isGranted(TemplateVoter::CREATE_TEMPLATE, $project)) {

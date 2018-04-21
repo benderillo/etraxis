@@ -60,7 +60,7 @@ class UpdateListItemHandler
      */
     public function handle(UpdateListItemCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
         $item = $this->repository->find($command->item);
 
         if (!$item) {

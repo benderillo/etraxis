@@ -50,7 +50,7 @@ class UnlockUserHandler
      */
     public function handle(UnlockUserCommand $command): void
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->repository->find($command->user);
 
         if (!$user) {

@@ -50,7 +50,7 @@ class ResumeProjectHandler
      */
     public function handle(ResumeProjectCommand $command)
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Project $project */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Project $project */
         $project = $this->repository->find($command->project);
 
         if (!$project) {

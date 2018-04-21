@@ -64,7 +64,6 @@ class CreateListItemCommandTest extends TransactionalTestCase
     public function testUnknownField()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown field.');
 
         $this->loginAs('admin@example.com');
 

@@ -48,7 +48,7 @@ class DeleteFieldHandler
      */
     public function handle(DeleteFieldCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Field $field */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Field $field */
         $field = $this->repository->find($command->field);
 
         if ($field && !$field->isRemoved) {

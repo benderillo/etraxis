@@ -86,11 +86,11 @@ class CreateFieldHandler
      */
     public function handle(Command\AbstractCreateFieldCommand $command): Field
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $state */
         $state = $this->stateRepository->find($command->state);
 
         if (!$state) {
-            throw new NotFoundHttpException('Unknown state.');
+            throw new NotFoundHttpException();
         }
 
         if (!$this->security->isGranted(FieldVoter::CREATE_FIELD, $state)) {

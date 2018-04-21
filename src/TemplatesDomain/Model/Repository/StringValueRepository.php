@@ -40,7 +40,7 @@ class StringValueRepository extends ServiceEntityRepository
      */
     public function get(string $value): StringValue
     {
-        /** @var StringValue $entity */
+        /** @var null|StringValue $entity */
         $entity = $this->findOneBy([
             'token' => md5($value),
         ]);

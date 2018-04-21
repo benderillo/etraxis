@@ -50,7 +50,7 @@ class ResetPasswordHandler
      */
     public function handle(ResetPasswordCommand $command): void
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->repository->findOneBy([
             'resetToken' => $command->token,
         ]);

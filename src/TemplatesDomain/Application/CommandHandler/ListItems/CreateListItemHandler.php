@@ -75,11 +75,11 @@ class CreateListItemHandler
      */
     public function handle(CreateListItemCommand $command): ListItem
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Field $field */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Field $field */
         $field = $this->fieldRepository->find($command->field);
 
         if (!$field) {
-            throw new NotFoundHttpException('Unknown field.');
+            throw new NotFoundHttpException();
         }
 
         if (!$this->security->isGranted(ListItemVoter::CREATE_ITEM, $field)) {

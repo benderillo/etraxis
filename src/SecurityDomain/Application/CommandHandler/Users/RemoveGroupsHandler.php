@@ -64,7 +64,7 @@ class RemoveGroupsHandler
      */
     public function handle(RemoveGroupsCommand $command): void
     {
-        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        /** @var null|\eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->userRepository->find($command->user);
 
         if (!$user) {

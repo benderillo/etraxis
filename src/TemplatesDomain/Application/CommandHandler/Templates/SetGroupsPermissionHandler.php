@@ -60,7 +60,7 @@ class SetGroupsPermissionHandler
      */
     public function handle(SetGroupsPermissionCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\Template $template */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Template $template */
         $template = $this->repository->find($command->template);
 
         if (!$template) {

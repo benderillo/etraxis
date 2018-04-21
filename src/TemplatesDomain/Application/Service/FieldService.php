@@ -258,11 +258,11 @@ class FieldService
                 $facade->setDefaultValue(null);
             }
             else {
-                /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
+                /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
                 $item = $this->listRepository->find($command->defaultValue);
 
                 if (!$item || $item->field !== $field) {
-                    throw new NotFoundHttpException('Unknown list item.');
+                    throw new NotFoundHttpException();
                 }
 
                 $facade->setDefaultValue($item);

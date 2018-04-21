@@ -112,7 +112,6 @@ class CreateStateCommandTest extends TransactionalTestCase
     public function testUnknownTemplate()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown template.');
 
         $this->loginAs('admin@example.com');
 

@@ -59,10 +59,10 @@ class SetRolesTransitionHandler
      */
     public function handle(SetRolesTransitionCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State $fromState */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $fromState */
         $fromState = $this->repository->find($command->from);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State $toState */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $toState */
         $toState = $this->repository->find($command->to);
 
         if (!$fromState || !$toState) {

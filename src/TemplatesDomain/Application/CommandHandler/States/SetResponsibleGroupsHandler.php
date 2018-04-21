@@ -60,7 +60,7 @@ class SetResponsibleGroupsHandler
      */
     public function handle(SetResponsibleGroupsCommand $command): void
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $state */
         $state = $this->repository->find($command->state);
 
         if (!$state) {
