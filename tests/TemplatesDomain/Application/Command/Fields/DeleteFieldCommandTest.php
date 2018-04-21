@@ -14,6 +14,7 @@
 namespace eTraxis\TemplatesDomain\Application\Command\Fields;
 
 use eTraxis\TemplatesDomain\Model\Entity\Field;
+use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -33,12 +34,19 @@ class DeleteFieldCommandTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
-        self::assertNotNull($field);
+        /** @var State $state */
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+
+        self::assertCount(3, $state->fields);
+
+        [$field1, $field2, $field3] = $state->fields;
+
+        self::assertSame(1, $field1->position);
+        self::assertSame(2, $field2->position);
+        self::assertSame(3, $field3->position);
 
         $command = new DeleteFieldCommand([
-            'field' => $field->id,
+            'field' => $field1->id,
         ]);
 
         $this->commandbus->handle($command);
@@ -47,6 +55,16 @@ class DeleteFieldCommandTest extends TransactionalTestCase
 
         $field = $this->repository->find($command->field);
         self::assertNull($field);
+
+        /** @var State $state */
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+
+        self::assertCount(2, $state->fields);
+
+        [$field1, $field2] = $state->fields;
+
+        self::assertSame(1, $field1->position);
+        self::assertSame(2, $field2->position);
     }
 
     public function testUnknownField()
@@ -69,6 +87,8 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
 
+        self::assertCount(1, $field->state->fields);
+
         $command = new DeleteFieldCommand([
             'field' => $field->id,
         ]);
@@ -81,6 +101,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
 
         self::assertNotNull($field);
         self::assertTrue($field->isRemoved);
+        self::assertCount(1, $field->state->fields);
     }
 
     public function testAccessDenied()

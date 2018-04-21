@@ -99,7 +99,7 @@ class State
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Field", mappedBy="state")
-     * @ORM\OrderBy({"name": "ASC"})
+     * @ORM\OrderBy({"position": "ASC"})
      */
     protected $fieldsCollection;
 

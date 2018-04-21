@@ -57,7 +57,18 @@ class DeleteFieldHandler
                 throw new AccessDeniedHttpException();
             }
 
+            $position = $field->position;
+            $fields   = $field->state->fields;
+
             $this->repository->remove($field);
+
+            // Reorder remaining fields.
+            foreach ($fields as $field) {
+                if ($field->position > $position) {
+                    $field->position = $field->position - 1;
+                    $this->repository->persist($field);
+                }
+            }
         }
     }
 }
