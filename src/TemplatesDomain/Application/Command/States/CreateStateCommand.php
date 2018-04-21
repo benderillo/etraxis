@@ -21,8 +21,8 @@ use Webinarium\DataTransferObjectTrait;
  *
  * @property int    $template    ID of the state's template.
  * @property string $name        State name.
- * @property int    $type        Type of the state.
- * @property int    $responsible Type of responsibility management.
+ * @property string $type        Type of the state.
+ * @property string $responsible Type of responsibility management.
  * @property int    $nextState   ID of the state which is next by default.
  */
 class CreateStateCommand

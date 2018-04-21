@@ -19,8 +19,8 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Sets specified responsible groups for the state.
  *
- * @property int    $state  State ID.
- * @property int[]  $groups Group IDs.
+ * @property int   $state  State ID.
+ * @property int[] $groups Group IDs.
  */
 class SetResponsibleGroupsCommand
 {

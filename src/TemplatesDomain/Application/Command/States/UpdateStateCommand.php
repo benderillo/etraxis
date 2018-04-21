@@ -21,7 +21,7 @@ use Webinarium\DataTransferObjectTrait;
  *
  * @property int    $state       State ID.
  * @property string $name        New state name.
- * @property int    $responsible New type of responsibility management.
+ * @property string $responsible New type of responsibility management.
  * @property int    $nextState   ID of the state which is next by default.
  */
 class UpdateStateCommand
