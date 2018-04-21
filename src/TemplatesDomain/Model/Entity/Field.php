@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\FieldTypes;
@@ -31,14 +32,17 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\TemplatesDomain\Model\Repository\FieldRepository")
  * @Assert\UniqueEntity(fields={"state", "name", "removedAt"}, message="field.conflict.name", ignoreNull=false)
  *
- * @property-read int    $id          Unique ID.
- * @property-read State  $state       State of the field.
- * @property      string $name        Name of the field.
- * @property-read string $type        Type of the field (see the "FieldType" dictionary).
- * @property      string $description Optional description of the field.
- * @property      int    $position    Ordinal number of the field. No duplicates of this number among fields of the same state are allowed.
- * @property      bool   $isRequired  Whether the field is required.
- * @property      bool   $isRemoved   Whether the field is removed (soft-deleted).
+ * @property-read int                    $id               Unique ID.
+ * @property-read State                  $state            State of the field.
+ * @property      string                 $name             Name of the field.
+ * @property-read string                 $type             Type of the field (see the "FieldType" dictionary).
+ * @property      string                 $description      Optional description of the field.
+ * @property      int                    $position         Ordinal number of the field.
+ *                                                         No duplicates of this number among fields of the same state are allowed.
+ * @property      bool                   $isRequired       Whether the field is required.
+ * @property      bool                   $isRemoved        Whether the field is removed (soft-deleted).
+ * @property-read FieldRolePermission[]  $rolePermissions  List of field role permissions.
+ * @property-read FieldGroupPermission[] $groupPermissions List of field group permissions.
  */
 class Field
 {
@@ -132,6 +136,20 @@ class Field
     protected $parameters;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="FieldRolePermission", mappedBy="field")
+     */
+    protected $rolePermissionsCollection;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="FieldGroupPermission", mappedBy="field")
+     */
+    protected $groupPermissionsCollection;
+
+    /**
      * Creates new field for the specified state.
      *
      * @param State  $state
@@ -148,6 +166,9 @@ class Field
 
         $this->pcre       = new FieldPCRE();
         $this->parameters = new FieldParameters();
+
+        $this->rolePermissionsCollection  = new ArrayCollection();
+        $this->groupPermissionsCollection = new ArrayCollection();
     }
 
     /**
@@ -169,6 +190,14 @@ class Field
 
             'isRemoved' => function (): bool {
                 return $this->removedAt !== null;
+            },
+
+            'rolePermissions' => function (): array {
+                return $this->rolePermissionsCollection->getValues();
+            },
+
+            'groupPermissions' => function (): array {
+                return $this->groupPermissionsCollection->getValues();
             },
         ];
     }

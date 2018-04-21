@@ -5,6 +5,8 @@ field.error.default_value_length: 'Default value should not be longer than %maxi
 field.error.default_value_range: 'Default value should be in range from %minimum% to %maximum%.'
 field.error.min_max_values: 'Maximum value should not be less then minimum one.'
 field.error.value_range: '''%name%'' should be in range from %minimum% to %maximum%.'
+field.permission.read_only: 'Read only'
+field.permission.read_write: 'Read and write'
 field.type.checkbox: Checkbox
 field.type.date: Date
 field.type.decimal: Decimal
