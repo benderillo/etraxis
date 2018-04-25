@@ -21,9 +21,9 @@ use Webinarium\PropertyTrait;
  *
  * @ORM\Embeddable
  *
- * @property int $parameter1   First parameter of the field. Depends on field type.
- * @property int $parameter2   Second parameter of the field. Depends on field type.
- * @property int $defaultValue Default value of the field. Depends on field type.
+ * @property null|int $parameter1   First parameter of the field. Depends on field type.
+ * @property null|int $parameter2   Second parameter of the field. Depends on field type.
+ * @property null|int $defaultValue Default value of the field. Depends on field type.
  */
 class FieldParameters
 {

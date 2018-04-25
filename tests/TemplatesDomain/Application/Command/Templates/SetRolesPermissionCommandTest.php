@@ -37,7 +37,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
     {
         $before = [
             TemplatePermission::ADD_COMMENTS,
-            TemplatePermission::ADD_FILES,
+            TemplatePermission::ATTACH_FILES,
             TemplatePermission::EDIT_ISSUES,
         ];
 
@@ -67,7 +67,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
 
         $command = new SetRolesPermissionCommand([
             'template'   => $template->id,
-            'permission' => TemplatePermission::ADD_FILES,
+            'permission' => TemplatePermission::ATTACH_FILES,
             'roles'      => [
                 SystemRole::RESPONSIBLE,
             ],

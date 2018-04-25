@@ -36,7 +36,7 @@ use Webinarium\PropertyTrait;
  * @property-read State                  $state            State of the field.
  * @property      string                 $name             Name of the field.
  * @property-read string                 $type             Type of the field (see the "FieldType" dictionary).
- * @property      string                 $description      Optional description of the field.
+ * @property      null|string            $description      Optional description of the field.
  * @property      int                    $position         Ordinal number of the field.
  *                                                         No duplicates of this number among fields of the same state are allowed.
  * @property      bool                   $isRequired       Whether the field is required.

@@ -29,7 +29,7 @@ class TemplatePermission extends StaticDictionary
     public const REOPEN_ISSUES       = 'issue.reopen';
     public const ADD_COMMENTS        = 'comment.add';
     public const PRIVATE_COMMENTS    = 'comment.private';
-    public const ADD_FILES           = 'file.add';
+    public const ATTACH_FILES        = 'file.attach';
     public const DELETE_FILES        = 'file.delete';
     public const ADD_DEPENDENCIES    = 'dependency.add';
     public const REMOVE_DEPENDENCIES = 'dependency.remove';
@@ -46,7 +46,7 @@ class TemplatePermission extends StaticDictionary
         self::REOPEN_ISSUES       => 'template.permission.reopen_issues',
         self::ADD_COMMENTS        => 'template.permission.add_comments',
         self::PRIVATE_COMMENTS    => 'template.permission.private_comments',
-        self::ADD_FILES           => 'template.permission.add_files',
+        self::ATTACH_FILES        => 'template.permission.attach_files',
         self::DELETE_FILES        => 'template.permission.delete_files',
         self::ADD_DEPENDENCIES    => 'template.permission.add_dependencies',
         self::REMOVE_DEPENDENCIES => 'template.permission.remove_dependencies',

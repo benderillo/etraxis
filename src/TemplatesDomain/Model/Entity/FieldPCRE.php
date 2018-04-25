@@ -21,9 +21,9 @@ use Webinarium\PropertyTrait;
  *
  * @ORM\Embeddable
  *
- * @property string $check   Perl-compatible regular expression which values of the field must conform to.
- * @property string $search  Perl-compatible regular expression to modify values of the field before display them (search for).
- * @property string $replace Perl-compatible regular expression to modify values of the field before display them (replace with).
+ * @property null|string $check   Perl-compatible regular expression which values of the field must conform to.
+ * @property null|string $search  Perl-compatible regular expression to modify values of the field before display them (search for).
+ * @property null|string $replace Perl-compatible regular expression to modify values of the field before display them (replace with).
  */
 class FieldPCRE
 {

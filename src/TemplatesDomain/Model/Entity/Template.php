@@ -36,10 +36,10 @@ use Webinarium\PropertyTrait;
  * @property      string                    $name             Name of the template.
  * @property      string                    $prefix           Prefix of the template (used as a prefix in ID of issues,
  *                                                            created using this template).
- * @property      string                    $description      Optional description of the template.
- * @property      int                       $criticalAge      When a issue remains opened more than this amount of days
+ * @property      null|string               $description      Optional description of the template.
+ * @property      null|int                  $criticalAge      When a issue remains opened more than this amount of days
  *                                                            it is displayed in red in the list of issues.
- * @property      int                       $frozenTime       When a issue is closed a user cannot change its state anymore,
+ * @property      null|int                  $frozenTime       When a issue is closed a user cannot change its state anymore,
  *                                                            but one still can modify its fields, add comments and attach files.
  *                                                            If frozen time is specified it will be allowed to modify issue this
  *                                                            amount of days after its closure. After that issue will become read-only.

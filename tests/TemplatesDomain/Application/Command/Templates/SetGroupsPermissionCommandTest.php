@@ -38,7 +38,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $before = [
             TemplatePermission::ADD_COMMENTS,
             TemplatePermission::PRIVATE_COMMENTS,
-            TemplatePermission::ADD_FILES,
+            TemplatePermission::ATTACH_FILES,
             TemplatePermission::CREATE_ISSUES,
             TemplatePermission::EDIT_ISSUES,
             TemplatePermission::VIEW_ISSUES,
@@ -46,7 +46,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
 
         $after = [
             TemplatePermission::ADD_COMMENTS,
-            TemplatePermission::ADD_FILES,
+            TemplatePermission::ATTACH_FILES,
             TemplatePermission::DELETE_FILES,
             TemplatePermission::CREATE_ISSUES,
             TemplatePermission::EDIT_ISSUES,

@@ -30,12 +30,12 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\SecurityDomain\Model\Repository\GroupRepository")
  * @Assert\UniqueEntity(fields={"project", "name"}, message="group.conflict.name", ignoreNull=false)
  *
- * @property-read int     $id          Unique ID.
- * @property-read Project $project     Project of the group (NULL if the group is global).
- * @property      string  $name        Name of the group.
- * @property      string  $description Optional description of the group.
- * @property-read bool    $isGlobal    Whether the group is a global one.
- * @property-read User[]  $members     List of members.
+ * @property-read int          $id          Unique ID.
+ * @property-read null|Project $project     Project of the group (NULL if the group is global).
+ * @property      string       $name        Name of the group.
+ * @property      null|string  $description Optional description of the group.
+ * @property-read bool         $isGlobal    Whether the group is a global one.
+ * @property-read User[]       $members     List of members.
  */
 class Group
 {

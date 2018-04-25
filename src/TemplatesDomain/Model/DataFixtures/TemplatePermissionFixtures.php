@@ -50,7 +50,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                 SystemRole::AUTHOR => [
                     TemplatePermission::EDIT_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                 ],
 
                 'managers:%s' => [
@@ -63,7 +63,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                     TemplatePermission::REOPEN_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::PRIVATE_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                     TemplatePermission::DELETE_FILES,
                     TemplatePermission::ADD_DEPENDENCIES,
                     TemplatePermission::REMOVE_DEPENDENCIES,
@@ -77,7 +77,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                     TemplatePermission::EDIT_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::PRIVATE_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                 ],
 
                 'support:%s' => [
@@ -91,13 +91,13 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                     TemplatePermission::EDIT_ISSUES,
                     TemplatePermission::REOPEN_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                 ],
 
                 SystemRole::RESPONSIBLE => [
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::PRIVATE_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                 ],
 
                 'managers:%s' => [
@@ -110,7 +110,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                     TemplatePermission::REOPEN_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::PRIVATE_COMMENTS,
-                    TemplatePermission::ADD_FILES,
+                    TemplatePermission::ATTACH_FILES,
                     TemplatePermission::DELETE_FILES,
                     TemplatePermission::ADD_DEPENDENCIES,
                     TemplatePermission::REMOVE_DEPENDENCIES,

@@ -35,7 +35,7 @@ state.type.initial: Initial
 state.type.intermediate: Intermediate
 template.permission.add_comments: 'Add comments'
 template.permission.add_dependencies: 'Add dependencies'
-template.permission.add_files: 'Add files'
+template.permission.attach_files: 'Attach files'
 template.permission.create_issues: 'Create issues'
 template.permission.delete_files: 'Delete files'
 template.permission.delete_issues: 'Delete issues'

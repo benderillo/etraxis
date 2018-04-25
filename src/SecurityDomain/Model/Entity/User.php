@@ -41,9 +41,9 @@ use Webinarium\PropertyTrait;
  *
  * @property-read int         $id          Unique ID.
  * @property      string      $email       Email address.
- * @property      string      $password    Password.
+ * @property      null|string $password    Password.
  * @property      string      $fullname    Full name.
- * @property      string      $description Optional description of the user.
+ * @property      null|string $description Optional description of the user.
  * @property      bool        $isAdmin     Whether the user has administrator privileges.
  * @property      AccountInfo $account     User's account.
  * @property      string      $locale      User's locale (see the "Locale" dictionary).
