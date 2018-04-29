@@ -81,7 +81,7 @@ class Project
     protected $isSuspended;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Group[]
      *
      * @ORM\OneToMany(targetEntity="eTraxis\SecurityDomain\Model\Entity\Group", mappedBy="project")
      * @ORM\OrderBy({"name": "ASC"})
@@ -89,7 +89,7 @@ class Project
     protected $groupsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Template[]
      *
      * @ORM\OneToMany(targetEntity="Template", mappedBy="project")
      * @ORM\OrderBy({"name": "ASC"})

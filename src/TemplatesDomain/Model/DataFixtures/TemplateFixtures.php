@@ -54,12 +54,12 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
 
             $development->name        = 'Development';
             $development->prefix      = 'task';
-            $development->description = 'Development ' . mb_strtoupper($ref);
+            $development->description = 'Development Task ' . mb_strtoupper($ref);
             $development->isLocked    = $isLocked;
 
             $support->name        = 'Support';
-            $support->prefix      = 'issue';
-            $support->description = 'Support ' . mb_strtoupper($ref);
+            $support->prefix      = 'req';
+            $support->description = 'Support Request ' . mb_strtoupper($ref);
             $support->criticalAge = 3;
             $support->frozenTime  = 7;
             $support->isLocked    = $ref === 'a';

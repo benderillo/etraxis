@@ -133,7 +133,7 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
         $command = new UpdateTemplateCommand([
             'template'    => $template->id,
             'name'        => 'Bugfix',
-            'prefix'      => 'issue',
+            'prefix'      => 'req',
             'description' => 'Error reports',
             'criticalAge' => 5,
             'frozenTime'  => 10,

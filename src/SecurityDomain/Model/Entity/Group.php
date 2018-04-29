@@ -77,7 +77,7 @@ class Group
     protected $description;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|User[]
      *
      * @ORM\ManyToMany(targetEntity="User", inversedBy="groupsCollection")
      * @ORM\JoinTable(

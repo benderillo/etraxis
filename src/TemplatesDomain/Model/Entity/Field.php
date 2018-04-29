@@ -136,14 +136,14 @@ class Field
     protected $parameters;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|FieldRolePermission[]
      *
      * @ORM\OneToMany(targetEntity="FieldRolePermission", mappedBy="field")
      */
     protected $rolePermissionsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|FieldGroupPermission[]
      *
      * @ORM\OneToMany(targetEntity="FieldGroupPermission", mappedBy="field")
      */

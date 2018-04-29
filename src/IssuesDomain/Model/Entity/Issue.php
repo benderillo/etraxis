@@ -113,7 +113,7 @@ class Issue
     protected $closedAt;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Event[]
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="issue")
      * @ORM\OrderBy({"createdAt": "ASC"})
@@ -121,7 +121,7 @@ class Issue
     protected $eventsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|FieldValue[]
      *
      * @ORM\OneToMany(targetEntity="FieldValue", mappedBy="issue")
      */

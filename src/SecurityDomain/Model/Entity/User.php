@@ -127,7 +127,7 @@ class User implements AdvancedUserInterface, EncoderAwareInterface
     protected $settings;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Group[]
      *
      * @ORM\ManyToMany(targetEntity="Group", mappedBy="membersCollection")
      * @ORM\OrderBy({"name": "ASC"})

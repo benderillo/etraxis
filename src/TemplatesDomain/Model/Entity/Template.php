@@ -118,7 +118,7 @@ class Template
     protected $isLocked;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|State[]
      *
      * @ORM\OneToMany(targetEntity="State", mappedBy="template")
      * @ORM\OrderBy({"name": "ASC"})
@@ -126,14 +126,14 @@ class Template
     protected $statesCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|TemplateRolePermission[]
      *
      * @ORM\OneToMany(targetEntity="TemplateRolePermission", mappedBy="template")
      */
     protected $rolePermissionsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|TemplateGroupPermission[]
      *
      * @ORM\OneToMany(targetEntity="TemplateGroupPermission", mappedBy="template")
      */

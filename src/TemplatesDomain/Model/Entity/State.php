@@ -96,7 +96,7 @@ class State
     protected $nextState;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Field[]
      *
      * @ORM\OneToMany(targetEntity="Field", mappedBy="state")
      * @ORM\OrderBy({"position": "ASC"})
@@ -104,21 +104,21 @@ class State
     protected $fieldsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|StateRoleTransition[]
      *
      * @ORM\OneToMany(targetEntity="StateRoleTransition", mappedBy="fromState")
      */
     protected $roleTransitionsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|StateGroupTransition[]
      *
      * @ORM\OneToMany(targetEntity="StateGroupTransition", mappedBy="fromState")
      */
     protected $groupTransitionsCollection;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|StateResponsibleGroup[]
      *
      * @ORM\OneToMany(targetEntity="StateResponsibleGroup", mappedBy="state")
      */
