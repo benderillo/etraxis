@@ -85,7 +85,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var ListItem $item */
-        [$item] = $this->repository->findBy(['value' => 1], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
 
         $command = new DeleteListItemCommand([
             'item' => $item->id,

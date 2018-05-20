@@ -151,7 +151,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,

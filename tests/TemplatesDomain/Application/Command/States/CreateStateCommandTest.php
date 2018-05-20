@@ -196,7 +196,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,

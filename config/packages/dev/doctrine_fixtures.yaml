@@ -5,6 +5,9 @@ services:
         autoconfigure: true
         public:        false
 
+    eTraxis\IssuesDomain\Model\DataFixtures\:
+        resource: '../../../src/IssuesDomain/Model/DataFixtures'
+
     eTraxis\SecurityDomain\Model\DataFixtures\:
         resource: '../../../src/SecurityDomain/Model/DataFixtures'
 

@@ -128,7 +128,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
             'state'       => $state->id,

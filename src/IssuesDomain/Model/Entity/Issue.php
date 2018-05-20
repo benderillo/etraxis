@@ -40,6 +40,9 @@ use Webinarium\PropertyTrait;
  * @property      State        $state       Current state.
  * @property-read User         $author      Author of the issue.
  * @property      null|User    $responsible Current responsible of the issue.
+ * @property-read int          $createdAt   Unix Epoch timestamp when the issue has been created.
+ * @property-read int          $changedAt   Unix Epoch timestamp when the issue has been changed last time.
+ * @property-read null|int     $closedAt    Unix Epoch timestamp when the issue has been closed, if so.
  * @property-read bool         $isClosed    Whether the issue is closed.
  * @property-read Event[]      $events      List of issue events.
  * @property-read FieldValue[] $values      List of field values.
@@ -92,21 +95,21 @@ class Issue
     protected $responsible;
 
     /**
-     * @var int Unix Epoch timestamp when the issue has been created.
+     * @var int
      *
      * @ORM\Column(name="created_at", type="integer")
      */
     protected $createdAt;
 
     /**
-     * @var int Unix Epoch timestamp when the issue has been changed last time.
+     * @var int
      *
      * @ORM\Column(name="changed_at", type="integer")
      */
     protected $changedAt;
 
     /**
-     * @var int Unix Epoch timestamp when the issue has been closed, if so.
+     * @var int
      *
      * @ORM\Column(name="closed_at", type="integer", nullable=true)
      */

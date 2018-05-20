@@ -50,6 +50,12 @@ class ProjectFixtures extends Fixture
                 'description' => 'Project C',
                 'created'     => '2017-04-11',
             ],
+
+            'project:d' => [
+                'name'        => 'Presto',
+                'description' => 'Project D',
+                'created'     => '2018-01-12',
+            ],
         ];
 
         foreach ($data as $ref => $row) {

@@ -57,7 +57,7 @@ class StateResponsibleGroupFixtures extends Fixture implements DependentFixtureI
             ],
         ];
 
-        foreach (['a', 'b', 'c'] as $pref) {
+        foreach (['a', 'b', 'c', 'd'] as $pref) {
 
             foreach ($data as $states) {
 

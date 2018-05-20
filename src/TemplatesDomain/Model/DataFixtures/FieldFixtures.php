@@ -175,7 +175,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
             'resolved' => [],
         ];
 
-        foreach (['a', 'b', 'c'] as $pref) {
+        foreach (['a', 'b', 'c', 'd'] as $pref) {
 
             foreach ($data as $sref => $fields) {
 

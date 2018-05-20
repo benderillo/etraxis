@@ -39,9 +39,10 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $data = [
-            'a' => true,
-            'b' => true,
-            'c' => false,
+            'a' => ['task' => true,  'req' => true],
+            'b' => ['task' => true,  'req' => false],
+            'c' => ['task' => false, 'req' => false],
+            'd' => ['task' => true,  'req' => false],
         ];
 
         foreach ($data as $ref => $isLocked) {
@@ -55,17 +56,17 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
             $development->name        = 'Development';
             $development->prefix      = 'task';
             $development->description = 'Development Task ' . mb_strtoupper($ref);
-            $development->isLocked    = $isLocked;
+            $development->isLocked    = $isLocked['task'];
 
             $support->name        = 'Support';
             $support->prefix      = 'req';
             $support->description = 'Support Request ' . mb_strtoupper($ref);
             $support->criticalAge = 3;
             $support->frozenTime  = 7;
-            $support->isLocked    = $ref === 'a';
+            $support->isLocked    = $isLocked['req'];
 
             $this->addReference('task:' . $ref, $development);
-            $this->addReference('issue:' . $ref, $support);
+            $this->addReference('req:' . $ref, $support);
 
             $manager->persist($development);
             $manager->persist($support);

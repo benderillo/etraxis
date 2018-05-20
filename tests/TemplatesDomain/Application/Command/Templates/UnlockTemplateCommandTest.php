@@ -35,7 +35,7 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);
 
         self::assertTrue($template->isLocked);
 
@@ -54,7 +54,7 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
+        [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'DESC']);
 
         self::assertFalse($template->isLocked);
 
@@ -75,7 +75,7 @@ class UnlockTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);
 
         $command = new UnlockTemplateCommand([
             'template' => $template->id,

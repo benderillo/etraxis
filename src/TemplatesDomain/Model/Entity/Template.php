@@ -15,6 +15,7 @@ namespace eTraxis\TemplatesDomain\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Webinarium\PropertyTrait;
 
@@ -45,6 +46,7 @@ use Webinarium\PropertyTrait;
  *                                                            amount of days after its closure. After that issue will become read-only.
  *                                                            If this attribute is not specified, issue will never become read-only.
  * @property      bool                      $isLocked         Whether the template is locked for edition.
+ * @property-read null|State                $initialState     Initial state of the template if present.
  * @property-read State[]                   $states           List of template states.
  * @property-read TemplateRolePermission[]  $rolePermissions  List of template role permissions.
  * @property-read TemplateGroupPermission[] $groupPermissions List of template group permissions.
@@ -159,6 +161,16 @@ class Template
     protected function getters(): array
     {
         return [
+
+            'initialState' => function (): ?State {
+                foreach ($this->statesCollection as $state) {
+                    if ($state->type === StateType::INITIAL) {
+                        return $state;
+                    }
+                }
+
+                return null;
+            },
 
             'states' => function (): array {
                 return $this->statesCollection->getValues();

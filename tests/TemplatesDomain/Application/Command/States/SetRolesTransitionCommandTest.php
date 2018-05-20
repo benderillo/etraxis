@@ -100,10 +100,10 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
-        [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
+        [/* skipping */, /* skipping */, $toState] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         $command = new SetRolesTransitionCommand([
             'from'  => $fromState->id,

@@ -34,7 +34,7 @@ class DeleteStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
         self::assertNotNull($state);
 
         $command = new DeleteStateCommand([
@@ -69,7 +69,7 @@ class DeleteStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
 
         $command = new DeleteStateCommand([
             'state' => $state->id,
@@ -85,7 +85,7 @@ class DeleteStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
+        [$state] = $this->repository->findBy(['name' => 'Resolved'], ['id' => 'DESC']);
 
         $command = new DeleteStateCommand([
             'state' => $state->id,

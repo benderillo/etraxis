@@ -106,7 +106,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var ListItem $item */
-        [$item] = $this->repository->findBy(['value' => 1], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
 
         $command = new UpdateListItemCommand([
             'item'  => $item->id,

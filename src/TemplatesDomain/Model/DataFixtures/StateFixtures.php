@@ -60,7 +60,7 @@ class StateFixtures extends Fixture implements DependentFixtureInterface
                 ],
             ],
 
-            'issue' => [
+            'req' => [
                 'Submitted' => [
                     'type'        => StateType::INITIAL,
                     'responsible' => StateResponsible::KEEP,
@@ -75,7 +75,7 @@ class StateFixtures extends Fixture implements DependentFixtureInterface
             ],
         ];
 
-        foreach (['a', 'b', 'c'] as $pref) {
+        foreach (['a', 'b', 'c', 'd'] as $pref) {
 
             foreach ($data as $tref => $states) {
 

@@ -35,7 +35,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'DESC']);
 
         self::assertCount(3, $state->fields);
 
@@ -57,7 +57,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'DESC']);
 
         self::assertCount(2, $state->fields);
 
@@ -85,7 +85,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'DESC']);
 
         self::assertCount(1, $field->state->fields);
 
@@ -111,7 +111,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'DESC']);
 
         $command = new DeleteFieldCommand([
             'field' => $field->id,
@@ -128,6 +128,8 @@ class DeleteFieldCommandTest extends TransactionalTestCase
 
         /** @var Field $field */
         [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'DESC']);
+
+        $field->state->template->isLocked = false;
 
         $command = new DeleteFieldCommand([
             'field' => $field->id,

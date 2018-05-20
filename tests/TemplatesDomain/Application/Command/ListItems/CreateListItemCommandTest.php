@@ -119,7 +119,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $command = new CreateListItemCommand([
             'field' => $field->id,

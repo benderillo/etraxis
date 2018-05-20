@@ -132,10 +132,10 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetResponsibleGroupsCommand([
             'state'  => $state->id,

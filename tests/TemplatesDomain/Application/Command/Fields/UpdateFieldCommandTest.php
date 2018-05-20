@@ -81,7 +81,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,

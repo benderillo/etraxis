@@ -34,7 +34,7 @@ class DeleteTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
         self::assertNotNull($template);
 
         $command = new DeleteTemplateCommand([
@@ -69,7 +69,7 @@ class DeleteTemplateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
 
         $command = new DeleteTemplateCommand([
             'template' => $template->id,

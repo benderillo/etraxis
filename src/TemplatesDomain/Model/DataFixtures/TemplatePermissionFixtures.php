@@ -85,7 +85,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                 ],
             ],
 
-            'issue' => [
+            'req' => [
 
                 SystemRole::AUTHOR => [
                     TemplatePermission::EDIT_ISSUES,
@@ -133,7 +133,7 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
             ],
         ];
 
-        foreach (['a', 'b', 'c'] as $pref) {
+        foreach (['a', 'b', 'c', 'd'] as $pref) {
 
             foreach ($data as $tref => $groups) {
 

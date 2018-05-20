@@ -121,16 +121,16 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
         $groupRepository = $this->doctrine->getRepository(Group::class);
 
         /** @var State $fromState */
-        [$fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $fromState] = $this->repository->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
         /** @var State $toState */
-        [$toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $toState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $developers] = $groupRepository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $support] = $groupRepository->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetGroupsTransitionCommand([
             'from'   => $fromState->id,

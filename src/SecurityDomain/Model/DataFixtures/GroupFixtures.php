@@ -135,6 +135,13 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
                     'tbuckridge@example.com',
                 ],
             ],
+
+            'd' => [
+                'managers'   => [],
+                'developers' => [],
+                'clients'    => [],
+                'support'    => [],
+            ],
         ];
 
         $globals = [

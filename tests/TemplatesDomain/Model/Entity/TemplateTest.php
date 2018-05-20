@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -27,6 +28,31 @@ class TemplateTest extends TestCase
 
         $template = new Template($project);
         self::assertSame($project, $this->getProperty($template, 'project'));
+    }
+
+    public function testInitialState()
+    {
+        $template = new Template(new Project());
+        self::assertNull($template->initialState);
+
+        $initial = new State($template, StateType::INITIAL);
+        $this->setProperty($initial, 'id', 1);
+
+        $intermediate = new State($template, StateType::INTERMEDIATE);
+        $this->setProperty($initial, 'id', 2);
+
+        $final = new State($template, StateType::FINAL);
+        $this->setProperty($initial, 'id', 3);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $states */
+        $states = $this->getProperty($template, 'statesCollection');
+
+        $states->add($intermediate);
+        $states->add($final);
+        self::assertNull($template->initialState);
+
+        $states->add($initial);
+        self::assertSame($initial, $template->initialState);
     }
 
     public function testStates()

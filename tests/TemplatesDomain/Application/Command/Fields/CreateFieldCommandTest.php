@@ -108,7 +108,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
+        [/* skipping */,  /* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         $command = new CreateIssueFieldCommand([
             'state'       => $state->id,
