@@ -42,7 +42,7 @@ class WebTestCase extends SymfonyWebTestCase
         $this->client = static::createClient();
 
         $this->doctrine   = $this->client->getContainer()->get('doctrine');
-        $this->commandbus = $this->client->getContainer()->get('League\Tactician\CommandBus');
+        $this->commandbus = $this->client->getContainer()->get('tactician.commandbus.default');
     }
 
     /**
