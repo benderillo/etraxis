@@ -127,7 +127,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             $this->commandbus->handle($command);
         }
         catch (ConflictHttpException $exception) {
-            $this->fail($exception->getMessage());
+            self::fail($exception->getMessage());
         }
 
         $command = new UpdateGroupCommand([
@@ -157,7 +157,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             $this->commandbus->handle($command);
         }
         catch (ConflictHttpException $exception) {
-            $this->fail($exception->getMessage());
+            self::fail($exception->getMessage());
         }
 
         $command = new UpdateGroupCommand([
