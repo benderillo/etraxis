@@ -13,8 +13,8 @@
 
 namespace eTraxis\SharedDomain\Framework\Doctrine;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 use eTraxis\SharedDomain\Model\Dictionary\DatabasePlatform;
 
 /**
