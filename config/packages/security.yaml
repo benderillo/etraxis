@@ -18,6 +18,7 @@ security:
         main:
             anonymous: ~
             logout:    ~
+            user_checker: LazySec\Checker\GenericUserChecker
             guard:
                 authenticators:
                     - eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator

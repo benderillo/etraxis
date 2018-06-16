@@ -25,7 +25,7 @@ use LazySec\Entity\ResetPasswordTrait;
 use LazySec\Entity\UserTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\Encoder\EncoderAwareInterface;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Webinarium\PropertyTrait;
 
 /**
@@ -51,7 +51,7 @@ use Webinarium\PropertyTrait;
  * @property      string      $timezone    User's timezone (see the "Timezone" dictionary).
  * @property-read Group[]     $groups      List of groups the user is member of.
  */
-class User implements AdvancedUserInterface, EncoderAwareInterface
+class User implements UserInterface, EncoderAwareInterface
 {
     use PropertyTrait;
     use UserTrait;

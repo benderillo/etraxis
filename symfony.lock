@@ -402,12 +402,12 @@
         "version": "1.0.0"
     },
     "webinarium/symfony-lazysec": {
-        "version": "2.0",
+        "version": "2.1",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
             "branch": "master",
-            "version": "2.0",
-            "ref": "803b262a199f69b5360dca85c2d57d8dd80f815a"
+            "version": "2.1",
+            "ref": "2ca4d2ee744f5dc7d166ebc4cca2a5719242f084"
         }
     },
     "webmozart/assert": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53f0a6364b90a9dad0369b08ddecde25",
+    "content-hash": "f4166f09ce291ed434d4d817b5c38a2b",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -4853,16 +4853,16 @@
         },
         {
             "name": "webinarium/symfony-lazysec",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webinarium/symfony-lazysec.git",
-                "reference": "ffa504cbe70584b2bf9a7864cd95be043f8462d0"
+                "reference": "95850adc26648fcbe576b883845a6f9975c011d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webinarium/symfony-lazysec/zipball/ffa504cbe70584b2bf9a7864cd95be043f8462d0",
-                "reference": "ffa504cbe70584b2bf9a7864cd95be043f8462d0",
+                "url": "https://api.github.com/repos/webinarium/symfony-lazysec/zipball/95850adc26648fcbe576b883845a6f9975c011d1",
+                "reference": "95850adc26648fcbe576b883845a6f9975c011d1",
                 "shasum": ""
             },
             "require": {
@@ -4870,10 +4870,10 @@
                 "doctrine/orm": "^2.5",
                 "php": ">=7.1",
                 "ramsey/uuid": "^3.7",
-                "symfony/security-core": "^2.7|^3.0|^4.0"
+                "symfony/security-core": "^2.7|^3.0|^4.0|^4.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.9",
+                "friendsofphp/php-cs-fixer": "^2.12",
                 "phpunit/phpunit": "^5.7"
             },
             "type": "library",
@@ -4892,7 +4892,7 @@
                 "security",
                 "symfony"
             ],
-            "time": "2018-01-10T04:30:52+00:00"
+            "time": "2018-06-09T10:49:21+00:00"
         },
         {
             "name": "webmozart/assert",
