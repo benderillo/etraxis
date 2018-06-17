@@ -18,7 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
+use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission;
+use eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -36,6 +38,9 @@ class IssueVoter extends Voter
     ];
 
     protected $manager;
+
+    private $rolesCache  = [];
+    private $groupsCache = [];
 
     /**
      * Dependency Injection constructor.
@@ -91,22 +96,69 @@ class IssueVoter extends Voter
             return true;
         }
 
-        $query = $this->manager->createQueryBuilder();
+        return $this->hasGroupPermission($subject->template, $user, TemplatePermission::VIEW_ISSUES);
+    }
 
-        $query
-            ->select('tgp')
-            ->from(TemplateGroupPermission::class, 'tgp')
-            ->where('tgp.template = :template')
-            ->andWhere($query->expr()->in('tgp.group', ':groups'))
-            ->andWhere('tgp.permission = :permission')
-            ->setParameters([
-                'template'   => $subject->template,
-                'groups'     => $user->groups,
-                'permission' => TemplatePermission::VIEW_ISSUES,
-            ]);
+    /**
+     * Checks whether the specified system role is granted to specified permission for the template.
+     *
+     * @param Template $template   Template.
+     * @param string   $role       System role (see the "SystemRole" dictionary).
+     * @param string   $permission Permission.
+     *
+     * @return bool
+     */
+    private function hasRolePermission(Template $template, string $role, string $permission): bool
+    {
+        // If we don't have the permissions info yet, retrieve it from the DB and cache to reuse.
+        if (!array_key_exists($template->id, $this->rolesCache)) {
 
-        $results = $query->getQuery()->getResult();
+            $query = $this->manager->createQueryBuilder();
 
-        return count($results) !== 0;
+            $query
+                ->distinct()
+                ->select('tp.role')
+                ->addSelect('tp.permission')
+                ->from(TemplateRolePermission::class, 'tp')
+                ->where('tp.template = :template')
+                ->setParameter('template', $template);
+
+            $this->rolesCache[$template->id] = $query->getQuery()->getResult();
+        }
+
+        return in_array(['role' => $role, 'permission' => $permission], $this->rolesCache[$template->id], true);
+    }
+
+    /**
+     * Checks whether the specified user is granted to specified group permission for the template.
+     *
+     * @param Template $template   Template.
+     * @param User     $user       User.
+     * @param string   $permission Permission.
+     *
+     * @return bool
+     */
+    private function hasGroupPermission(Template $template, User $user, string $permission): bool
+    {
+        $key = sprintf('%s:%s', $template->id, $user->id);
+
+        // If we don't have the permissions info yet, retrieve it from the DB and cache to reuse.
+        if (!array_key_exists($key, $this->groupsCache)) {
+
+            $query = $this->manager->createQueryBuilder();
+
+            $query
+                ->distinct()
+                ->select('tp.permission')
+                ->from(TemplateGroupPermission::class, 'tp')
+                ->where('tp.template = :template')
+                ->andWhere($query->expr()->in('tp.group', ':groups'))
+                ->setParameter('template', $template)
+                ->setParameter('groups', $user->groups);
+
+            $this->groupsCache[$key] = $query->getQuery()->getResult();
+        }
+
+        return in_array(['permission' => $permission], $this->groupsCache[$key], true);
     }
 }
