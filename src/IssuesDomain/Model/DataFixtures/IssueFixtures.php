@@ -94,7 +94,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
             'task8' => [
                 'subject'     => 'Development task 8',
                 'author'      => $this->developer2,
-                'responsible' => $this->developer2,
+                'responsible' => $this->support2,
             ],
 
             'req1' => [
