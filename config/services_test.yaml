@@ -1,5 +1,0 @@
-services:
-    _defaults:
-        public: true
-
-    League\Tactician\CommandBus: '@tactician.commandbus'
