@@ -25,7 +25,7 @@ use Webinarium\PropertyTrait;
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(columns={"type", "issue_id", "user_id", "created_at"})
  *     })
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="eTraxis\IssuesDomain\Model\Repository\EventRepository")
  *
  * @property-read int      $id        Unique ID.
  * @property-read string   $type      Type of the event (see the "EventType" dictionary).
@@ -57,8 +57,8 @@ class Event
     /**
      * @var Issue
      *
-     * @ORM\ManyToOne(targetEntity="Issue", inversedBy="eventsCollection")
-     * @ORM\JoinColumn(name="issue_id", nullable=false, referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Issue", inversedBy="eventsCollection", fetch="EAGER")
+     * @ORM\JoinColumn(name="issue_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $issue;
 

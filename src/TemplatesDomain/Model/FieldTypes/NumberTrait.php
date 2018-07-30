@@ -13,7 +13,10 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Number field trait.
@@ -27,17 +30,50 @@ trait NumberTrait
      */
     public function asNumber(): NumberInterface
     {
-        return new class($this->parameters) implements NumberInterface {
+        return new class($this, $this->parameters) implements NumberInterface {
+            protected $field;
             protected $parameters;
 
             /**
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
+             * @param Field           $field
              * @param FieldParameters $parameters
              */
-            public function __construct(FieldParameters &$parameters)
+            public function __construct(Field $field, FieldParameters &$parameters)
             {
+                $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $message = $translator->trans('field.error.value_range', [
+                    '%name%'    => $this->field->name,
+                    '%minimum%' => $this->getMinimumValue(),
+                    '%maximum%' => $this->getMaximumValue(),
+                ]);
+
+                $constraints = [
+                    new Assert\Range([
+                        'min'        => $this->getMinimumValue(),
+                        'max'        => $this->getMaximumValue(),
+                        'minMessage' => $message,
+                        'maxMessage' => $message,
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^(\-|\+)?\d+$/',
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
             }
 
             /**
@@ -63,7 +99,7 @@ trait NumberTrait
              */
             public function getMinimumValue(): int
             {
-                return $this->parameters->parameter1;
+                return $this->parameters->parameter1 ?? NumberInterface::MIN_VALUE;
             }
 
             /**
@@ -89,7 +125,7 @@ trait NumberTrait
              */
             public function getMaximumValue(): int
             {
-                return $this->parameters->parameter2;
+                return $this->parameters->parameter2 ?? NumberInterface::MAX_VALUE;
             }
 
             /**

@@ -36,7 +36,7 @@ class FieldValue
      *
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity="Issue", inversedBy="valuesCollection")
-     * @ORM\JoinColumn(name="issue_id", nullable=false, referencedColumnName="id")
+     * @ORM\JoinColumn(name="issue_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $issue;
 
@@ -55,7 +55,7 @@ class FieldValue
      *      number   - integer value (from -1000000000 till +1000000000)
      *      decimal  - decimal value (foreign key to "DecimalValue" entity)
      *      string   - string value (foreign key to "StringValue" entity)
-     *      text     - string value (foreign key to "TextValue" entity)
+     *      text     - text value (foreign key to "TextValue" entity)
      *      checkbox - state of checkbox (0 - unchecked, 1 - checked)
      *      list     - integer value (foreign key to "ListItem" entity)
      *      issue    - issue ID (foreign key to "Issue" entity)
@@ -67,7 +67,7 @@ class FieldValue
     protected $value;
 
     /**
-     * Creates new event.
+     * Creates new field value.
      *
      * @param Issue    $issue
      * @param Field    $field

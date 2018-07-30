@@ -46,13 +46,13 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [/* skipping */, $developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->responsibleGroupsToArray($state));
 
@@ -83,10 +83,10 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->responsibleGroupsToArray($state));
 
@@ -110,10 +110,10 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetResponsibleGroupsCommand([
             'state'  => $state->id,
@@ -132,10 +132,10 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [/* skipping */,  /* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $group */
-        [/* skipping */,  /* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetResponsibleGroupsCommand([
             'state'  => $state->id,
@@ -154,10 +154,10 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetResponsibleGroupsCommand([
             'state'  => $state->id,
@@ -176,7 +176,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         $command = new SetResponsibleGroupsCommand([
             'state'  => self::UNKNOWN_ENTITY_ID,
@@ -196,7 +196,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'DESC']);

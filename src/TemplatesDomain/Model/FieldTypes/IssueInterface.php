@@ -16,6 +16,6 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Issue field interface.
  */
-interface IssueInterface
+interface IssueInterface extends FieldInterface
 {
 }

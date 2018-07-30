@@ -16,7 +16,7 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Duration field interface.
  */
-interface DurationInterface
+interface DurationInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_VALUE = 0;            // 0:00

@@ -15,6 +15,7 @@ namespace eTraxis\SharedDomain\Application\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\User;
 
 class DummyVoter extends Voter
@@ -28,7 +29,7 @@ class DummyVoter extends Voter
     protected $attributes = [
         self::CREATE => null,
         self::UPDATE => User::class,
-        self::DELETE => User::class,
+        self::DELETE => [User::class, Role::class],
     ];
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)

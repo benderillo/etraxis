@@ -17,6 +17,8 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * List field trait.
@@ -49,6 +51,35 @@ trait ListTrait
                 $this->repository = $repository;
                 $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $choices = array_map(function (ListItem $item) {
+                    return $item->value;
+                }, $this->repository->findAllByField($this->field));
+
+                $constraints = [
+                    new Assert\Regex([
+                        'pattern' => '/^\d+$/',
+                    ]),
+                    new Assert\GreaterThan([
+                        'value' => 0,
+                    ]),
+                    new Assert\Choice([
+                        'choices' => $choices,
+                        'strict'  => true,
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
             }
 
             /**

@@ -36,7 +36,7 @@ class FieldVoterTest extends TransactionalTestCase
 
     public function testUnsupportedAttribute()
     {
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
         self::assertFalse($this->security->isGranted('UNKNOWN', $field));
@@ -47,9 +47,9 @@ class FieldVoterTest extends TransactionalTestCase
         $voter = new FieldVoter();
         $token = new AnonymousToken('', 'anon.');
 
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
 
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $state, [FieldVoter::CREATE_FIELD]));
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::UPDATE_FIELD]));
@@ -62,53 +62,53 @@ class FieldVoterTest extends TransactionalTestCase
         /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
         $repository = $this->doctrine->getRepository(State::class);
 
-        [$stateA, /* skipping */, $stateC] = $repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [/* skipping */, $stateB, $stateC] = $repository->findBy(['name' => 'New'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateA));
+        self::assertTrue($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateB));
         self::assertFalse($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateC));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateA));
+        self::assertFalse($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateB));
         self::assertFalse($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateC));
     }
 
     public function testUpdate()
     {
-        [$fieldA, /* skipping */, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldA));
+        self::assertTrue($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldC));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldA));
+        self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldC));
     }
 
     public function testDelete()
     {
-        [$fieldA, /* skipping */, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldA));
+        self::assertTrue($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldC));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldA));
+        self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldC));
     }
 
     public function testManagePermissions()
     {
-        [$fieldA, /* skipping */, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldA));
+        self::assertTrue($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldC));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldA));
+        self::assertFalse($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::MANAGE_PERMISSIONS, $fieldC));
     }
 }

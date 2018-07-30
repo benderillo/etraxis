@@ -13,7 +13,11 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange;
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Duration field trait.
@@ -27,17 +31,50 @@ trait DurationTrait
      */
     public function asDuration(): DurationInterface
     {
-        return new class($this->parameters) implements DurationInterface {
+        return new class($this, $this->parameters) implements DurationInterface {
+            protected $field;
             protected $parameters;
 
             /**
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
+             * @param Field           $field
              * @param FieldParameters $parameters
              */
-            public function __construct(FieldParameters &$parameters)
+            public function __construct(Field $field, FieldParameters &$parameters)
             {
+                $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $message = $translator->trans('field.error.value_range', [
+                    '%name%'    => $this->field->name,
+                    '%minimum%' => $this->getMinimumValue(),
+                    '%maximum%' => $this->getMaximumValue(),
+                ]);
+
+                $constraints = [
+                    new Assert\Regex([
+                        'pattern' => '/^\d{1,6}:[0-5]\d$/',
+                    ]),
+                    new DurationRange([
+                        'min'        => $this->getMinimumValue(),
+                        'max'        => $this->getMaximumValue(),
+                        'minMessage' => $message,
+                        'maxMessage' => $message,
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
             }
 
             /**
@@ -55,7 +92,7 @@ trait DurationTrait
              */
             public function getMinimumValue(): string
             {
-                return $this->toString($this->parameters->parameter1);
+                return $this->toString($this->parameters->parameter1 ?? DurationInterface::MIN_VALUE);
             }
 
             /**
@@ -73,7 +110,7 @@ trait DurationTrait
              */
             public function getMaximumValue(): string
             {
-                return $this->toString($this->parameters->parameter2);
+                return $this->toString($this->parameters->parameter2 ?? DurationInterface::MAX_VALUE);
             }
 
             /**

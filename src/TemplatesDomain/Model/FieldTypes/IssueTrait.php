@@ -13,6 +13,10 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\TemplatesDomain\Model\Entity\Field;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Issue field trait.
  */
@@ -25,7 +29,39 @@ trait IssueTrait
      */
     public function asIssue(): IssueInterface
     {
-        return new class() implements IssueInterface {
+        return new class($this) implements IssueInterface {
+            protected $field;
+
+            /**
+             * Dependency Injection constructor.
+             *
+             * @param Field $field
+             */
+            public function __construct(Field $field)
+            {
+                $this->field = $field;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $constraints = [
+                    new Assert\Regex([
+                        'pattern' => '/^\d+$/',
+                    ]),
+                    new Assert\GreaterThan([
+                        'value' => 0,
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
+            }
         };
     }
 }

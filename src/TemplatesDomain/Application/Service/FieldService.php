@@ -59,6 +59,48 @@ class FieldService
     }
 
     /**
+     * Returns list of constraints for field value validation.
+     *
+     * @param Field $field
+     *
+     * @return \Symfony\Component\Validator\Constraint[]
+     */
+    public function getValidationConstraints(Field $field): array
+    {
+        switch ($field->type) {
+
+            case FieldType::NUMBER:
+                return $field->asNumber()->getValidationConstraints($this->translator);
+
+            case FieldType::DECIMAL:
+                return $field->asDecimal($this->decimalRepository)->getValidationConstraints($this->translator);
+
+            case FieldType::STRING:
+                return $field->asString($this->stringRepository)->getValidationConstraints($this->translator);
+
+            case FieldType::TEXT:
+                return $field->asText($this->textRepository)->getValidationConstraints($this->translator);
+
+            case FieldType::CHECKBOX:
+                return $field->asCheckbox()->getValidationConstraints($this->translator);
+
+            case FieldType::LIST:
+                return $field->asList($this->listRepository)->getValidationConstraints($this->translator);
+
+            case FieldType::ISSUE:
+                return $field->asIssue()->getValidationConstraints($this->translator);
+
+            case FieldType::DATE:
+                return $field->asDate()->getValidationConstraints($this->translator);
+
+            case FieldType::DURATION:
+                return $field->asDuration()->getValidationConstraints($this->translator);
+        }
+
+        return [];
+    }
+
+    /**
      * Copies field-specific parameters from create/update command to specified field.
      *
      * @param Command\AbstractFieldCommand $command

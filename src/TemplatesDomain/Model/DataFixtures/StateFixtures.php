@@ -84,7 +84,7 @@ class StateFixtures extends Fixture implements DependentFixtureInterface
 
                 foreach ($states as $name => $row) {
 
-                    $state = new State($template, $row['type']);
+                    $state = new State($template, $pref === 'd' ? StateType::INTERMEDIATE : $row['type']);
 
                     $state->name        = $name;
                     $state->responsible = $row['responsible'] ?? StateResponsible::REMOVE;

@@ -37,8 +37,8 @@ class SetInitialStateCommandTest extends TransactionalTestCase
 
         /** @var State $initial */
         /** @var State $state */
-        [$initial] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
-        [$state]   = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $initial] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [/* skipping */, $state]   = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         self::assertSame(StateType::INITIAL, $initial->type);
         self::assertNotSame(StateType::INITIAL, $state->type);
@@ -61,7 +61,7 @@ class SetInitialStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
 
         self::assertSame(StateType::INITIAL, $state->type);
 
@@ -96,7 +96,7 @@ class SetInitialStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new SetInitialStateCommand([
             'state' => $state->id,

@@ -37,10 +37,10 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $nextState */
-        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [/* skipping */, $nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
         self::assertNull($state->nextState);
 
         $command = new UpdateStateCommand([
@@ -68,7 +68,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
             'state'       => $state->id,
@@ -88,7 +88,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         /** @var State $nextState */
         [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'DESC']);
@@ -110,7 +110,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
             'state'       => $state->id,
@@ -128,7 +128,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [/* skipping */,  /* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
             'state'       => $state->id,
@@ -162,7 +162,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $command = new UpdateStateCommand([
             'state'       => $state->id,

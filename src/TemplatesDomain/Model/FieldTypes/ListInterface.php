@@ -18,7 +18,7 @@ use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 /**
  * List field interface.
  */
-interface ListInterface
+interface ListInterface extends FieldInterface
 {
     /**
      * Sets default value of the field.

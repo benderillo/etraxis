@@ -47,15 +47,17 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
         $data = [
 
             'new' => [
-                1 => [
+                [
                     'type'     => FieldType::LIST,
                     'name'     => 'Priority',
                     'required' => true,
+                    'position' => 1,
                 ],
-                2 => [
+                [
                     'type'       => FieldType::TEXT,
                     'name'       => 'Description',
                     'required'   => false,
+                    'position'   => 2,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
                         $repository = $manager->getRepository(TextValue::class);
@@ -64,24 +66,27 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                             ->setMaximumLength(TextInterface::MAX_LENGTH);
                     },
                 ],
-                0 => [
+                [
                     'type'     => FieldType::CHECKBOX,
                     'name'     => 'Error',
                     'required' => false,
+                    'position' => 3,
                     'deleted'  => true,
                 ],
-                3 => [
+                [
                     'type'     => FieldType::CHECKBOX,
                     'name'     => 'New feature',
                     'required' => false,
+                    'position' => 3,
                 ],
             ],
 
             'assigned' => [
-                1 => [
+                [
                     'type'       => FieldType::DATE,
                     'name'       => 'Due date',
                     'required'   => false,
+                    'position'   => 1,
                     'parameters' => function (Field $field) {
                         $field->asDate()
                             ->setMinimumValue(0)
@@ -92,10 +97,11 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'completed' => [
-                1 => [
+                [
                     'type'       => FieldType::STRING,
                     'name'       => 'Commit ID',
                     'required'   => false,
+                    'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
                         $repository = $manager->getRepository(StringValue::class);
@@ -104,32 +110,35 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                             ->setMaximumLength(40);
                     },
                 ],
-                2 => [
+                [
                     'type'        => FieldType::NUMBER,
                     'name'        => 'Delta',
                     'description' => 'NCLOC',
                     'required'    => true,
+                    'position'    => 2,
                     'parameters'  => function (Field $field) {
                         $field->asNumber()
                             ->setMinimumValue(0)
                             ->setMaximumValue(NumberInterface::MAX_VALUE);
                     },
                 ],
-                3 => [
+                [
                     'type'        => FieldType::DURATION,
                     'name'        => 'Effort',
                     'description' => 'HH:MM',
                     'required'    => true,
+                    'position'    => 3,
                     'parameters'  => function (Field $field) {
                         $field->asDuration()
                             ->setMinimumValue('0:00')
                             ->setMaximumValue('999999:59');
                     },
                 ],
-                4 => [
+                [
                     'type'       => FieldType::DECIMAL,
                     'name'       => 'Test coverage',
                     'required'   => false,
+                    'position'   => 4,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
                         $repository = $manager->getRepository(DecimalValue::class);
@@ -142,24 +151,27 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'duplicated' => [
-                0 => [
+                [
                     'type'     => FieldType::ISSUE,
                     'name'     => 'Task ID',
                     'required' => true,
+                    'position' => 1,
                     'deleted'  => true,
                 ],
-                1 => [
+                [
                     'type'     => FieldType::ISSUE,
                     'name'     => 'Issue ID',
                     'required' => true,
+                    'position' => 1,
                 ],
             ],
 
             'submitted' => [
-                1 => [
+                [
                     'type'       => FieldType::TEXT,
                     'name'       => 'Description',
                     'required'   => true,
+                    'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
                         $repository = $manager->getRepository(TextValue::class);
@@ -182,11 +194,11 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                 /** @var \eTraxis\TemplatesDomain\Model\Entity\State $state */
                 $state = $this->getReference(sprintf('%s:%s', $sref, $pref));
 
-                foreach ($fields as $position => $row) {
+                foreach ($fields as $row) {
 
                     $field = new Field($state, $row['type']);
 
-                    $field->position    = $position;
+                    $field->position    = $row['position'];
                     $field->name        = $row['name'];
                     $field->description = $row['description'] ?? null;
                     $field->isRequired  = $row['required'];

@@ -38,7 +38,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         self::assertNull($this->getPermissionByRole($field->rolePermissions, SystemRole::ANYONE));
         self::assertSame(FieldPermission::READ_ONLY, $this->getPermissionByRole($field->rolePermissions, SystemRole::AUTHOR));
@@ -66,7 +66,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         self::assertNull($this->getPermissionByRole($field->rolePermissions, SystemRole::ANYONE));
         self::assertSame(FieldPermission::READ_ONLY, $this->getPermissionByRole($field->rolePermissions, SystemRole::AUTHOR));
@@ -95,7 +95,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         self::assertNull($this->getPermissionByRole($field->rolePermissions, SystemRole::ANYONE));
         self::assertSame(FieldPermission::READ_ONLY, $this->getPermissionByRole($field->rolePermissions, SystemRole::AUTHOR));
@@ -126,7 +126,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $command = new SetRolesPermissionCommand([
             'field'      => $field->id,

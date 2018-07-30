@@ -36,7 +36,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -62,7 +62,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -81,7 +81,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [/* skipping */,  /* skipping */, $field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -116,7 +116,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
 
         $command = new UpdateIssueFieldCommand([
             'field'       => $field->id,
@@ -136,7 +136,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $command = new UpdateListFieldCommand([
             'field'       => $field->id,

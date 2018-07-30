@@ -43,7 +43,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -67,7 +67,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -91,7 +91,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -115,7 +115,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -134,7 +134,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -151,7 +151,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [/* skipping */,  /* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
+        [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,
@@ -182,7 +182,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Task ID'], ['id' => 'ASC']);
 
         $command = new SetFieldPositionCommand([
             'field'    => $field->id,

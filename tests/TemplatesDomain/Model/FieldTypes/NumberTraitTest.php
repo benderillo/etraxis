@@ -20,11 +20,17 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
-use PHPUnit\Framework\TestCase;
+use eTraxis\Tests\WebTestCase;
 
-class NumberTraitTest extends TestCase
+class NumberTraitTest extends WebTestCase
 {
     use ReflectionTrait;
+
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    protected $translator;
+
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
+    protected $validator;
 
     /** @var Field */
     protected $object;
@@ -33,10 +39,54 @@ class NumberTraitTest extends TestCase
     {
         parent::setUp();
 
+        $this->translator = $this->client->getContainer()->get('translator');
+        $this->validator  = $this->client->getContainer()->get('validator');
+
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $this->object = new Field($state, FieldType::NUMBER);
         $this->setProperty($this->object, 'id', 1);
+    }
+
+    public function testValidationConstraints()
+    {
+        $this->object->name = 'Custom field';
+        $this->object->asNumber()
+            ->setMinimumValue(1)
+            ->setMaximumValue(100);
+
+        $errors = $this->validator->validate(1, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate(100, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate(0, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('\'Custom field\' should be in range from 1 to 100.', $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate(101, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('\'Custom field\' should be in range from 1 to 100.', $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate(12.34, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate('test', $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value should be a valid number.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = true;
+
+        $errors = $this->validator->validate(null, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = false;
+
+        $errors = $this->validator->validate(null, $this->object->asNumber()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()

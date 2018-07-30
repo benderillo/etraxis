@@ -38,16 +38,16 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         /** @var Group $managers */
-        [$managers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['id' => 'ASC']);
+        [/* skipping */, $managers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['id' => 'ASC']);
 
         /** @var Group $developers */
-        [$developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [/* skipping */, $developers] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         /** @var Group $support */
-        [$support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
+        [/* skipping */, $support] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['id' => 'ASC']);
 
         self::assertSame(FieldPermission::READ_WRITE, $this->getPermissionByGroup($field->groupPermissions, $managers->id));
         self::assertSame(FieldPermission::READ_ONLY, $this->getPermissionByGroup($field->groupPermissions, $developers->id));
@@ -78,10 +78,10 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [/* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new SetGroupsPermissionCommand([
             'field'      => $field->id,
@@ -101,7 +101,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
+        [/* skipping */, $group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $command = new SetGroupsPermissionCommand([
             'field'      => self::UNKNOWN_ENTITY_ID,
@@ -121,7 +121,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Field $field */
-        [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'DESC']);

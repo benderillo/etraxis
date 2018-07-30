@@ -38,7 +38,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Task ID', 'removedAt' => null]);
@@ -89,7 +89,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         $command = new CreateIssueFieldCommand([
             'state'       => $state->id,
@@ -108,7 +108,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [/* skipping */,  /* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         $command = new CreateIssueFieldCommand([
             'state'       => $state->id,
@@ -128,7 +128,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var State $state */
-        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         $command = new CreateIssueFieldCommand([
             'state'       => $state->id,

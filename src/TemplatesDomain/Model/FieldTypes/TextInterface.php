@@ -19,7 +19,7 @@ use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 /**
  * Text field interface.
  */
-interface TextInterface
+interface TextInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_LENGTH = 1;

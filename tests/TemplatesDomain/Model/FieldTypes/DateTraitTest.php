@@ -20,11 +20,19 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
-use PHPUnit\Framework\TestCase;
+use eTraxis\Tests\WebTestCase;
 
-class DateTraitTest extends TestCase
+class DateTraitTest extends WebTestCase
 {
     use ReflectionTrait;
+
+    protected const SECS_IN_DAY = 86400;
+
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    protected $translator;
+
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
+    protected $validator;
 
     /** @var Field */
     protected $object;
@@ -33,10 +41,52 @@ class DateTraitTest extends TestCase
     {
         parent::setUp();
 
+        $this->translator = $this->client->getContainer()->get('translator');
+        $this->validator  = $this->client->getContainer()->get('validator');
+
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $this->object = new Field($state, FieldType::DATE);
         $this->setProperty($this->object, 'id', 1);
+    }
+
+    public function testValidationConstraints()
+    {
+        $this->object->name = 'Custom field';
+        $this->object->asDate()
+            ->setMinimumValue(0)
+            ->setMaximumValue(7);
+
+        $now = time();
+
+        $errors = $this->validator->validate(date('Y-m-d', $now), $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 7), $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate(date('Y-m-d', $now - self::SECS_IN_DAY), $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame(sprintf('\'Custom field\' should be in range from %s to %s.', date('n/j/y', $now), date('n/j/y', $now + self::SECS_IN_DAY * 7)), $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 8), $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame(sprintf('\'Custom field\' should be in range from %s to %s.', date('n/j/y', $now), date('n/j/y', $now + self::SECS_IN_DAY * 7)), $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate('2015-22-11', $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = true;
+
+        $errors = $this->validator->validate(null, $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = false;
+
+        $errors = $this->validator->validate(null, $this->object->asDate()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()

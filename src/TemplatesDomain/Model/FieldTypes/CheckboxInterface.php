@@ -16,7 +16,7 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Checkbox field interface.
  */
-interface CheckboxInterface
+interface CheckboxInterface extends FieldInterface
 {
     /**
      * Sets default value of the field.

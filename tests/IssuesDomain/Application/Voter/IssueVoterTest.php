@@ -14,6 +14,9 @@
 namespace eTraxis\IssuesDomain\Application\Voter;
 
 use eTraxis\IssuesDomain\Model\Entity\Issue;
+use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
@@ -49,9 +52,15 @@ class IssueVoterTest extends TransactionalTestCase
         $voter = new IssueVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
+        $developer  = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$state]    = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+
         [$issue] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
 
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::VIEW_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $template, [IssueVoter::CREATE_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$state, $developer], [IssueVoter::ASSIGN_ISSUE]));
     }
 
     public function testViewByAuthor()
@@ -95,5 +104,37 @@ class IssueVoterTest extends TransactionalTestCase
 
         $this->loginAs('clegros@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::VIEW_ISSUE, $issue));
+    }
+
+    public function testCreate()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$templateA, $templateB, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+
+        // Template D doesn't have initial state.
+        [$templateD] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['id' => 'DESC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateA));
+        self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateB));
+        self::assertTrue($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateC));
+        self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateD));
+
+        $this->loginAs('lucas.oconnell@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateC));
+    }
+
+    public function testAssign()
+    {
+        /** @var State $state */
+        [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+
+        $developer = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
+        $support   = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'tmarquardt@example.com']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$state, $developer]));
+        self::assertFalse($this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$state, $support]));
     }
 }

@@ -45,6 +45,22 @@ class ListItemRepository extends ServiceEntityRepository
     }
 
     /**
+     * Finds all list items of specified field.
+     *
+     * @param Field $field
+     *
+     * @return ListItem[]
+     */
+    public function findAllByField(Field $field): array
+    {
+        return $this->findBy([
+            'field' => $field,
+        ], [
+            'value' => 'ASC',
+        ]);
+    }
+
+    /**
      * Finds list item by value.
      *
      * @param Field $field

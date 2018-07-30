@@ -13,9 +13,12 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
 use eTraxis\TemplatesDomain\Model\Entity\FieldPCRE;
 use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Text field trait.
@@ -31,8 +34,9 @@ trait TextTrait
      */
     public function asText(TextValueRepository $repository): TextInterface
     {
-        return new class($repository, $this->pcre, $this->parameters) implements TextInterface {
+        return new class($repository, $this, $this->pcre, $this->parameters) implements TextInterface {
             protected $repository;
+            protected $field;
             protected $pcre;
             protected $parameters;
 
@@ -40,14 +44,40 @@ trait TextTrait
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
              * @param TextValueRepository $repository
+             * @param Field               $field
              * @param FieldPCRE           $pcre
              * @param FieldParameters     $parameters
              */
-            public function __construct(TextValueRepository $repository, FieldPCRE $pcre, FieldParameters &$parameters)
+            public function __construct(TextValueRepository $repository, Field $field, FieldPCRE $pcre, FieldParameters &$parameters)
             {
                 $this->repository = $repository;
+                $this->field      = $field;
                 $this->pcre       = $pcre;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $constraints = [
+                    new Assert\Length([
+                        'max' => $this->getMaximumLength(),
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                if ($this->pcre->check) {
+                    $constraints[] = new Assert\Regex([
+                        'pattern' => sprintf('/^%s$/', $this->pcre->check),
+                    ]);
+                }
+
+                return $constraints;
             }
 
             /**
@@ -73,7 +103,7 @@ trait TextTrait
              */
             public function getMaximumLength(): int
             {
-                return $this->parameters->parameter1;
+                return $this->parameters->parameter1 ?? TextInterface::MAX_LENGTH;
             }
 
             /**

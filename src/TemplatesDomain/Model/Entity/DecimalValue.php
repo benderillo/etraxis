@@ -55,6 +55,42 @@ class DecimalValue
      */
     public function __construct(string $value)
     {
-        $this->value = $value;
+        $this->value = $this->trim($value);
+    }
+
+    /**
+     * Trims leading and trailing extra zeros from the specified number.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    protected function trim(string $value): string
+    {
+        $value = mb_strpos($value, '.') === false
+            ? ltrim($value, '0')
+            : trim($value, '0');
+
+        if (mb_strlen($value) === 0) {
+            $value = '0';
+        }
+        elseif ($value[0] === '.') {
+            $value = '0' . $value;
+        }
+
+        return rtrim($value, '.');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getters(): array
+    {
+        return [
+
+            'value' => function (): string {
+                return $this->trim($this->value);
+            },
+        ];
     }
 }

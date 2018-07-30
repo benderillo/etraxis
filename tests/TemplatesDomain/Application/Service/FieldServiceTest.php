@@ -14,17 +14,21 @@
 namespace eTraxis\TemplatesDomain\Application\Service;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
+use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class FieldServiceTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository */
     protected $fieldRepository;
 
@@ -57,6 +61,32 @@ class FieldServiceTest extends TransactionalTestCase
         $translator = $this->client->getContainer()->get('translator');
 
         $this->service = new FieldService($translator, $this->decimalRepository, $this->stringRepository, $this->textRepository, $this->listRepository);
+    }
+
+    public function testGetValidationConstraints()
+    {
+        $names = [
+            FieldType::NUMBER   => 'Delta',
+            FieldType::DECIMAL  => 'Test coverage',
+            FieldType::STRING   => 'Commit ID',
+            FieldType::TEXT     => 'Description',
+            FieldType::CHECKBOX => 'New feature',
+            FieldType::LIST     => 'Priority',
+            FieldType::ISSUE    => 'Issue ID',
+            FieldType::DATE     => 'Due date',
+            FieldType::DURATION => 'Effort',
+        ];
+
+        foreach ($names as $name) {
+            /** @var Field $field */
+            [$field] = $this->fieldRepository->findBy(['name' => $name], ['id' => 'ASC']);
+            self::assertNotEmpty($this->service->getValidationConstraints($field));
+        }
+
+        /** @var Field $field */
+        [$field] = $this->fieldRepository->findBy(['name' => 'New feature'], ['id' => 'ASC']);
+        $this->setProperty($field, 'type', 'unknown');
+        self::assertEmpty($this->service->getValidationConstraints($field));
     }
 
     public function testCopyAsCheckboxSuccess()
@@ -136,8 +166,8 @@ class FieldServiceTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Test coverage'], ['id' => 'ASC']);
 
-        self::assertSame('0.0000000000', $field->asDecimal($this->decimalRepository)->getMinimumValue());
-        self::assertSame('100.0000000000', $field->asDecimal($this->decimalRepository)->getMaximumValue());
+        self::assertSame('0', $field->asDecimal($this->decimalRepository)->getMinimumValue());
+        self::assertSame('100', $field->asDecimal($this->decimalRepository)->getMaximumValue());
         self::assertNull($field->asDecimal($this->decimalRepository)->getDefaultValue());
 
         $command = new Command\UpdateDecimalFieldCommand([

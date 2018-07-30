@@ -19,7 +19,7 @@ use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 /**
  * String field interface.
  */
-interface StringInterface
+interface StringInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_LENGTH = 1;

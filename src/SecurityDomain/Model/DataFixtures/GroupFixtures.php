@@ -137,7 +137,9 @@ class GroupFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'd' => [
-                'managers'   => [],
+                'managers'   => [
+                    'ldoyle@example.com',
+                ],
                 'developers' => [],
                 'clients'    => [],
                 'support'    => [],

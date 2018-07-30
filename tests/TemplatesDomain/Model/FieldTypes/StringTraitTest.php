@@ -28,6 +28,12 @@ class StringTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
 
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    protected $translator;
+
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
+    protected $validator;
+
     /** @var Field */
     protected $object;
 
@@ -35,10 +41,44 @@ class StringTraitTest extends TransactionalTestCase
     {
         parent::setUp();
 
+        $this->translator = $this->client->getContainer()->get('translator');
+        $this->validator  = $this->client->getContainer()->get('validator');
+
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $this->object = new Field($state, FieldType::STRING);
         $this->setProperty($this->object, 'id', 1);
+    }
+
+    public function testValidationConstraints()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
+        $repository = $this->doctrine->getRepository(StringValue::class);
+
+        $this->object->asString($repository)->setMaximumLength(12);
+        $this->object->asString($repository)->getPCRE()->check = '(\d{3})-(\d{3})-(\d{4})';
+
+        $errors = $this->validator->validate('123-456-7890', $this->object->asString($repository)->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate('123-456-78901', $this->object->asString($repository)->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value is too long. It should have 12 characters or less.', $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate('123 456 7890', $this->object->asString($repository)->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = true;
+
+        $errors = $this->validator->validate(null, $this->object->asString($repository)->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = false;
+
+        $errors = $this->validator->validate(null, $this->object->asString($repository)->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
     }
 
     public function testMaximumLength()

@@ -16,7 +16,7 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Number field interface.
  */
-interface NumberInterface
+interface NumberInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_VALUE = -1000000000;

@@ -16,7 +16,7 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Decimal field interface.
  */
-interface DecimalInterface
+interface DecimalInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_VALUE = '-9999999999.9999999999';

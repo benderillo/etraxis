@@ -56,7 +56,7 @@ class ListItem
      * @var Field Field.
      *
      * @ORM\ManyToOne(targetEntity="Field")
-     * @ORM\JoinColumn(name="field_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="field_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $field;
 

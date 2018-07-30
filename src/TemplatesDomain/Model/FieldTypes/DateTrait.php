@@ -13,7 +13,11 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\SharedDomain\Framework\Validator\Constraints\DateRange;
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Date field trait.
@@ -27,17 +31,57 @@ trait DateTrait
      */
     public function asDate(): DateInterface
     {
-        return new class($this->parameters) implements DateInterface {
+        return new class($this, $this->parameters) implements DateInterface {
+            protected const SECS_IN_DAY = 86400;
+
+            protected $field;
             protected $parameters;
 
             /**
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
+             * @param Field           $field
              * @param FieldParameters $parameters
              */
-            public function __construct(FieldParameters &$parameters)
+            public function __construct(Field $field, FieldParameters &$parameters)
             {
+                $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                /** @noinspection PhpUndefinedClassInspection */
+                $formatter = new \IntlDateFormatter($translator->getLocale(), \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
+
+                $now = time();
+
+                $message = $translator->trans('field.error.value_range', [
+                    '%name%'    => $this->field->name,
+                    '%minimum%' => $formatter->format($now + self::SECS_IN_DAY * $this->getMinimumValue()),
+                    '%maximum%' => $formatter->format($now + self::SECS_IN_DAY * $this->getMaximumValue()),
+                ]);
+
+                $constraints = [
+                    new Assert\Regex([
+                        'pattern' => DateRange::PCRE_PATTERN,
+                    ]),
+                    new DateRange([
+                        'min'        => date('Y-m-d', $now + self::SECS_IN_DAY * $this->getMinimumValue()),
+                        'max'        => date('Y-m-d', $now + self::SECS_IN_DAY * $this->getMaximumValue()),
+                        'minMessage' => $message,
+                        'maxMessage' => $message,
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
             }
 
             /**
@@ -63,7 +107,7 @@ trait DateTrait
              */
             public function getMinimumValue(): int
             {
-                return $this->parameters->parameter1;
+                return $this->parameters->parameter1 ?? DateInterface::MIN_VALUE;
             }
 
             /**
@@ -89,7 +133,7 @@ trait DateTrait
              */
             public function getMaximumValue(): int
             {
-                return $this->parameters->parameter2;
+                return $this->parameters->parameter2 ?? DateInterface::MAX_VALUE;
             }
 
             /**

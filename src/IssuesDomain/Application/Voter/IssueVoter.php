@@ -17,7 +17,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
+use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
 use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
+use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\TemplatesDomain\Model\Entity\StateResponsibleGroup;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission;
 use eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission;
@@ -31,10 +34,14 @@ class IssueVoter extends Voter
 {
     use VoterTrait;
 
-    public const VIEW_ISSUE = 'issue.view';
+    public const VIEW_ISSUE   = 'issue.view';
+    public const CREATE_ISSUE = 'issue.create';
+    public const ASSIGN_ISSUE = 'issue.assign';
 
     protected $attributes = [
-        self::VIEW_ISSUE => Issue::class,
+        self::VIEW_ISSUE   => Issue::class,
+        self::CREATE_ISSUE => Template::class,
+        self::ASSIGN_ISSUE => [State::class, User::class],
     ];
 
     protected $manager;
@@ -71,6 +78,12 @@ class IssueVoter extends Voter
             case self::VIEW_ISSUE:
                 return $this->isViewGranted($subject, $user);
 
+            case self::CREATE_ISSUE:
+                return $this->isCreateGranted($subject, $user);
+
+            case self::ASSIGN_ISSUE:
+                return $this->isAssignGranted($subject[0], $subject[1], $user);
+
             default:
                 return false;
         }
@@ -97,6 +110,59 @@ class IssueVoter extends Voter
         }
 
         return $this->hasGroupPermission($subject->template, $user, TemplatePermission::VIEW_ISSUES);
+    }
+
+    /**
+     * Whether a new issue can be created using the specified template.
+     *
+     * @param Template $subject Subject template.
+     * @param User     $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isCreateGranted(Template $subject, User $user): bool
+    {
+        // Template must not be locked and project must not be suspended.
+        if ($subject->isLocked || $subject->project->isSuspended) {
+            return false;
+        }
+
+        // One of the states must be set as initial.
+        if ($subject->initialState === null) {
+            return false;
+        }
+
+        return
+            $this->hasRolePermission($subject, SystemRole::ANYONE, TemplatePermission::CREATE_ISSUES) ||
+            $this->hasGroupPermission($subject, $user, TemplatePermission::CREATE_ISSUES);
+    }
+
+    /**
+     * Whether the specified user can be assigned to an issue if it's in the specified state.
+     *
+     * @param State $subject  Subject state.
+     * @param User  $assignee User to be assigned.
+     * @param User  $user     Current user.
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return bool
+     */
+    protected function isAssignGranted(State $subject, User $assignee, User $user): bool
+    {
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(sr.group)')
+            ->from(StateResponsibleGroup::class, 'sr')
+            ->where('sr.state = :state')
+            ->andWhere($query->expr()->in('sr.group', ':groups'))
+            ->setParameter('state', $subject)
+            ->setParameter('groups', $assignee->groups);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result !== 0;
     }
 
     /**

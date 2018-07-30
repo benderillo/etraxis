@@ -20,11 +20,17 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
-use PHPUnit\Framework\TestCase;
+use eTraxis\Tests\WebTestCase;
 
-class CheckboxTraitTest extends TestCase
+class CheckboxTraitTest extends WebTestCase
 {
     use ReflectionTrait;
+
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    protected $translator;
+
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
+    protected $validator;
 
     /** @var Field */
     protected $object;
@@ -33,10 +39,22 @@ class CheckboxTraitTest extends TestCase
     {
         parent::setUp();
 
+        $this->translator = $this->client->getContainer()->get('translator');
+        $this->validator  = $this->client->getContainer()->get('validator');
+
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $this->object = new Field($state, FieldType::CHECKBOX);
         $this->setProperty($this->object, 'id', 1);
+    }
+
+    public function testValidationConstraints()
+    {
+        $value = false;
+        self::assertCount(0, $this->validator->validate($value, $this->object->asCheckbox()->getValidationConstraints($this->translator)));
+
+        $value = true;
+        self::assertCount(0, $this->validator->validate($value, $this->object->asCheckbox()->getValidationConstraints($this->translator)));
     }
 
     public function testDefaultValue()

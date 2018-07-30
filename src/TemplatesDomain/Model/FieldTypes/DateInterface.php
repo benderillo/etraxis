@@ -16,7 +16,7 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 /**
  * Date field interface.
  */
-interface DateInterface
+interface DateInterface extends FieldInterface
 {
     // Constraints.
     public const MIN_VALUE = -0x80000000;

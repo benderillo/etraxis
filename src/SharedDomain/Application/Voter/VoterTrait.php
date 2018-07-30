@@ -17,14 +17,14 @@ namespace eTraxis\SharedDomain\Application\Voter;
  * A trait for supported attributes.
  *
  * The trait requires an array which must be declared as property named '$attributes'.
- * Each key of the array is an attribute name, value - class of the subject (use 'null' if subject is not required).
+ * Each key of the array is an attribute name, value - class of the subject (use 'null' if subject is not required), or array of such classes.
  *
  * Example:
  *
  * protected $attributes = [
  *     'create' => null,
  *     'update' => MyEntity::class,
- *     'delete' => MyEntity::class,
+ *     'delete' => [MyEntity::class, AnotherEntity::class],
  * ];
  */
 trait VoterTrait
@@ -39,16 +39,52 @@ trait VoterTrait
             return false;
         }
 
+        $classes = is_array($this->attributes[$attribute])
+            ? array_values($this->attributes[$attribute])
+            : [$this->attributes[$attribute]];
+
+        $subjects = is_array($subject)
+            ? array_values($subject)
+            : [$subject];
+
+        if (count($classes) !== count($subjects)) {
+            return false;
+        }
+
+        for ($i = 0; $i < count($classes); $i++) {
+            if (!$this->isValid($subjects[$i], $classes[$i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks whether the specified subject is of expected class.
+     *
+     * @param mixed  $subject
+     * @param string $expectedClass
+     *
+     * @return bool
+     */
+    private function isValid($subject, ?string $expectedClass): bool
+    {
         // Whether the subject is not required.
-        if ($this->attributes[$attribute] === null) {
+        if ($subject === null && $expectedClass === null) {
             return true;
+        }
+
+        // The subject must be an object.
+        if (!is_object($subject)) {
+            return false;
         }
 
         // Subject may be a Doctrine Proxy class,
         // e.g. 'Proxies\__CG__\App\Entity\MyEntity' instead of 'App\Entity\MyEntity'.
-        $class = mb_substr(get_class($subject), -mb_strlen($this->attributes[$attribute]));
+        $class = mb_substr(get_class($subject), -mb_strlen($expectedClass));
 
-        // The subject must be an object of expected class.
-        return is_object($subject) && $class === $this->attributes[$attribute];
+        // The subject must be of expected class.
+        return $class === $expectedClass;
     }
 }

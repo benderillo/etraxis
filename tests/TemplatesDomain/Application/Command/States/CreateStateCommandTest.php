@@ -39,10 +39,10 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var State $nextState */
-        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
+        [/* skipping */, $nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
         /** @var State $state */
         $state = $this->repository->findOneBy(['name' => 'Started']);
@@ -75,10 +75,10 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var State $initial */
-        [$initial] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
+        [/* skipping */, $initial] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
         self::assertSame(StateType::INITIAL, $initial->type);
 
         /** @var State $state */
@@ -133,7 +133,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,
@@ -154,10 +154,10 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         /** @var State $nextState */
-        [$nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'DESC']);
+        [/* skipping */, $nextState] = $this->repository->findBy(['name' => 'Completed'], ['id' => 'DESC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,
@@ -177,7 +177,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,
@@ -196,7 +196,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [/* skipping */,  /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,
@@ -216,7 +216,7 @@ class CreateStateCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
         $command = new CreateStateCommand([
             'template'    => $template->id,

@@ -13,7 +13,10 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Checkbox field trait.
@@ -27,17 +30,38 @@ trait CheckboxTrait
      */
     public function asCheckbox(): CheckboxInterface
     {
-        return new class($this->parameters) implements CheckboxInterface {
+        return new class($this, $this->parameters) implements CheckboxInterface {
+            protected $field;
             protected $parameters;
 
             /**
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
+             * @param Field           $field
              * @param FieldParameters $parameters
              */
-            public function __construct(FieldParameters &$parameters)
+            public function __construct(Field $field, FieldParameters &$parameters)
             {
+                $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                return [
+                    new Assert\Choice([
+                        'choices' => [false, true],
+                        'strict'  => true,
+                        'message' => $translator->trans('field.error.value_range', [
+                            '%name%' => $this->field->name,
+                            '%min%'  => 0,
+                            '%max%'  => 1,
+                        ]),
+                    ]),
+                ];
             }
 
             /**

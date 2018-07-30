@@ -34,6 +34,27 @@ class ListItemRepositoryTest extends WebTestCase
         self::assertInstanceOf(ListItemRepository::class, $this->repository);
     }
 
+    public function testFindAllByField()
+    {
+        /** @var Field $field */
+        [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority', 'removedAt' => null], ['id' => 'ASC']);
+
+        $items = $this->repository->findAllByField($field);
+
+        $expected = [
+            'high',
+            'normal',
+            'low',
+        ];
+
+        $actual = array_map(function (ListItem $item) {
+            return $item->text;
+        }, $items);
+
+        self::assertCount(3, $items);
+        self::assertSame($expected, $actual);
+    }
+
     public function testFindOneByValueSuccess()
     {
         /** @var Field $field */

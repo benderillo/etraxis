@@ -20,11 +20,17 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
-use PHPUnit\Framework\TestCase;
+use eTraxis\Tests\WebTestCase;
 
-class DurationTraitTest extends TestCase
+class DurationTraitTest extends WebTestCase
 {
     use ReflectionTrait;
+
+    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    protected $translator;
+
+    /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
+    protected $validator;
 
     /** @var Field */
     protected $object;
@@ -33,10 +39,46 @@ class DurationTraitTest extends TestCase
     {
         parent::setUp();
 
+        $this->translator = $this->client->getContainer()->get('translator');
+        $this->validator  = $this->client->getContainer()->get('validator');
+
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
 
         $this->object = new Field($state, FieldType::DURATION);
         $this->setProperty($this->object, 'id', 1);
+    }
+
+    public function testValidationConstraints()
+    {
+        $this->object->name = 'Custom field';
+        $this->object->asDuration()
+            ->setMinimumValue('0:00')
+            ->setMaximumValue('24:00');
+
+        $errors = $this->validator->validate('0:00', $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate('24:00', $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
+
+        $errors = $this->validator->validate('24:01', $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('\'Custom field\' should be in range from 0:00 to 24:00.', $errors->get(0)->getMessage());
+
+        $errors = $this->validator->validate('0:60', $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = true;
+
+        $errors = $this->validator->validate(null, $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertNotCount(0, $errors);
+        self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
+
+        $this->object->isRequired = false;
+
+        $errors = $this->validator->validate(null, $this->object->asDuration()->getValidationConstraints($this->translator));
+        self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()

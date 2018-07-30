@@ -201,7 +201,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
                                 break;
 
                             case FieldType::DURATION:
-                                $value = $field->asDuration()->toNumber($vref);
+                                $value = $vref;
                                 break;
                         }
                     }

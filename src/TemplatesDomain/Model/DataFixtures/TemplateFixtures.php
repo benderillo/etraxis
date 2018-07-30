@@ -39,7 +39,7 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $data = [
-            'a' => ['task' => true,  'req' => true],
+            'a' => ['task' => false, 'req' => true],
             'b' => ['task' => true,  'req' => false],
             'c' => ['task' => false, 'req' => false],
             'd' => ['task' => true,  'req' => false],

@@ -13,9 +13,13 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
+use eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRange;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
 use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Decimal field trait.
@@ -31,20 +35,53 @@ trait DecimalTrait
      */
     public function asDecimal(DecimalValueRepository $repository): DecimalInterface
     {
-        return new class($repository, $this->parameters) implements DecimalInterface {
+        return new class($repository, $this, $this->parameters) implements DecimalInterface {
             protected $repository;
+            protected $field;
             protected $parameters;
 
             /**
              * Passes original field's parameters as a reference so they can be modified inside the class.
              *
              * @param DecimalValueRepository $repository
+             * @param Field                  $field
              * @param FieldParameters        $parameters
              */
-            public function __construct(DecimalValueRepository $repository, FieldParameters &$parameters)
+            public function __construct(DecimalValueRepository $repository, Field $field, FieldParameters &$parameters)
             {
                 $this->repository = $repository;
+                $this->field      = $field;
                 $this->parameters = &$parameters;
+            }
+
+            /**
+             * {@inheritdoc}
+             */
+            public function getValidationConstraints(TranslatorInterface $translator): array
+            {
+                $message = $translator->trans('field.error.value_range', [
+                    '%name%'    => $this->field->name,
+                    '%minimum%' => $this->getMinimumValue(),
+                    '%maximum%' => $this->getMaximumValue(),
+                ]);
+
+                $constraints = [
+                    new Assert\Regex([
+                        'pattern' => '/^(\-|\+)?\d{1,10}(\.\d{1,10})?$/',
+                    ]),
+                    new DecimalRange([
+                        'min'        => $this->getMinimumValue(),
+                        'max'        => $this->getMaximumValue(),
+                        'minMessage' => $message,
+                        'maxMessage' => $message,
+                    ]),
+                ];
+
+                if ($this->field->isRequired) {
+                    $constraints[] = new Assert\NotBlank();
+                }
+
+                return $constraints;
             }
 
             /**
@@ -73,7 +110,7 @@ trait DecimalTrait
                 /** @var DecimalValue $decimal */
                 $decimal = $this->repository->find($this->parameters->parameter1);
 
-                return $decimal->value;
+                return $decimal !== null ? $decimal->value : DecimalInterface::MIN_VALUE;
             }
 
             /**
@@ -102,7 +139,7 @@ trait DecimalTrait
                 /** @var DecimalValue $decimal */
                 $decimal = $this->repository->find($this->parameters->parameter2);
 
-                return $decimal->value;
+                return $decimal !== null ? $decimal->value : DecimalInterface::MAX_VALUE;
             }
 
             /**
