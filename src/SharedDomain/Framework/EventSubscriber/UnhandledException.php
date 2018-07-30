@@ -60,7 +60,7 @@ class UnhandledException implements EventSubscriberInterface
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onException(GetResponseForExceptionEvent $event)
+    public function onException(GetResponseForExceptionEvent $event): void
     {
         $request   = $event->getRequest();
         $exception = $event->getException();

@@ -40,6 +40,26 @@ class IssueTest extends TestCase
         self::assertSame($createdAt, $changedAt);
     }
 
+    public function testTouch()
+    {
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $issue = new Issue(new User());
+        $this->setProperty($issue, 'changedAt', 0);
+
+        $changedAt = $this->getProperty($issue, 'changedAt');
+        self::assertGreaterThan(1, time() - $changedAt);
+
+        $issue->touch();
+
+        $changedAt = $this->getProperty($issue, 'changedAt');
+        self::assertLessThanOrEqual(1, time() - $changedAt);
+    }
+
     public function testFullId()
     {
         $project = new Project();
@@ -61,26 +81,6 @@ class IssueTest extends TestCase
 
         $this->setProperty($issue, 'id', 1234);
         self::assertSame('bug-1234', $issue->fullId);
-    }
-
-    public function testTouch()
-    {
-        $project = new Project();
-        $this->setProperty($project, 'id', 1);
-
-        $template = new Template($project);
-        $this->setProperty($template, 'id', 2);
-
-        $issue = new Issue(new User());
-        $this->setProperty($issue, 'changedAt', 0);
-
-        $changedAt = $this->getProperty($issue, 'changedAt');
-        self::assertGreaterThan(1, time() - $changedAt);
-
-        $issue->touch();
-
-        $changedAt = $this->getProperty($issue, 'changedAt');
-        self::assertLessThanOrEqual(1, time() - $changedAt);
     }
 
     public function testProject()

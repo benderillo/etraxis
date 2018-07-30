@@ -148,7 +148,7 @@ class Issue
     /**
      * Updates the timestamp of when the issue has been changed.
      */
-    public function touch()
+    public function touch(): void
     {
         $this->changedAt = time();
     }
