@@ -47,11 +47,13 @@ trait VoterTrait
             ? array_values($subject)
             : [$subject];
 
-        if (count($classes) !== count($subjects)) {
+        $count = count($classes);
+
+        if ($count !== count($subjects)) {
             return false;
         }
 
-        for ($i = 0; $i < count($classes); $i++) {
+        for ($i = 0; $i < $count; $i++) {
             if (!$this->isValid($subjects[$i], $classes[$i])) {
                 return false;
             }

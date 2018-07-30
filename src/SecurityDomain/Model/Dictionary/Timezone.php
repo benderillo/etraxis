@@ -83,6 +83,6 @@ class Timezone extends StaticDictionary
     {
         $timezones = timezone_identifiers_list();
 
-        return array_combine($timezones, $timezones);
+        return $timezones !== false ? array_combine($timezones, $timezones) : [];
     }
 }

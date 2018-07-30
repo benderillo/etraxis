@@ -24,8 +24,8 @@ class DateRangeValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      *
-     * @param string    $value
-     * @param DateRange $constraint
+     * @param null|string $value
+     * @param DateRange   $constraint
      */
     public function validate($value, Constraint $constraint)
     {

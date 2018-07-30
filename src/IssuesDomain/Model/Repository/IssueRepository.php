@@ -125,7 +125,8 @@ class IssueRepository extends ServiceEntityRepository
                     break;
 
                 case FieldType::DATE:
-                    $newValue = date_create_from_format('Y-m-d', $value, timezone_open($event->user->timezone))->getTimestamp();
+                    $timezone = timezone_open($event->user->timezone) ?? null;
+                    $newValue = date_create_from_format('Y-m-d', $value, $timezone)->getTimestamp();
                     break;
 
                 case FieldType::DURATION:

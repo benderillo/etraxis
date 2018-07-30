@@ -24,7 +24,7 @@ class DurationRangeValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      *
-     * @param string        $value
+     * @param null|string   $value
      * @param DurationRange $constraint
      */
     public function validate($value, Constraint $constraint)

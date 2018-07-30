@@ -26,7 +26,7 @@ class DecimalRangeValidator extends ConstraintValidator
     /**
      * {@inheritdoc}
      *
-     * @param string       $value
+     * @param null|string  $value
      * @param DecimalRange $constraint
      */
     public function validate($value, Constraint $constraint)
