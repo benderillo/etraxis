@@ -197,6 +197,21 @@ class IssueTest extends TestCase
         self::assertFalse($issue->isClosed);
     }
 
+    public function testIsSuspended()
+    {
+        $issue = new Issue(new User());
+        self::assertFalse($issue->isSuspended);
+
+        $issue->suspend(time() + 86400);
+        self::assertTrue($issue->isSuspended);
+
+        $issue->resume();
+        self::assertFalse($issue->isSuspended);
+
+        $issue->suspend(time());
+        self::assertFalse($issue->isSuspended);
+    }
+
     public function testEvents()
     {
         $issue = new Issue(new User());

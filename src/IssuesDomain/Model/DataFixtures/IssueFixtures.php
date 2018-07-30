@@ -83,6 +83,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
                 'subject'     => 'Development task 6',
                 'author'      => $this->developer3,
                 'responsible' => null,
+                'suspended'   => true,
             ],
 
             'task7' => [
@@ -206,6 +207,10 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
 
             $this->setProperty($issue, 'createdAt', $createdAt);
             $this->setProperty($issue, 'changedAt', $createdAt);
+
+            if ($row['suspended'] ?? false) {
+                $issue->suspend(time() + 86400);
+            }
 
             $this->addReference($ref, $issue);
 

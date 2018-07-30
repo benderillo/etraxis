@@ -43,7 +43,9 @@ use Webinarium\PropertyTrait;
  * @property-read int          $createdAt   Unix Epoch timestamp when the issue has been created.
  * @property-read int          $changedAt   Unix Epoch timestamp when the issue has been changed last time.
  * @property-read null|int     $closedAt    Unix Epoch timestamp when the issue has been closed, if so.
+ * @property-read null|int     $suspendedAt Unix Epoch timestamp when the issue should be resumed, if suspended.
  * @property-read bool         $isClosed    Whether the issue is closed.
+ * @property-read bool         $isSuspended Whether the issue is suspended.
  * @property-read Event[]      $events      List of issue events.
  * @property-read FieldValue[] $values      List of field values.
  */
@@ -116,6 +118,13 @@ class Issue
     protected $closedAt;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="suspended_at", type="integer", nullable=true)
+     */
+    protected $suspendedAt;
+
+    /**
      * @var ArrayCollection|Event[]
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="issue")
@@ -154,6 +163,24 @@ class Issue
     }
 
     /**
+     * Suspends the issue until specified timestamp.
+     *
+     * @param int $timestamp Unix Epoch timestamp.
+     */
+    public function suspend(int $timestamp): void
+    {
+        $this->suspendedAt = $timestamp;
+    }
+
+    /**
+     * Resumes the issue if suspended.
+     */
+    public function resume(): void
+    {
+        $this->suspendedAt = null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getters(): array
@@ -174,6 +201,10 @@ class Issue
 
             'isClosed' => function (): bool {
                 return $this->closedAt !== null;
+            },
+
+            'isSuspended' => function (): bool {
+                return $this->suspendedAt !== null && $this->suspendedAt > time();
             },
 
             'events' => function (): array {
