@@ -380,7 +380,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         });
 
         $value = reset($values);
-        self::assertSame('2015-04-23', date('Y-m-d', $value->value));
+        $date  = date_create();
+        $date->setTimestamp($value->value)->setTimezone(timezone_open($issue->events[0]->user->timezone));
+        self::assertSame('2015-04-23', $date->format('Y-m-d'));
     }
 
     public function testSetDurationFieldValue()
