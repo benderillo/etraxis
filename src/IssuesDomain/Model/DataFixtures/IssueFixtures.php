@@ -77,13 +77,13 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
                 'subject'     => 'Development task 5',
                 'author'      => $this->manager3,
                 'responsible' => null,
+                'suspended'   => true,
             ],
 
             'task6' => [
                 'subject'     => 'Development task 6',
                 'author'      => $this->developer3,
                 'responsible' => null,
-                'suspended'   => true,
             ],
 
             'task7' => [

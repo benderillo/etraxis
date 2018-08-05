@@ -20,7 +20,7 @@ use Webinarium\DataTransferObjectTrait;
  * Creates new issue.
  *
  * @property int    $template    ID of the template to use.
- * @property string $subject     State name.
+ * @property string $subject     Issue subject.
  * @property int    $responsible ID of user to assign new issue to (ignored when not applicable).
  * @property array  $fields      Fields values (keys are field IDs).
  */

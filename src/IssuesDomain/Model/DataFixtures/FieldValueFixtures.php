@@ -120,27 +120,27 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'req:%s:1' => [
-                'submitted:%s:description' => 'Expedita ullam iste omnis natus veritatis sint temporibus provident velit veniam provident rerum doloremque autem repellat est in sed.',
+                'submitted:%s:details' => 'Expedita ullam iste omnis natus veritatis sint temporibus provident velit veniam provident rerum doloremque autem repellat est in sed.',
             ],
 
             'req:%s:2' => [
-                'submitted:%s:description' => 'Laborum sed saepe esse distinctio inventore nulla ipsam qui est qui laborum iste iure natus ea saepe qui recusandae similique est quia sed.',
+                'submitted:%s:details' => 'Laborum sed saepe esse distinctio inventore nulla ipsam qui est qui laborum iste iure natus ea saepe qui recusandae similique est quia sed.',
             ],
 
             'req:%s:3' => [
-                'submitted:%s:description' => 'Est ut inventore omnis doloribus et corporis adipisci ut est rem sapiente numquam dolor voluptatibus quibusdam quo voluptates ab doloribus illum recusandae libero accusantium. Animi rem ut ut aperiam laborum sapiente quis dicta qui nostrum occaecati commodi non.',
+                'submitted:%s:details' => 'Est ut inventore omnis doloribus et corporis adipisci ut est rem sapiente numquam dolor voluptatibus quibusdam quo voluptates ab doloribus illum recusandae libero accusantium. Animi rem ut ut aperiam laborum sapiente quis dicta qui nostrum occaecati commodi non.',
             ],
 
             'req:%s:4' => [
-                'submitted:%s:description' => 'Distinctio maiores placeat quo cupiditate est autem excepturi cumque et dolorum qui rem minima ab enim dolor voluptas odio fugiat ea aspernatur voluptas enim. Sint dolor asperiores et facilis excepturi quasi perspiciatis ut ut reprehenderit aspernatur repellat adipisci ut aut laudantium cumque dicta ea non.',
+                'submitted:%s:details' => 'Distinctio maiores placeat quo cupiditate est autem excepturi cumque et dolorum qui rem minima ab enim dolor voluptas odio fugiat ea aspernatur voluptas enim. Sint dolor asperiores et facilis excepturi quasi perspiciatis ut ut reprehenderit aspernatur repellat adipisci ut aut laudantium cumque dicta ea non.',
             ],
 
             'req:%s:5' => [
-                'submitted:%s:description' => 'Sapiente cum placeat consequatur repellat est aliquid ut sed praesentium aliquid dolorum cumque quas qui maiores consequatur nihil commodi iure architecto molestias libero. Dicta id illum officiis ut numquam et et quisquam libero voluptatem ad accusamus aspernatur est consequatur et minima reiciendis repellat culpa.',
+                'submitted:%s:details' => 'Sapiente cum placeat consequatur repellat est aliquid ut sed praesentium aliquid dolorum cumque quas qui maiores consequatur nihil commodi iure architecto molestias libero. Dicta id illum officiis ut numquam et et quisquam libero voluptatem ad accusamus aspernatur est consequatur et minima reiciendis repellat culpa.',
             ],
 
             'req:%s:6' => [
-                'submitted:%s:description' => 'Quis quaerat ut corrupti vitae sed rerum voluptate consequatur odio molestiae voluptatibus esse nostrum sunt perspiciatis in fuga est vitae enim. Voluptas distinctio enim ullam iusto voluptate vitae voluptatem ipsa placeat asperiores molestiae eveniet expedita at officiis incidunt amet.',
+                'submitted:%s:details' => 'Quis quaerat ut corrupti vitae sed rerum voluptate consequatur odio molestiae voluptatibus esse nostrum sunt perspiciatis in fuga est vitae enim. Voluptas distinctio enim ullam iusto voluptate vitae voluptatem ipsa placeat asperiores molestiae eveniet expedita at officiis incidunt amet.',
             ],
         ];
 

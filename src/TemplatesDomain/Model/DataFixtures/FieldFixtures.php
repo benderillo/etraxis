@@ -169,7 +169,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
             'submitted' => [
                 [
                     'type'       => FieldType::TEXT,
-                    'name'       => 'Description',
+                    'name'       => 'Details',
                     'required'   => true,
                     'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {

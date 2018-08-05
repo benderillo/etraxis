@@ -48,9 +48,37 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
             'task' => [
 
                 SystemRole::AUTHOR => [
+                    TemplatePermission::CREATE_ISSUES,
                     TemplatePermission::EDIT_ISSUES,
+                    TemplatePermission::REASSIGN_ISSUES,
+                    TemplatePermission::SUSPEND_ISSUES,
+                    TemplatePermission::RESUME_ISSUES,
+                    TemplatePermission::REOPEN_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
+                    TemplatePermission::PRIVATE_COMMENTS,
                     TemplatePermission::ATTACH_FILES,
+                    TemplatePermission::DELETE_FILES,
+                    TemplatePermission::ADD_DEPENDENCIES,
+                    TemplatePermission::REMOVE_DEPENDENCIES,
+                    TemplatePermission::SEND_REMINDERS,
+                    TemplatePermission::DELETE_ISSUES,
+                ],
+
+                SystemRole::RESPONSIBLE => [
+                    TemplatePermission::CREATE_ISSUES,
+                    TemplatePermission::EDIT_ISSUES,
+                    TemplatePermission::REASSIGN_ISSUES,
+                    TemplatePermission::SUSPEND_ISSUES,
+                    TemplatePermission::RESUME_ISSUES,
+                    TemplatePermission::REOPEN_ISSUES,
+                    TemplatePermission::ADD_COMMENTS,
+                    TemplatePermission::PRIVATE_COMMENTS,
+                    TemplatePermission::ATTACH_FILES,
+                    TemplatePermission::DELETE_FILES,
+                    TemplatePermission::ADD_DEPENDENCIES,
+                    TemplatePermission::REMOVE_DEPENDENCIES,
+                    TemplatePermission::SEND_REMINDERS,
+                    TemplatePermission::DELETE_ISSUES,
                 ],
 
                 'managers:%s' => [
@@ -74,10 +102,6 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                 'developers:%s' => [
                     TemplatePermission::VIEW_ISSUES,
                     TemplatePermission::CREATE_ISSUES,
-                    TemplatePermission::EDIT_ISSUES,
-                    TemplatePermission::ADD_COMMENTS,
-                    TemplatePermission::PRIVATE_COMMENTS,
-                    TemplatePermission::ATTACH_FILES,
                 ],
 
                 'support:%s' => [

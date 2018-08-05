@@ -14,7 +14,7 @@
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
-use eTraxis\TemplatesDomain\Application\Service\FieldService;
+use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
@@ -56,14 +56,14 @@ class CreateFieldHandler
      * @param ValidatorInterface            $validator
      * @param StateRepository               $stateRepository
      * @param FieldRepository               $fieldRepository
-     * @param FieldService                  $fieldService
+     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         StateRepository               $stateRepository,
         FieldRepository               $fieldRepository,
-        FieldService                  $fieldService
+        FieldServiceInterface         $fieldService
     )
     {
         $this->security           = $security;

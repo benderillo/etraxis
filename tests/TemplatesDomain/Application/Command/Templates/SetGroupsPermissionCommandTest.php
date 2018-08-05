@@ -36,20 +36,13 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
     public function testSuccess()
     {
         $before = [
-            TemplatePermission::ADD_COMMENTS,
-            TemplatePermission::PRIVATE_COMMENTS,
-            TemplatePermission::ATTACH_FILES,
             TemplatePermission::CREATE_ISSUES,
-            TemplatePermission::EDIT_ISSUES,
             TemplatePermission::VIEW_ISSUES,
         ];
 
         $after = [
-            TemplatePermission::ADD_COMMENTS,
-            TemplatePermission::ATTACH_FILES,
             TemplatePermission::DELETE_FILES,
             TemplatePermission::CREATE_ISSUES,
-            TemplatePermission::EDIT_ISSUES,
             TemplatePermission::VIEW_ISSUES,
         ];
 

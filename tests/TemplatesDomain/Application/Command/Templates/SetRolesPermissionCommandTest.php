@@ -39,18 +39,20 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             TemplatePermission::ADD_COMMENTS,
             TemplatePermission::ATTACH_FILES,
             TemplatePermission::EDIT_ISSUES,
+            TemplatePermission::REOPEN_ISSUES,
         ];
 
         $after = [
             TemplatePermission::ADD_COMMENTS,
             TemplatePermission::PRIVATE_COMMENTS,
             TemplatePermission::EDIT_ISSUES,
+            TemplatePermission::REOPEN_ISSUES,
         ];
 
         $this->loginAs('admin@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);
 
         self::assertSame($before, $this->permissionsToArray($template->rolePermissions, SystemRole::AUTHOR));
 
@@ -86,7 +88,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var Template $template */
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);
 
         $command = new SetRolesPermissionCommand([
             'template'   => $template->id,

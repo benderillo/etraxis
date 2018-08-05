@@ -2,7 +2,7 @@
 
 //----------------------------------------------------------------------
 //
-//  Copyright (C) 2014-2016 Artem Rodygin
+//  Copyright (C) 2018 Artem Rodygin
 //
 //  You should have received a copy of the GNU General Public License
 //  along with the file. If not, see <http://www.gnu.org/licenses/>.
@@ -26,7 +26,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Service to process fields of any type.
  */
-class FieldService
+class FieldService implements FieldServiceInterface
 {
     protected $translator;
     protected $decimalRepository;
@@ -59,11 +59,7 @@ class FieldService
     }
 
     /**
-     * Returns list of constraints for field value validation.
-     *
-     * @param Field $field
-     *
-     * @return \Symfony\Component\Validator\Constraint[]
+     * {@inheritdoc}
      */
     public function getValidationConstraints(Field $field): array
     {
@@ -100,13 +96,8 @@ class FieldService
         return [];
     }
 
-    /**
-     * Copies field-specific parameters from create/update command to specified field.
-     *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
-     *
-     * @return Field Updated field entity.
+   /**
+     * {@inheritdoc}
      */
     public function copyCommandToField(Command\AbstractFieldCommand $command, Field $field): Field
     {

@@ -21,7 +21,7 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
-use eTraxis\TemplatesDomain\Application\Service\FieldService;
+use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Repository\TemplateRepository;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
@@ -56,7 +56,7 @@ class CreateIssueHandler
      * @param TemplateRepository            $templateRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
-     * @param FieldService                  $fieldService
+     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
@@ -66,7 +66,7 @@ class CreateIssueHandler
         TemplateRepository            $templateRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
-        FieldService                  $fieldService
+        FieldServiceInterface         $fieldService
     )
     {
         $this->security           = $security;

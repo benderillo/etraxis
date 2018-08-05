@@ -14,7 +14,7 @@
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
-use eTraxis\TemplatesDomain\Application\Service\FieldService;
+use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -39,13 +39,13 @@ class UpdateFieldHandler
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param FieldRepository               $repository
-     * @param FieldService                  $fieldService
+     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         FieldRepository               $repository,
-        FieldService                  $fieldService
+        FieldServiceInterface         $fieldService
     )
     {
         $this->security     = $security;

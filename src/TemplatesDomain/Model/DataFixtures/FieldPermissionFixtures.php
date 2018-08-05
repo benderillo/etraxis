@@ -105,7 +105,7 @@ class FieldPermissionFixtures extends Fixture implements DependentFixtureInterfa
                 'developers:%s'    => FieldPermission::READ_ONLY,
             ],
 
-            'submitted:%s:description' => [
+            'submitted:%s:details' => [
                 SystemRole::AUTHOR => FieldPermission::READ_WRITE,
                 'managers:%s'      => FieldPermission::READ_WRITE,
                 'support:%s'       => FieldPermission::READ_ONLY,

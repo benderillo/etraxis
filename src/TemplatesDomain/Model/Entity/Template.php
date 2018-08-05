@@ -38,13 +38,13 @@ use Webinarium\PropertyTrait;
  * @property      string                    $prefix           Prefix of the template (used as a prefix in ID of issues,
  *                                                            created using this template).
  * @property      null|string               $description      Optional description of the template.
- * @property      null|int                  $criticalAge      When a issue remains opened more than this amount of days
- *                                                            it is displayed in red in the list of issues.
- * @property      null|int                  $frozenTime       When a issue is closed a user cannot change its state anymore,
- *                                                            but one still can modify its fields, add comments and attach files.
- *                                                            If frozen time is specified it will be allowed to modify issue this
- *                                                            amount of days after its closure. After that issue will become read-only.
- *                                                            If this attribute is not specified, issue will never become read-only.
+ * @property      null|int                  $criticalAge      When an issue remains opened for more than this amount of days
+ *                                                            it's displayed in red in the list of issues.
+ * @property      null|int                  $frozenTime       When an issue is closed a user cannot change its state anymore,
+ *                                                            but one still can edit its fields, add comments and attach files.
+ *                                                            If frozen time is specified it will be allowed to edit the issue this
+ *                                                            amount of days after its closure. After that the issue becomes read-only.
+ *                                                            If this attribute is not specified, an issue will never become read-only.
  * @property      bool                      $isLocked         Whether the template is locked for edition.
  * @property-read null|State                $initialState     Initial state of the template if present.
  * @property-read State[]                   $states           List of template states.
