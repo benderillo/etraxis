@@ -149,9 +149,8 @@ class FieldService implements FieldServiceInterface
 
                 case FieldType::DATE:
 
-                    $date = date_create();
+                    $date = date_create(null, timezone_open($user->timezone) ?: null);
                     $date->setTimestamp($fieldValue->value);
-                    $date->setTimezone(timezone_open($user->timezone));
 
                     return $date->format('Y-m-d');
 
