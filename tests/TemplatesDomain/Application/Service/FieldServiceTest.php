@@ -245,7 +245,9 @@ class FieldServiceTest extends TransactionalTestCase
         });
 
         $value = reset($values);
-        self::assertSame('2015-04-27', $this->service->getFieldValue($value, $user));
+        $date  = date_create();
+        $date->setTimestamp($value->value)->setTimezone(timezone_open($user->timezone));
+        self::assertSame($date->format('Y-m-d'), $this->service->getFieldValue($value, $user));
     }
 
     public function testGetDurationFieldValue()
