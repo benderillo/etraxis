@@ -23,9 +23,10 @@ use Webinarium\PropertyTrait;
  * @ORM\Table(name="field_values")
  * @ORM\Entity
  *
- * @property-read Issue    $issue Issue.
- * @property-read Field    $field Field.
- * @property      null|int $value Current value of the field. Depends on field type.
+ * @property-read Issue    $issue     Issue.
+ * @property-read Field    $field     Field.
+ * @property      null|int $value     Current value of the field. Depends on field type.
+ * @property-read int      $createdAt Unix Epoch timestamp when the value has been created.
  */
 class FieldValue
 {
@@ -67,6 +68,13 @@ class FieldValue
     protected $value;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="created_at", type="integer")
+     */
+    protected $createdAt;
+
+    /**
      * Creates new field value.
      *
      * @param Issue    $issue
@@ -82,5 +90,7 @@ class FieldValue
         $this->issue = $issue;
         $this->field = $field;
         $this->value = $value;
+
+        $this->createdAt = time();
     }
 }

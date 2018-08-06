@@ -49,7 +49,7 @@ trait NumberTrait
             /**
              * {@inheritdoc}
              */
-            public function getValidationConstraints(TranslatorInterface $translator): array
+            public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
                 $message = $translator->trans('field.error.value_range', [
                     '%name%'    => $this->field->name,

@@ -54,6 +54,7 @@ class FieldValueTest extends TestCase
         self::assertSame($issue, $value->issue);
         self::assertSame($field, $value->field);
         self::assertSame(100, $value->value);
+        self::assertLessThanOrEqual(1, time() - $value->createdAt);
     }
 
     public function testConstructorException()

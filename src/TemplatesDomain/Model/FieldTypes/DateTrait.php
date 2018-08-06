@@ -52,12 +52,12 @@ trait DateTrait
             /**
              * {@inheritdoc}
              */
-            public function getValidationConstraints(TranslatorInterface $translator): array
+            public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
                 /** @noinspection PhpUndefinedClassInspection */
                 $formatter = new \IntlDateFormatter($translator->getLocale(), \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
 
-                $now = time();
+                $now = $timestamp ?? time();
 
                 $message = $translator->trans('field.error.value_range', [
                     '%name%'    => $this->field->name,

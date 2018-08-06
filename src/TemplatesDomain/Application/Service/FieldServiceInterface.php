@@ -24,11 +24,22 @@ interface FieldServiceInterface
     /**
      * Returns list of constraints for field value validation.
      *
-     * @param Field $field Field which value has to be validated.
+     * @param Field    $field     Field which value has to be validated.
+     * @param null|int $timestamp Timestamp when current value of the field has been created, if applicable.
      *
      * @return \Symfony\Component\Validator\Constraint[]
      */
-    public function getValidationConstraints(Field $field): array;
+    public function getValidationConstraints(Field $field, ?int $timestamp = null): array;
+
+    /**
+     * Returns human-readable version of the specified field value.
+     *
+     * @param FieldValue $fieldValue Field value.
+     * @param User       $user       Current user.
+     *
+     * @return null|mixed Human-readable value.
+     */
+    public function getFieldValue(FieldValue $fieldValue, User $user);
 
     /**
      * Copies field-specific parameters from create/update command to specified field.

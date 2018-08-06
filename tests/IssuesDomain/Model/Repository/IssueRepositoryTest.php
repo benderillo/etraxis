@@ -40,6 +40,33 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertInstanceOf(IssueRepository::class, $this->repository);
     }
 
+    public function testSetSubject()
+    {
+        /** @var Issue $issue */
+        [$issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        $changes = count($this->doctrine->getRepository(Change::class)->findAll());
+
+        $this->repository->setSubject($issue, $issue->events[0], 'Development task 1');
+        $this->doctrine->getManager()->flush();
+        self::assertCount($changes, $this->doctrine->getRepository(Change::class)->findAll());
+
+        $this->repository->setSubject($issue, $issue->events[0], 'Development task X');
+        $this->doctrine->getManager()->flush();
+        self::assertSame('Development task X', $issue->subject);
+        self::assertCount($changes + 1, $this->doctrine->getRepository(Change::class)->findAll());
+
+        /** @var Change $change */
+        [$change] = $this->doctrine->getRepository(Change::class)->findBy([], ['id' => 'DESC']);
+
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
+        $repository = $this->doctrine->getRepository(StringValue::class);
+
+        self::assertNull($change->field);
+        self::assertSame('Development task 1', $repository->find($change->oldValue)->value);
+        self::assertSame('Development task X', $repository->find($change->newValue)->value);
+    }
+
     public function testSetNumberFieldValue()
     {
         /** @var Issue $issue1 */

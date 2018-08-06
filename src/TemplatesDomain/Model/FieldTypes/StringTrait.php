@@ -59,7 +59,7 @@ trait StringTrait
             /**
              * {@inheritdoc}
              */
-            public function getValidationConstraints(TranslatorInterface $translator): array
+            public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
                 $constraints = [
                     new Assert\Length([

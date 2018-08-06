@@ -11,6 +11,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Service;
 
+use eTraxis\IssuesDomain\Model\Entity\FieldValue;
+use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
@@ -61,42 +63,108 @@ class FieldService implements FieldServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function getValidationConstraints(Field $field): array
+    public function getValidationConstraints(Field $field, ?int $timestamp = null): array
     {
         switch ($field->type) {
 
             case FieldType::NUMBER:
-                return $field->asNumber()->getValidationConstraints($this->translator);
+                return $field->asNumber()->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::DECIMAL:
-                return $field->asDecimal($this->decimalRepository)->getValidationConstraints($this->translator);
+                return $field->asDecimal($this->decimalRepository)->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::STRING:
-                return $field->asString($this->stringRepository)->getValidationConstraints($this->translator);
+                return $field->asString($this->stringRepository)->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::TEXT:
-                return $field->asText($this->textRepository)->getValidationConstraints($this->translator);
+                return $field->asText($this->textRepository)->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::CHECKBOX:
-                return $field->asCheckbox()->getValidationConstraints($this->translator);
+                return $field->asCheckbox()->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::LIST:
-                return $field->asList($this->listRepository)->getValidationConstraints($this->translator);
+                return $field->asList($this->listRepository)->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::ISSUE:
-                return $field->asIssue()->getValidationConstraints($this->translator);
+                return $field->asIssue()->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::DATE:
-                return $field->asDate()->getValidationConstraints($this->translator);
+                return $field->asDate()->getValidationConstraints($this->translator, $timestamp);
 
             case FieldType::DURATION:
-                return $field->asDuration()->getValidationConstraints($this->translator);
+                return $field->asDuration()->getValidationConstraints($this->translator, $timestamp);
         }
 
         return [];
     }
 
-   /**
+    /**
+     * {@inheritdoc}
+     */
+    public function getFieldValue(FieldValue $fieldValue, User $user)
+    {
+        if ($fieldValue->value !== null) {
+
+            switch ($fieldValue->field->type) {
+
+                case FieldType::NUMBER:
+
+                    return $fieldValue->value;
+
+                case FieldType::DECIMAL:
+
+                    /** @var \eTraxis\TemplatesDomain\Model\Entity\DecimalValue $value */
+                    $value = $this->decimalRepository->find($fieldValue->value);
+
+                    return $value === null ? null : $value->value;
+
+                case FieldType::STRING:
+
+                    /** @var \eTraxis\TemplatesDomain\Model\Entity\StringValue $value */
+                    $value = $this->stringRepository->find($fieldValue->value);
+
+                    return $value === null ? null : $value->value;
+
+                case FieldType::TEXT:
+
+                    /** @var \eTraxis\TemplatesDomain\Model\Entity\TextValue $value */
+                    $value = $this->textRepository->find($fieldValue->value);
+
+                    return $value === null ? null : $value->value;
+
+                case FieldType::CHECKBOX:
+
+                    return $fieldValue->value ? true : false;
+
+                case FieldType::LIST:
+
+                    /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $value */
+                    $value = $this->listRepository->find($fieldValue->value);
+
+                    return $value === null ? null : $value->value;
+
+                case FieldType::ISSUE:
+
+                    return $fieldValue->value;
+
+                case FieldType::DATE:
+
+                    $date = date_create();
+                    $date->setTimestamp($fieldValue->value);
+                    $date->setTimezone(timezone_open($user->timezone));
+
+                    return $date->format('Y-m-d');
+
+                case FieldType::DURATION:
+
+                    return $fieldValue->field->asDuration()->toString($fieldValue->value);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function copyCommandToField(Command\AbstractFieldCommand $command, Field $field): Field

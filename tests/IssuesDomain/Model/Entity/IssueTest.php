@@ -170,6 +170,62 @@ class IssueTest extends TestCase
         $issue->state = $state2;
     }
 
+    public function testIsCritical()
+    {
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+        $template->criticalAge = 1;
+
+        $initial = new State($template, StateType::INITIAL);
+        $this->setProperty($initial, 'id', 3);
+
+        $final = new State($template, StateType::FINAL);
+        $this->setProperty($final, 'id', 4);
+
+        $issue = new Issue(new User());
+
+        $issue->state = $initial;
+        self::assertFalse($issue->isCritical);
+
+        $this->setProperty($issue, 'createdAt', time() - 86401);
+        self::assertTrue($issue->isCritical);
+
+        $issue->state = $final;
+        self::assertFalse($issue->isCritical);
+    }
+
+    public function testIsFrozen()
+    {
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $initial = new State($template, StateType::INITIAL);
+        $this->setProperty($initial, 'id', 3);
+
+        $final = new State($template, StateType::FINAL);
+        $this->setProperty($final, 'id', 4);
+
+        $issue = new Issue(new User());
+
+        $issue->state = $final;
+        $this->setProperty($issue, 'closedAt', time() - 86401);
+
+        $template->frozenTime = null;
+        self::assertFalse($issue->isFrozen);
+
+        $template->frozenTime = 1;
+        self::assertTrue($issue->isFrozen);
+
+        $issue->state = $initial;
+        self::assertFalse($issue->isFrozen);
+    }
+
     public function testIsClosed()
     {
         $project = new Project();

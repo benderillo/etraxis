@@ -60,6 +60,7 @@ class IssueVoterTest extends TransactionalTestCase
 
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::VIEW_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $template, [IssueVoter::CREATE_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::UPDATE_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$state, $developer], [IssueVoter::ASSIGN_ISSUE]));
     }
 
@@ -123,6 +124,37 @@ class IssueVoterTest extends TransactionalTestCase
 
         $this->loginAs('lucas.oconnell@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateC));
+    }
+
+    public function testUpdate()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $assignedToDev3));
+
+        /** @var Template $templateC */
+        [/* skipping */, /* skipping */, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+
+        $templateC->frozenTime = 1;
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueC));
     }
 
     public function testAssign()

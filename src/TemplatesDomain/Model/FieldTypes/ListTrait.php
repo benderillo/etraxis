@@ -56,7 +56,7 @@ trait ListTrait
             /**
              * {@inheritdoc}
              */
-            public function getValidationConstraints(TranslatorInterface $translator): array
+            public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
                 $choices = array_map(function (ListItem $item) {
                     return $item->value;

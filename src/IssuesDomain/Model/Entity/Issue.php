@@ -44,6 +44,8 @@ use Webinarium\PropertyTrait;
  * @property-read int          $changedAt   Unix Epoch timestamp when the issue has been changed last time.
  * @property-read null|int     $closedAt    Unix Epoch timestamp when the issue has been closed, if so.
  * @property-read null|int     $suspendedAt Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read bool         $isCritical  Whether the issue is critical (remains opened for too long).
+ * @property-read bool         $isFrozen    Whether the issue is frozen (read-only).
  * @property-read bool         $isClosed    Whether the issue is closed.
  * @property-read bool         $isSuspended Whether the issue is suspended.
  * @property-read Event[]      $events      List of issue events.
@@ -55,6 +57,9 @@ class Issue
 
     // Constraints.
     public const MAX_SUBJECT = 250;
+
+    // Utility constants.
+    protected const SECS_IN_DAY = 86400;
 
     /**
      * @var int
@@ -197,6 +202,30 @@ class Issue
 
             'template' => function (): Template {
                 return $this->state->template;
+            },
+
+            'isCritical' => function (): bool {
+
+                if ($this->state->template->criticalAge !== null && $this->closedAt === null) {
+                    $duration = ($this->closedAt ?? time()) - $this->createdAt;
+                    $period   = ceil($duration / self::SECS_IN_DAY);
+
+                    return $this->state->template->criticalAge < $period;
+                }
+
+                return false;
+            },
+
+            'isFrozen' => function (): bool {
+
+                if ($this->state->template->frozenTime !== null && $this->closedAt !== null) {
+                    $duration = time() - $this->closedAt;
+                    $period   = ceil($duration / self::SECS_IN_DAY);
+
+                    return $this->state->template->frozenTime < $period;
+                }
+
+                return false;
             },
 
             'isClosed' => function (): bool {

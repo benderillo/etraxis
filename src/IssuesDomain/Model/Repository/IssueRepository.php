@@ -69,6 +69,31 @@ class IssueRepository extends ServiceEntityRepository
     }
 
     /**
+     * Sets new subject of the specified issue.
+     *
+     * @noinspection PhpDocMissingThrowsInspection
+     *
+     * @param Issue  $issue   Issie whose subject is being set.
+     * @param Event  $event   Event related to this change.
+     * @param string $subject New subject.
+     */
+    public function setSubject(Issue $issue, Event $event, string $subject): void
+    {
+        if ($issue->subject !== $subject) {
+
+            $oldValue = $this->stringRepository->get($issue->subject)->id;
+            $newValue = $this->stringRepository->get($subject)->id;
+
+            $change = new Change($event, null, $oldValue, $newValue);
+
+            $issue->subject = $subject;
+
+            $this->getEntityManager()->persist($change);
+            $this->getEntityManager()->persist($issue);
+        }
+    }
+
+    /**
      * Sets value of the specified field in the specified issue.
      *
      * @noinspection PhpDocMissingThrowsInspection

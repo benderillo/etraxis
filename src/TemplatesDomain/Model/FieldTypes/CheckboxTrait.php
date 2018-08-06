@@ -49,7 +49,7 @@ trait CheckboxTrait
             /**
              * {@inheritdoc}
              */
-            public function getValidationConstraints(TranslatorInterface $translator): array
+            public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
                 return [
                     new Assert\Choice([
