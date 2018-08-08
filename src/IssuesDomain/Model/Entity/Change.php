@@ -50,7 +50,7 @@ class Change
      * @var Event
      *
      * @ORM\ManyToOne(targetEntity="Event")
-     * @ORM\JoinColumn(name="event_id", nullable=false, referencedColumnName="id")
+     * @ORM\JoinColumn(name="event_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $event;
 

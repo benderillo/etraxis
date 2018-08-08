@@ -37,12 +37,14 @@ class IssueVoter extends Voter
     public const VIEW_ISSUE   = 'issue.view';
     public const CREATE_ISSUE = 'issue.create';
     public const UPDATE_ISSUE = 'issue.update';
+    public const DELETE_ISSUE = 'issue.delete';
     public const ASSIGN_ISSUE = 'issue.assign';
 
     protected $attributes = [
         self::VIEW_ISSUE   => Issue::class,
         self::CREATE_ISSUE => Template::class,
         self::UPDATE_ISSUE => Issue::class,
+        self::DELETE_ISSUE => Issue::class,
         self::ASSIGN_ISSUE => [State::class, User::class],
     ];
 
@@ -85,6 +87,9 @@ class IssueVoter extends Voter
 
             case self::UPDATE_ISSUE:
                 return $this->isUpdateGranted($subject, $user);
+
+            case self::DELETE_ISSUE:
+                return $this->isDeleteGranted($subject, $user);
 
             case self::ASSIGN_ISSUE:
                 return $this->isAssignGranted($subject[0], $subject[1], $user);
@@ -175,6 +180,41 @@ class IssueVoter extends Voter
         return
             $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::EDIT_ISSUES) ||
             $this->hasGroupPermission($subject->template, $user, TemplatePermission::EDIT_ISSUES);
+    }
+
+    /**
+     * Whether the specified issue can be deleted.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isDeleteGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended.
+        if ($subject->isSuspended) {
+            return false;
+        }
+
+        // Template must not be locked and project must not be suspended.
+        if ($subject->template->isLocked || $subject->project->isSuspended) {
+            return false;
+        }
+
+        // Check whether the user has required permissions as author.
+        if ($subject->author === $user && $this->hasRolePermission($subject->template, SystemRole::AUTHOR, TemplatePermission::DELETE_ISSUES)) {
+            return true;
+        }
+
+        // Check whether the user has required permissions as current responsible.
+        if ($subject->responsible === $user && $this->hasRolePermission($subject->template, SystemRole::RESPONSIBLE, TemplatePermission::DELETE_ISSUES)) {
+            return true;
+        }
+
+        return
+            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::DELETE_ISSUES) ||
+            $this->hasGroupPermission($subject->template, $user, TemplatePermission::DELETE_ISSUES);
     }
 
     /**
