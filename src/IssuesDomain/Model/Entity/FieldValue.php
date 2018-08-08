@@ -21,7 +21,7 @@ use Webinarium\PropertyTrait;
  * Issue field value.
  *
  * @ORM\Table(name="field_values")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="eTraxis\IssuesDomain\Model\Repository\FieldValueRepository")
  *
  * @property-read Issue    $issue     Issue.
  * @property-read Field    $field     Field.

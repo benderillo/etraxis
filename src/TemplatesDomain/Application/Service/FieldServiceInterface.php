@@ -11,8 +11,6 @@
 
 namespace eTraxis\TemplatesDomain\Application\Service;
 
-use eTraxis\IssuesDomain\Model\Entity\FieldValue;
-use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractFieldCommand;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 
@@ -30,16 +28,6 @@ interface FieldServiceInterface
      * @return \Symfony\Component\Validator\Constraint[]
      */
     public function getValidationConstraints(Field $field, ?int $timestamp = null): array;
-
-    /**
-     * Returns human-readable version of the specified field value.
-     *
-     * @param FieldValue $fieldValue Field value.
-     * @param User       $user       Current user.
-     *
-     * @return null|mixed Human-readable value.
-     */
-    public function getFieldValue(FieldValue $fieldValue, User $user);
 
     /**
      * Copies field-specific parameters from create/update command to specified field.

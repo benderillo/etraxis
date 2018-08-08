@@ -11,8 +11,6 @@
 
 namespace eTraxis\TemplatesDomain\Application\Service;
 
-use eTraxis\IssuesDomain\Model\Entity\FieldValue;
-use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
@@ -96,71 +94,6 @@ class FieldService implements FieldServiceInterface
         }
 
         return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFieldValue(FieldValue $fieldValue, User $user)
-    {
-        if ($fieldValue->value !== null) {
-
-            switch ($fieldValue->field->type) {
-
-                case FieldType::NUMBER:
-
-                    return $fieldValue->value;
-
-                case FieldType::DECIMAL:
-
-                    /** @var \eTraxis\TemplatesDomain\Model\Entity\DecimalValue $value */
-                    $value = $this->decimalRepository->find($fieldValue->value);
-
-                    return $value === null ? null : $value->value;
-
-                case FieldType::STRING:
-
-                    /** @var \eTraxis\TemplatesDomain\Model\Entity\StringValue $value */
-                    $value = $this->stringRepository->find($fieldValue->value);
-
-                    return $value === null ? null : $value->value;
-
-                case FieldType::TEXT:
-
-                    /** @var \eTraxis\TemplatesDomain\Model\Entity\TextValue $value */
-                    $value = $this->textRepository->find($fieldValue->value);
-
-                    return $value === null ? null : $value->value;
-
-                case FieldType::CHECKBOX:
-
-                    return $fieldValue->value ? true : false;
-
-                case FieldType::LIST:
-
-                    /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $value */
-                    $value = $this->listRepository->find($fieldValue->value);
-
-                    return $value === null ? null : $value->value;
-
-                case FieldType::ISSUE:
-
-                    return $fieldValue->value;
-
-                case FieldType::DATE:
-
-                    $date = date_create(null, timezone_open($user->timezone) ?: null);
-                    $date->setTimestamp($fieldValue->value);
-
-                    return $date->format('Y-m-d');
-
-                case FieldType::DURATION:
-
-                    return $fieldValue->field->asDuration()->toString($fieldValue->value);
-            }
-        }
-
-        return null;
     }
 
     /**

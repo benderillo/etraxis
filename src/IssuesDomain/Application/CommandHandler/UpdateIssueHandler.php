@@ -18,6 +18,7 @@ use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Repository\EventRepository;
+use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
@@ -38,6 +39,7 @@ class UpdateIssueHandler
     protected $tokens;
     protected $issueRepository;
     protected $eventRepository;
+    protected $valueRepository;
     protected $fieldService;
 
     /**
@@ -48,6 +50,7 @@ class UpdateIssueHandler
      * @param TokenStorageInterface         $tokens
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldValueRepository          $valueRepository
      * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
@@ -56,6 +59,7 @@ class UpdateIssueHandler
         TokenStorageInterface         $tokens,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
+        FieldValueRepository          $valueRepository,
         FieldServiceInterface         $fieldService
     )
     {
@@ -64,6 +68,7 @@ class UpdateIssueHandler
         $this->tokens          = $tokens;
         $this->issueRepository = $issueRepository;
         $this->eventRepository = $eventRepository;
+        $this->valueRepository = $valueRepository;
         $this->fieldService    = $fieldService;
     }
 
@@ -96,7 +101,7 @@ class UpdateIssueHandler
         $this->eventRepository->persist($event);
 
         if (mb_strlen($command->subject) !== 0) {
-            $this->issueRepository->setSubject($issue, $event, $command->subject);
+            $this->issueRepository->changeSubject($issue, $event, $command->subject);
         }
 
         // Validate field values.
@@ -104,7 +109,7 @@ class UpdateIssueHandler
         $constraints = [];
 
         foreach ($issue->values as $fieldValue) {
-            $defaults[$fieldValue->field->id]    = $this->fieldService->getFieldValue($fieldValue, $user);
+            $defaults[$fieldValue->field->id]    = $this->valueRepository->getFieldValue($fieldValue, $user);
             $constraints[$fieldValue->field->id] = $this->fieldService->getValidationConstraints($fieldValue->field, $fieldValue->createdAt);
         }
 
@@ -127,7 +132,7 @@ class UpdateIssueHandler
 
         // Create field values.
         foreach ($issue->values as $fieldValue) {
-            $this->issueRepository->setFieldValue($issue, $event, $fieldValue->field, $command->fields[$fieldValue->field->id]);
+            $this->valueRepository->setFieldValue($issue, $event, $fieldValue->field, $command->fields[$fieldValue->field->id]);
         }
     }
 }

@@ -19,6 +19,7 @@ use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\EventRepository;
+use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
@@ -44,6 +45,7 @@ class CreateIssueHandler
     protected $templateRepository;
     protected $issueRepository;
     protected $eventRepository;
+    protected $valueRepository;
     protected $fieldService;
 
     /**
@@ -56,6 +58,7 @@ class CreateIssueHandler
      * @param TemplateRepository            $templateRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldValueRepository          $valueRepository
      * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
@@ -66,6 +69,7 @@ class CreateIssueHandler
         TemplateRepository            $templateRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
+        FieldValueRepository          $valueRepository,
         FieldServiceInterface         $fieldService
     )
     {
@@ -76,6 +80,7 @@ class CreateIssueHandler
         $this->templateRepository = $templateRepository;
         $this->issueRepository    = $issueRepository;
         $this->eventRepository    = $eventRepository;
+        $this->valueRepository    = $valueRepository;
         $this->fieldService       = $fieldService;
     }
 
@@ -147,7 +152,7 @@ class CreateIssueHandler
 
         // Create field values.
         foreach ($issue->state->fields as $field) {
-            $this->issueRepository->setFieldValue($issue, $event, $field, $command->fields[$field->id]);
+            $this->valueRepository->setFieldValue($issue, $event, $field, $command->fields[$field->id]);
         }
 
         // Whether the issue must be assigned on creation.
