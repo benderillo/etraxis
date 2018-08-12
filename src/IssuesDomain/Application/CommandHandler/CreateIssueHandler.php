@@ -170,6 +170,7 @@ class CreateIssueHandler
 
             $event2 = new Event(EventType::ISSUE_ASSIGNED, $issue, $author, $issue->responsible->id);
 
+            $this->issueRepository->persist($issue);
             $this->eventRepository->persist($event2);
         }
 

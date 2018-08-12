@@ -82,6 +82,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertInstanceOf(Issue::class, $issue);
         self::assertSame($result, $issue);
 
+        $this->doctrine->getManager()->refresh($issue);
+
         self::assertSame('Test issue', $issue->subject);
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
@@ -89,8 +91,6 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
         self::assertSame($issue->createdAt, $issue->changedAt);
         self::assertNull($issue->closedAt);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount(1, $issue->events);
 
@@ -183,6 +183,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertInstanceOf(Issue::class, $issue);
         self::assertSame($result, $issue);
 
+        $this->doctrine->getManager()->refresh($issue);
+
         self::assertSame('Test issue', $issue->subject);
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
@@ -190,8 +192,6 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
         self::assertSame($issue->createdAt, $issue->changedAt);
         self::assertNull($issue->closedAt);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount(2, $issue->events);
 
@@ -289,6 +289,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertInstanceOf(Issue::class, $issue);
         self::assertSame($result, $issue);
 
+        $this->doctrine->getManager()->refresh($issue);
+
         self::assertSame('Test issue', $issue->subject);
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
@@ -296,8 +298,6 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
         self::assertSame($issue->createdAt, $issue->changedAt);
         self::assertNull($issue->closedAt);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount(1, $issue->events);
 
@@ -526,6 +526,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
     {
         $this->expectException(AccessDeniedHttpException::class);
         $this->expectExceptionMessage('New issue cannot be assigned to specified user.');
+
         $this->loginAs('nhills@example.com');
 
         /** @var State $state */
