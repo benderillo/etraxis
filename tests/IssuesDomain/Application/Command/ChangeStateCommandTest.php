@@ -138,7 +138,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         [/* skipping */, /* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         /** @var Field $field */
-        [/* skipping */, /* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Issue Id'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         /** @var Issue $duplicate */
         [/* skipping */, /* skipping */, $duplicate] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
@@ -372,7 +372,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         [/* skipping */, /* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
 
         /** @var Field $field */
-        [/* skipping */, /* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Issue Id'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
