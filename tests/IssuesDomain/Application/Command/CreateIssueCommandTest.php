@@ -89,7 +89,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertSame($issue->createdAt, $issue->changedAt);
+        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(1, $issue->events);
@@ -190,7 +190,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertSame('dquigley@example.com', $issue->responsible->email);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertSame($issue->createdAt, $issue->changedAt);
+        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(2, $issue->events);
@@ -296,7 +296,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertSame($issue->createdAt, $issue->changedAt);
+        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(1, $issue->events);
