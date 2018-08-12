@@ -84,6 +84,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
+        self::assertGreaterThan(1, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -114,9 +115,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         $this->commandbus->handle($command);
 
-        /** @var Issue $issue */
-        $issue = $this->repository->find($issue->id);
-        self::assertInstanceOf(Issue::class, $issue);
+        $this->doctrine->getManager()->refresh($issue);
 
         $values = $issue->values;
 
@@ -124,9 +123,10 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        $date  = date_create();
+        $date = date_create();
         $date->setTimezone(timezone_open($user->timezone));
 
+        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
         self::assertSame('Test issue', $issue->subject);
         self::assertSame('high', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Est dolorum omnis accusantium hic veritatis ut.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -136,8 +136,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(5182, $values[$index['Delta']]->value);
         self::assertSame(460, $values[$index['Effort']]->value);
         self::assertSame('98.52', $decimalRepository->find($values[$index['Test coverage']]->value)->value);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount($events + 1, $issue->events);
         self::assertCount($changes + 9, $this->doctrine->getRepository(Change::class)->findAll());
@@ -189,6 +187,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
+        self::assertGreaterThan(1, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -209,9 +208,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         $this->commandbus->handle($command);
 
-        /** @var Issue $issue */
-        $issue = $this->repository->find($issue->id);
-        self::assertInstanceOf(Issue::class, $issue);
+        $this->doctrine->getManager()->refresh($issue);
 
         $values = $issue->values;
 
@@ -219,6 +216,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
+        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
         self::assertSame('Test issue', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -228,8 +226,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(5173, $values[$index['Delta']]->value);
         self::assertSame(1440, $values[$index['Effort']]->value);
         self::assertSame('98.49', $decimalRepository->find($values[$index['Test coverage']]->value)->value);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount($events + 1, $issue->events);
         self::assertCount($changes + 1, $this->doctrine->getRepository(Change::class)->findAll());
@@ -281,6 +277,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
+        self::assertGreaterThan(1, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -306,9 +303,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         $this->commandbus->handle($command);
 
-        /** @var Issue $issue */
-        $issue = $this->repository->find($issue->id);
-        self::assertInstanceOf(Issue::class, $issue);
+        $this->doctrine->getManager()->refresh($issue);
 
         $values = $issue->values;
 
@@ -316,6 +311,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
+        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('high', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -325,8 +321,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(5182, $values[$index['Delta']]->value);
         self::assertSame(460, $values[$index['Effort']]->value);
         self::assertSame('98.49', $decimalRepository->find($values[$index['Test coverage']]->value)->value);
-
-        $this->doctrine->getManager()->refresh($issue);
 
         self::assertCount($events + 1, $issue->events);
         self::assertCount($changes + 3, $this->doctrine->getRepository(Change::class)->findAll());

@@ -84,6 +84,7 @@ class IssueRepository extends ServiceEntityRepository
             $change = new Change($event, null, $oldValue, $newValue);
 
             $issue->subject = $subject;
+            $issue->touch();
 
             $this->getEntityManager()->persist($change);
             $this->getEntityManager()->persist($issue);

@@ -205,12 +205,14 @@ class FieldValueRepository extends ServiceEntityRepository
         // If value doesn't exist yet, create it; otherwise register a change.
         if ($fieldValue === null) {
             $fieldValue = new FieldValue($issue, $field, $newValue);
+            $issue->touch();
         }
         elseif ($fieldValue->value !== $newValue) {
             $change = new Change($event, $field, $fieldValue->value, $newValue);
             $this->getEntityManager()->persist($change);
 
             $fieldValue->value = $newValue;
+            $issue->touch();
         }
 
         $this->getEntityManager()->persist($fieldValue);

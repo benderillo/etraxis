@@ -130,7 +130,7 @@ class UpdateIssueHandler
             throw InvalidCommandException::onCommand($command, $errors);
         }
 
-        // Create field values.
+        // Set field values.
         foreach ($issue->values as $fieldValue) {
             $this->valueRepository->setFieldValue($issue, $event, $fieldValue->field, $command->fields[$fieldValue->field->id]);
         }
