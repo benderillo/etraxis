@@ -14,29 +14,22 @@
 namespace eTraxis\IssuesDomain\Application\Command;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Webinarium\DataTransferObjectTrait;
 
 /**
- * Changes state of the issue to the specified one.
+ * Abstract issue command.
  *
- * @property int   $issue       Issue ID.
- * @property int   $state       New state ID.
  * @property int   $responsible ID of user to assign the issue to (ignored when not applicable).
  * @property array $fields      Fields values (keys are field IDs).
  */
-class ChangeStateCommand extends IssueCommand
+class IssueCommand
 {
-    use DataTransferObjectTrait;
-
     /**
-     * @Assert\NotBlank
      * @Assert\Regex("/^\d+$/")
      */
-    public $issue;
+    public $responsible;
 
     /**
-     * @Assert\NotBlank
-     * @Assert\Regex("/^\d+$/")
+     * All the constraints are configured at run-time.
      */
-    public $state;
+    public $fields = [];
 }

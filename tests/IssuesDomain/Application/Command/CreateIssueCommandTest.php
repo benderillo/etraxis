@@ -525,7 +525,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
     public function testResponsibleDenied()
     {
         $this->expectException(AccessDeniedHttpException::class);
-        $this->expectExceptionMessage('New issue cannot be assigned to specified user.');
+        $this->expectExceptionMessage('The issue cannot be assigned to specified user.');
 
         $this->loginAs('nhills@example.com');
 

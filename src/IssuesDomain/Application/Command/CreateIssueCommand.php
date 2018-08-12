@@ -24,7 +24,7 @@ use Webinarium\DataTransferObjectTrait;
  * @property int    $responsible ID of user to assign new issue to (ignored when not applicable).
  * @property array  $fields      Fields values (keys are field IDs).
  */
-class CreateIssueCommand
+class CreateIssueCommand extends IssueCommand
 {
     use DataTransferObjectTrait;
 
@@ -39,14 +39,4 @@ class CreateIssueCommand
      * @Assert\Length(max="250")
      */
     public $subject;
-
-    /**
-     * @Assert\Regex("/^\d+$/")
-     */
-    public $responsible;
-
-    /**
-     * All the constraints are configured at run-time.
-     */
-    public $fields = [];
 }

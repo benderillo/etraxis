@@ -23,30 +23,19 @@ use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
-use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Repository\TemplateRepository;
-use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Command handler.
  */
-class CreateIssueHandler
+class CreateIssueHandler extends IssueHandler
 {
-    protected $security;
-    protected $validator;
-    protected $tokens;
-    protected $userRepository;
     protected $templateRepository;
-    protected $issueRepository;
-    protected $eventRepository;
-    protected $valueRepository;
-    protected $fieldService;
 
     /**
      * Dependency Injection constructor.
@@ -55,33 +44,27 @@ class CreateIssueHandler
      * @param ValidatorInterface            $validator
      * @param TokenStorageInterface         $tokens
      * @param UserRepository                $userRepository
-     * @param TemplateRepository            $templateRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
      * @param FieldValueRepository          $valueRepository
      * @param FieldServiceInterface         $fieldService
+     * @param TemplateRepository            $templateRepository
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         TokenStorageInterface         $tokens,
         UserRepository                $userRepository,
-        TemplateRepository            $templateRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
         FieldValueRepository          $valueRepository,
-        FieldServiceInterface         $fieldService
+        FieldServiceInterface         $fieldService,
+        TemplateRepository            $templateRepository
     )
     {
-        $this->security           = $security;
-        $this->validator          = $validator;
-        $this->tokens             = $tokens;
-        $this->userRepository     = $userRepository;
+        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $valueRepository, $fieldService);
+
         $this->templateRepository = $templateRepository;
-        $this->issueRepository    = $issueRepository;
-        $this->eventRepository    = $eventRepository;
-        $this->valueRepository    = $valueRepository;
-        $this->fieldService       = $fieldService;
     }
 
     /**
@@ -120,59 +103,7 @@ class CreateIssueHandler
         $this->issueRepository->persist($issue);
         $this->eventRepository->persist($event);
 
-        // Validate field values.
-        $defaults    = [];
-        $constraints = [];
-
-        foreach ($issue->state->fields as $field) {
-            $defaults[$field->id]    = null;
-            $constraints[$field->id] = $this->fieldService->getValidationConstraints($field);
-        }
-
-        $command->fields = $command->fields + $defaults;
-
-        /** @var \Symfony\Component\Validator\Mapping\ClassMetadata $metadata */
-        $metadata = $this->validator->getMetadataFor(CreateIssueCommand::class);
-
-        if ($issue->state->responsible === StateResponsible::ASSIGN) {
-            $metadata->addPropertyConstraint('responsible', new Assert\NotBlank());
-        }
-
-        $metadata->addPropertyConstraint('fields', new Assert\Collection([
-            'fields'             => $constraints,
-            'allowExtraFields'   => false,
-            'allowMissingFields' => false,
-        ]));
-
-        $errors = $this->validator->validate($command);
-
-        if (count($errors)) {
-            throw InvalidCommandException::onCommand($command, $errors);
-        }
-
-        // Create field values.
-        foreach ($issue->state->fields as $field) {
-            $this->valueRepository->setFieldValue($issue, $event, $field, $command->fields[$field->id]);
-        }
-
-        // Whether the issue must be assigned on creation.
-        if ($issue->state->responsible === StateResponsible::ASSIGN) {
-
-            $issue->responsible = $this->userRepository->find($command->responsible);
-
-            if (!$issue->responsible) {
-                throw new NotFoundHttpException('Unknown user.');
-            }
-
-            if (!$this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$issue->state, $issue->responsible])) {
-                throw new AccessDeniedHttpException('New issue cannot be assigned to specified user.');
-            }
-
-            $event2 = new Event(EventType::ISSUE_ASSIGNED, $issue, $author, $issue->responsible->id);
-
-            $this->issueRepository->persist($issue);
-            $this->eventRepository->persist($event2);
-        }
+        $this->validateState($issue, $event, $command);
 
         return $issue;
     }
