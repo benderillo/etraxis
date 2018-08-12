@@ -40,7 +40,7 @@ class TemplateFixtures extends Fixture implements DependentFixtureInterface
     {
         $data = [
             'a' => ['task' => false, 'req' => true],
-            'b' => ['task' => true,  'req' => false],
+            'b' => ['task' => true,  'req' => true],
             'c' => ['task' => false, 'req' => false],
             'd' => ['task' => true,  'req' => false],
         ];

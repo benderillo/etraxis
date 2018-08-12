@@ -20,7 +20,9 @@ use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
 use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
 use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\TemplatesDomain\Model\Entity\StateGroupTransition;
 use eTraxis\TemplatesDomain\Model\Entity\StateResponsibleGroup;
+use eTraxis\TemplatesDomain\Model\Entity\StateRoleTransition;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission;
 use eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission;
@@ -38,6 +40,7 @@ class IssueVoter extends Voter
     public const CREATE_ISSUE = 'issue.create';
     public const UPDATE_ISSUE = 'issue.update';
     public const DELETE_ISSUE = 'issue.delete';
+    public const CHANGE_STATE = 'state.change';
     public const ASSIGN_ISSUE = 'issue.assign';
 
     protected $attributes = [
@@ -45,6 +48,7 @@ class IssueVoter extends Voter
         self::CREATE_ISSUE => Template::class,
         self::UPDATE_ISSUE => Issue::class,
         self::DELETE_ISSUE => Issue::class,
+        self::CHANGE_STATE => [Issue::class, State::class],
         self::ASSIGN_ISSUE => [State::class, User::class],
     ];
 
@@ -90,6 +94,9 @@ class IssueVoter extends Voter
 
             case self::DELETE_ISSUE:
                 return $this->isDeleteGranted($subject, $user);
+
+            case self::CHANGE_STATE:
+                return $this->isChangeStateGranted($subject[0], $subject[1], $user);
 
             case self::ASSIGN_ISSUE:
                 return $this->isAssignGranted($subject[0], $subject[1], $user);
@@ -215,6 +222,80 @@ class IssueVoter extends Voter
         return
             $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::DELETE_ISSUES) ||
             $this->hasGroupPermission($subject->template, $user, TemplatePermission::DELETE_ISSUES);
+    }
+
+    /**
+     * Whether the current state of the specified issue can be changed to the specified state.
+     *
+     * @param Issue $subject Subject issue.
+     * @param State $state   New state of the issue.
+     * @param User  $user    Current user.
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return bool
+     */
+    protected function isChangeStateGranted(Issue $subject, State $state, User $user): bool
+    {
+        // Issue must not be suspended or closed.
+        if ($subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        // Template must not be locked and project must not be suspended.
+        if ($subject->template->isLocked || $subject->project->isSuspended) {
+            return false;
+        }
+
+        // Check whether the user has required permissions by role.
+        $roles = [SystemRole::ANYONE];
+
+        if ($subject->author === $user) {
+            $roles[] = SystemRole::AUTHOR;
+        }
+
+        if ($subject->responsible === $user) {
+            $roles[] = SystemRole::RESPONSIBLE;
+        }
+
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(st.role)')
+            ->from(StateRoleTransition::class, 'st')
+            ->where('st.fromState = :from')
+            ->andWhere('st.toState = :to')
+            ->andWhere($query->expr()->in('st.role', ':roles'))
+            ->setParameters([
+                'from'  => $subject->state,
+                'to'    => $state,
+                'roles' => $roles,
+            ]);
+
+        if ((int) ($query->getQuery()->getSingleScalarResult()) !== 0) {
+            return true;
+        }
+
+        // Check whether the user has required permissions by group.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(st.group)')
+            ->from(StateGroupTransition::class, 'st')
+            ->where('st.fromState = :from')
+            ->andWhere('st.toState = :to')
+            ->andWhere($query->expr()->in('st.group', ':groups'))
+            ->setParameters([
+                'from'   => $subject->state,
+                'to'     => $state,
+                'groups' => $user->groups,
+            ]);
+
+        if ((int) ($query->getQuery()->getSingleScalarResult()) !== 0) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

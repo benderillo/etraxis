@@ -56,12 +56,14 @@ class IssueVoterTest extends TransactionalTestCase
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
         [$state]    = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
-        [$issue] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
+        [$issue1] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
+        [$issue6] = $this->repository->findBy(['subject' => 'Support request 6'], ['id' => 'ASC']);
 
-        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::VIEW_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::VIEW_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $template, [IssueVoter::CREATE_ISSUE]));
-        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::UPDATE_ISSUE]));
-        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue, [IssueVoter::DELETE_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::UPDATE_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::DELETE_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue6, $state], [IssueVoter::CHANGE_STATE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$state, $developer], [IssueVoter::ASSIGN_ISSUE]));
     }
 
@@ -187,6 +189,34 @@ class IssueVoterTest extends TransactionalTestCase
 
         $this->loginAs('ldoyle@example.com');
         self::assertTrue($this->security->isGranted(IssueVoter::DELETE_ISSUE, $issueC));
+    }
+
+    public function testChangeState()
+    {
+        [$stateA, $stateB, $stateC] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+
+        // Template B is locked, template C is not.
+        // Project A is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Support request 2'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Support request 5'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByClient3]   = $this->repository->findBy(['subject' => 'Support request 4'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToSupport1] = $this->repository->findBy(['subject' => 'Support request 4'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueA, $stateA]));
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueB, $stateB]));
+        self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$suspended, $stateC]));
+
+        $this->loginAs('dtillman@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
+        self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient3, $stateC]));
+
+        $this->loginAs('cbatz@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
+        self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$assignedToSupport1, $stateC]));
     }
 
     public function testAssign()

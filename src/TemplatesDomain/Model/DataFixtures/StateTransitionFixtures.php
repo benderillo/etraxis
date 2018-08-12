@@ -69,6 +69,7 @@ class StateTransitionFixtures extends Fixture implements DependentFixtureInterfa
 
                 'managers:%s' => [
                     'submitted:%s' => 'opened:%s',
+                    'opened:%s'    => 'resolved:%s',
                 ],
 
                 'support:%s' => [

@@ -126,6 +126,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
                 'subject'     => 'Support request 5',
                 'author'      => $this->client2,
                 'responsible' => $this->support3,
+                'suspended'   => true,
             ],
 
             'req6' => [
