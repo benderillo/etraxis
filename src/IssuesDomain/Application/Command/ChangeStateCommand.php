@@ -24,7 +24,7 @@ use Webinarium\DataTransferObjectTrait;
  * @property int   $responsible ID of user to assign the issue to (ignored when not applicable).
  * @property array $fields      Fields values (keys are field IDs).
  */
-class ChangeStateCommand extends IssueCommand
+class ChangeStateCommand extends AbstractIssueCommand
 {
     use DataTransferObjectTrait;
 

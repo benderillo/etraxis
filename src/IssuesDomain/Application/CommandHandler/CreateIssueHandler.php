@@ -22,7 +22,7 @@ use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
+use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use eTraxis\TemplatesDomain\Model\Repository\TemplateRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,7 +33,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Command handler.
  */
-class CreateIssueHandler extends IssueHandler
+class CreateIssueHandler extends AbstractIssueHandler
 {
     protected $templateRepository;
 
@@ -46,8 +46,8 @@ class CreateIssueHandler extends IssueHandler
      * @param UserRepository                $userRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
-     * @param FieldServiceInterface         $fieldService
      * @param TemplateRepository            $templateRepository
      */
     public function __construct(
@@ -57,12 +57,12 @@ class CreateIssueHandler extends IssueHandler
         UserRepository                $userRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
+        FieldRepository               $fieldRepository,
         FieldValueRepository          $valueRepository,
-        FieldServiceInterface         $fieldService,
         TemplateRepository            $templateRepository
     )
     {
-        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $valueRepository, $fieldService);
+        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $fieldRepository, $valueRepository);
 
         $this->templateRepository = $templateRepository;
     }

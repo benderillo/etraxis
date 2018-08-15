@@ -11,10 +11,10 @@
 //
 //----------------------------------------------------------------------
 
-namespace eTraxis\TemplatesDomain\Application\Service;
+namespace eTraxis\TemplatesDomain\Application\Command\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
-use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
+use eTraxis\TemplatesDomain\Application\CommandHandler\Fields\AbstractFieldHandler;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
@@ -25,7 +25,7 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class FieldServiceTest extends TransactionalTestCase
+class AbstractFieldCommandTest extends TransactionalTestCase
 {
     use ReflectionTrait;
 
@@ -44,8 +44,8 @@ class FieldServiceTest extends TransactionalTestCase
     /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository */
     protected $listRepository;
 
-    /** @var FieldService $service */
-    protected $service;
+    /** @var AbstractFieldHandler $handler */
+    protected $handler;
 
     protected function setUp()
     {
@@ -60,33 +60,7 @@ class FieldServiceTest extends TransactionalTestCase
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->client->getContainer()->get('translator');
 
-        $this->service = new FieldService($translator, $this->decimalRepository, $this->stringRepository, $this->textRepository, $this->listRepository);
-    }
-
-    public function testGetValidationConstraints()
-    {
-        $names = [
-            FieldType::NUMBER   => 'Delta',
-            FieldType::DECIMAL  => 'Test coverage',
-            FieldType::STRING   => 'Commit ID',
-            FieldType::TEXT     => 'Description',
-            FieldType::CHECKBOX => 'New feature',
-            FieldType::LIST     => 'Priority',
-            FieldType::ISSUE    => 'Issue ID',
-            FieldType::DATE     => 'Due date',
-            FieldType::DURATION => 'Effort',
-        ];
-
-        foreach ($names as $name) {
-            /** @var Field $field */
-            [$field] = $this->fieldRepository->findBy(['name' => $name], ['id' => 'ASC']);
-            self::assertNotEmpty($this->service->getValidationConstraints($field));
-        }
-
-        /** @var Field $field */
-        [$field] = $this->fieldRepository->findBy(['name' => 'New feature'], ['id' => 'ASC']);
-        $this->setProperty($field, 'type', 'unknown');
-        self::assertEmpty($this->service->getValidationConstraints($field));
+        $this->handler = new DummyFieldHandler($translator, $this->decimalRepository, $this->stringRepository, $this->textRepository, $this->listRepository);
     }
 
     public function testCopyAsCheckboxSuccess()
@@ -100,7 +74,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => true,
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertTrue($field->asCheckbox()->getDefaultValue());
     }
@@ -120,7 +94,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '3',
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame(1, $field->asDate()->getMinimumValue());
         self::assertSame(7, $field->asDate()->getMaximumValue());
@@ -141,7 +115,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '3',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsDateDefaultValueRangeError()
@@ -158,7 +132,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '0',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsDecimalSuccess()
@@ -176,7 +150,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '5',
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame('1', $field->asDecimal($this->decimalRepository)->getMinimumValue());
         self::assertSame('10', $field->asDecimal($this->decimalRepository)->getMaximumValue());
@@ -197,7 +171,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '5',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsDecimalDefaultValueRangeError()
@@ -214,7 +188,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '0',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsDurationSuccess()
@@ -232,7 +206,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '0:30',
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame('0:01', $field->asDuration()->getMinimumValue());
         self::assertSame('0:59', $field->asDuration()->getMaximumValue());
@@ -253,7 +227,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '0:30',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsDurationDefaultValueRangeError()
@@ -270,7 +244,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => '0:00',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsIssueSuccess()
@@ -280,7 +254,7 @@ class FieldServiceTest extends TransactionalTestCase
 
         $command = new Command\UpdateIssueFieldCommand();
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertTrue(true);
     }
@@ -299,7 +273,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => $item->id,
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame($item, $field->asList($this->listRepository)->getDefaultValue());
 
@@ -307,7 +281,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => null,
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertNull($field->asList($this->listRepository)->getDefaultValue());
     }
@@ -323,7 +297,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsListWrongItem()
@@ -340,7 +314,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => $item->id,
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsNumberSuccess()
@@ -358,7 +332,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => 100,
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame(-100000, $field->asNumber()->getMinimumValue());
         self::assertSame(100000, $field->asNumber()->getMaximumValue());
@@ -379,7 +353,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => 100,
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsNumberDefaultValueRangeError()
@@ -396,7 +370,7 @@ class FieldServiceTest extends TransactionalTestCase
             'defaultValue' => 100001,
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsStringSuccess()
@@ -418,7 +392,7 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame(20, $field->asString($this->stringRepository)->getMaximumLength());
         self::assertSame('123-456-7890', $field->asString($this->stringRepository)->getDefaultValue());
@@ -443,7 +417,7 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsStringDefaultValueFormatError()
@@ -462,7 +436,7 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsTextSuccess()
@@ -484,7 +458,7 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $field = $this->service->copyCommandToField($command, $field);
+        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
         self::assertSame(20, $field->asText($this->textRepository)->getMaximumLength());
         self::assertSame('123-456-7890', $field->asText($this->textRepository)->getDefaultValue());
@@ -509,7 +483,7 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 
     public function testCopyAsTextDefaultValueFormatError()
@@ -528,6 +502,6 @@ class FieldServiceTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $this->service->copyCommandToField($command, $field);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
     }
 }

@@ -21,7 +21,7 @@ use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
+use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Command handler.
  */
-class ChangeStateHandler extends IssueHandler
+class ChangeStateHandler extends AbstractIssueHandler
 {
     protected $stateRepository;
 
@@ -45,8 +45,8 @@ class ChangeStateHandler extends IssueHandler
      * @param UserRepository                $userRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
-     * @param FieldServiceInterface         $fieldService
      * @param StateRepository               $stateRepository
      */
     public function __construct(
@@ -56,12 +56,12 @@ class ChangeStateHandler extends IssueHandler
         UserRepository                $userRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
+        FieldRepository               $fieldRepository,
         FieldValueRepository          $valueRepository,
-        FieldServiceInterface         $fieldService,
         StateRepository               $stateRepository
     )
     {
-        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $valueRepository, $fieldService);
+        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $fieldRepository, $valueRepository);
 
         $this->stateRepository = $stateRepository;
     }

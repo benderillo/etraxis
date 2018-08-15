@@ -207,10 +207,37 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
 
                             switch ($field->type) {
 
+                                case FieldType::CHECKBOX:
+                                    $value = $vref ? 1 : 0;
+                                    break;
+
+                                case FieldType::DATE:
+                                    $value = $issue->createdAt + $vref * self::SECS_IN_DAY;
+                                    break;
+
                                 case FieldType::DECIMAL:
                                     /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
                                     $repository = $manager->getRepository(DecimalValue::class);
                                     $value      = $repository->get($vref)->id;
+                                    break;
+
+                                case FieldType::DURATION:
+                                    $value = $vref;
+                                    break;
+
+                                case FieldType::ISSUE:
+                                    /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $entity */
+                                    $entity = $this->getReference(sprintf($vref, $pref));
+                                    $value  = $entity->id;
+                                    break;
+
+                                case FieldType::LIST:
+                                    /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+                                    $repository = $manager->getRepository(ListItem::class);
+                                    $value      = $repository->findOneByValue($field, $vref)->id;
+                                    break;
+
+                                case FieldType::NUMBER:
                                     break;
 
                                 case FieldType::STRING:
@@ -223,30 +250,6 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
                                     /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
                                     $repository = $manager->getRepository(TextValue::class);
                                     $value      = $repository->get($vref)->id;
-                                    break;
-
-                                case FieldType::CHECKBOX:
-                                    $value = $vref ? 1 : 0;
-                                    break;
-
-                                case FieldType::LIST:
-                                    /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
-                                    $repository = $manager->getRepository(ListItem::class);
-                                    $value      = $repository->findOneByValue($field, $vref)->id;
-                                    break;
-
-                                case FieldType::ISSUE:
-                                    /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $entity */
-                                    $entity = $this->getReference(sprintf($vref, $pref));
-                                    $value  = $entity->id;
-                                    break;
-
-                                case FieldType::DATE:
-                                    $value = $issue->createdAt + $vref * self::SECS_IN_DAY;
-                                    break;
-
-                                case FieldType::DURATION:
-                                    $value = $vref;
                                     break;
                             }
                         }

@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @property int   $responsible ID of user to assign the issue to (ignored when not applicable).
  * @property array $fields      Fields values (keys are field IDs).
  */
-class IssueCommand
+abstract class AbstractIssueCommand
 {
     /**
      * @Assert\Regex("/^\d+$/")

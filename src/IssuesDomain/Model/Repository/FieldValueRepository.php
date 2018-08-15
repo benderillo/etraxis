@@ -70,9 +70,16 @@ class FieldValueRepository extends ServiceEntityRepository
 
             switch ($fieldValue->field->type) {
 
-                case FieldType::NUMBER:
+                case FieldType::CHECKBOX:
 
-                    return $fieldValue->value;
+                    return $fieldValue->value ? true : false;
+
+                case FieldType::DATE:
+
+                    $date = date_create(null, timezone_open($user->timezone) ?: null);
+                    $date->setTimestamp($fieldValue->value);
+
+                    return $date->format('Y-m-d');
 
                 case FieldType::DECIMAL:
 
@@ -80,6 +87,25 @@ class FieldValueRepository extends ServiceEntityRepository
                     $value = $this->decimalRepository->find($fieldValue->value);
 
                     return $value === null ? null : $value->value;
+
+                case FieldType::DURATION:
+
+                    return $fieldValue->field->asDuration()->toString($fieldValue->value);
+
+                case FieldType::ISSUE:
+
+                    return $fieldValue->value;
+
+                case FieldType::LIST:
+
+                    /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $value */
+                    $value = $this->listRepository->find($fieldValue->value);
+
+                    return $value === null ? null : $value->value;
+
+                case FieldType::NUMBER:
+
+                    return $fieldValue->value;
 
                 case FieldType::STRING:
 
@@ -94,32 +120,6 @@ class FieldValueRepository extends ServiceEntityRepository
                     $value = $this->textRepository->find($fieldValue->value);
 
                     return $value === null ? null : $value->value;
-
-                case FieldType::CHECKBOX:
-
-                    return $fieldValue->value ? true : false;
-
-                case FieldType::LIST:
-
-                    /** @var \eTraxis\TemplatesDomain\Model\Entity\ListItem $value */
-                    $value = $this->listRepository->find($fieldValue->value);
-
-                    return $value === null ? null : $value->value;
-
-                case FieldType::ISSUE:
-
-                    return $fieldValue->value;
-
-                case FieldType::DATE:
-
-                    $date = date_create(null, timezone_open($user->timezone) ?: null);
-                    $date->setTimestamp($fieldValue->value);
-
-                    return $date->format('Y-m-d');
-
-                case FieldType::DURATION:
-
-                    return $fieldValue->field->asDuration()->toString($fieldValue->value);
             }
         }
 
@@ -146,20 +146,30 @@ class FieldValueRepository extends ServiceEntityRepository
 
             switch ($field->type) {
 
+                case FieldType::CHECKBOX:
+                    $newValue = $value ? 1 : 0;
+                    break;
+
+                case FieldType::DATE:
+                    $timezone = timezone_open($event->user->timezone) ?? null;
+                    $newValue = date_create_from_format('Y-m-d', $value, $timezone)->getTimestamp();
+                    break;
+
                 case FieldType::DECIMAL:
                     $newValue = $this->decimalRepository->get($value)->id;
                     break;
 
-                case FieldType::STRING:
-                    $newValue = $this->stringRepository->get($value)->id;
+                case FieldType::DURATION:
+                    $newValue = $field->asDuration()->toNumber($value);
                     break;
 
-                case FieldType::TEXT:
-                    $newValue = $this->textRepository->get($value)->id;
-                    break;
+                case FieldType::ISSUE:
 
-                case FieldType::CHECKBOX:
-                    $newValue = $value ? 1 : 0;
+                    if ($this->issueRepository->find($value) === null) {
+                        return null;
+                    }
+
+                    $newValue = $value;
                     break;
 
                 case FieldType::LIST:
@@ -173,22 +183,12 @@ class FieldValueRepository extends ServiceEntityRepository
                     $newValue = $item->id;
                     break;
 
-                case FieldType::ISSUE:
-
-                    if ($this->issueRepository->find($value) === null) {
-                        return null;
-                    }
-
-                    $newValue = $value;
+                case FieldType::STRING:
+                    $newValue = $this->stringRepository->get($value)->id;
                     break;
 
-                case FieldType::DATE:
-                    $timezone = timezone_open($event->user->timezone) ?? null;
-                    $newValue = date_create_from_format('Y-m-d', $value, $timezone)->getTimestamp();
-                    break;
-
-                case FieldType::DURATION:
-                    $newValue = $field->asDuration()->toNumber($value);
+                case FieldType::TEXT:
+                    $newValue = $this->textRepository->get($value)->id;
                     break;
 
                 default:

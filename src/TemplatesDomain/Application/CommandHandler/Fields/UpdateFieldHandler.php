@@ -14,44 +14,56 @@
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
+use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
+use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
+use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Command handler.
  */
-class UpdateFieldHandler
+class UpdateFieldHandler extends AbstractFieldHandler
 {
     protected $security;
     protected $validator;
     protected $repository;
-    protected $fieldService;
 
     /**
      * Dependency Injection constructor.
      *
+     * @param TranslatorInterface           $translator
+     * @param DecimalValueRepository        $decimalRepository
+     * @param StringValueRepository         $stringRepository
+     * @param TextValueRepository           $textRepository
+     * @param ListItemRepository            $listRepository
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param FieldRepository               $repository
-     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
+        TranslatorInterface           $translator,
+        DecimalValueRepository        $decimalRepository,
+        StringValueRepository         $stringRepository,
+        TextValueRepository           $textRepository,
+        ListItemRepository            $listRepository,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
-        FieldRepository               $repository,
-        FieldServiceInterface         $fieldService
+        FieldRepository               $repository
     )
     {
-        $this->security     = $security;
-        $this->validator    = $validator;
-        $this->repository   = $repository;
-        $this->fieldService = $fieldService;
+        parent::__construct($translator, $decimalRepository, $stringRepository, $textRepository, $listRepository);
+
+        $this->security   = $security;
+        $this->validator  = $validator;
+        $this->repository = $repository;
     }
 
     /**
@@ -80,7 +92,7 @@ class UpdateFieldHandler
         $field->description = $command->description;
         $field->isRequired  = $command->required;
 
-        $field = $this->fieldService->copyCommandToField($command, $field);
+        $field = $this->copyCommandToField($command, $field);
 
         $errors = $this->validator->validate($field);
 

@@ -4,14 +4,19 @@
 //
 //  Copyright (C) 2018 Artem Rodygin
 //
+//  This file is part of eTraxis.
+//
 //  You should have received a copy of the GNU General Public License
-//  along with the file. If not, see <http://www.gnu.org/licenses/>.
+//  along with eTraxis. If not, see <http://www.gnu.org/licenses/>.
 //
 //----------------------------------------------------------------------
 
-namespace eTraxis\TemplatesDomain\Application\Service;
+/** @noinspection PhpUnusedPrivateMethodInspection */
 
-use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
+namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
+
+use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractFieldCommand;
+use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
@@ -24,9 +29,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Service to process fields of any type.
+ * Abstract "Create/update field" command handler.
  */
-class FieldService implements FieldServiceInterface
+class AbstractFieldHandler
 {
     protected $translator;
     protected $decimalRepository;
@@ -59,47 +64,14 @@ class FieldService implements FieldServiceInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Copies field-specific parameters from create/update command to specified field.
+     *
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
+     *
+     * @return Field Updated field entity.
      */
-    public function getValidationConstraints(Field $field, ?int $timestamp = null): array
-    {
-        switch ($field->type) {
-
-            case FieldType::NUMBER:
-                return $field->asNumber()->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::DECIMAL:
-                return $field->asDecimal($this->decimalRepository)->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::STRING:
-                return $field->asString($this->stringRepository)->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::TEXT:
-                return $field->asText($this->textRepository)->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::CHECKBOX:
-                return $field->asCheckbox()->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::LIST:
-                return $field->asList($this->listRepository)->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::ISSUE:
-                return $field->asIssue()->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::DATE:
-                return $field->asDate()->getValidationConstraints($this->translator, $timestamp);
-
-            case FieldType::DURATION:
-                return $field->asDuration()->getValidationConstraints($this->translator, $timestamp);
-        }
-
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function copyCommandToField(Command\AbstractFieldCommand $command, Field $field): Field
+    protected function copyCommandToField(AbstractFieldCommand $command, Field $field): Field
     {
         $handlers = [
             FieldType::CHECKBOX => 'copyAsCheckbox',
@@ -121,12 +93,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "checkbox" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsCheckbox(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsCheckbox(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\CheckboxCommandTrait $command */
         $facade = $field->asCheckbox();
@@ -139,12 +111,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "date" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsDate(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsDate(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DateCommandTrait $command */
         $facade = $field->asDate();
@@ -176,12 +148,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "decimal" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsDecimal(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsDecimal(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DecimalCommandTrait $command */
         $facade = $field->asDecimal($this->decimalRepository);
@@ -215,12 +187,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "duration" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsDuration(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsDuration(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DurationCommandTrait $command */
         $facade = $field->asDuration();
@@ -257,12 +229,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "issue" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsIssue(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsIssue(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\IssueCommandTrait $command */
 
@@ -274,19 +246,19 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "list" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsList(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsList(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\ListCommandTrait $command */
         $facade = $field->asList($this->listRepository);
 
-        if (get_parent_class($command) === Command\AbstractUpdateFieldCommand::class) {
+        if (get_parent_class($command) === AbstractUpdateFieldCommand::class) {
 
-            /** @var Command\UpdateListFieldCommand $command */
+            /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\UpdateListFieldCommand $command */
             if ($command->defaultValue === null) {
                 $facade->setDefaultValue(null);
             }
@@ -308,12 +280,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "number" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsNumber(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsNumber(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\NumberCommandTrait $command */
         $facade = $field->asNumber();
@@ -345,12 +317,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "string" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsString(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsString(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\StringCommandTrait $command */
         $facade = $field->asString($this->stringRepository);
@@ -383,12 +355,12 @@ class FieldService implements FieldServiceInterface
     /**
      * Copies field-specific parameters from create/update command to specified "text" field.
      *
-     * @param Command\AbstractFieldCommand $command
-     * @param Field                        $field
+     * @param AbstractFieldCommand $command
+     * @param Field                $field
      *
      * @return Field Updated field entity.
      */
-    protected function copyAsText(Command\AbstractFieldCommand $command, Field $field): Field
+    private function copyAsText(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\TextCommandTrait $command */
         $facade = $field->asText($this->textRepository);

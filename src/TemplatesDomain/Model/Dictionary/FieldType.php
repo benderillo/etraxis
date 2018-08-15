@@ -20,25 +20,25 @@ use Dictionary\StaticDictionary;
  */
 class FieldType extends StaticDictionary
 {
-    public const NUMBER   = 'number';
+    public const CHECKBOX = 'checkbox';
+    public const DATE     = 'date';
     public const DECIMAL  = 'decimal';
+    public const DURATION = 'duration';
+    public const ISSUE    = 'issue';
+    public const LIST     = 'list';
+    public const NUMBER   = 'number';
     public const STRING   = 'string';
     public const TEXT     = 'text';
-    public const CHECKBOX = 'checkbox';
-    public const LIST     = 'list';
-    public const ISSUE    = 'issue';
-    public const DATE     = 'date';
-    public const DURATION = 'duration';
 
     protected static $dictionary = [
-        self::NUMBER   => 'field.type.number',
+        self::CHECKBOX => 'field.type.checkbox',
+        self::DATE     => 'field.type.date',
         self::DECIMAL  => 'field.type.decimal',
+        self::DURATION => 'field.type.duration',
+        self::ISSUE    => 'field.type.issue',
+        self::LIST     => 'field.type.list',
+        self::NUMBER   => 'field.type.number',
         self::STRING   => 'field.type.string',
         self::TEXT     => 'field.type.text',
-        self::CHECKBOX => 'field.type.checkbox',
-        self::LIST     => 'field.type.list',
-        self::ISSUE    => 'field.type.issue',
-        self::DATE     => 'field.type.date',
-        self::DURATION => 'field.type.duration',
     ];
 }

@@ -20,7 +20,7 @@ use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
+use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -39,8 +39,8 @@ class UpdateIssueHandler
     protected $tokens;
     protected $issueRepository;
     protected $eventRepository;
+    protected $fieldRepository;
     protected $valueRepository;
-    protected $fieldService;
 
     /**
      * Dependency Injection constructor.
@@ -50,8 +50,8 @@ class UpdateIssueHandler
      * @param TokenStorageInterface         $tokens
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
-     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
@@ -59,8 +59,8 @@ class UpdateIssueHandler
         TokenStorageInterface         $tokens,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
-        FieldValueRepository          $valueRepository,
-        FieldServiceInterface         $fieldService
+        FieldRepository               $fieldRepository,
+        FieldValueRepository          $valueRepository
     )
     {
         $this->security        = $security;
@@ -68,8 +68,8 @@ class UpdateIssueHandler
         $this->tokens          = $tokens;
         $this->issueRepository = $issueRepository;
         $this->eventRepository = $eventRepository;
+        $this->fieldRepository = $fieldRepository;
         $this->valueRepository = $valueRepository;
-        $this->fieldService    = $fieldService;
     }
 
     /**
@@ -110,7 +110,7 @@ class UpdateIssueHandler
 
         foreach ($issue->values as $fieldValue) {
             $defaults[$fieldValue->field->id]    = $this->valueRepository->getFieldValue($fieldValue, $user);
-            $constraints[$fieldValue->field->id] = $this->fieldService->getValidationConstraints($fieldValue->field, $fieldValue->createdAt);
+            $constraints[$fieldValue->field->id] = $this->fieldRepository->getValidationConstraints($fieldValue->field, $fieldValue->createdAt);
         }
 
         $command->fields = $command->fields + $defaults;

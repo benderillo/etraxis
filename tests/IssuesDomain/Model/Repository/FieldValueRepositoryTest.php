@@ -58,21 +58,40 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertNull($this->repository->getFieldValue($value, $user));
     }
 
-    public function testGetNumberFieldValue()
+    public function testGetCheckboxFieldValue()
     {
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
 
         /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
 
         /** @var FieldValue[] $values */
         $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::NUMBER;
+            return $fieldValue->field->type === FieldType::CHECKBOX;
         });
 
         $value = reset($values);
-        self::assertSame(5173, $this->repository->getFieldValue($value, $user));
+        self::assertTrue($this->repository->getFieldValue($value, $user));
+    }
+
+    public function testGetDateFieldValue()
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DATE;
+        });
+
+        $value = reset($values);
+        $date  = date_create();
+        $date->setTimestamp($value->value)->setTimezone(timezone_open($user->timezone));
+        self::assertSame($date->format('Y-m-d'), $this->repository->getFieldValue($value, $user));
     }
 
     public function testGetDecimalFieldValue()
@@ -90,6 +109,77 @@ class FieldValueRepositoryTest extends TransactionalTestCase
 
         $value = reset($values);
         self::assertSame('98.49', $this->repository->getFieldValue($value, $user));
+    }
+
+    public function testGetDurationFieldValue()
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DURATION;
+        });
+
+        $value = reset($values);
+        self::assertSame('1:20', $this->repository->getFieldValue($value, $user));
+    }
+
+    public function testGetIssueFieldValue()
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
+
+        /** @var Issue $duplicate */
+        [$duplicate] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::ISSUE;
+        });
+
+        $value = reset($values);
+        self::assertSame($duplicate->id, $this->repository->getFieldValue($value, $user));
+    }
+
+    public function testGetListFieldValue()
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::LIST;
+        });
+
+        $value = reset($values);
+        self::assertSame(2, $this->repository->getFieldValue($value, $user));
+    }
+
+    public function testGetNumberFieldValue()
+    {
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::NUMBER;
+        });
+
+        $value = reset($values);
+        self::assertSame(5173, $this->repository->getFieldValue($value, $user));
     }
 
     public function testGetStringFieldValue()
@@ -126,11 +216,8 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $this->repository->getFieldValue($value, $user));
     }
 
-    public function testGetCheckboxFieldValue()
+    public function testSetCheckboxFieldValue()
     {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
-
         /** @var Issue $issue */
         [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
 
@@ -140,13 +227,162 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         });
 
         $value = reset($values);
-        self::assertTrue($this->repository->getFieldValue($value, $user));
+        self::assertSame(1, $value->value);
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, false);
+        self::assertNotNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::CHECKBOX;
+        });
+
+        $value = reset($values);
+        self::assertSame(0, $value->value);
     }
 
-    public function testGetListFieldValue()
+    public function testSetDateFieldValue()
     {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DATE;
+        });
+
+        $value = reset($values);
+        self::assertSame('2015-04-28', date('Y-m-d', $value->value));
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '2015-04-23');
+        self::assertNotNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DATE;
+        });
+
+        $value = reset($values);
+        $date  = date_create();
+        $date->setTimestamp($value->value)->setTimezone(timezone_open($issue->events[0]->user->timezone));
+        self::assertSame('2015-04-23', $date->format('Y-m-d'));
+    }
+
+    public function testSetDecimalFieldValue()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
+        $repository = $this->doctrine->getRepository(DecimalValue::class);
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DECIMAL;
+        });
+
+        $value = reset($values);
+        self::assertSame('98.49', $repository->find($value->value)->value);
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '3.1415');
+        self::assertNotNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DECIMAL;
+        });
+
+        $value = reset($values);
+        self::assertSame('3.1415', $repository->find($value->value)->value);
+    }
+
+    public function testSetDurationFieldValue()
+    {
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DURATION;
+        });
+
+        $value = reset($values);
+        self::assertSame(1440, $value->value);
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '11:52');
+        self::assertNotNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::DURATION;
+        });
+
+        $value = reset($values);
+        self::assertSame(712, $value->value);
+    }
+
+    public function testSetIssueFieldValue()
+    {
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
+
+        /** @var Issue $duplicate1 */
+        /** @var Issue $duplicate2 */
+        [$duplicate1] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [$duplicate2] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::ISSUE;
+        });
+
+        $value = reset($values);
+        self::assertSame($duplicate1->id, $value->value);
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, $duplicate2->id);
+        self::assertNotNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::ISSUE;
+        });
+
+        $value = reset($values);
+        self::assertSame($duplicate2->id, $value->value);
+    }
+
+    public function testSetIssueFieldValueFailure()
+    {
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
+
+        /** @var Issue $duplicate1 */
+        [$duplicate1] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::ISSUE;
+        });
+
+        $value = reset($values);
+        self::assertSame($duplicate1->id, $value->value);
+
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, self::UNKNOWN_ENTITY_ID);
+        self::assertNull($result);
+
+        /** @var FieldValue[] $values */
+        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
+            return $fieldValue->field->type === FieldType::ISSUE;
+        });
+
+        $value = reset($values);
+        self::assertSame($duplicate1->id, $value->value);
+    }
+
+    public function testSetListFieldValue()
+    {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+        $repository = $this->doctrine->getRepository(ListItem::class);
 
         /** @var Issue $issue */
         [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
@@ -157,63 +393,46 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         });
 
         $value = reset($values);
-        self::assertSame(2, $this->repository->getFieldValue($value, $user));
-    }
+        self::assertSame('normal', $repository->find($value->value)->text);
 
-    public function testGetIssueFieldValue()
-    {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
-
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
-
-        /** @var Issue $duplicate */
-        [$duplicate] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, 3);
+        self::assertNotNull($result);
 
         /** @var FieldValue[] $values */
         $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::ISSUE;
+            return $fieldValue->field->type === FieldType::LIST;
         });
 
         $value = reset($values);
-        self::assertSame($duplicate->id, $this->repository->getFieldValue($value, $user));
+        self::assertSame('low', $repository->find($value->value)->text);
     }
 
-    public function testGetDateFieldValue()
+    public function testSetListFieldValueFailure()
     {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+        $repository = $this->doctrine->getRepository(ListItem::class);
 
         /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var FieldValue[] $values */
         $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DATE;
+            return $fieldValue->field->type === FieldType::LIST;
         });
 
         $value = reset($values);
-        $date  = date_create();
-        $date->setTimestamp($value->value)->setTimezone(timezone_open($user->timezone));
-        self::assertSame($date->format('Y-m-d'), $this->repository->getFieldValue($value, $user));
-    }
+        self::assertSame('normal', $repository->find($value->value)->text);
 
-    public function testGetDurationFieldValue()
-    {
-        /** @var User $user */
-        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
-
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, 4);
+        self::assertNull($result);
 
         /** @var FieldValue[] $values */
         $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DURATION;
+            return $fieldValue->field->type === FieldType::LIST;
         });
 
         $value = reset($values);
-        self::assertSame('1:20', $this->repository->getFieldValue($value, $user));
+        self::assertSame('normal', $repository->find($value->value)->text);
     }
 
     public function testSetNumberFieldValue()
@@ -311,34 +530,6 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertCount($changes, $this->doctrine->getRepository(Change::class)->findAll());
     }
 
-    public function testSetDecimalFieldValue()
-    {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-        $repository = $this->doctrine->getRepository(DecimalValue::class);
-
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DECIMAL;
-        });
-
-        $value = reset($values);
-        self::assertSame('98.49', $repository->find($value->value)->value);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '3.1415');
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DECIMAL;
-        });
-
-        $value = reset($values);
-        self::assertSame('3.1415', $repository->find($value->value)->value);
-    }
-
     public function testSetStringFieldValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
@@ -393,196 +584,5 @@ class FieldValueRepositoryTest extends TransactionalTestCase
 
         $value = reset($values);
         self::assertSame('Corporis ea amet eligendi fugit.', $repository->find($value->value)->value);
-    }
-
-    public function testSetCheckboxFieldValue()
-    {
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::CHECKBOX;
-        });
-
-        $value = reset($values);
-        self::assertSame(1, $value->value);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, false);
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::CHECKBOX;
-        });
-
-        $value = reset($values);
-        self::assertSame(0, $value->value);
-    }
-
-    public function testSetListFieldValue()
-    {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
-        $repository = $this->doctrine->getRepository(ListItem::class);
-
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::LIST;
-        });
-
-        $value = reset($values);
-        self::assertSame('normal', $repository->find($value->value)->text);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, 3);
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::LIST;
-        });
-
-        $value = reset($values);
-        self::assertSame('low', $repository->find($value->value)->text);
-    }
-
-    public function testSetListFieldValueFailure()
-    {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
-        $repository = $this->doctrine->getRepository(ListItem::class);
-
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::LIST;
-        });
-
-        $value = reset($values);
-        self::assertSame('normal', $repository->find($value->value)->text);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, 4);
-        self::assertNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::LIST;
-        });
-
-        $value = reset($values);
-        self::assertSame('normal', $repository->find($value->value)->text);
-    }
-
-    public function testSetIssueFieldValue()
-    {
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
-
-        /** @var Issue $duplicate1 */
-        /** @var Issue $duplicate2 */
-        [$duplicate1] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
-        [$duplicate2] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::ISSUE;
-        });
-
-        $value = reset($values);
-        self::assertSame($duplicate1->id, $value->value);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, $duplicate2->id);
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::ISSUE;
-        });
-
-        $value = reset($values);
-        self::assertSame($duplicate2->id, $value->value);
-    }
-
-    public function testSetIssueFieldValueFailure()
-    {
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 4'], ['id' => 'ASC']);
-
-        /** @var Issue $duplicate1 */
-        [$duplicate1] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::ISSUE;
-        });
-
-        $value = reset($values);
-        self::assertSame($duplicate1->id, $value->value);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, self::UNKNOWN_ENTITY_ID);
-        self::assertNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::ISSUE;
-        });
-
-        $value = reset($values);
-        self::assertSame($duplicate1->id, $value->value);
-    }
-
-    public function testSetDateFieldValue()
-    {
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DATE;
-        });
-
-        $value = reset($values);
-        self::assertSame('2015-04-28', date('Y-m-d', $value->value));
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '2015-04-23');
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DATE;
-        });
-
-        $value = reset($values);
-        $date  = date_create();
-        $date->setTimestamp($value->value)->setTimezone(timezone_open($issue->events[0]->user->timezone));
-        self::assertSame('2015-04-23', $date->format('Y-m-d'));
-    }
-
-    public function testSetDurationFieldValue()
-    {
-        /** @var Issue $issue */
-        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DURATION;
-        });
-
-        $value = reset($values);
-        self::assertSame(1440, $value->value);
-
-        $result = $this->repository->setFieldValue($issue, $issue->events[0], $value->field, '11:52');
-        self::assertNotNull($result);
-
-        /** @var FieldValue[] $values */
-        $values = array_filter($issue->values, function (FieldValue $fieldValue) {
-            return $fieldValue->field->type === FieldType::DURATION;
-        });
-
-        $value = reset($values);
-        self::assertSame(712, $value->value);
     }
 }

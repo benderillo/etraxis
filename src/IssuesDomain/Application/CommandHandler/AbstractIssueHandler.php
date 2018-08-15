@@ -13,7 +13,7 @@
 
 namespace eTraxis\IssuesDomain\Application\CommandHandler;
 
-use eTraxis\IssuesDomain\Application\Command\IssueCommand;
+use eTraxis\IssuesDomain\Application\Command\AbstractIssueCommand;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Event;
@@ -22,8 +22,8 @@ use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
+use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Base command handler for issues.
  */
-class IssueHandler
+abstract class AbstractIssueHandler
 {
     protected $security;
     protected $validator;
@@ -43,8 +43,8 @@ class IssueHandler
     protected $userRepository;
     protected $issueRepository;
     protected $eventRepository;
+    protected $fieldRepository;
     protected $valueRepository;
-    protected $fieldService;
 
     /**
      * Dependency Injection constructor.
@@ -55,8 +55,8 @@ class IssueHandler
      * @param UserRepository                $userRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
+     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
-     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
@@ -65,8 +65,8 @@ class IssueHandler
         UserRepository                $userRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
-        FieldValueRepository          $valueRepository,
-        FieldServiceInterface         $fieldService
+        FieldRepository               $fieldRepository,
+        FieldValueRepository          $valueRepository
     )
     {
         $this->security        = $security;
@@ -75,21 +75,21 @@ class IssueHandler
         $this->userRepository  = $userRepository;
         $this->issueRepository = $issueRepository;
         $this->eventRepository = $eventRepository;
+        $this->fieldRepository = $fieldRepository;
         $this->valueRepository = $valueRepository;
-        $this->fieldService    = $fieldService;
     }
 
     /**
      * Validates and processes state fields of specified command.
      *
-     * @param Issue        $issue   Target issue.
-     * @param Event        $event   Current event.
-     * @param IssueCommand $command Current command.
+     * @param Issue                $issue   Target issue.
+     * @param Event                $event   Current event.
+     * @param AbstractIssueCommand $command Current command.
      *
      * @throws AccessDeniedHttpException
      * @throws NotFoundHttpException
      */
-    protected function validateState(Issue $issue, Event $event, IssueCommand $command): void
+    protected function validateState(Issue $issue, Event $event, AbstractIssueCommand $command): void
     {
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->tokens->getToken()->getUser();
@@ -100,7 +100,7 @@ class IssueHandler
 
         foreach ($issue->state->fields as $field) {
             $defaults[$field->id]    = null;
-            $constraints[$field->id] = $this->fieldService->getValidationConstraints($field);
+            $constraints[$field->id] = $this->fieldRepository->getValidationConstraints($field);
         }
 
         $command->fields = $command->fields + $defaults;

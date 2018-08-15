@@ -14,22 +14,26 @@
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
-use eTraxis\TemplatesDomain\Application\Service\FieldServiceInterface;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
+use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
+use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
 use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
+use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Command handler.
  */
-class CreateFieldHandler
+class CreateFieldHandler extends AbstractFieldHandler
 {
     protected $types = [
         Command\CreateCheckboxFieldCommand::class => FieldType::CHECKBOX,
@@ -47,30 +51,38 @@ class CreateFieldHandler
     protected $validator;
     protected $stateRepository;
     protected $fieldRepository;
-    protected $fieldService;
 
     /**
      * Dependency Injection constructor.
      *
+     * @param TranslatorInterface           $translator
+     * @param DecimalValueRepository        $decimalRepository
+     * @param StringValueRepository         $stringRepository
+     * @param TextValueRepository           $textRepository
+     * @param ListItemRepository            $listRepository
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param StateRepository               $stateRepository
      * @param FieldRepository               $fieldRepository
-     * @param FieldServiceInterface         $fieldService
      */
     public function __construct(
+        TranslatorInterface           $translator,
+        DecimalValueRepository        $decimalRepository,
+        StringValueRepository         $stringRepository,
+        TextValueRepository           $textRepository,
+        ListItemRepository            $listRepository,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         StateRepository               $stateRepository,
-        FieldRepository               $fieldRepository,
-        FieldServiceInterface         $fieldService
+        FieldRepository               $fieldRepository
     )
     {
-        $this->security           = $security;
-        $this->validator          = $validator;
-        $this->stateRepository    = $stateRepository;
-        $this->fieldRepository    = $fieldRepository;
-        $this->fieldService       = $fieldService;
+        parent::__construct($translator, $decimalRepository, $stringRepository, $textRepository, $listRepository);
+
+        $this->security        = $security;
+        $this->validator       = $validator;
+        $this->stateRepository = $stateRepository;
+        $this->fieldRepository = $fieldRepository;
     }
 
     /**
@@ -105,7 +117,7 @@ class CreateFieldHandler
         $field->isRequired  = $command->required;
         $field->position    = count($state->fields) + 1;
 
-        $field = $this->fieldService->copyCommandToField($command, $field);
+        $field = $this->copyCommandToField($command, $field);
 
         $errors = $this->validator->validate($field);
 
