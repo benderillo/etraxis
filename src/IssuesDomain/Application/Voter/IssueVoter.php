@@ -36,20 +36,22 @@ class IssueVoter extends Voter
 {
     use VoterTrait;
 
-    public const VIEW_ISSUE   = 'issue.view';
-    public const CREATE_ISSUE = 'issue.create';
-    public const UPDATE_ISSUE = 'issue.update';
-    public const DELETE_ISSUE = 'issue.delete';
-    public const CHANGE_STATE = 'state.change';
-    public const ASSIGN_ISSUE = 'issue.assign';
+    public const VIEW_ISSUE     = 'issue.view';
+    public const CREATE_ISSUE   = 'issue.create';
+    public const UPDATE_ISSUE   = 'issue.update';
+    public const DELETE_ISSUE   = 'issue.delete';
+    public const CHANGE_STATE   = 'state.change';
+    public const ASSIGN_ISSUE   = 'issue.assign';
+    public const REASSIGN_ISSUE = 'issue.reassign';
 
     protected $attributes = [
-        self::VIEW_ISSUE   => Issue::class,
-        self::CREATE_ISSUE => Template::class,
-        self::UPDATE_ISSUE => Issue::class,
-        self::DELETE_ISSUE => Issue::class,
-        self::CHANGE_STATE => [Issue::class, State::class],
-        self::ASSIGN_ISSUE => [State::class, User::class],
+        self::VIEW_ISSUE     => Issue::class,
+        self::CREATE_ISSUE   => Template::class,
+        self::UPDATE_ISSUE   => Issue::class,
+        self::DELETE_ISSUE   => Issue::class,
+        self::CHANGE_STATE   => [Issue::class, State::class],
+        self::ASSIGN_ISSUE   => [State::class, User::class],
+        self::REASSIGN_ISSUE => [Issue::class, User::class],
     ];
 
     protected $manager;
@@ -100,6 +102,9 @@ class IssueVoter extends Voter
 
             case self::ASSIGN_ISSUE:
                 return $this->isAssignGranted($subject[0], $subject[1], $user);
+
+            case self::REASSIGN_ISSUE:
+                return $this->isReassignGranted($subject[0], $subject[1], $user);
 
             default:
                 return false;
@@ -324,6 +329,54 @@ class IssueVoter extends Voter
         $result = (int) $query->getQuery()->getSingleScalarResult();
 
         return $result !== 0;
+    }
+
+    /**
+     * Whether the specified user can reassign specified issue to another specified user.
+     *
+     * @param Issue $subject  Subject issue.
+     * @param User  $assignee User to be assigned.
+     * @param User  $user     Current user.
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return bool
+     */
+    protected function isReassignGranted(Issue $subject, User $assignee, User $user): bool
+    {
+        // Issue must not be suspended or closed.
+        if ($subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        // Issue must be assigned.
+        if ($subject->responsible === null) {
+            return false;
+        }
+
+        // Template must not be locked and project must not be suspended.
+        if ($subject->template->isLocked || $subject->project->isSuspended) {
+            return false;
+        }
+
+        // Issue must be assignable to the specified user.
+        if (!$this->isAssignGranted($subject->state, $assignee, $user)) {
+            return false;
+        }
+
+        // Check whether the user has required permissions as author.
+        if ($subject->author === $user && $this->hasRolePermission($subject->template, SystemRole::AUTHOR, TemplatePermission::REASSIGN_ISSUES)) {
+            return true;
+        }
+
+        // Check whether the user has required permissions as current responsible.
+        if ($subject->responsible === $user && $this->hasRolePermission($subject->template, SystemRole::RESPONSIBLE, TemplatePermission::REASSIGN_ISSUES)) {
+            return true;
+        }
+
+        return
+            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::REASSIGN_ISSUES) ||
+            $this->hasGroupPermission($subject->template, $user, TemplatePermission::REASSIGN_ISSUES);
     }
 
     /**

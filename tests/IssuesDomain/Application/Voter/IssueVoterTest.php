@@ -57,6 +57,7 @@ class IssueVoterTest extends TransactionalTestCase
         [$state]    = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         [$issue1] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
+        [$issue2] = $this->repository->findBy(['subject' => 'Support request 2'], ['id' => 'ASC']);
         [$issue6] = $this->repository->findBy(['subject' => 'Support request 6'], ['id' => 'ASC']);
 
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::VIEW_ISSUE]));
@@ -65,6 +66,7 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::DELETE_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue6, $state], [IssueVoter::CHANGE_STATE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$state, $developer], [IssueVoter::ASSIGN_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue2, $developer], [IssueVoter::REASSIGN_ISSUE]));
     }
 
     public function testViewByAuthor()
@@ -230,5 +232,41 @@ class IssueVoterTest extends TransactionalTestCase
         $this->loginAs('ldoyle@example.com');
         self::assertTrue($this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$state, $developer]));
         self::assertFalse($this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$state, $support]));
+    }
+
+    public function testReassign()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $unassigned] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev2]  = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $developer = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
+        $support   = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'tmarquardt@example.com']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueA, $developer]));
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueB, $developer]));
+        self::assertTrue($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueC, $developer]));
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueC, $support]));
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$unassigned, $developer]));
+
+        $this->loginAs('dquigley@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$createdByDev2, $developer]));
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$assignedToDev3, $developer]));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$createdByDev2, $developer]));
+        self::assertTrue($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$assignedToDev3, $developer]));
+
+        /** @var Issue $issueC */
+        $issueC->suspend(time() + 86400);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueC, $developer]));
     }
 }
