@@ -40,10 +40,12 @@ use Webinarium\PropertyTrait;
  * @property      State        $state       Current state.
  * @property-read User         $author      Author of the issue.
  * @property      null|User    $responsible Current responsible of the issue.
+ * @property-read null|Issue   $origin      Original issue this issue was cloned from (when applicable).
  * @property-read int          $createdAt   Unix Epoch timestamp when the issue has been created.
  * @property-read int          $changedAt   Unix Epoch timestamp when the issue has been changed last time.
  * @property-read null|int     $closedAt    Unix Epoch timestamp when the issue has been closed, if so.
  * @property-read null|int     $suspendedAt Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read bool         $isCloned    Whether the issue was cloned.
  * @property-read bool         $isCritical  Whether the issue is critical (remains opened for too long).
  * @property-read bool         $isFrozen    Whether the issue is frozen (read-only).
  * @property-read bool         $isClosed    Whether the issue is closed.
@@ -102,6 +104,14 @@ class Issue
     protected $responsible;
 
     /**
+     * @var Issue
+     *
+     * @ORM\ManyToOne(targetEntity="Issue")
+     * @ORM\JoinColumn(name="origin_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $origin;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="created_at", type="integer")
@@ -147,11 +157,15 @@ class Issue
     /**
      * Creates new issue.
      *
-     * @param User $author
+     * @noinspection PhpDocSignatureInspection
+     *
+     * @param User       $author
+     * @param null|Issue $origin
      */
-    public function __construct(User $author)
+    public function __construct(User $author, self $origin = null)
     {
         $this->author = $author;
+        $this->origin = $origin;
 
         $this->createdAt = $this->changedAt = time();
 
@@ -202,6 +216,10 @@ class Issue
 
             'template' => function (): Template {
                 return $this->state->template;
+            },
+
+            'isCloned' => function (): bool {
+                return $this->origin !== null;
             },
 
             'isCritical' => function (): bool {

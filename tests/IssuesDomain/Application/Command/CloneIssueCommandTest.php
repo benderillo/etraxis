@@ -23,7 +23,6 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\StateResponsibleGroup;
-use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
@@ -31,7 +30,7 @@ use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class CreateIssueCommandTest extends TransactionalTestCase
+class CloneIssueCommandTest extends TransactionalTestCase
 {
     use ReflectionTrait;
 
@@ -49,26 +48,26 @@ class CreateIssueCommandTest extends TransactionalTestCase
     {
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
         /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
+        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Description']);
 
         /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
+        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'New feature']);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
         self::assertNull($issue);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
                 $field2->id => 'Est dolorum omnis accusantium hic veritatis ut.',
                 $field3->id => true,
@@ -85,7 +84,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($issue);
 
         self::assertSame('Test issue', $issue->subject);
-        self::assertSame($template->initialState, $issue->state);
+        self::assertSame($origin->template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
@@ -102,8 +101,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertLessThanOrEqual(1, $event->createdAt - $issue->createdAt);
         self::assertSame($issue->state->id, $event->parameter);
 
-        $values = array_filter($issue->values, function (FieldValue $value) use ($template) {
-            return $value->field->state === $template->initialState;
+        $values = array_filter($issue->values, function (FieldValue $value) use ($origin) {
+            return $value->field->state === $origin->template->initialState;
         });
 
         usort($values, function (FieldValue $value1, FieldValue $value2) {
@@ -146,17 +145,17 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->setProperty($state, 'responsible', StateResponsible::ASSIGN);
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
         /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
+        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Description']);
 
         /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
+        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'New feature']);
 
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'dquigley@example.com']);
@@ -165,8 +164,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
         self::assertNull($issue);
 
-        $command = new CreateIssueCommand([
-            'template'    => $template->id,
+        $command = new CloneIssueCommand([
+            'issue'       => $origin->id,
             'subject'     => 'Test issue',
             'responsible' => $user->id,
             'fields'      => [
@@ -186,7 +185,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($issue);
 
         self::assertSame('Test issue', $issue->subject);
-        self::assertSame($template->initialState, $issue->state);
+        self::assertSame($origin->template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertSame('dquigley@example.com', $issue->responsible->email);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
@@ -214,7 +213,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
     public function testFailedWithResponsible()
     {
         $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CreateIssueCommand with 1 violation(s).');
+        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CloneIssueCommand with 1 violation(s).');
 
         $this->loginAs('nhills@example.com');
 
@@ -231,26 +230,26 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->setProperty($state, 'responsible', StateResponsible::ASSIGN);
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
         /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
+        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Description']);
 
         /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
+        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'New feature']);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
         self::assertNull($issue);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
                 $field2->id => 'Est dolorum omnis accusantium hic veritatis ut.',
                 $field3->id => true,
@@ -264,20 +263,20 @@ class CreateIssueCommandTest extends TransactionalTestCase
     {
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
         self::assertNull($issue);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
             ],
         ]);
@@ -292,7 +291,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($issue);
 
         self::assertSame('Test issue', $issue->subject);
-        self::assertSame($template->initialState, $issue->state);
+        self::assertSame($origin->template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
         self::assertLessThanOrEqual(1, time() - $issue->createdAt);
@@ -309,8 +308,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertLessThanOrEqual(1, $event->createdAt - $issue->createdAt);
         self::assertSame($issue->state->id, $event->parameter);
 
-        $values = array_filter($issue->values, function (FieldValue $value) use ($template) {
-            return $value->field->state === $template->initialState;
+        $values = array_filter($issue->values, function (FieldValue $value) use ($origin) {
+            return $value->field->state === $origin->template->initialState;
         });
 
         usort($values, function (FieldValue $value1, FieldValue $value2) {
@@ -333,134 +332,38 @@ class CreateIssueCommandTest extends TransactionalTestCase
     public function testValidationRequiredFields()
     {
         $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CreateIssueCommand with 1 violation(s).');
+        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CloneIssueCommand with 1 violation(s).');
 
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
         ]);
 
         $this->commandbus->handle($command);
     }
 
-    public function testValidationOnListField()
-    {
-        $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CreateIssueCommand with 1 violation(s).');
-
-        $this->loginAs('nhills@example.com');
-
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
-
-        /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
-
-        /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
-
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
-                $field1->id => 4,
-                $field2->id => 'Est dolorum omnis accusantium hic veritatis ut.',
-                $field3->id => true,
-            ],
-        ]);
-
-        $this->commandbus->handle($command);
-    }
-
-    public function testValidationOnTextField()
-    {
-        $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CreateIssueCommand with 1 violation(s).');
-
-        $this->loginAs('nhills@example.com');
-
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
-
-        /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
-
-        /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
-
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
-                $field1->id => 2,
-                $field2->id => str_pad(null, 4001, '*'),
-                $field3->id => true,
-            ],
-        ]);
-
-        $this->commandbus->handle($command);
-    }
-
-    public function testValidationOnCheckboxField()
-    {
-        $this->expectException(InvalidCommandException::class);
-        $this->expectExceptionMessage('Validation failed for eTraxis\IssuesDomain\Application\Command\CreateIssueCommand with 1 violation(s).');
-
-        $this->loginAs('nhills@example.com');
-
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
-
-        /** @var Field $field2 */
-        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Description']);
-
-        /** @var Field $field3 */
-        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'New feature']);
-
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
-                $field1->id => 2,
-                $field2->id => 'Est dolorum omnis accusantium hic veritatis ut.',
-                $field3->id => 0,
-            ],
-        ]);
-
-        $this->commandbus->handle($command);
-    }
-
-    public function testUnknownTemplate()
+    public function testUnknownIssue()
     {
         $this->expectException(NotFoundHttpException::class);
-        $this->expectExceptionMessage('Unknown template.');
+        $this->expectExceptionMessage('Unknown issue.');
 
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
-        $command = new CreateIssueCommand([
-            'template' => self::UNKNOWN_ENTITY_ID,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => self::UNKNOWN_ENTITY_ID,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
             ],
         ]);
@@ -480,14 +383,14 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->setProperty($state, 'responsible', StateResponsible::ASSIGN);
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
-        $command = new CreateIssueCommand([
-            'template'    => $template->id,
+        $command = new CloneIssueCommand([
+            'issue'       => $origin->id,
             'subject'     => 'Test issue',
             'responsible' => self::UNKNOWN_ENTITY_ID,
             'fields'      => [
@@ -505,16 +408,16 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->loginAs('labshire@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
             ],
         ]);
@@ -534,11 +437,11 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->setProperty($state, 'responsible', StateResponsible::ASSIGN);
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, /* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'dquigley@example.com']);
@@ -547,8 +450,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
         self::assertNull($issue);
 
-        $command = new CreateIssueCommand([
-            'template'    => $template->id,
+        $command = new CloneIssueCommand([
+            'issue'       => $origin->id,
             'subject'     => 'Test issue',
             'responsible' => $user->id,
             'fields'      => [
@@ -565,16 +468,16 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [$origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
             ],
         ]);
@@ -588,35 +491,18 @@ class CreateIssueCommandTest extends TransactionalTestCase
 
         $this->loginAs('nhills@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        /** @var Issue $origin */
+        [/* skipping */, $origin] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         /** @var Field $field1 */
-        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $template->initialState, 'name' => 'Priority']);
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $origin->template->initialState, 'name' => 'Priority']);
 
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
-            'fields'   => [
+        $command = new CloneIssueCommand([
+            'issue'   => $origin->id,
+            'subject' => 'Test issue',
+            'fields'  => [
                 $field1->id => 2,
             ],
-        ]);
-
-        $this->commandbus->handle($command);
-    }
-
-    public function testInvalidTemplate()
-    {
-        $this->expectException(AccessDeniedHttpException::class);
-
-        $this->loginAs('nhills@example.com');
-
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        $command = new CreateIssueCommand([
-            'template' => $template->id,
-            'subject'  => 'Test issue',
         ]);
 
         $this->commandbus->handle($command);

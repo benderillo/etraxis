@@ -78,6 +78,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
                 'author'      => $this->manager3,
                 'responsible' => null,
                 'suspended'   => true,
+                'origin'      => 'task:%s:3',
             ],
 
             'task6' => [
@@ -203,6 +204,12 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
             $issue->subject     = $row['subject'];
             $issue->state       = $template->initialState;
             $issue->responsible = $row['responsible'][$pref] ? $this->getReference($row['responsible'][$pref]) : null;
+
+            if ($row['origin'] ?? false) {
+                /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $origin */
+                $origin = $this->getReference(sprintf($row['origin'], $pref));
+                $this->setProperty($issue, 'origin', $origin);
+            }
 
             $createdAt = strtotime($date . ' 09:00:00');
 

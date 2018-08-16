@@ -88,7 +88,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'task:%s:5' => [
-                [EventType::ISSUE_CLONED,   $this->manager3,   0, 'task:%s:3'],
+                [EventType::ISSUE_CREATED,  $this->manager3,   0, 'new'],
             ],
 
             'task:%s:6' => [
@@ -188,14 +188,6 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
                             /** @var \eTraxis\SecurityDomain\Model\Entity\User $entity */
                             $entity = $this->getReference($row[self::EVENT_PARAMETER][$pref]);
-                            $this->setProperty($event, 'parameter', $entity->id);
-
-                            break;
-
-                        case EventType::ISSUE_CLONED:
-
-                            /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $entity */
-                            $entity = $this->getReference(sprintf($row[self::EVENT_PARAMETER], $pref));
                             $this->setProperty($event, 'parameter', $entity->id);
 
                             break;

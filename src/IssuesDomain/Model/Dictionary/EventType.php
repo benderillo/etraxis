@@ -21,7 +21,6 @@ use Dictionary\StaticDictionary;
 class EventType extends StaticDictionary
 {
     public const ISSUE_CREATED      = 'issue.created';
-    public const ISSUE_CLONED       = 'issue.cloned';
     public const ISSUE_EDITED       = 'issue.edited';
     public const STATE_CHANGED      = 'state.changed';
     public const ISSUE_REOPENED     = 'issue.reopened';
@@ -38,7 +37,6 @@ class EventType extends StaticDictionary
 
     protected static $dictionary = [
         self::ISSUE_CREATED      => 'event.issue_created',
-        self::ISSUE_CLONED       => 'event.issue_cloned',
         self::ISSUE_EDITED       => 'event.issue_edited',
         self::STATE_CHANGED      => 'event.state_changed',
         self::ISSUE_REOPENED     => 'event.issue_reopened',

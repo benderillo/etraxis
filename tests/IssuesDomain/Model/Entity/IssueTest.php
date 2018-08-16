@@ -36,8 +36,13 @@ class IssueTest extends TestCase
         $changedAt = $this->getProperty($issue, 'changedAt');
 
         self::assertSame($user, $issue->author);
+        self::assertNull($issue->origin);
         self::assertLessThanOrEqual(1, time() - $createdAt);
         self::assertSame($createdAt, $changedAt);
+
+        $clone = new Issue($user, $issue);
+
+        self::assertSame($issue, $clone->origin);
     }
 
     public function testTouch()
@@ -168,6 +173,15 @@ class IssueTest extends TestCase
 
         $issue->state = $state;
         $issue->state = $state2;
+    }
+
+    public function testIsCloned()
+    {
+        $issue = new Issue(new User());
+        $clone = new Issue(new User(), $issue);
+
+        self::assertFalse($issue->isCloned);
+        self::assertTrue($clone->isCloned);
     }
 
     public function testIsCritical()
