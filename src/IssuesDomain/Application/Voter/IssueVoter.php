@@ -127,7 +127,7 @@ class IssueVoter extends Voter
         }
 
         // Responsibles can always view their issues.
-        if ($subject->responsible !== null && $subject->responsible === $user) {
+        if ($subject->responsible === $user) {
             return true;
         }
 
@@ -169,29 +169,12 @@ class IssueVoter extends Voter
      */
     protected function isUpdateGranted(Issue $subject, User $user): bool
     {
-        // Issue must not be suspended.
+        // Issue must not be suspended or frozen.
         if ($subject->isSuspended || $subject->isFrozen) {
             return false;
         }
 
-        // Template must not be locked and project must not be suspended.
-        if ($subject->template->isLocked || $subject->project->isSuspended) {
-            return false;
-        }
-
-        // Check whether the user has required permissions as author.
-        if ($subject->author === $user && $this->hasRolePermission($subject->template, SystemRole::AUTHOR, TemplatePermission::EDIT_ISSUES)) {
-            return true;
-        }
-
-        // Check whether the user has required permissions as current responsible.
-        if ($subject->responsible === $user && $this->hasRolePermission($subject->template, SystemRole::RESPONSIBLE, TemplatePermission::EDIT_ISSUES)) {
-            return true;
-        }
-
-        return
-            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::EDIT_ISSUES) ||
-            $this->hasGroupPermission($subject->template, $user, TemplatePermission::EDIT_ISSUES);
+        return $this->hasPermission($subject, $user, TemplatePermission::EDIT_ISSUES);
     }
 
     /**
@@ -209,24 +192,7 @@ class IssueVoter extends Voter
             return false;
         }
 
-        // Template must not be locked and project must not be suspended.
-        if ($subject->template->isLocked || $subject->project->isSuspended) {
-            return false;
-        }
-
-        // Check whether the user has required permissions as author.
-        if ($subject->author === $user && $this->hasRolePermission($subject->template, SystemRole::AUTHOR, TemplatePermission::DELETE_ISSUES)) {
-            return true;
-        }
-
-        // Check whether the user has required permissions as current responsible.
-        if ($subject->responsible === $user && $this->hasRolePermission($subject->template, SystemRole::RESPONSIBLE, TemplatePermission::DELETE_ISSUES)) {
-            return true;
-        }
-
-        return
-            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::DELETE_ISSUES) ||
-            $this->hasGroupPermission($subject->template, $user, TemplatePermission::DELETE_ISSUES);
+        return $this->hasPermission($subject, $user, TemplatePermission::DELETE_ISSUES);
     }
 
     /**
@@ -277,7 +243,9 @@ class IssueVoter extends Voter
                 'roles' => $roles,
             ]);
 
-        if ((int) ($query->getQuery()->getSingleScalarResult()) !== 0) {
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        if ($result !== 0) {
             return true;
         }
 
@@ -296,7 +264,9 @@ class IssueVoter extends Voter
                 'groups' => $user->groups,
             ]);
 
-        if ((int) ($query->getQuery()->getSingleScalarResult()) !== 0) {
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        if ($result !== 0) {
             return true;
         }
 
@@ -354,29 +324,12 @@ class IssueVoter extends Voter
             return false;
         }
 
-        // Template must not be locked and project must not be suspended.
-        if ($subject->template->isLocked || $subject->project->isSuspended) {
-            return false;
-        }
-
         // Issue must be assignable to the specified user.
         if (!$this->isAssignGranted($subject->state, $assignee, $user)) {
             return false;
         }
 
-        // Check whether the user has required permissions as author.
-        if ($subject->author === $user && $this->hasRolePermission($subject->template, SystemRole::AUTHOR, TemplatePermission::REASSIGN_ISSUES)) {
-            return true;
-        }
-
-        // Check whether the user has required permissions as current responsible.
-        if ($subject->responsible === $user && $this->hasRolePermission($subject->template, SystemRole::RESPONSIBLE, TemplatePermission::REASSIGN_ISSUES)) {
-            return true;
-        }
-
-        return
-            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::REASSIGN_ISSUES) ||
-            $this->hasGroupPermission($subject->template, $user, TemplatePermission::REASSIGN_ISSUES);
+        return $this->hasPermission($subject, $user, TemplatePermission::REASSIGN_ISSUES);
     }
 
     /**
@@ -440,5 +393,36 @@ class IssueVoter extends Voter
         }
 
         return in_array(['permission' => $permission], $this->groupsCache[$key], true);
+    }
+
+    /**
+     * Checks whether the specified user is granted to specified permission for the issue either by group or by role.
+     *
+     * @param Issue  $issue      Issue.
+     * @param User   $user       User.
+     * @param string $permission Permission.
+     *
+     * @return bool
+     */
+    private function hasPermission(Issue $issue, User $user, string $permission): bool
+    {
+        // Template must not be locked and project must not be suspended.
+        if ($issue->template->isLocked || $issue->project->isSuspended) {
+            return false;
+        }
+
+        // Check whether the user has required permissions as author.
+        if ($issue->author === $user && $this->hasRolePermission($issue->template, SystemRole::AUTHOR, TemplatePermission::REASSIGN_ISSUES)) {
+            return true;
+        }
+
+        // Check whether the user has required permissions as current responsible.
+        if ($issue->responsible === $user && $this->hasRolePermission($issue->template, SystemRole::RESPONSIBLE, TemplatePermission::REASSIGN_ISSUES)) {
+            return true;
+        }
+
+        return
+            $this->hasRolePermission($issue->template, SystemRole::ANYONE, TemplatePermission::REASSIGN_ISSUES) ||
+            $this->hasGroupPermission($issue->template, $user, TemplatePermission::REASSIGN_ISSUES);
     }
 }
