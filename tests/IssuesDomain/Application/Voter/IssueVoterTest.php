@@ -58,6 +58,7 @@ class IssueVoterTest extends TransactionalTestCase
 
         [$issue1] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
         [$issue2] = $this->repository->findBy(['subject' => 'Support request 2'], ['id' => 'ASC']);
+        [$issue5] = $this->repository->findBy(['subject' => 'Support request 5'], ['id' => 'ASC']);
         [$issue6] = $this->repository->findBy(['subject' => 'Support request 6'], ['id' => 'ASC']);
 
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue1, [IssueVoter::VIEW_ISSUE]));
@@ -67,6 +68,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue6, $state], [IssueVoter::CHANGE_STATE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$state, $developer], [IssueVoter::ASSIGN_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue2, $developer], [IssueVoter::REASSIGN_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue6, [IssueVoter::SUSPEND_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue5, [IssueVoter::RESUME_ISSUE]));
     }
 
     public function testViewByAuthor()
@@ -281,5 +284,71 @@ class IssueVoterTest extends TransactionalTestCase
 
         $this->loginAs('ldoyle@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueC, $developer]));
+    }
+
+    public function testSuspend()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev2]  = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $suspended));
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $closed));
+
+        $this->loginAs('dquigley@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $createdByDev2));
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $assignedToDev3));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $createdByDev2));
+        self::assertTrue($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $assignedToDev3));
+    }
+
+    public function testResume()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $resumed] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]  = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev2]  = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        /** @var Issue $createdByDev2 */
+        $createdByDev2->suspend(time() + 86400);
+
+        /** @var Issue $assignedToDev3 */
+        $assignedToDev3->suspend(time() + 86400);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $resumed));
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $closed));
+
+        $this->loginAs('dquigley@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $createdByDev2));
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $assignedToDev3));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $createdByDev2));
+        self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $assignedToDev3));
     }
 }

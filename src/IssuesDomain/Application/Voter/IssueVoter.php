@@ -43,6 +43,8 @@ class IssueVoter extends Voter
     public const CHANGE_STATE   = 'state.change';
     public const ASSIGN_ISSUE   = 'issue.assign';
     public const REASSIGN_ISSUE = 'issue.reassign';
+    public const SUSPEND_ISSUE  = 'issue.suspend';
+    public const RESUME_ISSUE   = 'issue.resume';
 
     protected $attributes = [
         self::VIEW_ISSUE     => Issue::class,
@@ -52,6 +54,8 @@ class IssueVoter extends Voter
         self::CHANGE_STATE   => [Issue::class, State::class],
         self::ASSIGN_ISSUE   => [State::class, User::class],
         self::REASSIGN_ISSUE => [Issue::class, User::class],
+        self::SUSPEND_ISSUE  => Issue::class,
+        self::RESUME_ISSUE   => Issue::class,
     ];
 
     protected $manager;
@@ -105,6 +109,12 @@ class IssueVoter extends Voter
 
             case self::REASSIGN_ISSUE:
                 return $this->isReassignGranted($subject[0], $subject[1], $user);
+
+            case self::SUSPEND_ISSUE:
+                return $this->isSuspendGranted($subject, $user);
+
+            case self::RESUME_ISSUE:
+                return $this->isResumeGranted($subject, $user);
 
             default:
                 return false;
@@ -330,6 +340,42 @@ class IssueVoter extends Voter
         }
 
         return $this->hasPermission($subject, $user, TemplatePermission::REASSIGN_ISSUES);
+    }
+
+    /**
+     * Whether the specified issue can be suspended.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isSuspendGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended or closed.
+        if ($subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::SUSPEND_ISSUES);
+    }
+
+    /**
+     * Whether the specified issue can be resumed.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isResumeGranted(Issue $subject, User $user): bool
+    {
+        // Issue must be suspended and not closed.
+        if (!$subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::RESUME_ISSUES);
     }
 
     /**
