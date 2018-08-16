@@ -80,13 +80,14 @@ class Event
     /**
      * @var int Event parameter. Depends on event type as following:
      *          ISSUE_CREATED      - Initial state (foreign key to "State" entity)
+     *          ISSUE_CLONED       - Original issue (foreign key to "Issue" entity)
      *          ISSUE_EDITED       - NULL (not used)
      *          STATE_CHANGED      - New state (foreign key to "State" entity)
+     *          ISSUE_REOPENED     - New state of the reopened issue (foreign key to "State" entity)
+     *          ISSUE_CLOSED       - New state of the closed issue (foreign key to "State" entity)
      *          ISSUE_ASSIGNED     - Responsible user (foreign key to "User" entity)
      *          ISSUE_SUSPENDED    - NULL (not used)
      *          ISSUE_RESUMED      - NULL (not used)
-     *          ISSUE_REOPENED     - New state of the reopened issue (foreign key to "State" entity)
-     *          ISSUE_CLONED       - Original issue (foreign key to "Issue" entity)
      *          PUBLIC_COMMENT     - NULL (not used)
      *          PRIVATE_COMMENT    - NULL (not used)
      *          FILE_ATTACHED      - NULL (not used)

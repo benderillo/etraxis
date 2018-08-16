@@ -135,11 +135,11 @@ class IssueVoterTest extends TransactionalTestCase
     {
         // Template B is locked, template C is not.
         // Template A is not locked, too, but the project is suspended.
-        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
 
-        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
         [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
 
         $this->loginAs('ldoyle@example.com');
@@ -166,11 +166,11 @@ class IssueVoterTest extends TransactionalTestCase
     {
         // Template B is locked, template C is not.
         // Template A is not locked, too, but the project is suspended.
-        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
         [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
 
-        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
         [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
 
         $this->loginAs('ldoyle@example.com');
@@ -195,7 +195,12 @@ class IssueVoterTest extends TransactionalTestCase
 
     public function testChangeState()
     {
+        /** @var Template $templateC */
+        [/* skipping */, /* skipping */, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['id' => 'ASC']);
+
         [$stateA, $stateB, $stateC] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $reopen] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
 
         // Template B is locked, template C is not.
         // Project A is suspended.
@@ -203,6 +208,7 @@ class IssueVoterTest extends TransactionalTestCase
 
         [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Support request 5'], ['id' => 'ASC']);
 
+        [/* skipping */, /* skipping */, $createdByClient1]   = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
         [/* skipping */, /* skipping */, $createdByClient3]   = $this->repository->findBy(['subject' => 'Support request 4'], ['id' => 'ASC']);
         [/* skipping */, /* skipping */, $assignedToSupport1] = $this->repository->findBy(['subject' => 'Support request 4'], ['id' => 'ASC']);
 
@@ -219,6 +225,13 @@ class IssueVoterTest extends TransactionalTestCase
         $this->loginAs('cbatz@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
         self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$assignedToSupport1, $stateC]));
+
+        $this->loginAs('lucas.oconnell@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient1, $reopen]));
+
+        $templateC->frozenTime = null;
+        self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient1, $reopen]));
     }
 
     public function testAssign()

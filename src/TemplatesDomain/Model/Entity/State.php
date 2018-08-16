@@ -37,6 +37,7 @@ use Webinarium\PropertyTrait;
  * @property-read string                  $type              Type of the state (see the "StateType" dictionary).
  * @property      string                  $responsible       Type of responsibility management (see the "StateResponsible" dictionary).
  * @property      null|State              $nextState         Next state by default (optional).
+ * @property      bool                    $isFinal           Whether the state is final.
  * @property-read Field[]                 $fields            List of state fields.
  * @property-read StateRoleTransition[]   $roleTransitions   List of state role transitions.
  * @property-read StateGroupTransition[]  $groupTransitions  List of state group transitions.
@@ -158,6 +159,10 @@ class State
 
             'nextState' => function (): ?State {
                 return $this->type === StateType::FINAL ? null : $this->nextState;
+            },
+
+            'isFinal' => function (): bool {
+                return $this->type === StateType::FINAL;
             },
 
             'fields' => function (): array {

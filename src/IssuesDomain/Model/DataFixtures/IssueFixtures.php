@@ -63,7 +63,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
 
             'task3' => [
                 'subject'     => 'Development task 3',
-                'author'      => $this->manager3,
+                'author'      => $this->developer3,
                 'responsible' => null,
             ],
 
@@ -82,7 +82,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
 
             'task6' => [
                 'subject'     => 'Development task 6',
-                'author'      => $this->developer3,
+                'author'      => $this->manager3,
                 'responsible' => null,
             ],
 

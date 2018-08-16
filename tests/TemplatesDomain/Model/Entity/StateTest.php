@@ -122,6 +122,20 @@ class StateTest extends TestCase
         $state->nextState = $nextState;
     }
 
+    public function testIsFinal()
+    {
+        $template = new Template(new Project());
+        $this->setProperty($template, 'id', 1);
+
+        $initial      = new State($template, StateType::INITIAL);
+        $intermediate = new State($template, StateType::INTERMEDIATE);
+        $final        = new State($template, StateType::FINAL);
+
+        self::assertFalse($initial->isFinal);
+        self::assertFalse($intermediate->isFinal);
+        self::assertTrue($final->isFinal);
+    }
+
     public function testFields()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);

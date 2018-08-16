@@ -46,13 +46,18 @@ class StateTransitionFixtures extends Fixture implements DependentFixtureInterfa
 
             'task' => [
 
+                SystemRole::AUTHOR => [
+                    'completed:%s' => 'new:%s',
+                ],
+
                 SystemRole::RESPONSIBLE => [
                     'assigned:%s' => 'completed:%s',
                 ],
 
                 'managers:%s' => [
-                    'new:%s'      => 'assigned:%s',
-                    'assigned:%s' => 'duplicated:%s',
+                    'new:%s'       => 'assigned:%s',
+                    'assigned:%s'  => 'duplicated:%s',
+                    'completed:%s' => 'new:%s',
                 ],
             ],
 

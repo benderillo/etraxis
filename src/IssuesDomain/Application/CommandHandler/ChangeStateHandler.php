@@ -97,9 +97,19 @@ class ChangeStateHandler extends AbstractIssueHandler
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->tokens->getToken()->getUser();
 
+        if (!$issue->isClosed && $state->isFinal) {
+            $eventType = EventType::ISSUE_CLOSED;
+        }
+        elseif ($issue->isClosed && !$state->isFinal) {
+            $eventType = EventType::ISSUE_REOPENED;
+        }
+        else {
+            $eventType = EventType::STATE_CHANGED;
+        }
+
         $issue->state = $state;
 
-        $event = new Event(EventType::STATE_CHANGED, $issue, $user, $state->id);
+        $event = new Event($eventType, $issue, $user, $state->id);
 
         $this->issueRepository->persist($issue);
         $this->eventRepository->persist($event);

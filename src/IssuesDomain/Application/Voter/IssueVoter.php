@@ -208,8 +208,8 @@ class IssueVoter extends Voter
      */
     protected function isChangeStateGranted(Issue $subject, State $state, User $user): bool
     {
-        // Issue must not be suspended or closed.
-        if ($subject->isSuspended || $subject->isClosed) {
+        // Issue must not be suspended or frozen.
+        if ($subject->isSuspended || $subject->isFrozen) {
             return false;
         }
 

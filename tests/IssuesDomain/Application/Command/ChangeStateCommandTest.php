@@ -39,7 +39,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Issue::class);
     }
 
-    public function testSuccessIntermediateState()
+    public function testSuccessInitialToIntermediate()
     {
         $this->loginAs('ldoyle@example.com');
 
@@ -127,7 +127,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         self::assertSame($assignee->id, $event2->parameter);
     }
 
-    public function testSuccessFinalState()
+    public function testSuccessIntermediateToFinal()
     {
         $this->loginAs('ldoyle@example.com');
 
@@ -197,7 +197,64 @@ class ChangeStateCommandTest extends TransactionalTestCase
         $events = $issue->events;
         $event  = end($events);
 
-        self::assertSame(EventType::STATE_CHANGED, $event->type);
+        self::assertSame(EventType::ISSUE_CLOSED, $event->type);
+        self::assertSame($issue, $event->issue);
+        self::assertSame($user, $event->user);
+        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertSame($state->id, $event->parameter);
+    }
+
+    public function testSuccessFinalToInitial()
+    {
+        $this->loginAs('ldoyle@example.com');
+
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
+
+        /** @var State $state */
+        [/* skipping */, /* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+
+        /** @var Field $field1 */
+        $field1 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $state, 'name' => 'Priority']);
+
+        /** @var Field $field2 */
+        $field2 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $state, 'name' => 'Description']);
+
+        /** @var Field $field3 */
+        $field3 = $this->doctrine->getRepository(Field::class)->findOneBy(['state' => $state, 'name' => 'New feature']);
+
+        /** @var Issue $issue */
+        [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        self::assertNotNull($issue);
+        self::assertNotNull($issue->closedAt);
+        self::assertCount(8, $issue->values);
+
+        $events = count($issue->events);
+
+        $command = new ChangeStateCommand([
+            'issue'  => $issue->id,
+            'state'  => $state->id,
+            'fields' => [
+                $field1->id => 2,
+                $field2->id => 'Est dolorum omnis accusantium hic veritatis ut.',
+                $field3->id => true,
+            ],
+        ]);
+
+        $this->commandbus->handle($command);
+
+        $this->doctrine->getManager()->refresh($issue);
+
+        self::assertNull($issue->responsible);
+        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertNull($issue->closedAt);
+        self::assertCount(8, $issue->values);
+        self::assertCount($events + 1, $issue->events);
+
+        $events = $issue->events;
+        $event  = end($events);
+
+        self::assertSame(EventType::ISSUE_REOPENED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
         self::assertLessThanOrEqual(1, time() - $event->createdAt);

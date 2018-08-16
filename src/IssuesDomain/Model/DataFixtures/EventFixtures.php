@@ -62,14 +62,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_EDITED,   $this->manager1,   0, null],
                 [EventType::STATE_CHANGED,  $this->manager1,   0, 'assigned'],
                 [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->developer1],
-                [EventType::STATE_CHANGED,  $this->developer1, 3, 'completed'],
+                [EventType::ISSUE_CLOSED,   $this->developer1, 3, 'completed'],
             ],
 
             'task:%s:2' => [
                 [EventType::ISSUE_CREATED,  $this->manager2,   0, 'new'],
                 [EventType::STATE_CHANGED,  $this->manager1,   0, 'assigned'],
                 [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->developer3],
-                [EventType::STATE_CHANGED,  $this->developer3, 2, 'completed'],
+                [EventType::ISSUE_CLOSED,   $this->developer3, 2, 'completed'],
                 [EventType::ISSUE_REOPENED, $this->manager2,   2, 'new'],
                 [EventType::STATE_CHANGED,  $this->manager2,   2, 'assigned'],
                 [EventType::ISSUE_ASSIGNED, $this->manager2,   2, $this->developer3],
@@ -79,12 +79,12 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_CREATED,  $this->manager3,   0, 'new'],
                 [EventType::STATE_CHANGED,  $this->manager3,   0, 'assigned'],
                 [EventType::ISSUE_ASSIGNED, $this->manager3,   0, $this->developer1],
-                [EventType::STATE_CHANGED,  $this->developer1, 5, 'completed'],
+                [EventType::ISSUE_CLOSED,   $this->developer1, 5, 'completed'],
             ],
 
             'task:%s:4' => [
                 [EventType::ISSUE_CREATED,  $this->developer1, 0, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager2,   0, 'duplicated'],
+                [EventType::ISSUE_CLOSED,   $this->manager2,   0, 'duplicated'],
             ],
 
             'task:%s:5' => [
@@ -99,7 +99,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_CREATED,  $this->developer2, 0, 'new'],
                 [EventType::STATE_CHANGED,  $this->manager2,   1, 'assigned'],
                 [EventType::ISSUE_ASSIGNED, $this->manager2,   1, $this->developer2],
-                [EventType::STATE_CHANGED,  $this->manager3,   2, 'duplicated'],
+                [EventType::ISSUE_CLOSED,   $this->manager3,   2, 'duplicated'],
             ],
 
             'task:%s:8' => [
@@ -112,7 +112,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_CREATED,  $this->client1,    0, 'submitted'],
                 [EventType::STATE_CHANGED,  $this->manager1,   0, 'opened'],
                 [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->support1],
-                [EventType::STATE_CHANGED,  $this->support1,   2, 'resolved'],
+                [EventType::ISSUE_CLOSED,   $this->support1,   2, 'resolved'],
             ],
 
             'req:%s:2' => [
@@ -125,7 +125,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_CREATED,  $this->client2,    0, 'submitted'],
                 [EventType::STATE_CHANGED,  $this->support2,   0, 'opened'],
                 [EventType::ISSUE_ASSIGNED, $this->support2,   0, $this->support2],
-                [EventType::STATE_CHANGED,  $this->support2,   2, 'resolved'],
+                [EventType::ISSUE_CLOSED,   $this->support2,   2, 'resolved'],
             ],
 
             'req:%s:4' => [
@@ -169,6 +169,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
                         case EventType::ISSUE_CREATED:
                         case EventType::ISSUE_REOPENED:
+                        case EventType::ISSUE_CLOSED:
                         case EventType::STATE_CHANGED:
 
                             /** @var \eTraxis\TemplatesDomain\Model\Entity\State $entity */
