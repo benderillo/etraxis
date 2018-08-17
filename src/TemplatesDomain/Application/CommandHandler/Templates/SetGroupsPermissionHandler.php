@@ -77,10 +77,11 @@ class SetGroupsPermissionHandler
         $query
             ->select('grp')
             ->from(Group::class, 'grp')
-            ->where($query->expr()->in('grp.id', ':groups'))
-            ->setParameter('groups', $command->groups);
+            ->where($query->expr()->in('grp.id', ':groups'));
 
-        $requestedGroups = $query->getQuery()->getResult();
+        $requestedGroups = $query->getQuery()->execute([
+            'groups' => $command->groups,
+        ]);
 
         // Remove all groups which are supposed to not be granted with specified permission, but they currently are.
         $permissions = array_filter($template->groupPermissions, function (TemplateGroupPermission $permission) use ($command) {

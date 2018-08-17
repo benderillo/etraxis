@@ -399,10 +399,11 @@ class IssueVoter extends Voter
                 ->select('tp.role')
                 ->addSelect('tp.permission')
                 ->from(TemplateRolePermission::class, 'tp')
-                ->where('tp.template = :template')
-                ->setParameter('template', $template);
+                ->where('tp.template = :template');
 
-            $this->rolesCache[$template->id] = $query->getQuery()->getResult();
+            $this->rolesCache[$template->id] = $query->getQuery()->execute([
+                'template' => $template,
+            ]);
         }
 
         return in_array(['role' => $role, 'permission' => $permission], $this->rolesCache[$template->id], true);
@@ -431,11 +432,12 @@ class IssueVoter extends Voter
                 ->select('tp.permission')
                 ->from(TemplateGroupPermission::class, 'tp')
                 ->where('tp.template = :template')
-                ->andWhere($query->expr()->in('tp.group', ':groups'))
-                ->setParameter('template', $template)
-                ->setParameter('groups', $user->groups);
+                ->andWhere($query->expr()->in('tp.group', ':groups'));
 
-            $this->groupsCache[$key] = $query->getQuery()->getResult();
+            $this->groupsCache[$key] = $query->getQuery()->execute([
+                'template' => $template,
+                'groups'   => $user->groups,
+            ]);
         }
 
         return in_array(['permission' => $permission], $this->groupsCache[$key], true);

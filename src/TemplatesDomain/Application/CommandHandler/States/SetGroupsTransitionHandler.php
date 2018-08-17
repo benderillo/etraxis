@@ -80,10 +80,11 @@ class SetGroupsTransitionHandler
         $query
             ->select('grp')
             ->from(Group::class, 'grp')
-            ->where($query->expr()->in('grp.id', ':groups'))
-            ->setParameter('groups', $command->groups);
+            ->where($query->expr()->in('grp.id', ':groups'));
 
-        $requestedGroups = $query->getQuery()->getResult();
+        $requestedGroups = $query->getQuery()->execute([
+            'groups' => $command->groups,
+        ]);
 
         // Remove all groups which are supposed to not be granted for specified transition, but they currently are.
         $transitions = array_filter($fromState->groupTransitions, function (StateGroupTransition $transition) use ($command) {

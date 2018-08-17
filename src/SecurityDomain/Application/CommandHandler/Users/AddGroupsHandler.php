@@ -76,11 +76,12 @@ class AddGroupsHandler
         $query
             ->select('grp')
             ->from(Group::class, 'grp')
-            ->where($query->expr()->in('grp.id', ':groups'))
-            ->setParameter('groups', $command->groups);
+            ->where($query->expr()->in('grp.id', ':groups'));
 
         /** @var Group[] $groups */
-        $groups = $query->getQuery()->getResult();
+        $groups = $query->getQuery()->execute([
+            'groups' => $command->groups,
+        ]);
 
         foreach ($groups as $group) {
 

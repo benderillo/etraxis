@@ -76,10 +76,11 @@ class SetResponsibleGroupsHandler
         $query
             ->select('grp')
             ->from(Group::class, 'grp')
-            ->where($query->expr()->in('grp.id', ':groups'))
-            ->setParameter('groups', $command->groups);
+            ->where($query->expr()->in('grp.id', ':groups'));
 
-        $requestedGroups = $query->getQuery()->getResult();
+        $requestedGroups = $query->getQuery()->execute([
+            'groups' => $command->groups,
+        ]);
 
         foreach ($state->responsibleGroups as $responsibleGroup) {
             if (!in_array($responsibleGroup->group, $requestedGroups, true)) {

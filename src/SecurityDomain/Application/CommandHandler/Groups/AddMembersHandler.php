@@ -75,11 +75,12 @@ class AddMembersHandler
         $query
             ->select('user')
             ->from(User::class, 'user')
-            ->where($query->expr()->in('user.id', ':users'))
-            ->setParameter('users', $command->users);
+            ->where($query->expr()->in('user.id', ':users'));
 
         /** @var User[] $users */
-        $users = $query->getQuery()->getResult();
+        $users = $query->getQuery()->execute([
+            'users' => $command->users,
+        ]);
 
         foreach ($users as $user) {
             $group->addMember($user);
