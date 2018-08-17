@@ -24,7 +24,6 @@ use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -32,8 +31,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateIssueCommandTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */
     protected $repository;
 

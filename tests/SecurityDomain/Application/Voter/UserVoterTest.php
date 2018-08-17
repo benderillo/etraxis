@@ -14,14 +14,11 @@
 namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
 class UserVoterTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 

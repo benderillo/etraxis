@@ -19,7 +19,6 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\State;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -27,8 +26,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ChangeStateCommandTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */
     protected $repository;
 

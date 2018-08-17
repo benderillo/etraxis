@@ -16,13 +16,10 @@ namespace eTraxis\IssuesDomain\Application\Command;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Entity\LastRead;
 use eTraxis\SecurityDomain\Model\Entity\User;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
 class MarkAsReadCommandTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */
     protected $repository;
 

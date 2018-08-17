@@ -57,7 +57,7 @@ class LastRead
     protected $readAt;
 
     /**
-     * Creates new field value.
+     * Creates new read.
      *
      * @param Issue $issue
      * @param User  $user

@@ -13,13 +13,10 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
-use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
 class FieldPCRETest extends TestCase
 {
-    use ReflectionTrait;
-
     public function testValidate()
     {
         $pcre = new FieldPCRE();

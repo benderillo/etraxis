@@ -14,15 +14,12 @@
 namespace eTraxis\IssuesDomain\Application\Command;
 
 use eTraxis\IssuesDomain\Model\Entity\Issue;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DeleteIssueCommandTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */
     protected $repository;
 

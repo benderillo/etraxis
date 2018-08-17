@@ -15,7 +15,6 @@ namespace eTraxis\IssuesDomain\Application\Command;
 
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
-use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -23,8 +22,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SuspendIssueCommandTest extends TransactionalTestCase
 {
-    use ReflectionTrait;
-
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */
     protected $repository;
 
