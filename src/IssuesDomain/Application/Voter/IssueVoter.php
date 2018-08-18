@@ -460,17 +460,17 @@ class IssueVoter extends Voter
         }
 
         // Check whether the user has required permissions as author.
-        if ($issue->author === $user && $this->hasRolePermission($issue->template, SystemRole::AUTHOR, TemplatePermission::REASSIGN_ISSUES)) {
+        if ($issue->author === $user && $this->hasRolePermission($issue->template, SystemRole::AUTHOR, $permission)) {
             return true;
         }
 
         // Check whether the user has required permissions as current responsible.
-        if ($issue->responsible === $user && $this->hasRolePermission($issue->template, SystemRole::RESPONSIBLE, TemplatePermission::REASSIGN_ISSUES)) {
+        if ($issue->responsible === $user && $this->hasRolePermission($issue->template, SystemRole::RESPONSIBLE, $permission)) {
             return true;
         }
 
         return
-            $this->hasRolePermission($issue->template, SystemRole::ANYONE, TemplatePermission::REASSIGN_ISSUES) ||
-            $this->hasGroupPermission($issue->template, $user, TemplatePermission::REASSIGN_ISSUES);
+            $this->hasRolePermission($issue->template, SystemRole::ANYONE, $permission) ||
+            $this->hasGroupPermission($issue->template, $user, $permission);
     }
 }

@@ -35,7 +35,7 @@ class LastRead
      * @var Issue
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Issue", inversedBy="valuesCollection")
+     * @ORM\ManyToOne(targetEntity="Issue")
      * @ORM\JoinColumn(name="issue_id", nullable=false, referencedColumnName="id", onDelete="CASCADE")
      */
     protected $issue;
