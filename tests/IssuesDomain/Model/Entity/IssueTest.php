@@ -307,4 +307,27 @@ class IssueTest extends TestCase
 
         self::assertSame(['Value A', 'Value B'], $issue->values);
     }
+
+    public function testDependencies()
+    {
+        $issue = new Issue(new User());
+        $this->setProperty($issue, 'id', 1);
+        self::assertSame([], $issue->values);
+
+        $issue1 = new Issue(new User());
+        $this->setProperty($issue1, 'id', 2);
+
+        $issue2 = new Issue(new User());
+        $this->setProperty($issue2, 'id', 3);
+
+        $dependency1 = new Dependency($issue, $issue1);
+        $dependency2 = new Dependency($issue, $issue2);
+
+        /** @var \Doctrine\Common\Collections\ArrayCollection $values */
+        $values = $this->getProperty($issue, 'dependenciesCollection');
+        $values->add($dependency1);
+        $values->add($dependency2);
+
+        self::assertSame([$issue1, $issue2], $issue->dependencies);
+    }
 }

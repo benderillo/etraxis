@@ -70,6 +70,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue2, $developer], [IssueVoter::REASSIGN_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue6, [IssueVoter::SUSPEND_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue5, [IssueVoter::RESUME_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_DEPENDENCY]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::REMOVE_DEPENDENCY]));
     }
 
     public function testViewByAuthor()
@@ -210,6 +212,7 @@ class IssueVoterTest extends TransactionalTestCase
         [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Support request 2'], ['id' => 'ASC']);
 
         [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Support request 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $dependant] = $this->repository->findBy(['subject' => 'Support request 6'], ['id' => 'ASC']);
 
         [/* skipping */, /* skipping */, $createdByClient1]   = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
         [/* skipping */, /* skipping */, $createdByClient3]   = $this->repository->findBy(['subject' => 'Support request 4'], ['id' => 'ASC']);
@@ -220,6 +223,7 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueB, $stateB]));
         self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$suspended, $stateC]));
+        self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$dependant, $reopen]));
 
         $this->loginAs('dtillman@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
@@ -350,5 +354,65 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueC));
         self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $createdByDev2));
         self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $assignedToDev3));
+    }
+
+    public function testAddDependency()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev2]  = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $suspended));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $closed));
+
+        $this->loginAs('dquigley@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $createdByDev2));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $assignedToDev3));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $createdByDev2));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $assignedToDev3));
+    }
+
+    public function testRemoveDependency()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev2]  = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $suspended));
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $closed));
+
+        $this->loginAs('dquigley@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $createdByDev2));
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $assignedToDev3));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $createdByDev2));
+        self::assertTrue($this->security->isGranted(IssueVoter::REMOVE_DEPENDENCY, $assignedToDev3));
     }
 }

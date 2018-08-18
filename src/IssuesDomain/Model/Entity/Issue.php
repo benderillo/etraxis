@@ -32,26 +32,27 @@ use Webinarium\PropertyTrait;
  *     })
  * @ORM\Entity(repositoryClass="eTraxis\IssuesDomain\Model\Repository\IssueRepository")
  *
- * @property-read int          $id          Unique ID.
- * @property-read string       $fullId      Full unique ID with template prefix.
- * @property      string       $subject     Subject of the issue.
- * @property-read Project      $project     Issue project.
- * @property-read Template     $template    Issue template.
- * @property      State        $state       Current state.
- * @property-read User         $author      Author of the issue.
- * @property      null|User    $responsible Current responsible of the issue.
- * @property-read null|Issue   $origin      Original issue this issue was cloned from (when applicable).
- * @property-read int          $createdAt   Unix Epoch timestamp when the issue has been created.
- * @property-read int          $changedAt   Unix Epoch timestamp when the issue has been changed last time.
- * @property-read null|int     $closedAt    Unix Epoch timestamp when the issue has been closed, if so.
- * @property-read null|int     $suspendedAt Unix Epoch timestamp when the issue should be resumed, if suspended.
- * @property-read bool         $isCloned    Whether the issue was cloned.
- * @property-read bool         $isCritical  Whether the issue is critical (remains opened for too long).
- * @property-read bool         $isFrozen    Whether the issue is frozen (read-only).
- * @property-read bool         $isClosed    Whether the issue is closed.
- * @property-read bool         $isSuspended Whether the issue is suspended.
- * @property-read Event[]      $events      List of issue events.
- * @property-read FieldValue[] $values      List of field values.
+ * @property-read int          $id           Unique ID.
+ * @property-read string       $fullId       Full unique ID with template prefix.
+ * @property      string       $subject      Subject of the issue.
+ * @property-read Project      $project      Issue project.
+ * @property-read Template     $template     Issue template.
+ * @property      State        $state        Current state.
+ * @property-read User         $author       Author of the issue.
+ * @property      null|User    $responsible  Current responsible of the issue.
+ * @property-read null|Issue   $origin       Original issue this issue was cloned from (when applicable).
+ * @property-read int          $createdAt    Unix Epoch timestamp when the issue has been created.
+ * @property-read int          $changedAt    Unix Epoch timestamp when the issue has been changed last time.
+ * @property-read null|int     $closedAt     Unix Epoch timestamp when the issue has been closed, if so.
+ * @property-read null|int     $suspendedAt  Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read bool         $isCloned     Whether the issue was cloned.
+ * @property-read bool         $isCritical   Whether the issue is critical (remains opened for too long).
+ * @property-read bool         $isFrozen     Whether the issue is frozen (read-only).
+ * @property-read bool         $isClosed     Whether the issue is closed.
+ * @property-read bool         $isSuspended  Whether the issue is suspended.
+ * @property-read Event[]      $events       List of issue events.
+ * @property-read FieldValue[] $values       List of field values.
+ * @property-read Issue[]      $dependencies List of issue dependencies.
  */
 class Issue
 {
@@ -155,6 +156,14 @@ class Issue
     protected $valuesCollection;
 
     /**
+     * @var ArrayCollection|Dependency[]
+     *
+     * @ORM\OneToMany(targetEntity="Dependency", mappedBy="issue")
+     * @ORM\OrderBy({"issue": "ASC"})
+     */
+    protected $dependenciesCollection;
+
+    /**
      * Creates new issue.
      *
      * @noinspection PhpDocSignatureInspection
@@ -169,8 +178,9 @@ class Issue
 
         $this->createdAt = $this->changedAt = time();
 
-        $this->eventsCollection = new ArrayCollection();
-        $this->valuesCollection = new ArrayCollection();
+        $this->eventsCollection       = new ArrayCollection();
+        $this->valuesCollection       = new ArrayCollection();
+        $this->dependenciesCollection = new ArrayCollection();
     }
 
     /**
@@ -260,6 +270,12 @@ class Issue
 
             'values' => function (): array {
                 return $this->valuesCollection->getValues();
+            },
+
+            'dependencies' => function (): array {
+                return array_map(function (Dependency $dependency) {
+                    return $dependency->dependency;
+                }, $this->dependenciesCollection->getValues());
             },
         ];
     }

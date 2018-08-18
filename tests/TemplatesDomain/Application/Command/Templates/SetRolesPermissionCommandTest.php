@@ -37,6 +37,8 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
     {
         $before = [
             TemplatePermission::ADD_COMMENTS,
+            TemplatePermission::ADD_DEPENDENCIES,
+            TemplatePermission::REMOVE_DEPENDENCIES,
             TemplatePermission::ATTACH_FILES,
             TemplatePermission::EDIT_ISSUES,
             TemplatePermission::REOPEN_ISSUES,
@@ -45,6 +47,8 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
         $after = [
             TemplatePermission::ADD_COMMENTS,
             TemplatePermission::PRIVATE_COMMENTS,
+            TemplatePermission::ADD_DEPENDENCIES,
+            TemplatePermission::REMOVE_DEPENDENCIES,
             TemplatePermission::EDIT_ISSUES,
             TemplatePermission::REOPEN_ISSUES,
         ];

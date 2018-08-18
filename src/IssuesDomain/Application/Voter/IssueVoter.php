@@ -36,26 +36,30 @@ class IssueVoter extends Voter
 {
     use VoterTrait;
 
-    public const VIEW_ISSUE     = 'issue.view';
-    public const CREATE_ISSUE   = 'issue.create';
-    public const UPDATE_ISSUE   = 'issue.update';
-    public const DELETE_ISSUE   = 'issue.delete';
-    public const CHANGE_STATE   = 'state.change';
-    public const ASSIGN_ISSUE   = 'issue.assign';
-    public const REASSIGN_ISSUE = 'issue.reassign';
-    public const SUSPEND_ISSUE  = 'issue.suspend';
-    public const RESUME_ISSUE   = 'issue.resume';
+    public const VIEW_ISSUE        = 'issue.view';
+    public const CREATE_ISSUE      = 'issue.create';
+    public const UPDATE_ISSUE      = 'issue.update';
+    public const DELETE_ISSUE      = 'issue.delete';
+    public const CHANGE_STATE      = 'state.change';
+    public const ASSIGN_ISSUE      = 'issue.assign';
+    public const REASSIGN_ISSUE    = 'issue.reassign';
+    public const SUSPEND_ISSUE     = 'issue.suspend';
+    public const RESUME_ISSUE      = 'issue.resume';
+    public const ADD_DEPENDENCY    = 'dependency.add';
+    public const REMOVE_DEPENDENCY = 'dependency.remove';
 
     protected $attributes = [
-        self::VIEW_ISSUE     => Issue::class,
-        self::CREATE_ISSUE   => Template::class,
-        self::UPDATE_ISSUE   => Issue::class,
-        self::DELETE_ISSUE   => Issue::class,
-        self::CHANGE_STATE   => [Issue::class, State::class],
-        self::ASSIGN_ISSUE   => [State::class, User::class],
-        self::REASSIGN_ISSUE => [Issue::class, User::class],
-        self::SUSPEND_ISSUE  => Issue::class,
-        self::RESUME_ISSUE   => Issue::class,
+        self::VIEW_ISSUE        => Issue::class,
+        self::CREATE_ISSUE      => Template::class,
+        self::UPDATE_ISSUE      => Issue::class,
+        self::DELETE_ISSUE      => Issue::class,
+        self::CHANGE_STATE      => [Issue::class, State::class],
+        self::ASSIGN_ISSUE      => [State::class, User::class],
+        self::REASSIGN_ISSUE    => [Issue::class, User::class],
+        self::SUSPEND_ISSUE     => Issue::class,
+        self::RESUME_ISSUE      => Issue::class,
+        self::ADD_DEPENDENCY    => Issue::class,
+        self::REMOVE_DEPENDENCY => Issue::class,
     ];
 
     protected $manager;
@@ -115,6 +119,12 @@ class IssueVoter extends Voter
 
             case self::RESUME_ISSUE:
                 return $this->isResumeGranted($subject, $user);
+
+            case self::ADD_DEPENDENCY:
+                return $this->isAddDependencyGranted($subject, $user);
+
+            case self::REMOVE_DEPENDENCY:
+                return $this->isRemoveDependencyGranted($subject, $user);
 
             default:
                 return false;
@@ -226,6 +236,13 @@ class IssueVoter extends Voter
         // Template must not be locked and project must not be suspended.
         if ($subject->template->isLocked || $subject->project->isSuspended) {
             return false;
+        }
+
+        // Check whether the issue has opened dependencies.
+        foreach ($subject->dependencies as $dependency) {
+            if (!$dependency->isClosed) {
+                return false;
+            }
         }
 
         // Check whether the user has required permissions by role.
@@ -376,6 +393,42 @@ class IssueVoter extends Voter
         }
 
         return $this->hasPermission($subject, $user, TemplatePermission::RESUME_ISSUES);
+    }
+
+    /**
+     * Whether a dependency can be added to the specified issue.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isAddDependencyGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended or closed.
+        if ($subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::ADD_DEPENDENCIES);
+    }
+
+    /**
+     * Whether a dependency can be removed from the specified issue.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isRemoveDependencyGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended or closed.
+        if ($subject->isSuspended || $subject->isClosed) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::REMOVE_DEPENDENCIES);
     }
 
     /**

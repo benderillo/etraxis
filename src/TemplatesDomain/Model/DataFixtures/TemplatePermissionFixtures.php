@@ -116,12 +116,16 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
                     TemplatePermission::REOPEN_ISSUES,
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::ATTACH_FILES,
+                    TemplatePermission::ADD_DEPENDENCIES,
+                    TemplatePermission::REMOVE_DEPENDENCIES,
                 ],
 
                 SystemRole::RESPONSIBLE => [
                     TemplatePermission::ADD_COMMENTS,
                     TemplatePermission::PRIVATE_COMMENTS,
                     TemplatePermission::ATTACH_FILES,
+                    TemplatePermission::ADD_DEPENDENCIES,
+                    TemplatePermission::REMOVE_DEPENDENCIES,
                 ],
 
                 'managers:%s' => [
