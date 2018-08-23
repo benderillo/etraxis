@@ -387,7 +387,7 @@ class IssueVoter extends Voter
      */
     protected function isResumeGranted(Issue $subject, User $user): bool
     {
-        // Issue must be suspended and not closed.
+        // Issue must not be suspended or closed.
         if (!$subject->isSuspended || $subject->isClosed) {
             return false;
         }

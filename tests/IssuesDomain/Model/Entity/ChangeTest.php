@@ -36,7 +36,7 @@ class ChangeTest extends TestCase
         $issue = new Issue($user);
         $this->setProperty($issue, 'id', 2);
 
-        $event = new Event(EventType::ISSUE_ASSIGNED, $issue, $user, $user->id);
+        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
         $this->setProperty($event, 'id', 3);
 
         $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);
