@@ -25,10 +25,6 @@ use eTraxis\IssuesDomain\Model\Entity\Event;
  */
 class CommentFixtures extends Fixture implements DependentFixtureInterface
 {
-    protected const EVENT_TYPE   = 0;
-    protected const EVENT_INDEX  = 1;
-    protected const COMMENT_BODY = 2;
-
     /**
      * {@inheritdoc}
      */

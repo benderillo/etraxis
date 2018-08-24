@@ -40,7 +40,7 @@ use Webinarium\PropertyTrait;
  * @property      int                    $position         Ordinal number of the field.
  *                                                         No duplicates of this number among fields of the same state are allowed.
  * @property      bool                   $isRequired       Whether the field is required.
- * @property      bool                   $isRemoved        Whether the field is removed (soft-deleted).
+ * @property-read bool                   $isRemoved        Whether the field is removed (soft-deleted).
  * @property-read FieldRolePermission[]  $rolePermissions  List of field role permissions.
  * @property-read FieldGroupPermission[] $groupPermissions List of field group permissions.
  */

@@ -37,4 +37,20 @@ class CommentTest extends TestCase
 
         self::assertSame($event, $comment->event);
     }
+
+    public function testIssue()
+    {
+        $user = new User();
+        $this->setProperty($user, 'id', 1);
+
+        $issue = new Issue($user);
+        $this->setProperty($issue, 'id', 2);
+
+        $event = new Event(EventType::PUBLIC_COMMENT, $issue, $user);
+        $this->setProperty($event, 'id', 3);
+
+        $comment = new Comment($event);
+
+        self::assertSame($issue, $comment->issue);
+    }
 }

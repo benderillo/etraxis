@@ -27,6 +27,7 @@ use Webinarium\PropertyTrait;
  * @ORM\Entity(repositoryClass="eTraxis\IssuesDomain\Model\Repository\CommentRepository")
  *
  * @property-read int    $id        Unique ID.
+ * @property-read Issue  $issue     Issue of the comment.
  * @property-read Event  $event     Event which the comment has been posted by.
  * @property      string $body      Comment's body.
  * @property      bool   $isPrivate Whether the comment is private.
@@ -77,5 +78,18 @@ class Comment
     public function __construct(Event $event)
     {
         $this->event = $event;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getters(): array
+    {
+        return [
+
+            'issue' => function (): Issue {
+                return $this->event->issue;
+            },
+        ];
     }
 }

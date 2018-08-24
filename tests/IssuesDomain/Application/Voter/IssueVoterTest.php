@@ -161,10 +161,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $createdByDev3));
         self::assertTrue($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $assignedToDev3));
 
-        /** @var Template $templateC */
-        [/* skipping */, /* skipping */, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        $templateC->frozenTime = 1;
+        /** @var Issue $issueC */
+        $issueC->template->frozenTime = 1;
 
         $this->loginAs('ldoyle@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueC));
@@ -192,10 +190,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::DELETE_ISSUE, $createdByDev3));
         self::assertTrue($this->security->isGranted(IssueVoter::DELETE_ISSUE, $assignedToDev3));
 
-        /** @var Template $templateC */
-        [/* skipping */, /* skipping */, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
-        $templateC->frozenTime = 1;
+        /** @var Issue $issueC */
+        $issueC->template->frozenTime = 1;
 
         $this->loginAs('ldoyle@example.com');
         self::assertTrue($this->security->isGranted(IssueVoter::DELETE_ISSUE, $issueC));
@@ -203,9 +199,6 @@ class IssueVoterTest extends TransactionalTestCase
 
     public function testChangeState()
     {
-        /** @var Template $templateC */
-        [/* skipping */, /* skipping */, $templateC] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['id' => 'ASC']);
-
         [$stateA, $stateB, $stateC] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
 
         [/* skipping */, /* skipping */, $reopen] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Opened'], ['id' => 'ASC']);
@@ -240,7 +233,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$issueC, $stateC]));
         self::assertFalse($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient1, $reopen]));
 
-        $templateC->frozenTime = null;
+        /** @var Issue $issueC */
+        $issueC->template->frozenTime = null;
         self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient1, $reopen]));
     }
 

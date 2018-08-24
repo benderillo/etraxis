@@ -22,7 +22,6 @@ use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\TemplatesDomain\Model\Entity\StringValue;
-use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\TransactionalTestCase;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
@@ -647,13 +646,10 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         $this->loginAs('ldoyle@example.com');
 
-        /** @var Template $template */
-        [/* skipping */, /* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
-
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
 
-        $template->frozenTime = 1;
+        $issue->template->frozenTime = 1;
 
         $command = new UpdateIssueCommand([
             'issue'   => $issue->id,
