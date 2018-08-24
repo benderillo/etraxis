@@ -70,6 +70,9 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, [$issue2, $developer], [IssueVoter::REASSIGN_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue6, [IssueVoter::SUSPEND_ISSUE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue5, [IssueVoter::RESUME_ISSUE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_PUBLIC_COMMENT]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_PRIVATE_COMMENT]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::READ_PRIVATE_COMMENT]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_DEPENDENCY]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::REMOVE_DEPENDENCY]));
     }
@@ -354,6 +357,89 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $issueC));
         self::assertFalse($this->security->isGranted(IssueVoter::RESUME_ISSUE, $createdByDev2));
         self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $assignedToDev3));
+    }
+
+    public function testAddPublicComment()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $assignedToDev3));
+
+        /** @var Issue $closed */
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $closed));
+        $closed->template->frozenTime = 1;
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $closed));
+    }
+
+    public function testAddPrivateComment()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $assignedToDev3));
+
+        /** @var Issue $closed */
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $closed));
+        $closed->template->frozenTime = 1;
+        self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $closed));
+    }
+
+    public function testReadPrivateComment()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issueA));
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $assignedToDev3));
     }
 
     public function testAddDependency()

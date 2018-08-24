@@ -122,7 +122,6 @@ class TemplatePermissionFixtures extends Fixture implements DependentFixtureInte
 
                 SystemRole::RESPONSIBLE => [
                     TemplatePermission::ADD_COMMENTS,
-                    TemplatePermission::PRIVATE_COMMENTS,
                     TemplatePermission::ATTACH_FILES,
                     TemplatePermission::ADD_DEPENDENCIES,
                     TemplatePermission::REMOVE_DEPENDENCIES,
