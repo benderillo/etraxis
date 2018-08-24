@@ -31,9 +31,9 @@ use eTraxis\TemplatesDomain\Model\Entity\TextValue;
  */
 class ChangeFixtures extends Fixture implements DependentFixtureInterface
 {
-    protected const EVENT_TYPE      = 0;
-    protected const EVENT_TIMESTAMP = 1;
-    protected const CHANGED_FIELDS  = 2;
+    protected const EVENT_TYPE     = 0;
+    protected const EVENT_INDEX    = 1;
+    protected const CHANGED_FIELDS = 2;
 
     protected const SECS_IN_DAY = 86400;
 
@@ -59,7 +59,7 @@ class ChangeFixtures extends Fixture implements DependentFixtureInterface
 
             'task:%s:1' => [
 
-                // Modified.
+                // Modified (first time).
                 [EventType::ISSUE_EDITED, 0, [
                     'subject'         => ['Task 1', 'Development task 1'],
                     'new:%s:priority' => [3, 2],
@@ -68,8 +68,8 @@ class ChangeFixtures extends Fixture implements DependentFixtureInterface
 
             'task:%s:2' => [
 
-                // Reopened in 'New' state.
-                [EventType::ISSUE_REOPENED, 2, [
+                // Reopened in 'New' state (first time).
+                [EventType::ISSUE_REOPENED, 0, [
                     'new:%s:priority'    => [3, 1],
                     'new:%s:description' => [
                         'Velit voluptatem rerum nulla quos.',
@@ -77,8 +77,8 @@ class ChangeFixtures extends Fixture implements DependentFixtureInterface
                     ],
                 ]],
 
-                // Moved to 'Assigned' state second time.
-                [EventType::STATE_CHANGED, 2, [
+                // Moved to 'Assigned' state (second time).
+                [EventType::STATE_CHANGED, 1, [
                     'assigned:%s:due date' => [14, 7],
                 ]],
             ],
@@ -94,14 +94,13 @@ class ChangeFixtures extends Fixture implements DependentFixtureInterface
 
                 foreach ($events as $row) {
 
-                    $timestamp = $issue->createdAt + $row[self::EVENT_TIMESTAMP] * self::SECS_IN_DAY;
-
-                    /** @var Event $event */
-                    $event = $manager->getRepository(Event::class)->findOneBy([
-                        'type'      => $row[self::EVENT_TYPE],
-                        'issue'     => $issue,
-                        'createdAt' => $timestamp,
+                    /** @var Event[] $events */
+                    $events = $manager->getRepository(Event::class)->findBy([
+                        'type'  => $row[self::EVENT_TYPE],
+                        'issue' => $issue,
                     ]);
+
+                    $event = $events[$row[self::EVENT_INDEX]];
 
                     foreach ($row[self::CHANGED_FIELDS] as $fref => $values) {
 

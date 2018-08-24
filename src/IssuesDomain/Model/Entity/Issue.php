@@ -144,7 +144,7 @@ class Issue
      * @var ArrayCollection|Event[]
      *
      * @ORM\OneToMany(targetEntity="Event", mappedBy="issue")
-     * @ORM\OrderBy({"createdAt": "ASC"})
+     * @ORM\OrderBy({"createdAt": "ASC", "id": "ASC"})
      */
     protected $eventsCollection;
 

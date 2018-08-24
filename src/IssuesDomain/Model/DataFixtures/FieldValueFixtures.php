@@ -16,6 +16,8 @@ namespace eTraxis\IssuesDomain\Model\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use eTraxis\IssuesDomain\Model\Dictionary\EventType;
+use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\FieldValue;
 use eTraxis\TemplatesDomain\Model\DataFixtures\FieldFixtures;
 use eTraxis\TemplatesDomain\Model\DataFixtures\ListItemFixtures;
@@ -44,6 +46,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             FieldFixtures::class,
             ListItemFixtures::class,
             IssueFixtures::class,
+            EventFixtures::class,
         ];
     }
 
@@ -55,13 +58,15 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
         $data = [
 
             'task:%s:1' => [
-                0 => [
-                    'new:%s:priority'      => 2,
-                    'new:%s:description'   => 'Quas sunt reprehenderit vero accusantium.',
-                    'new:%s:error'         => false,
+                EventType::ISSUE_CREATED => [
+                    'new:%s:priority'    => 2,
+                    'new:%s:description' => 'Quas sunt reprehenderit vero accusantium.',
+                    'new:%s:error'       => false,
+                ],
+                EventType::STATE_CHANGED => [
                     'assigned:%s:due date' => null,
                 ],
-                3 => [
+                EventType::ISSUE_CLOSED => [
                     'completed:%s:commit id'     => null,
                     'completed:%s:delta'         => 5173,
                     'completed:%s:effort'        => 1440,       // 24 hours
@@ -70,29 +75,35 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'task:%s:2' => [
-                0 => [
-                    'new:%s:priority'      => 1,
-                    'new:%s:description'   => 'Velit voluptatem rerum nulla quos soluta excepturi omnis.',
-                    'new:%s:error'         => true,
+                EventType::ISSUE_CREATED => [
+                    'new:%s:priority'    => 1,
+                    'new:%s:description' => 'Velit voluptatem rerum nulla quos soluta excepturi omnis.',
+                    'new:%s:error'       => true,
+                ],
+                EventType::STATE_CHANGED => [
                     'assigned:%s:due date' => 7,
                 ],
-                2 => [
-                    'new:%s:new feature'         => false,
+                EventType::ISSUE_CLOSED => [
                     'completed:%s:commit id'     => '940059027173b8e8e1e3e874681f012f1f3bcf1d',
                     'completed:%s:delta'         => 1,
                     'completed:%s:effort'        => 80,         // 1:20
                     'completed:%s:test coverage' => null,
                 ],
+                EventType::ISSUE_REOPENED => [
+                    'new:%s:new feature' => false,
+                ],
             ],
 
             'task:%s:3' => [
-                0 => [
-                    'new:%s:priority'      => 2,
-                    'new:%s:description'   => 'Et nostrum et ut in ullam voluptatem dolorem et.',
-                    'new:%s:new feature'   => true,
+                EventType::ISSUE_CREATED => [
+                    'new:%s:priority'    => 2,
+                    'new:%s:description' => 'Et nostrum et ut in ullam voluptatem dolorem et.',
+                    'new:%s:new feature' => true,
+                ],
+                EventType::STATE_CHANGED => [
                     'assigned:%s:due date' => null,
                 ],
-                5 => [
+                EventType::ISSUE_CLOSED => [
                     'completed:%s:commit id'     => '067d9eebe965d2451cd3bd9333e46f38f3ec94c7',
                     'completed:%s:delta'         => 7403,
                     'completed:%s:effort'        => 2250,       // 37:30
@@ -101,16 +112,18 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'task:%s:4' => [
-                0 => [
-                    'new:%s:priority'       => 2,
-                    'new:%s:description'    => 'Omnis id quos recusandae provident.',
-                    'new:%s:new feature'    => true,
+                EventType::ISSUE_CREATED => [
+                    'new:%s:priority'    => 2,
+                    'new:%s:description' => 'Omnis id quos recusandae provident.',
+                    'new:%s:new feature' => true,
+                ],
+                EventType::ISSUE_CLOSED => [
                     'duplicated:%s:task id' => 'task:%s:3',
                 ],
             ],
 
             'task:%s:5' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'new:%s:priority'    => 2,
                     'new:%s:description' => null,
                     'new:%s:new feature' => false,
@@ -118,7 +131,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'task:%s:6' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'new:%s:priority'    => 3,
                     'new:%s:description' => 'Voluptatum qui ratione sed molestias quo aliquam.',
                     'new:%s:new feature' => true,
@@ -126,62 +139,62 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
             ],
 
             'task:%s:7' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'new:%s:priority'    => 2,
                     'new:%s:description' => 'Sapiente et velit aut minus sequi et.',
                     'new:%s:new feature' => true,
                 ],
-                1 => [
+                EventType::STATE_CHANGED => [
                     'assigned:%s:due date' => 15,     // 1 day after creation + 14 days due
                 ],
-                2 => [
+                EventType::ISSUE_CLOSED => [
                     'duplicated:%s:issue id' => 'task:%s:6',
                 ],
             ],
 
             'task:%s:8' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'new:%s:priority'    => 1,
                     'new:%s:description' => 'Esse labore et ducimus consequuntur labore voluptatem atque.',
                     'new:%s:new feature' => false,
                 ],
-                3 => [
+                EventType::STATE_CHANGED => [
                     'assigned:%s:due date' => 6,        // 3 days after creation + 3 days due
                 ],
             ],
 
             'req:%s:1' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Expedita ullam iste omnis natus veritatis sint temporibus provident velit veniam provident rerum doloremque autem repellat est in sed.',
                 ],
             ],
 
             'req:%s:2' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Laborum sed saepe esse distinctio inventore nulla ipsam qui est qui laborum iste iure natus ea saepe qui recusandae similique est quia sed.',
                 ],
             ],
 
             'req:%s:3' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Est ut inventore omnis doloribus et corporis adipisci ut est rem sapiente numquam dolor voluptatibus quibusdam quo voluptates ab doloribus illum recusandae libero accusantium. Animi rem ut ut aperiam laborum sapiente quis dicta qui nostrum occaecati commodi non.',
                 ],
             ],
 
             'req:%s:4' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Distinctio maiores placeat quo cupiditate est autem excepturi cumque et dolorum qui rem minima ab enim dolor voluptas odio fugiat ea aspernatur voluptas enim. Sint dolor asperiores et facilis excepturi quasi perspiciatis ut ut reprehenderit aspernatur repellat adipisci ut aut laudantium cumque dicta ea non.',
                 ],
             ],
 
             'req:%s:5' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Sapiente cum placeat consequatur repellat est aliquid ut sed praesentium aliquid dolorum cumque quas qui maiores consequatur nihil commodi iure architecto molestias libero. Dicta id illum officiis ut numquam et et quisquam libero voluptatem ad accusamus aspernatur est consequatur et minima reiciendis repellat culpa.',
                 ],
             ],
 
             'req:%s:6' => [
-                0 => [
+                EventType::ISSUE_CREATED => [
                     'submitted:%s:details' => 'Quis quaerat ut corrupti vitae sed rerum voluptate consequatur odio molestiae voluptatibus esse nostrum sunt perspiciatis in fuga est vitae enim. Voluptas distinctio enim ullam iusto voluptate vitae voluptatem ipsa placeat asperiores molestiae eveniet expedita at officiis incidunt amet.',
                 ],
             ],
@@ -189,12 +202,18 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
 
         foreach (['a', 'b', 'c'] as $pref) {
 
-            foreach ($data as $iref => $offsets) {
+            foreach ($data as $iref => $event_types) {
 
-                foreach ($offsets as $offset => $fields) {
+                foreach ($event_types as $event_type => $fields) {
 
                     /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue */
                     $issue = $this->getReference(sprintf($iref, $pref));
+
+                    /** @var \eTraxis\IssuesDomain\Model\Entity\Event $event */
+                    [$event] = $manager->getRepository(Event::class)->findBy([
+                        'type'  => $event_type,
+                        'issue' => $issue,
+                    ]);
 
                     foreach ($fields as $fref => $vref) {
 
@@ -256,8 +275,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
 
                         $fieldValue = new FieldValue($issue, $field, $value);
 
-                        $timestamp = $issue->createdAt + $offset * self::SECS_IN_DAY;
-                        $this->setProperty($fieldValue, 'createdAt', $timestamp);
+                        $this->setProperty($fieldValue, 'createdAt', $event->createdAt);
 
                         $manager->persist($fieldValue);
                     }

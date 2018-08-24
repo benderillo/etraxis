@@ -33,10 +33,12 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
     protected const EVENT_TYPE      = 0;
     protected const EVENT_USER      = 1;
-    protected const EVENT_TIMESTAMP = 2;
-    protected const EVENT_PARAMETER = 3;
+    protected const EVENT_DAY       = 2;
+    protected const EVENT_MIN       = 3;
+    protected const EVENT_PARAMETER = 4;
 
     protected const SECS_IN_DAY = 86400;
+    protected const SECS_IN_MIN = 60;
 
     /**
      * {@inheritdoc}
@@ -58,90 +60,90 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $data = [
 
             'task:%s:1' => [
-                [EventType::ISSUE_CREATED,  $this->manager1,   0, 'new'],
-                [EventType::ISSUE_EDITED,   $this->manager1,   0, null],
-                [EventType::STATE_CHANGED,  $this->manager1,   0, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->developer1],
-                [EventType::ISSUE_CLOSED,   $this->developer1, 3, 'completed'],
+                [EventType::ISSUE_CREATED,  $this->manager1,   0, 0,  'new'],
+                [EventType::ISSUE_EDITED,   $this->manager1,   0, 5,  null],
+                [EventType::STATE_CHANGED,  $this->manager1,   0, 15, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, 15, $this->developer1],
+                [EventType::ISSUE_CLOSED,   $this->developer1, 3, 0,  'completed'],
             ],
 
             'task:%s:2' => [
-                [EventType::ISSUE_CREATED,  $this->manager2,   0, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager1,   0, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->developer3],
-                [EventType::ISSUE_CLOSED,   $this->developer3, 2, 'completed'],
-                [EventType::ISSUE_REOPENED, $this->manager2,   2, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager2,   2, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager2,   2, $this->developer3],
+                [EventType::ISSUE_CREATED,  $this->manager2,   0, 0,  'new'],
+                [EventType::STATE_CHANGED,  $this->manager1,   0, 10, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, 10, $this->developer3],
+                [EventType::ISSUE_CLOSED,   $this->developer3, 2, 35, 'completed'],
+                [EventType::ISSUE_REOPENED, $this->manager2,   2, 90, 'new'],
+                [EventType::STATE_CHANGED,  $this->manager2,   2, 95, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager2,   2, 95, $this->developer3],
             ],
 
             'task:%s:3' => [
-                [EventType::ISSUE_CREATED,  $this->manager3,   0, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager3,   0, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager3,   0, $this->developer1],
-                [EventType::ISSUE_CLOSED,   $this->developer1, 5, 'completed'],
+                [EventType::ISSUE_CREATED,  $this->manager3,   0, 0, 'new'],
+                [EventType::STATE_CHANGED,  $this->manager3,   0, 5, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager3,   0, 5, $this->developer1],
+                [EventType::ISSUE_CLOSED,   $this->developer1, 5, 0, 'completed'],
             ],
 
             'task:%s:4' => [
-                [EventType::ISSUE_CREATED,  $this->developer1, 0, 'new'],
-                [EventType::ISSUE_CLOSED,   $this->manager2,   0, 'duplicated'],
+                [EventType::ISSUE_CREATED,  $this->developer1, 0, 0,   'new'],
+                [EventType::ISSUE_CLOSED,   $this->manager2,   0, 135, 'duplicated'],
             ],
 
             'task:%s:5' => [
-                [EventType::ISSUE_CREATED,  $this->manager3,   0, 'new'],
+                [EventType::ISSUE_CREATED,  $this->manager3, 0, 0, 'new'],
             ],
 
             'task:%s:6' => [
-                [EventType::ISSUE_CREATED,  $this->manager3,   0, 'new'],
+                [EventType::ISSUE_CREATED,  $this->manager3, 0, 0, 'new'],
             ],
 
             'task:%s:7' => [
-                [EventType::ISSUE_CREATED,  $this->developer2, 0, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager2,   1, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager2,   1, $this->developer2],
-                [EventType::ISSUE_CLOSED,   $this->manager3,   2, 'duplicated'],
+                [EventType::ISSUE_CREATED,  $this->developer2, 0, 0, 'new'],
+                [EventType::STATE_CHANGED,  $this->manager2,   1, 0, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager2,   1, 0, $this->developer2],
+                [EventType::ISSUE_CLOSED,   $this->manager3,   2, 0, 'duplicated'],
             ],
 
             'task:%s:8' => [
-                [EventType::ISSUE_CREATED,  $this->developer2, 0, 'new'],
-                [EventType::STATE_CHANGED,  $this->manager1,   3, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   3, $this->developer2],
+                [EventType::ISSUE_CREATED,  $this->developer2, 0, 0, 'new'],
+                [EventType::STATE_CHANGED,  $this->manager1,   3, 0, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager1,   3, 0, $this->developer2],
             ],
 
             'req:%s:1' => [
-                [EventType::ISSUE_CREATED,  $this->client1,    0, 'submitted'],
-                [EventType::STATE_CHANGED,  $this->manager1,   0, 'opened'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, $this->support1],
-                [EventType::ISSUE_CLOSED,   $this->support1,   2, 'resolved'],
+                [EventType::ISSUE_CREATED,  $this->client1,  0, 0, 'submitted'],
+                [EventType::STATE_CHANGED,  $this->manager1, 0, 5, 'opened'],
+                [EventType::ISSUE_ASSIGNED, $this->manager1, 0, 5, $this->support1],
+                [EventType::ISSUE_CLOSED,   $this->support1, 2, 0, 'resolved'],
             ],
 
             'req:%s:2' => [
-                [EventType::ISSUE_CREATED,  $this->client2,    0, 'submitted'],
-                [EventType::STATE_CHANGED,  $this->support2,   0, 'opened'],
-                [EventType::ISSUE_ASSIGNED, $this->support2,   0, $this->support2],
+                [EventType::ISSUE_CREATED,  $this->client2,  0, 0, 'submitted'],
+                [EventType::STATE_CHANGED,  $this->support2, 0, 5, 'opened'],
+                [EventType::ISSUE_ASSIGNED, $this->support2, 0, 5, $this->support2],
             ],
 
             'req:%s:3' => [
-                [EventType::ISSUE_CREATED,  $this->client2,    0, 'submitted'],
-                [EventType::STATE_CHANGED,  $this->support2,   0, 'opened'],
-                [EventType::ISSUE_ASSIGNED, $this->support2,   0, $this->support2],
-                [EventType::ISSUE_CLOSED,   $this->support2,   2, 'resolved'],
+                [EventType::ISSUE_CREATED,  $this->client2,  0, 0, 'submitted'],
+                [EventType::STATE_CHANGED,  $this->support2, 0, 5, 'opened'],
+                [EventType::ISSUE_ASSIGNED, $this->support2, 0, 5, $this->support2],
+                [EventType::ISSUE_CLOSED,   $this->support2, 2, 0, 'resolved'],
             ],
 
             'req:%s:4' => [
-                [EventType::ISSUE_CREATED,  $this->client3,    0, 'submitted'],
-                [EventType::STATE_CHANGED,  $this->manager2,   1, 'opened'],
-                [EventType::ISSUE_ASSIGNED, $this->manager2,   1, $this->support1],
+                [EventType::ISSUE_CREATED,  $this->client3,  0, 0, 'submitted'],
+                [EventType::STATE_CHANGED,  $this->manager2, 1, 0, 'opened'],
+                [EventType::ISSUE_ASSIGNED, $this->manager2, 1, 0, $this->support1],
             ],
 
             'req:%s:5' => [
-                [EventType::ISSUE_CREATED,  $this->client2,    0, 'submitted'],
-                [EventType::STATE_CHANGED,  $this->support3,   0, 'opened'],
-                [EventType::ISSUE_ASSIGNED, $this->support3,   0, $this->support3],
+                [EventType::ISSUE_CREATED,  $this->client2,  0, 0, 'submitted'],
+                [EventType::STATE_CHANGED,  $this->support3, 0, 5, 'opened'],
+                [EventType::ISSUE_ASSIGNED, $this->support3, 0, 5, $this->support3],
             ],
 
             'req:%s:6' => [
-                [EventType::ISSUE_CREATED,  $this->client1,    0, 'submitted'],
+                [EventType::ISSUE_CREATED,  $this->client1, 0, 0, 'submitted'],
             ],
         ];
 
@@ -153,12 +155,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 $issue = $this->getReference(sprintf($iref, $pref));
                 $manager->refresh($issue);
 
-                foreach ($events as $row) {
+                foreach ($events as $index => $row) {
 
                     /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
                     $user = $this->getReference($row[self::EVENT_USER][$pref]);
 
-                    $timestamp = $issue->createdAt + $row[self::EVENT_TIMESTAMP] * self::SECS_IN_DAY;
+                    $timestamp = $issue->createdAt
+                        + $row[self::EVENT_DAY] * self::SECS_IN_DAY
+                        + $row[self::EVENT_MIN] * self::SECS_IN_MIN;
 
                     $event = new Event($row[self::EVENT_TYPE], $issue, $user);
 
