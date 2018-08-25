@@ -35,7 +35,7 @@ class AddCommentCommand
 
     /**
      * @Assert\NotBlank
-     * @Assert\Length(max="4000")
+     * @Assert\Length(max="10000")
      */
     public $body;
 

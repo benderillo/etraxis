@@ -404,7 +404,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             'subject'  => 'Test issue',
             'fields'   => [
                 $field1->id => 2,
-                $field2->id => str_pad(null, 4001, '*'),
+                $field2->id => str_pad(null, TextValue::MAX_VALUE + 1, '*'),
                 $field3->id => true,
             ],
         ]);

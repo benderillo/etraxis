@@ -35,7 +35,7 @@ class FieldParameters
      *      number   - minimum of range of allowed values (from -1000000000 till +1000000000)
      *      decimal  - maximum of range of allowed values (foreign key to "DecimalValue" entity)
      *      string   - maximum allowed length of values (up to 250)
-     *      text     - maximum allowed length of values (up to 4000)
+     *      text     - maximum allowed length of values (up to 10000)
      *      checkbox - NULL (not used)
      *      list     - NULL (not used)
      *      issue    - NULL (not used)

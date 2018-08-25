@@ -405,7 +405,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'issue'   => $issue->id,
             'subject' => 'Test issue',
             'fields'  => [
-                $field->id => str_pad(null, 4001, '*'),
+                $field->id => str_pad(null, TextValue::MAX_VALUE + 1, '*'),
             ],
         ]);
 

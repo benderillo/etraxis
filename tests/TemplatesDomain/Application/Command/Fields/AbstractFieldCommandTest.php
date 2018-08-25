@@ -444,7 +444,7 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Description'], ['id' => 'ASC']);
 
-        self::assertSame(4000, $field->asText($this->textRepository)->getMaximumLength());
+        self::assertSame(TextValue::MAX_VALUE, $field->asText($this->textRepository)->getMaximumLength());
         self::assertNull($field->asText($this->textRepository)->getDefaultValue());
         self::assertNull($field->asText($this->textRepository)->getPCRE()->check);
         self::assertNull($field->asText($this->textRepository)->getPCRE()->search);

@@ -28,13 +28,13 @@ trait TextCommandTrait
 {
     /**
      * @Assert\NotBlank
-     * @Assert\Range(min="1", max="4000")
+     * @Assert\Range(min="1", max="10000")
      * @Assert\Regex("/^(\-|\+)?\d+$/")
      */
     public $maximumLength;
 
     /**
-     * @Assert\Length(max="4000")
+     * @Assert\Length(max="10000")
      */
     public $defaultValue;
 

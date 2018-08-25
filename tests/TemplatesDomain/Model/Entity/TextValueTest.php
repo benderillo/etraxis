@@ -22,7 +22,7 @@ class TextValueTest extends TestCase
 
     public function testConstruct()
     {
-        $expected = str_pad(null, 4000, '_');
+        $expected = str_pad(null, TextValue::MAX_VALUE, '_');
         $text     = new TextValue($expected);
 
         self::assertSame(md5($expected), $this->getProperty($text, 'token'));

@@ -30,7 +30,7 @@ class TextValue
     use PropertyTrait;
 
     // Constraints.
-    public const MAX_VALUE = 4000;
+    public const MAX_VALUE = 10000;
 
     /**
      * @var int
