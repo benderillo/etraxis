@@ -80,7 +80,7 @@ class SuspendIssueHandler
             throw new AccessDeniedHttpException('You are not allowed to suspend this issue.');
         }
 
-        $date = date_create_from_format('Y-m-d', $command->date, timezone_open($user->timezone));
+        $date = date_create_from_format('Y-m-d', $command->date, timezone_open($user->timezone) ?: null);
         $date->setTime(0, 0);
 
         if ($date->getTimestamp() < time()) {

@@ -151,7 +151,7 @@ class FieldValueRepository extends ServiceEntityRepository
                     break;
 
                 case FieldType::DATE:
-                    $timezone = timezone_open($event->user->timezone) ?? null;
+                    $timezone = timezone_open($event->user->timezone) ?: null;
                     $newValue = date_create_from_format('Y-m-d', $value, $timezone)->getTimestamp();
                     break;
 

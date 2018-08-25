@@ -51,10 +51,10 @@ class DependencyFixtures extends Fixture implements DependentFixtureInterface
                 /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue */
                 $issue = $this->getReference(sprintf($iref, $pref));
 
-                foreach ($issues as $iref) {
+                foreach ($issues as $iref2) {
 
                     /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue2 */
-                    $issue2 = $this->getReference(sprintf($iref, $pref));
+                    $issue2 = $this->getReference(sprintf($iref2, $pref));
 
                     $dependency = new Dependency($issue, $issue2);
 
