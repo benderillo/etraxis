@@ -21,6 +21,13 @@ services:
         resource: '../../src/{IssuesDomain,SecurityDomain,TemplatesDomain}/Application/CommandHandler'
         tags: [{ name: tactician.handler, typehints: true }]
 
+    eTraxis\IssuesDomain\Application\CommandHandler\AttachFileHandler:
+        autowire: true
+        tags:
+            - { name: tactician.handler, command: eTraxis\IssuesDomain\Application\Command\AttachFileCommand }
+        arguments:
+            $maxsize: '%files.maxsize%'
+
     eTraxis\TemplatesDomain\Application\CommandHandler\Fields\CreateFieldHandler:
         autowire: true
         tags:

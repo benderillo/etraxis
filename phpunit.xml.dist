@@ -18,6 +18,8 @@
         <!-- define your env variables for the test env here -->
         <env name="ETRAXIS_LOCALE" value="en_US" />
         <env name="ETRAXIS_THEME" value="azure" />
+        <env name="FILES_STORAGE" value="var/" />
+        <env name="FILES_MAXSIZE" value="2" />
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL" value="mysql://root:secret@127.0.0.1/etraxis?charset=utf8mb4&amp;server_version=5.7" />

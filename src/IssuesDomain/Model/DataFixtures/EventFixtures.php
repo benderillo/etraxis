@@ -62,8 +62,9 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             'task:%s:1' => [
                 [EventType::ISSUE_CREATED,  $this->manager1,   0, 0,  'new'],
                 [EventType::ISSUE_EDITED,   $this->manager1,   0, 5,  null],
-                [EventType::STATE_CHANGED,  $this->manager1,   0, 15, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, 15, $this->developer1],
+                [EventType::FILE_ATTACHED,  $this->manager1,   0, 10, null],
+                [EventType::STATE_CHANGED,  $this->manager1,   0, 25, 'assigned'],
+                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, 25, $this->developer1],
                 [EventType::PUBLIC_COMMENT, $this->manager1,   1, 0,  null],
                 [EventType::ISSUE_CLOSED,   $this->developer1, 3, 0,  'completed'],
             ],
@@ -72,13 +73,15 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::ISSUE_CREATED,   $this->manager2,   0, 0,   'new'],
                 [EventType::STATE_CHANGED,   $this->manager1,   0, 10,  'assigned'],
                 [EventType::ISSUE_ASSIGNED,  $this->manager1,   0, 10,  $this->developer3],
+                [EventType::FILE_ATTACHED,   $this->manager1,   0, 15,  null],
                 [EventType::PUBLIC_COMMENT,  $this->manager1,   1, 0,   null],
                 [EventType::ISSUE_CLOSED,    $this->developer3, 2, 35,  'completed'],
                 [EventType::ISSUE_REOPENED,  $this->manager2,   2, 90,  'new'],
                 [EventType::STATE_CHANGED,   $this->manager2,   2, 95,  'assigned'],
                 [EventType::ISSUE_ASSIGNED,  $this->manager2,   2, 95,  $this->developer3],
                 [EventType::PRIVATE_COMMENT, $this->manager2,   2, 105, null],
-                [EventType::PUBLIC_COMMENT,  $this->developer3, 3, 60,  null],
+                [EventType::FILE_ATTACHED,   $this->developer3, 3, 60,  null],
+                [EventType::PUBLIC_COMMENT,  $this->developer3, 3, 65,  null],
             ],
 
             'task:%s:3' => [

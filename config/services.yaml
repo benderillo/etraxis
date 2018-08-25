@@ -7,6 +7,9 @@ parameters:
     mailer.name:     '%env(MAILER_NAME)%'
     mailer.delivery: '%env(MAILER_DELIVERY)%'
 
+    files.storage: '%env(FILES_STORAGE)%'
+    files.maxsize: '%env(FILES_MAXSIZE)%'
+
 services:
 
     _defaults:
@@ -20,6 +23,10 @@ services:
     eTraxis\SharedDomain\:
         resource: '../src/SharedDomain/{Framework,Application}/*'
         exclude:  '../src/SharedDomain/Framework/{Doctrine}'
+
+    # autowiring hints
+    eTraxis\IssuesDomain\Model\Repository\FileRepository:
+        $storage: '%files.storage%'
 
     # autowiring hints
     eTraxis\SharedDomain\Application\Mailer\Mailer:

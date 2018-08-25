@@ -73,6 +73,8 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_PUBLIC_COMMENT]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_PRIVATE_COMMENT]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::READ_PRIVATE_COMMENT]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ATTACH_FILE]));
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::DELETE_FILE]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::ADD_DEPENDENCY]));
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::REMOVE_DEPENDENCY]));
     }
@@ -434,6 +436,66 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issueC));
         self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $createdByDev3));
         self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $assignedToDev3));
+    }
+
+    public function testAttachFile()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::ATTACH_FILE, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::ATTACH_FILE, $assignedToDev3));
+
+        /** @var Issue $closed */
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::ATTACH_FILE, $closed));
+        $closed->template->frozenTime = 1;
+        self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $closed));
+    }
+
+    public function testDeleteFile()
+    {
+        // Template B is locked, template C is not.
+        // Template A is not locked, too, but the project is suspended.
+        [$issueA, $issueB, $issueC] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $suspended] = $this->repository->findBy(['subject' => 'Development task 5'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $closed]    = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
+
+        [/* skipping */, /* skipping */, $createdByDev3]  = $this->repository->findBy(['subject' => 'Development task 3'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $assignedToDev3] = $this->repository->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $issueA));
+        self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $issueB));
+        self::assertTrue($this->security->isGranted(IssueVoter::DELETE_FILE, $issueC));
+        self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $suspended));
+
+        $this->loginAs('akoepp@example.com');
+        self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $issueC));
+        self::assertTrue($this->security->isGranted(IssueVoter::DELETE_FILE, $createdByDev3));
+        self::assertTrue($this->security->isGranted(IssueVoter::DELETE_FILE, $assignedToDev3));
+
+        /** @var Issue $closed */
+        $this->loginAs('ldoyle@example.com');
+        self::assertTrue($this->security->isGranted(IssueVoter::DELETE_FILE, $closed));
+        $closed->template->frozenTime = 1;
+        self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $closed));
     }
 
     public function testAddDependency()

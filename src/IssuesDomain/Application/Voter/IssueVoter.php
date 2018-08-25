@@ -48,6 +48,8 @@ class IssueVoter extends Voter
     public const ADD_PUBLIC_COMMENT   = 'comment.public.add';
     public const ADD_PRIVATE_COMMENT  = 'comment.private.add';
     public const READ_PRIVATE_COMMENT = 'comment.private.read';
+    public const ATTACH_FILE          = 'file.attach';
+    public const DELETE_FILE          = 'file.delete';
     public const ADD_DEPENDENCY       = 'dependency.add';
     public const REMOVE_DEPENDENCY    = 'dependency.remove';
 
@@ -64,6 +66,8 @@ class IssueVoter extends Voter
         self::ADD_PUBLIC_COMMENT   => Issue::class,
         self::ADD_PRIVATE_COMMENT  => Issue::class,
         self::READ_PRIVATE_COMMENT => Issue::class,
+        self::ATTACH_FILE          => Issue::class,
+        self::DELETE_FILE          => Issue::class,
         self::ADD_DEPENDENCY       => Issue::class,
         self::REMOVE_DEPENDENCY    => Issue::class,
     ];
@@ -134,6 +138,12 @@ class IssueVoter extends Voter
 
             case self::READ_PRIVATE_COMMENT:
                 return $this->isReadPrivateCommentGranted($subject, $user);
+
+            case self::ATTACH_FILE:
+                return $this->isAttachFileGranted($subject, $user);
+
+            case self::DELETE_FILE:
+                return $this->isDeleteFileGranted($subject, $user);
 
             case self::ADD_DEPENDENCY:
                 return $this->isAddDependencyGranted($subject, $user);
@@ -466,6 +476,42 @@ class IssueVoter extends Voter
         return
             $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::PRIVATE_COMMENTS) ||
             $this->hasGroupPermission($subject->template, $user, TemplatePermission::PRIVATE_COMMENTS);
+    }
+
+    /**
+     * Whether a file can be attached to the specified issue.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isAttachFileGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended or frozen.
+        if ($subject->isSuspended || $subject->isFrozen) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::ATTACH_FILES);
+    }
+
+    /**
+     * Whether a file can be deleted from the specified issue.
+     *
+     * @param Issue $subject Subject issue.
+     * @param User  $user    Current user.
+     *
+     * @return bool
+     */
+    protected function isDeleteFileGranted(Issue $subject, User $user): bool
+    {
+        // Issue must not be suspended or frozen.
+        if ($subject->isSuspended || $subject->isFrozen) {
+            return false;
+        }
+
+        return $this->hasPermission($subject, $user, TemplatePermission::DELETE_FILES);
     }
 
     /**
