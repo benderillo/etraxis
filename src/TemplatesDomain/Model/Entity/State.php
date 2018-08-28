@@ -157,7 +157,7 @@ class State
                 return $this->type === StateType::FINAL ? StateResponsible::REMOVE : $this->responsible;
             },
 
-            'nextState' => function (): ?State {
+            'nextState' => function (): ?self {
                 return $this->type === StateType::FINAL ? null : $this->nextState;
             },
 
@@ -201,7 +201,7 @@ class State
                 }
             },
 
-            'nextState' => function (?State $value): void {
+            'nextState' => function (?self $value): void {
                 if ($value === null || $value->template === $this->template) {
                     $this->nextState = $value;
                 }
