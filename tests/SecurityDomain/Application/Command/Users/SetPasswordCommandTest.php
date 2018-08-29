@@ -18,7 +18,7 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
 class SetPasswordCommandTest extends TransactionalTestCase
 {
@@ -142,7 +142,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
 
         $command = new SetPasswordCommand([
             'user'     => $user->id,
-            'password' => str_repeat('*', BCryptPasswordEncoder::MAX_PASSWORD_LENGTH + 1),
+            'password' => str_repeat('*', BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1),
         ]);
 
         $this->commandbus->handle($command);

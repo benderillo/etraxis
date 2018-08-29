@@ -18,7 +18,7 @@ use eTraxis\Tests\TransactionalTestCase;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
 class ResetPasswordCommandTest extends TransactionalTestCase
 {
@@ -111,7 +111,7 @@ class ResetPasswordCommandTest extends TransactionalTestCase
 
         $command = new ResetPasswordCommand([
             'token'    => $token,
-            'password' => str_repeat('*', BCryptPasswordEncoder::MAX_PASSWORD_LENGTH + 1),
+            'password' => str_repeat('*', BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1),
         ]);
 
         $this->commandbus->handle($command);

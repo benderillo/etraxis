@@ -19,7 +19,7 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
-use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
 class CreateUserCommandTest extends TransactionalTestCase
 {
@@ -102,7 +102,7 @@ class CreateUserCommandTest extends TransactionalTestCase
 
         $command = new CreateUserCommand([
             'email'       => 'anna@example.com',
-            'password'    => str_repeat('*', BCryptPasswordEncoder::MAX_PASSWORD_LENGTH + 1),
+            'password'    => str_repeat('*', BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1),
             'fullname'    => 'Anna Rodygina',
             'description' => 'Very lovely Daughter',
             'admin'       => true,

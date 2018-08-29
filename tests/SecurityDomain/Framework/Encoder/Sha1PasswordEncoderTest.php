@@ -35,7 +35,7 @@ class Sha1PasswordEncoderTest extends TestCase
 
     public function testEncodePasswordMaxLength()
     {
-        $raw = str_pad(null, Md5PasswordEncoder::MAX_PASSWORD_LENGTH, '*');
+        $raw = str_repeat('*', Sha1PasswordEncoder::MAX_PASSWORD_LENGTH);
 
         try {
             $this->encoder->encodePassword($raw);
@@ -51,7 +51,7 @@ class Sha1PasswordEncoderTest extends TestCase
     {
         $this->expectException(BadCredentialsException::class);
 
-        $raw = str_pad(null, Md5PasswordEncoder::MAX_PASSWORD_LENGTH + 1, '*');
+        $raw = str_repeat('*', Sha1PasswordEncoder::MAX_PASSWORD_LENGTH + 1);
 
         $this->encoder->encodePassword($raw);
     }
