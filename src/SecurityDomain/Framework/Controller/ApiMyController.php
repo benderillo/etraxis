@@ -20,7 +20,11 @@ use Swagger\Annotations as API;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * API controller for '/my' resource.
@@ -31,6 +35,49 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiMyController extends Controller
 {
+    /**
+     * Sets new password for the current user.
+     *
+     * @Route("/password", name="api_password_set", methods={"PUT"})
+     *
+     * @API\Parameter(name="current", in="formData", type="string", required=true, description="Current password (up to 4096 characters).")
+     * @API\Parameter(name="new",     in="formData", type="string", required=true, description="New password (up to 4096 characters).")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @Api\Response(response=400, description="Wrong current password.<br>The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Password cannot be set for external accounts.")
+     *
+     * @param Request                      $request
+     * @param CommandBus                   $commandBus
+     * @param UserPasswordEncoderInterface $encoder
+     * @param TranslatorInterface          $translator
+     *
+     * @return JsonResponse
+     */
+    public function setPassword(Request $request, CommandBus $commandBus, UserPasswordEncoderInterface $encoder, TranslatorInterface $translator): JsonResponse
+    {
+        /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($user->isAccountExternal()) {
+            throw new AccessDeniedHttpException('Password cannot be set for external accounts.');
+        }
+
+        if (!$encoder->isPasswordValid($user, $request->request->get('current'))) {
+            throw new BadRequestHttpException($translator->trans('Bad credentials.'));
+        }
+
+        $command = new Command\SetPasswordCommand([
+            'user'     => $user->id,
+            'password' => $request->request->get('new'),
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
     /**
      * Returns profile of the current user.
      *
