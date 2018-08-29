@@ -16,6 +16,8 @@ namespace eTraxis\Tests;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as SymfonyWebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
@@ -74,5 +76,30 @@ class WebTestCase extends SymfonyWebTestCase
         }
 
         return $user;
+    }
+
+    /**
+     * Makes JSON request to specified URI.
+     *
+     * @param string $method  Request method.
+     * @param string $uri     Request URI.
+     * @param array  $data    Request parameters (for GET) or data payload (for POST/PUT/PATCH).
+     * @param array  $headers Additional headers to pass with request.
+     *
+     * @return Response
+     */
+    protected function json(string $method, string $uri, array $data = [], array $headers = []): Response
+    {
+        $headers['CONTENT_TYPE'] = 'application/json';
+
+        $parameters = $method === Request::METHOD_GET ? $data : [];
+
+        $content = $method === Request::METHOD_POST || $method === Request::METHOD_PUT || $method === Request::METHOD_PATCH
+            ? json_encode($data)
+            : null;
+
+        $this->client->request($method, $uri, $parameters, [], $headers, $content);
+
+        return $this->client->getResponse();
     }
 }
