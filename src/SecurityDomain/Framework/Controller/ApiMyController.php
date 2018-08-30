@@ -44,7 +44,7 @@ class ApiMyController extends Controller
      * @API\Parameter(name="new",     in="formData", type="string", required=true, description="New password (up to 4096 characters).")
      *
      * @API\Response(response=200, description="Success.")
-     * @Api\Response(response=400, description="Wrong current password.<br>The request is malformed.")
+     * @API\Response(response=400, description="Wrong current password.<br>The request is malformed.")
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Password cannot be set for external accounts.")
      *
@@ -81,22 +81,20 @@ class ApiMyController extends Controller
     /**
      * Returns profile of the current user.
      *
-     * # Sample response
-     * ```
-     * {
-     *     "id":       123,
-     *     "email":    "anna@example.com",
-     *     "fullname": "Anna Rodygina",
-     *     "provider": "eTraxis",
-     *     "locale":   "en_NZ",
-     *     "theme":    "azure",
-     *     "timezone": "Pacific/Auckland"
-     * }
-     * ```
-     *
      * @Route("/profile", name="api_profile_get", methods={"GET"})
      *
-     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="id",       type="integer", example=123),
+     *         @API\Property(property="email",    type="string",  example="anna@example.com"),
+     *         @API\Property(property="fullname", type="string",  example="Anna Rodygina"),
+     *         @API\Property(property="provider", type="string",  example="eTraxis"),
+     *         @API\Property(property="locale",   type="string",  example="en_NZ"),
+     *         @API\Property(property="theme",    type="string",  example="azure"),
+     *         @API\Property(property="timezone", type="string",  example="Pacific/Auckland")
+     *     }
+     * ))
      * @API\Response(response=401, description="Client is not authenticated.")
      *
      * @return JsonResponse
@@ -119,16 +117,16 @@ class ApiMyController extends Controller
      *
      * @Route("/profile", name="api_profile_update", methods={"PATCH"})
      *
-     * @API\Parameter(name="email",    in="formData", type="string", required=false, description="Email address (RFC 5322).<br>Ignored for external accounts.")
-     * @API\Parameter(name="fullname", in="formData", type="string", required=false, description="Full name (up to 50 characters).<br>Ignored for external accounts.")
+     * @API\Parameter(name="email",    in="formData", type="string", required=false, description="Email address (RFC 5322). Ignored for external accounts.")
+     * @API\Parameter(name="fullname", in="formData", type="string", required=false, description="Full name (up to 50 characters). Ignored for external accounts.")
      * @API\Parameter(name="locale",   in="formData", type="string", required=false, description="Locale ('xx' or 'xx_XX', see ISO 639-1 / ISO 3166-1).")
      * @API\Parameter(name="theme",    in="formData", type="string", required=false, description="Theme.")
      * @API\Parameter(name="timezone", in="formData", type="string", required=false, description="Timezone (IANA database value).")
      *
      * @API\Response(response=200, description="Success.")
-     * @Api\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=400, description="The request is malformed.")
      * @API\Response(response=401, description="Client is not authenticated.")
-     * @Api\Response(response=409, description="Account with specified email already exists.")
+     * @API\Response(response=409, description="Account with specified email already exists.")
      *
      * @param Request    $request
      * @param CommandBus $commandBus
