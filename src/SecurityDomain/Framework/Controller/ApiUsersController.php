@@ -14,6 +14,7 @@
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
+use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +32,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiUsersController extends Controller
 {
+    use CollectionTrait;
+
     /**
      * Returns list of users.
      *
@@ -92,17 +95,7 @@ class ApiUsersController extends Controller
      */
     public function listUsers(Request $request, UserRepository $repository): JsonResponse
     {
-        $offset = (int) $request->get('offset', 0);
-        $limit  = (int) $request->get('limit', UserRepository::MAX_LIMIT);
-
-        $offset = max(0, $offset);
-        $limit  = max(1, min($limit, UserRepository::MAX_LIMIT));
-
-        $search = $request->headers->get('X-Search');
-        $filter = json_decode($request->headers->get('X-Filter'), true);
-        $sort   = json_decode($request->headers->get('X-Sort'), true);
-
-        $collection = $repository->getCollection($offset, $limit, $search, $filter ?? [], $sort ?? []);
+        $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
     }
