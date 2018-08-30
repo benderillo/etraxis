@@ -16,6 +16,7 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 use eTraxis\SecurityDomain\Application\Command\Users as Command;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use League\Tactician\CommandBus;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,6 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * API controller for '/my' resource.
  *
  * @Route("/api/my")
+ * @Security("has_role('ROLE_USER')")
  *
  * @API\Tag(name="My Account")
  */
