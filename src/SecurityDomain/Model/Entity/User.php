@@ -51,7 +51,7 @@ use Webinarium\PropertyTrait;
  * @property      string      $timezone    User's timezone (see the "Timezone" dictionary).
  * @property-read Group[]     $groups      List of groups the user is member of.
  */
-class User implements UserInterface, EncoderAwareInterface
+class User implements UserInterface, EncoderAwareInterface, \JsonSerializable
 {
     use PropertyTrait;
     use UserTrait;
@@ -67,6 +67,19 @@ class User implements UserInterface, EncoderAwareInterface
     public const MAX_EMAIL       = 254;
     public const MAX_FULLNAME    = 50;
     public const MAX_DESCRIPTION = 100;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_EMAIL       = 'email';
+    public const JSON_FULLNAME    = 'fullname';
+    public const JSON_DESCRIPTION = 'description';
+    public const JSON_ADMIN       = 'admin';
+    public const JSON_DISABLED    = 'disabled';
+    public const JSON_LOCKED      = 'locked';
+    public const JSON_PROVIDER    = 'provider';
+    public const JSON_LOCALE      = 'locale';
+    public const JSON_THEME       = 'theme';
+    public const JSON_TIMEZONE    = 'timezone';
 
     /**
      * @var int
@@ -193,6 +206,26 @@ class User implements UserInterface, EncoderAwareInterface
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_EMAIL       => $this->email,
+            self::JSON_FULLNAME    => $this->fullname,
+            self::JSON_DESCRIPTION => $this->description,
+            self::JSON_ADMIN       => $this->isAdmin,
+            self::JSON_DISABLED    => !$this->isEnabled(),
+            self::JSON_LOCKED      => !$this->isAccountNonLocked(),
+            self::JSON_PROVIDER    => $this->account->provider,
+            self::JSON_LOCALE      => $this->locale,
+            self::JSON_THEME       => $this->theme,
+            self::JSON_TIMEZONE    => $this->timezone,
+        ];
     }
 
     /**

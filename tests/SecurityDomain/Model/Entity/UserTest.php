@@ -14,6 +14,9 @@
 namespace eTraxis\SecurityDomain\Model\Entity;
 
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
+use eTraxis\SecurityDomain\Model\Dictionary\Locale;
+use eTraxis\SecurityDomain\Model\Dictionary\Theme;
+use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -91,6 +94,32 @@ class UserTest extends TestCase
         // bcrypt
         $user->password = '$2y$13$892p0g2hOe1cW5m5YRr32uvNJLTsE4Y20IALX1EseRbi6a9zVFDFy';
         self::assertNull($user->getEncoderName());
+    }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'          => 123,
+            'email'       => 'anna@example.com',
+            'fullname'    => 'Anna Rodygina',
+            'description' => null,
+            'admin'       => false,
+            'disabled'    => false,
+            'locked'      => false,
+            'provider'    => AccountProvider::FALLBACK,
+            'locale'      => Locale::FALLBACK,
+            'theme'       => Theme::FALLBACK,
+            'timezone'    => Timezone::FALLBACK,
+        ];
+
+        $user = new User();
+
+        $this->setProperty($user, 'id', 123);
+
+        $user->email    = 'anna@example.com';
+        $user->fullname = 'Anna Rodygina';
+
+        self::assertSame($expected, $user->jsonSerialize());
     }
 
     public function testIsAdmin()
