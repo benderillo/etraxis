@@ -93,6 +93,38 @@ class ApiUsersController extends Controller
     }
 
     /**
+     * Creates new user.
+     *
+     * @Route("", name="api_users_create", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\CreateUserCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=409, description="Account with specified email already exists.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createUser(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\CreateUserCommand($request->request->all());
+
+        /** @var User $user */
+        $user = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_users_get', [
+            'id' => $user->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
+    }
+
+    /**
      * Disables specified users.
      *
      * @Route("/disable", name="api_users_disable", methods={"POST"})
@@ -163,38 +195,6 @@ class ApiUsersController extends Controller
     public function retrieveUser(User $user): JsonResponse
     {
         return $this->json($user);
-    }
-
-    /**
-     * Creates new user.
-     *
-     * @Route("", name="api_users_create", methods={"POST"})
-     *
-     * @API\Parameter(name="", in="body", @Model(type=Command\CreateUserCommand::class, groups={"api"}))
-     *
-     * @API\Response(response=201, description="Success.")
-     * @API\Response(response=400, description="The request is malformed.")
-     * @API\Response(response=401, description="Client is not authenticated.")
-     * @API\Response(response=403, description="Client is not authorized for this request.")
-     * @API\Response(response=409, description="Account with specified email already exists.")
-     *
-     * @param Request    $request
-     * @param CommandBus $commandBus
-     *
-     * @return JsonResponse
-     */
-    public function createUser(Request $request, CommandBus $commandBus): JsonResponse
-    {
-        $command = new Command\CreateUserCommand($request->request->all());
-
-        /** @var User $user */
-        $user = $commandBus->handle($command);
-
-        $url = $this->generateUrl('api_users_get', [
-            'id' => $user->id,
-        ], UrlGeneratorInterface::ABSOLUTE_URL);
-
-        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
 
     /**
