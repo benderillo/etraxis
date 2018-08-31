@@ -13,9 +13,11 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Application\Command\Users as Command;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
+use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
@@ -23,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * API controller for '/users' resource.
@@ -108,5 +111,37 @@ class ApiUsersController extends Controller
     public function retrieveUser(User $user): JsonResponse
     {
         return $this->json($user);
+    }
+
+    /**
+     * Creates new user.
+     *
+     * @Route("", name="api_users_create", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\CreateUserCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=409, description="Account with specified email already exists.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createUser(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\CreateUserCommand($request->request->all());
+
+        /** @var User $user */
+        $user = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_users_get', [
+            'id' => $user->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
 }
