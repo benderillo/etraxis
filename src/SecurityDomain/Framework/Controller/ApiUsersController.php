@@ -177,4 +177,32 @@ class ApiUsersController extends Controller
 
         return $this->json(null);
     }
+
+    /**
+     * Deletes specified user.
+     *
+     * @Route("/{id}", name="api_users_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function deleteUser(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\DeleteUserCommand([
+            'user' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
