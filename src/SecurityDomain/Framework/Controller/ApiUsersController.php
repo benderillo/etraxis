@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -86,5 +87,26 @@ class ApiUsersController extends Controller
         $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
+    }
+
+    /**
+     * Returns specified user.
+     *
+     * @Route("/{id}", name="api_users_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Response(response=200, description="Success.", @Model(type=eTraxis\SecurityDomain\Model\API\User::class))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function retrieveUser(User $user): JsonResponse
+    {
+        return $this->json($user);
     }
 }
