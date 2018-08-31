@@ -144,4 +144,37 @@ class ApiUsersController extends Controller
 
         return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
+
+    /**
+     * Updates specified user.
+     *
+     * @Route("/{id}", name="api_users_update", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\UpdateUserCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     * @API\Response(response=409, description="Account with specified email already exists.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function updateUser(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UpdateUserCommand($request->request->all());
+
+        $command->user = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
