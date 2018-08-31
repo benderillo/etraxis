@@ -80,7 +80,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -122,7 +122,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         $date = date_create();
         $date->setTimezone(timezone_open($user->timezone));
 
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertSame('Test issue', $issue->subject);
         self::assertSame('high', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Est dolorum omnis accusantium hic veritatis ut.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -142,7 +142,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_EDITED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertNull($event->parameter);
     }
 
@@ -183,7 +183,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -212,7 +212,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertSame('Test issue', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -232,7 +232,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_EDITED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertNull($event->parameter);
     }
 
@@ -273,7 +273,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('normal', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -307,7 +307,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertSame('Development task 1', $issue->subject);
         self::assertSame('high', $listRepository->find($values[$index['Priority']]->value)->text);
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $textRepository->find($values[$index['Description']]->value)->value);
@@ -327,7 +327,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_EDITED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertNull($event->parameter);
     }
 

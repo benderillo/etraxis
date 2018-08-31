@@ -36,6 +36,6 @@ class EventTest extends TestCase
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
         self::assertSame(1, $event->parameter);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
     }
 }

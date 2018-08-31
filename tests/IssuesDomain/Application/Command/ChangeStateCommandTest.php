@@ -63,7 +63,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertNotSame($assignee, $issue->responsible);
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertCount(3, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('New feature', $values[1]->field->name);
@@ -93,7 +93,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertSame($assignee, $issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertCount(4, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('Due date', $values[1]->field->name);
@@ -114,13 +114,13 @@ class ChangeStateCommandTest extends TransactionalTestCase
         self::assertSame(EventType::STATE_CHANGED, $event1->type);
         self::assertSame($issue, $event1->issue);
         self::assertSame($user, $event1->user);
-        self::assertLessThanOrEqual(1, time() - $event1->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event1->createdAt);
         self::assertSame($state->id, $event1->parameter);
 
         self::assertSame(EventType::ISSUE_ASSIGNED, $event2->type);
         self::assertSame($issue, $event2->issue);
         self::assertSame($user, $event2->user);
-        self::assertLessThanOrEqual(1, time() - $event2->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event2->createdAt);
         self::assertSame($assignee->id, $event2->parameter);
     }
 
@@ -151,7 +151,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertNotNull($issue->responsible);
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertCount(4, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('Due date', $values[1]->field->name);
@@ -179,7 +179,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertNull($issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertCount(5, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('Due date', $values[1]->field->name);
@@ -197,7 +197,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_CLOSED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertSame($state->id, $event->parameter);
     }
 
@@ -243,7 +243,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($issue);
 
         self::assertNull($issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertNull($issue->closedAt);
         self::assertCount(8, $issue->values);
         self::assertCount($events + 1, $issue->events);
@@ -254,7 +254,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_REOPENED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertSame($state->id, $event->parameter);
     }
 
@@ -282,7 +282,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertNotSame($assignee, $issue->responsible);
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertCount(3, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('New feature', $values[1]->field->name);
@@ -305,7 +305,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
         });
 
         self::assertSame($assignee, $issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertCount(4, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('Due date', $values[1]->field->name);
@@ -341,7 +341,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertGreaterThan(1, time() - $issue->changedAt);
+        self::assertGreaterThan(2, time() - $issue->changedAt);
         self::assertCount(4, $values);
         self::assertSame('Description', $values[0]->field->name);
         self::assertSame('Due date', $values[1]->field->name);
@@ -367,7 +367,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             return strcmp($value1->field->name, $value2->field->name);
         });
 
-        self::assertLessThanOrEqual(1, time() - $issue->changedAt);
+        self::assertLessThanOrEqual(2, time() - $issue->changedAt);
         self::assertCount(8, $values);
         self::assertSame('Commit ID', $values[0]->field->name);
         self::assertSame('Delta', $values[1]->field->name);

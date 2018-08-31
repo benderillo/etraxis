@@ -63,7 +63,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
 
         self::assertSame(EventType::ISSUE_ASSIGNED, $event->type);
         self::assertSame($issue, $event->issue);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertSame($user->id, $event->parameter);
     }
 

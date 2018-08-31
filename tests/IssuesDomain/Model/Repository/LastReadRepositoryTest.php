@@ -50,7 +50,7 @@ class LastReadRepositoryTest extends TransactionalTestCase
         ]);
 
         self::assertNotNull($read);
-        self::assertGreaterThan(1, time() - $read->readAt);
+        self::assertGreaterThan(2, time() - $read->readAt);
 
         $this->repository->markAsRead($issue, $user);
 
@@ -61,7 +61,7 @@ class LastReadRepositoryTest extends TransactionalTestCase
         ]);
 
         self::assertNotNull($read);
-        self::assertLessThanOrEqual(1, time() - $read->readAt);
+        self::assertLessThanOrEqual(2, time() - $read->readAt);
     }
 
     public function testMarkAsReadNew()
@@ -89,6 +89,6 @@ class LastReadRepositoryTest extends TransactionalTestCase
         ]);
 
         self::assertNotNull($read);
-        self::assertLessThanOrEqual(1, time() - $read->readAt);
+        self::assertLessThanOrEqual(2, time() - $read->readAt);
     }
 }

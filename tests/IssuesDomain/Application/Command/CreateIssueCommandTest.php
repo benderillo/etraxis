@@ -88,8 +88,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, time() - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(1, $issue->events);
@@ -99,7 +99,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_CREATED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($issue->author, $event->user);
-        self::assertLessThanOrEqual(1, $event->createdAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $event->createdAt - $issue->createdAt);
         self::assertSame($issue->state->id, $event->parameter);
 
         $values = array_filter($issue->values, function (FieldValue $value) use ($template) {
@@ -189,8 +189,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertSame('dquigley@example.com', $issue->responsible->email);
-        self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, time() - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(2, $issue->events);
@@ -207,7 +207,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_ASSIGNED, $event2->type);
         self::assertSame($issue, $event2->issue);
         self::assertSame($issue->author, $event2->user);
-        self::assertLessThanOrEqual(1, $event2->createdAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $event2->createdAt - $issue->createdAt);
         self::assertSame($issue->responsible->id, $event2->parameter);
     }
 
@@ -295,8 +295,8 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame($template->initialState, $issue->state);
         self::assertSame('nhills@example.com', $issue->author->email);
         self::assertNull($issue->responsible);
-        self::assertLessThanOrEqual(1, time() - $issue->createdAt);
-        self::assertLessThanOrEqual(1, $issue->changedAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, time() - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $issue->changedAt - $issue->createdAt);
         self::assertNull($issue->closedAt);
 
         self::assertCount(1, $issue->events);
@@ -306,7 +306,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
         self::assertSame(EventType::ISSUE_CREATED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($issue->author, $event->user);
-        self::assertLessThanOrEqual(1, $event->createdAt - $issue->createdAt);
+        self::assertLessThanOrEqual(2, $event->createdAt - $issue->createdAt);
         self::assertSame($issue->state->id, $event->parameter);
 
         $values = array_filter($issue->values, function (FieldValue $value) use ($template) {

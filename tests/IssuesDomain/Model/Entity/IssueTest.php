@@ -37,7 +37,7 @@ class IssueTest extends TestCase
 
         self::assertSame($user, $issue->author);
         self::assertNull($issue->origin);
-        self::assertLessThanOrEqual(1, time() - $createdAt);
+        self::assertLessThanOrEqual(2, time() - $createdAt);
         self::assertSame($createdAt, $changedAt);
 
         $clone = new Issue($user, $issue);
@@ -57,12 +57,12 @@ class IssueTest extends TestCase
         $this->setProperty($issue, 'changedAt', 0);
 
         $changedAt = $this->getProperty($issue, 'changedAt');
-        self::assertGreaterThan(1, time() - $changedAt);
+        self::assertGreaterThan(2, time() - $changedAt);
 
         $issue->touch();
 
         $changedAt = $this->getProperty($issue, 'changedAt');
-        self::assertLessThanOrEqual(1, time() - $changedAt);
+        self::assertLessThanOrEqual(2, time() - $changedAt);
     }
 
     public function testFullId()

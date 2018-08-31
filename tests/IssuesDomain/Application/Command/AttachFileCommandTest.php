@@ -89,7 +89,7 @@ class AttachFileCommandTest extends TransactionalTestCase
         self::assertSame(EventType::FILE_ATTACHED, $event->type);
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertNull($event->parameter);
 
         /** @var File $file */

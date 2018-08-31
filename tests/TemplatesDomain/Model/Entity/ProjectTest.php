@@ -24,7 +24,7 @@ class ProjectTest extends TestCase
     {
         $project = new Project();
 
-        self::assertLessThanOrEqual(1, time() - $project->createdAt);
+        self::assertLessThanOrEqual(2, time() - $project->createdAt);
     }
 
     public function testGroups()

@@ -69,7 +69,7 @@ class DeleteFileCommandTest extends TransactionalTestCase
         self::assertSame(EventType::FILE_DELETED, $event->type);
         self::assertSame($file->issue, $event->issue);
         self::assertSame($user, $event->user);
-        self::assertLessThanOrEqual(1, time() - $event->createdAt);
+        self::assertLessThanOrEqual(2, time() - $event->createdAt);
         self::assertSame($file->id, $event->parameter);
 
         /** @var File $file */

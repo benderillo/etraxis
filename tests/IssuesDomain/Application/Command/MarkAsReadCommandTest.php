@@ -52,7 +52,7 @@ class MarkAsReadCommandTest extends TransactionalTestCase
             'user'  => $user,
         ]);
 
-        self::assertGreaterThan(1, time() - $lastRead->readAt);
+        self::assertGreaterThan(2, time() - $lastRead->readAt);
 
         $count = count($this->doctrine->getRepository(LastRead::class)->findAll());
 
@@ -70,6 +70,6 @@ class MarkAsReadCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($lastRead);
 
         self::assertCount($count + 1, $this->doctrine->getRepository(LastRead::class)->findAll());
-        self::assertLessThanOrEqual(1, time() - $lastRead->readAt);
+        self::assertLessThanOrEqual(2, time() - $lastRead->readAt);
     }
 }
