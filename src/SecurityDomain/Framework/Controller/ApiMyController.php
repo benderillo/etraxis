@@ -14,8 +14,8 @@
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\SecurityDomain\Application\Command\Users as Command;
-use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use League\Tactician\CommandBus;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,11 +42,17 @@ class ApiMyController extends Controller
      *
      * @Route("/password", name="api_password_set", methods={"PUT"})
      *
-     * @API\Parameter(name="current", in="formData", type="string", required=true, description="Current password (up to 4096 characters).")
-     * @API\Parameter(name="new",     in="formData", type="string", required=true, description="New password (up to 4096 characters).")
+     * @API\Parameter(name="", in="body", @API\Schema(
+     *     type="object",
+     *     required={"current", "new"},
+     *     properties={
+     *         @API\Property(property="current", type="string", maxLength=4096, description="Current password."),
+     *         @API\Property(property="new",     type="string", maxLength=4096, description="New password.")
+     *     }
+     * ))
      *
      * @API\Response(response=200, description="Success.")
-     * @API\Response(response=400, description="Wrong current password.<br>The request is malformed.")
+     * @API\Response(response=400, description="Wrong current password, or The request is malformed.")
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Password cannot be set for external accounts.")
      *
@@ -85,18 +91,7 @@ class ApiMyController extends Controller
      *
      * @Route("/profile", name="api_profile_get", methods={"GET"})
      *
-     * @API\Response(response=200, description="Success.", @API\Schema(
-     *     type="object",
-     *     properties={
-     *         @API\Property(property="id",       type="integer", example=123),
-     *         @API\Property(property="email",    type="string",  example="anna@example.com"),
-     *         @API\Property(property="fullname", type="string",  example="Anna Rodygina"),
-     *         @API\Property(property="provider", type="string",  example="eTraxis"),
-     *         @API\Property(property="locale",   type="string",  example="en_NZ"),
-     *         @API\Property(property="theme",    type="string",  example="azure"),
-     *         @API\Property(property="timezone", type="string",  example="Pacific/Auckland")
-     *     }
-     * ))
+     * @API\Response(response=200, description="Success.", @Model(type=eTraxis\SecurityDomain\Model\API\Profile::class))
      * @API\Response(response=401, description="Client is not authenticated.")
      *
      * @return JsonResponse
@@ -110,7 +105,10 @@ class ApiMyController extends Controller
             'id'       => $user->id,
             'email'    => $user->email,
             'fullname' => $user->fullname,
-            'provider' => AccountProvider::get($user->account->provider),
+            'provider' => $user->account->provider,
+            'locale'   => $user->locale,
+            'theme'    => $user->theme,
+            'timezone' => $user->timezone,
         ]);
     }
 
@@ -119,11 +117,17 @@ class ApiMyController extends Controller
      *
      * @Route("/profile", name="api_profile_update", methods={"PATCH"})
      *
-     * @API\Parameter(name="email",    in="formData", type="string", required=false, description="Email address (RFC 5322). Ignored for external accounts.")
-     * @API\Parameter(name="fullname", in="formData", type="string", required=false, description="Full name (up to 50 characters). Ignored for external accounts.")
-     * @API\Parameter(name="locale",   in="formData", type="string", required=false, description="Locale ('xx' or 'xx_XX', see ISO 639-1 / ISO 3166-1).")
-     * @API\Parameter(name="theme",    in="formData", type="string", required=false, description="Theme.")
-     * @API\Parameter(name="timezone", in="formData", type="string", required=false, description="Timezone (IANA database value).")
+     * @API\Parameter(name="", in="body", @API\Schema(
+     *     type="object",
+     *     required={},
+     *     properties={
+     *         @API\Property(property="email",    type="string", maxLength=254, description="Email address (RFC 5322). Ignored for external accounts."),
+     *         @API\Property(property="fullname", type="string", maxLength=50, description="Full name. Ignored for external accounts."),
+     *         @API\Property(property="locale",   type="string", example="en_NZ", description="Locale (ISO 639-1 / ISO 3166-1)."),
+     *         @API\Property(property="theme",    type="string", enum={"azure", "emerald", "humanity", "mars"}, example="azure", description="Theme."),
+     *         @API\Property(property="timezone", type="string", example="Pacific/Auckland", description="Timezone (IANA database value).")
+     *     }
+     * ))
      *
      * @API\Response(response=200, description="Success.")
      * @API\Response(response=400, description="The request is malformed.")

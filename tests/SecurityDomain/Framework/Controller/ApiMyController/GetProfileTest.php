@@ -27,9 +27,12 @@ class GetProfileTest extends WebTestCase
 
         $expected = [
             'id'       => $user->id,
-            'email'    => $user->email,
-            'fullname' => $user->fullname,
-            'provider' => 'eTraxis',
+            'email'    => 'artem@example.com',
+            'fullname' => 'Artem Rodygin',
+            'provider' => 'etraxis',
+            'locale'   => 'en_US',
+            'theme'    => 'azure',
+            'timezone' => 'UTC',
         ];
 
         $this->loginAs('artem@example.com');
@@ -49,9 +52,12 @@ class GetProfileTest extends WebTestCase
 
         $expected = [
             'id'       => $user->id,
-            'email'    => $user->email,
-            'fullname' => $user->fullname,
-            'provider' => 'LDAP',
+            'email'    => 'einstein@ldap.forumsys.com',
+            'fullname' => 'Albert Einstein',
+            'provider' => 'ldap',
+            'locale'   => 'en_US',
+            'theme'    => 'azure',
+            'timezone' => 'UTC',
         ];
 
         $this->loginAs('einstein@ldap.forumsys.com');
