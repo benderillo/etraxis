@@ -257,6 +257,37 @@ class ApiUsersController extends Controller
     }
 
     /**
+     * Sets password for the specified user.
+     *
+     * @Route("/{id}/password", name="api_users_password", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\SetPasswordCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setPassword(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\SetPasswordCommand($request->request->all());
+
+        $command->user = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
      * Unlocks specified user.
      *
      * @Route("/{id}/unlock", name="api_users_unlock", methods={"POST"}, requirements={"id": "\d+"})
