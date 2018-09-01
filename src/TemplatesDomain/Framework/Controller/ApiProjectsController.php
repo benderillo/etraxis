@@ -139,4 +139,36 @@ class ApiProjectsController extends Controller
     {
         return $this->json($project);
     }
+
+    /**
+     * Updates specified project.
+     *
+     * @Route("/{id}", name="api_projects_update", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Project ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\UpdateProjectCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Project is not found.")
+     * @API\Response(response=409, description="Project with specified name already exists.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function updateProject(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UpdateProjectCommand($request->request->all());
+
+        $command->project = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
