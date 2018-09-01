@@ -30,11 +30,11 @@ class ProjectTest extends TestCase
     public function testJsonSerialize()
     {
         $expected = [
-            'id',
-            'name',
-            'description',
-            'created',
-            'suspended',
+            'id'          => 123,
+            'name'        => 'Project',
+            'description' => 'Test project',
+            'created'     => time(),
+            'suspended'   => false,
         ];
 
         $project = new Project();
@@ -44,15 +44,7 @@ class ProjectTest extends TestCase
         $project->name        = 'Project';
         $project->description = 'Test project';
 
-        $json = $project->jsonSerialize();
-
-        self::assertSame($expected, array_keys($json));
-
-        self::assertSame(123, $json[Project::JSON_ID]);
-        self::assertSame('Project', $json[Project::JSON_NAME]);
-        self::assertSame('Test project', $json[Project::JSON_DESCRIPTION]);
-        self::assertLessThanOrEqual(2, time() - $json[Project::JSON_CREATED]);
-        self::assertFalse($json[Project::JSON_SUSPENDED]);
+        self::assertSame($expected, $project->jsonSerialize());
     }
 
     public function testGroups()

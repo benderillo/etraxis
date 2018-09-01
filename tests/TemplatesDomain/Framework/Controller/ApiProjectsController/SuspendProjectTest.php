@@ -24,6 +24,7 @@ class SuspendProjectTest extends TransactionalTestCase
     {
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Molestiae']);
+        self::assertFalse($project->isSuspended);
 
         $this->loginAs('admin@example.com');
 

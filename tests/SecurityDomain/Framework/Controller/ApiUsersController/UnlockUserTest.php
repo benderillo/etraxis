@@ -24,6 +24,7 @@ class UnlockUserTest extends TransactionalTestCase
     {
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'jgutmann@example.com']);
+        self::assertFalse($user->isAccountNonLocked());
 
         $this->loginAs('admin@example.com');
 

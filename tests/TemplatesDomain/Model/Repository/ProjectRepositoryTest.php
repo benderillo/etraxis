@@ -62,7 +62,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(2, 10, null, [], [
+        $collection = $this->repository->getCollection(2, ProjectRepository::MAX_LIMIT, null, [], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
         ]);
 
@@ -107,7 +107,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, 'eSt', [], [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, 'eSt', [], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
         ]);
 
@@ -129,7 +129,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Molestiae',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
             Project::JSON_NAME => 'Ti',
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -152,7 +152,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
             Project::JSON_DESCRIPTION => ' d',
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -177,7 +177,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
             Project::JSON_SUSPENDED => false,
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -201,7 +201,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
             Project::JSON_NAME      => 'R',
             Project::JSON_SUSPENDED => false,
         ], [
@@ -228,7 +228,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Distinctio',
         ];
 
-        $collection = $this->repository->getCollection(0, 25, '', [], [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [], [
             Project::JSON_SUSPENDED => ProjectRepository::SORT_ASC,
             Project::JSON_NAME      => ProjectRepository::SORT_ASC,
         ]);

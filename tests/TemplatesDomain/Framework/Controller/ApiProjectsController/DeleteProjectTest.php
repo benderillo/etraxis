@@ -24,6 +24,7 @@ class DeleteProjectTest extends TransactionalTestCase
     {
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Presto']);
+        self::assertNotNull($project);
 
         $this->loginAs('admin@example.com');
 

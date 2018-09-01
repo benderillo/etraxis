@@ -27,6 +27,9 @@ class DisableUsersTest extends TransactionalTestCase
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
         $tberge = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'tberge@example.com']);
 
+        self::assertTrue($nhills->isEnabled());
+        self::assertFalse($tberge->isEnabled());
+
         $data = [
             'users' => [
                 $nhills->id,

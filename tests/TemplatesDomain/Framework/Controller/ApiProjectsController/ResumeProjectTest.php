@@ -24,6 +24,7 @@ class ResumeProjectTest extends TransactionalTestCase
     {
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
+        self::assertTrue($project->isSuspended);
 
         $this->loginAs('admin@example.com');
 

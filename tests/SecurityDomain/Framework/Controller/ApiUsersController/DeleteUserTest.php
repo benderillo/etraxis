@@ -24,6 +24,7 @@ class DeleteUserTest extends TransactionalTestCase
     {
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'hstroman@example.com']);
+        self::assertNotNull($user);
 
         $this->loginAs('admin@example.com');
 

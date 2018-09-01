@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller\ApiMyController;
 
+use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,14 @@ class SetPasswordTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
+        $encoder = $this->client->getContainer()->get('security.password_encoder');
+
+        /** @var User $user */
+        $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
+
+        self::assertTrue($encoder->isPasswordValid($user, 'secret'));
+
         $this->loginAs('nhills@example.com');
 
         $uri = '/api/my/password';
@@ -34,6 +43,8 @@ class SetPasswordTest extends TransactionalTestCase
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+        self::assertFalse($encoder->isPasswordValid($user, 'secret'));
+        self::assertTrue($encoder->isPasswordValid($user, 'P@ssw0rd'));
     }
 
     public function testBadCredentials()
