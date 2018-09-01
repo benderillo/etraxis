@@ -171,4 +171,31 @@ class ApiProjectsController extends Controller
 
         return $this->json(null);
     }
+
+    /**
+     * Deletes specified project.
+     *
+     * @Route("/{id}", name="api_projects_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Project ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function deleteProject(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\DeleteProjectCommand([
+            'project' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
