@@ -14,8 +14,10 @@
 namespace eTraxis\TemplatesDomain\Framework\Controller;
 
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
+use eTraxis\TemplatesDomain\Application\Command\Projects as Command;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Repository\ProjectRepository;
+use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
@@ -23,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * API controller for '/projects' resource.
@@ -82,6 +85,38 @@ class ApiProjectsController extends Controller
         $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
+    }
+
+    /**
+     * Creates new project.
+     *
+     * @Route("", name="api_projects_create", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\CreateProjectCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=409, description="Project with specified name already exists.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createProject(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\CreateProjectCommand($request->request->all());
+
+        /** @var Project $project */
+        $project = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_projects_get', [
+            'id' => $project->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
 
     /**
