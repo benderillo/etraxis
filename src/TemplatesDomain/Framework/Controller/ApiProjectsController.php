@@ -14,6 +14,7 @@
 namespace eTraxis\TemplatesDomain\Framework\Controller;
 
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
+use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Repository\ProjectRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -81,5 +82,26 @@ class ApiProjectsController extends Controller
         $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
+    }
+
+    /**
+     * Returns specified project.
+     *
+     * @Route("/{id}", name="api_projects_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Project ID.")
+     *
+     * @API\Response(response=200, description="Success.", @Model(type=eTraxis\TemplatesDomain\Model\API\Project::class))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Project is not found.")
+     *
+     * @param Project $project
+     *
+     * @return JsonResponse
+     */
+    public function getProject(Project $project): JsonResponse
+    {
+        return $this->json($project);
     }
 }
