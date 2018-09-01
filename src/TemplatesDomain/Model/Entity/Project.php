@@ -35,13 +35,20 @@ use Webinarium\PropertyTrait;
  * @property-read Group[]     $groups      List of project groups.
  * @property-read Template[]  $templates   List of project templates.
  */
-class Project
+class Project implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_NAME        = 25;
     public const MAX_DESCRIPTION = 100;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_NAME        = 'name';
+    public const JSON_DESCRIPTION = 'description';
+    public const JSON_CREATED     = 'created';
+    public const JSON_SUSPENDED   = 'suspended';
 
     /**
      * @var int
@@ -101,10 +108,25 @@ class Project
      */
     public function __construct()
     {
-        $this->createdAt = time();
+        $this->createdAt   = time();
+        $this->isSuspended = false;
 
         $this->groupsCollection    = new ArrayCollection();
         $this->templatesCollection = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_NAME        => $this->name,
+            self::JSON_DESCRIPTION => $this->description,
+            self::JSON_CREATED     => $this->createdAt,
+            self::JSON_SUSPENDED   => $this->isSuspended,
+        ];
     }
 
     /**

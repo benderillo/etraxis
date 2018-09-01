@@ -32,4 +32,215 @@ class ProjectRepositoryTest extends WebTestCase
     {
         self::assertInstanceOf(ProjectRepository::class, $this->repository);
     }
+
+    public function testGetCollectionDefault()
+    {
+        $expected = [
+            'Distinctio',
+            'Molestiae',
+            'Excepturi',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection();
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionOffset()
+    {
+        $expected = [
+            'Molestiae',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(2, 10, null, [], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(2, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionLimit()
+    {
+        $expected = [
+            'Distinctio',
+            'Excepturi',
+            'Molestiae',
+        ];
+
+        $collection = $this->repository->getCollection(0, 3, null, [], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(2, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSearch()
+    {
+        $expected = [
+            'Molestiae',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, 'eSt', [], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(1, $collection->to);
+        self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByName()
+    {
+        $expected = [
+            'Distinctio',
+            'Molestiae',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [
+            Project::JSON_NAME => 'Ti',
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(1, $collection->to);
+        self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByDescription()
+    {
+        $expected = [
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [
+            Project::JSON_DESCRIPTION => ' d',
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(0, $collection->to);
+        self::assertSame(1, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterBySuspended()
+    {
+        $expected = [
+            'Excepturi',
+            'Molestiae',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [
+            Project::JSON_SUSPENDED => false,
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(2, $collection->to);
+        self::assertSame(3, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionCombinedFilter()
+    {
+        $expected = [
+            'Excepturi',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [
+            Project::JSON_NAME      => 'R',
+            Project::JSON_SUSPENDED => false,
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(1, $collection->to);
+        self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSort()
+    {
+        $expected = [
+            'Excepturi',
+            'Molestiae',
+            'Presto',
+            'Distinctio',
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [], [
+            Project::JSON_SUSPENDED => ProjectRepository::SORT_ASC,
+            Project::JSON_NAME      => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
 }
