@@ -5,3 +5,7 @@ SecurityDomain:
 SharedDomain:
     resource: '../../src/SharedDomain/Framework/Controller/'
     type: annotation
+
+TemplatesDomain:
+    resource: '../../src/TemplatesDomain/Framework/Controller/'
+    type: annotation
