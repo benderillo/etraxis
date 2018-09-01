@@ -200,6 +200,34 @@ class ApiProjectsController extends Controller
     }
 
     /**
+     * Resumes specified project.
+     *
+     * @Route("/{id}/resume", name="api_projects_resume", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Project ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Project is not found.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function resumeProject(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\ResumeProjectCommand([
+            'project' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
      * Suspends specified project.
      *
      * @Route("/{id}/suspend", name="api_projects_suspend", methods={"POST"}, requirements={"id": "\d+"})
