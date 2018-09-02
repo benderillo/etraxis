@@ -200,4 +200,30 @@ class ApiGroupsController extends Controller
 
         return $this->json(null);
     }
+
+    /**
+     * Returns members for the specified group.
+     *
+     * @Route("/{id}/members", name="api_groups_members_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Group ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\SecurityDomain\Model\API\User::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Group is not found.")
+     *
+     * @param Group $group
+     *
+     * @return JsonResponse
+     */
+    public function getMembers(Group $group): JsonResponse
+    {
+        return $this->json($group->members);
+    }
 }
