@@ -32,13 +32,21 @@ class ListGroupsTest extends WebTestCase
             ['Support Engineers', 'Support Engineers B'],
             ['Managers',          'Managers C'],
             ['Developers',        'Developers C'],
+            ['Clients',           'Clients C'],
+            ['Support Engineers', 'Support Engineers C'],
+            ['Managers',          'Managers D'],
+            ['Developers',        'Developers D'],
+            ['Clients',           'Clients D'],
+            ['Support Engineers', 'Support Engineers D'],
+            ['Company Staff',     null],
+            ['Company Clients',   null],
         ];
 
         $this->loginAs('admin@example.com');
 
         $uri = '/api/groups';
 
-        $response = $this->json(Request::METHOD_GET, $uri, ['limit' => 10]);
+        $response = $this->json(Request::METHOD_GET, $uri);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
 
@@ -48,8 +56,11 @@ class ListGroupsTest extends WebTestCase
         }, $content['data']);
 
         self::assertSame(0, $content['from']);
-        self::assertSame(9, $content['to']);
+        self::assertSame(17, $content['to']);
         self::assertSame(18, $content['total']);
+
+        sort($expected);
+        sort($actual);
 
         self::assertSame($expected, $actual);
     }

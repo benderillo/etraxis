@@ -32,13 +32,38 @@ class ListUsersTest extends WebTestCase
             'Jeramy Mueller',
             'Derrick Tillman',
             'Hunter Stroman',
+            'Alyson Schinner',
+            'Denis Murazik',
+            'Leland Doyle',
+            'Dorcas Ernser',
+            'Berenice O\'Connell',
+            'Carolyn Hill',
+            'Dangelo Hill',
+            'Emmanuelle Bartell',
+            'Juanita Goodwin',
+            'Francesca Dooley',
+            'Lola Abshire',
+            'Dennis Quigley',
+            'Ansel Koepp',
+            'Christy McDermott',
+            'Anissa Marvin',
+            'Millie Bogisich',
+            'Tracy Marquardt',
+            'Bell Kemmer',
+            'Carter Batz',
+            'Kailyn Bahringer',
+            'Kyla Schultz',
+            'Vida Parker',
+            'Tony Buckridge',
+            'Nikko Hills',
+            'Jarrell Kiehn',
         ];
 
         $this->loginAs('admin@example.com');
 
         $uri = '/api/users';
 
-        $response = $this->json(Request::METHOD_GET, $uri, ['limit' => 10]);
+        $response = $this->json(Request::METHOD_GET, $uri);
 
         self::assertSame(Response::HTTP_OK, $response->getStatusCode());
 
@@ -48,8 +73,11 @@ class ListUsersTest extends WebTestCase
         }, $content['data']);
 
         self::assertSame(0, $content['from']);
-        self::assertSame(9, $content['to']);
+        self::assertSame(34, $content['to']);
         self::assertSame(35, $content['total']);
+
+        sort($expected);
+        sort($actual);
 
         self::assertSame($expected, $actual);
     }

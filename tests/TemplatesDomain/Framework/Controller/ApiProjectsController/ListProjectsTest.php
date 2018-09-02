@@ -45,6 +45,9 @@ class ListProjectsTest extends WebTestCase
         self::assertSame(3, $content['to']);
         self::assertSame(4, $content['total']);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 
