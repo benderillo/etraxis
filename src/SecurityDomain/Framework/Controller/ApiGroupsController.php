@@ -226,4 +226,66 @@ class ApiGroupsController extends Controller
     {
         return $this->json($group->members);
     }
+
+    /**
+     * Sets members for the specified group.
+     *
+     * @Route("/{id}/members", name="api_groups_members_set", methods={"PATCH"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Group ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     @API\Property(property="add", type="array", example={123, 456}, description="List of user IDs to add.",
+     *         @API\Items(type="integer")
+     *     ),
+     *     @API\Property(property="remove", type="array", example={123, 456}, description="List of user IDs to remove.",
+     *         @API\Items(type="integer")
+     *     )
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Group is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setMembers(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $add    = $request->request->get('add');
+        $remove = $request->request->get('remove');
+
+        $add    = is_array($add) ? $add : [];
+        $remove = is_array($remove) ? $remove : [];
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->getDoctrine()->getManager();
+        $manager->beginTransaction();
+
+        $command = new Command\AddMembersCommand([
+            'group' => $id,
+            'users' => array_diff($add, $remove),
+        ]);
+
+        if (count($command->users)) {
+            $commandBus->handle($command);
+        }
+
+        $command = new Command\RemoveMembersCommand([
+            'group' => $id,
+            'users' => array_diff($remove, $add),
+        ]);
+
+        if (count($command->users)) {
+            $commandBus->handle($command);
+        }
+
+        $manager->commit();
+
+        return $this->json(null);
+    }
 }
