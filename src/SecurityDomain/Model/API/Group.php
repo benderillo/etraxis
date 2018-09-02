@@ -1,0 +1,48 @@
+<?php
+
+//----------------------------------------------------------------------
+//
+//  Copyright (C) 2018 Artem Rodygin
+//
+//  This file is part of eTraxis.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with eTraxis. If not, see <http://www.gnu.org/licenses/>.
+//
+//----------------------------------------------------------------------
+
+namespace eTraxis\SecurityDomain\Model\API;
+
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Swagger\Annotations as API;
+
+/**
+ * Descriptive class for API annotations.
+ */
+class Group
+{
+    /**
+     * @API\Property(type="integer", example=123, description="Group ID.")
+     */
+    public $id;
+
+    /**
+     * @API\Property(type="object", ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class), description="Project of the group (null if the group is global).")
+     */
+    public $project;
+
+    /**
+     * @API\Property(type="string", example="Team", description="Name of the group.")
+     */
+    public $name;
+
+    /**
+     * @API\Property(type="string", example="Project developers", description="Optional description.")
+     */
+    public $description;
+
+    /**
+     * @API\Property(type="boolean", example=false, description="Whether the group is a global one.")
+     */
+    public $global;
+}
