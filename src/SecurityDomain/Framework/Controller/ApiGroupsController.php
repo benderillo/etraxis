@@ -141,4 +141,36 @@ class ApiGroupsController extends Controller
     {
         return $this->json($group);
     }
+
+    /**
+     * Updates specified group.
+     *
+     * @Route("/{id}", name="api_groups_update", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Group ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\UpdateGroupCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Group is not found.")
+     * @API\Response(response=409, description="Group with specified name already exists.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function updateGroup(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UpdateGroupCommand($request->request->all());
+
+        $command->group = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
