@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\SecurityDomain\Model\Repository\GroupRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -82,5 +83,26 @@ class ApiGroupsController extends Controller
         $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
+    }
+
+    /**
+     * Returns specified group.
+     *
+     * @Route("/{id}", name="api_groups_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Group ID.")
+     *
+     * @API\Response(response=200, description="Success.", @Model(type=eTraxis\SecurityDomain\Model\API\Group::class))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Group is not found.")
+     *
+     * @param Group $group
+     *
+     * @return JsonResponse
+     */
+    public function getGroup(Group $group): JsonResponse
+    {
+        return $this->json($group);
     }
 }
