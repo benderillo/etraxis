@@ -257,6 +257,32 @@ class ApiUsersController extends Controller
     }
 
     /**
+     * Returns groups for the specified user.
+     *
+     * @Route("/{id}/groups", name="api_users_groups_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\SecurityDomain\Model\API\Group::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param User $user
+     *
+     * @return JsonResponse
+     */
+    public function getGroups(User $user): JsonResponse
+    {
+        return $this->json($user->groups);
+    }
+
+    /**
      * Sets password for the specified user.
      *
      * @Route("/{id}/password", name="api_users_password", methods={"PUT"}, requirements={"id": "\d+"})
