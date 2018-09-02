@@ -33,6 +33,37 @@ class GroupTest extends TestCase
         self::assertNull($this->getProperty($group, 'project'));
     }
 
+    public function testJsonSerializeLocalGroup()
+    {
+        $expected = [
+            'id'          => 2,
+            'project'     => [
+                'id'          => 1,
+                'name'        => 'Project',
+                'description' => 'Test project',
+                'created'     => time(),
+                'suspended'   => false,
+            ],
+            'name'        => 'Team',
+            'description' => 'Project developers',
+            'global'      => false,
+        ];
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $project->name        = 'Project';
+        $project->description = 'Test project';
+
+        $group = new Group($project);
+        $this->setProperty($group, 'id', 2);
+
+        $group->name        = 'Team';
+        $group->description = 'Project developers';
+
+        self::assertSame($expected, $group->jsonSerialize());
+    }
+
     public function testMembers()
     {
         $group = new Group(new Project());

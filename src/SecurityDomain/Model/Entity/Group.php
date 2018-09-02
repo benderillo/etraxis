@@ -37,13 +37,20 @@ use Webinarium\PropertyTrait;
  * @property-read bool         $isGlobal    Whether the group is a global one.
  * @property-read User[]       $members     List of members.
  */
-class Group
+class Group implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_NAME        = 25;
     public const MAX_DESCRIPTION = 100;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_PROJECT     = 'project';
+    public const JSON_NAME        = 'name';
+    public const JSON_DESCRIPTION = 'description';
+    public const JSON_GLOBAL      = 'global';
 
     /**
      * @var int
@@ -57,7 +64,7 @@ class Group
     /**
      * @var Project
      *
-     * @ORM\ManyToOne(targetEntity="eTraxis\TemplatesDomain\Model\Entity\Project", inversedBy="groupsCollection")
+     * @ORM\ManyToOne(targetEntity="eTraxis\TemplatesDomain\Model\Entity\Project", inversedBy="groupsCollection", fetch="EAGER")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $project;
@@ -128,6 +135,20 @@ class Group
         $this->membersCollection->removeElement($user);
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_PROJECT     => $this->project === null ? null : $this->project->jsonSerialize(),
+            self::JSON_NAME        => $this->name,
+            self::JSON_DESCRIPTION => $this->description,
+            self::JSON_GLOBAL      => $this->isGlobal,
+        ];
     }
 
     /**
