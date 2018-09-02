@@ -173,4 +173,31 @@ class ApiGroupsController extends Controller
 
         return $this->json(null);
     }
+
+    /**
+     * Deletes specified group.
+     *
+     * @Route("/{id}", name="api_groups_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Group ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function deleteGroup(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\DeleteGroupCommand([
+            'group' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
 }
