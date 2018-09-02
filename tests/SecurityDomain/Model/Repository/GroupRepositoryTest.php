@@ -67,6 +67,9 @@ class GroupRepositoryTest extends WebTestCase
             return [$group->name, $group->description];
         }, $collection->data);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 

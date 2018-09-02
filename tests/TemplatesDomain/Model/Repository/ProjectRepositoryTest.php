@@ -52,6 +52,9 @@ class ProjectRepositoryTest extends WebTestCase
             return $project->name;
         }, $collection->data);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 

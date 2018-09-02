@@ -101,6 +101,9 @@ class UserRepositoryTest extends WebTestCase
             return $user->fullname;
         }, $collection->data);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 
@@ -474,25 +477,15 @@ class UserRepositoryTest extends WebTestCase
             ['Berenice O\'Connell', 'Manager A+C'],
             ['Emmanuelle Bartell',  'Manager B'],
             ['Carolyn Hill',        'Manager B+C'],
-            ['Juanita Goodwin',     'Manager C'],
-            ['Kyla Schultz',        'Support Engineer A'],
-            ['Jarrell Kiehn',       'Support Engineer A, Developer B, Manager C'],
-            ['Bell Kemmer',         'Support Engineer A+B'],
-            ['Nikko Hills',         'Support Engineer A+B, Developer C'],
-            ['Tracy Marquardt',     'Support Engineer A+B+C'],
-            ['Carter Batz',         'Support Engineer A+C'],
-            ['Vida Parker',         'Support Engineer B'],
-            ['Kailyn Bahringer',    'Support Engineer B+C'],
-            ['Tony Buckridge',      'Support Engineer C'],
         ];
 
-        $collection = $this->repository->getCollection(0, UserRepository::MAX_LIMIT, '', [], [
+        $collection = $this->repository->getCollection(0, 25, '', [], [
             User::JSON_DESCRIPTION => UserRepository::SORT_ASC,
             User::JSON_FULLNAME    => UserRepository::SORT_DESC,
         ]);
 
         self::assertSame(0, $collection->from);
-        self::assertSame(34, $collection->to);
+        self::assertSame(24, $collection->to);
         self::assertSame(35, $collection->total);
 
         $actual = array_map(function (User $user) {
