@@ -283,6 +283,68 @@ class ApiUsersController extends Controller
     }
 
     /**
+     * Sets groups for the specified user.
+     *
+     * @Route("/{id}/groups", name="api_users_groups_set", methods={"PATCH"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     @API\Property(property="add", type="array", example={123, 456}, description="List of group IDs to add.",
+     *         @API\Items(type="integer")
+     *     ),
+     *     @API\Property(property="remove", type="array", example={123, 456}, description="List of group IDs to remove.",
+     *         @API\Items(type="integer")
+     *     )
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setGroups(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $add    = $request->request->get('add');
+        $remove = $request->request->get('remove');
+
+        $add    = is_array($add) ? $add : [];
+        $remove = is_array($remove) ? $remove : [];
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->getDoctrine()->getManager();
+        $manager->beginTransaction();
+
+        $command = new Command\AddGroupsCommand([
+            'user'   => $id,
+            'groups' => array_diff($add, $remove),
+        ]);
+
+        if (count($command->groups)) {
+            $commandBus->handle($command);
+        }
+
+        $command = new Command\RemoveGroupsCommand([
+            'user'   => $id,
+            'groups' => array_diff($remove, $add),
+        ]);
+
+        if (count($command->groups)) {
+            $commandBus->handle($command);
+        }
+
+        $manager->commit();
+
+        return $this->json(null);
+    }
+
+    /**
      * Sets password for the specified user.
      *
      * @Route("/{id}/password", name="api_users_password", methods={"PUT"}, requirements={"id": "\d+"})
