@@ -143,7 +143,7 @@ class User implements UserInterface, EncoderAwareInterface, \JsonSerializable
      * @var ArrayCollection|Group[]
      *
      * @ORM\ManyToMany(targetEntity="Group", mappedBy="membersCollection")
-     * @ORM\OrderBy({"name": "ASC"})
+     * @ORM\OrderBy({"name": "ASC", "project": "ASC"})
      */
     protected $groupsCollection;
 
