@@ -27,12 +27,12 @@ class Group
     public $id;
 
     /**
-     * @API\Property(type="object", ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class), description="Project of the group (null if the group is global).")
+     * @API\Property(type="object", ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class), description="Group project (null if the group is global).")
      */
     public $project;
 
     /**
-     * @API\Property(type="string", example="Team", description="Name of the group.")
+     * @API\Property(type="string", example="Team", description="Group name.")
      */
     public $name;
 

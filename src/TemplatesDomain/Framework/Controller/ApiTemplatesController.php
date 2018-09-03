@@ -105,6 +105,7 @@ class ApiTemplatesController extends Controller
      * @API\Response(response=400, description="The request is malformed.")
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Project is not found.")
      * @API\Response(response=409, description="Template with specified name or prefix already exists.")
      *
      * @param Request    $request

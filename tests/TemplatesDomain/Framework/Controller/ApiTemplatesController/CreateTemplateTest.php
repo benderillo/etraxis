@@ -107,6 +107,26 @@ class CreateTemplateTest extends TransactionalTestCase
         self::assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
     }
 
+    public function test404()
+    {
+        $data = [
+            'project'     => self::UNKNOWN_ENTITY_ID,
+            'name'        => 'Bugfix',
+            'prefix'      => 'bug',
+            'description' => 'Error reports',
+            'criticalAge' => 5,
+            'frozenTime'  => 10,
+        ];
+
+        $this->loginAs('admin@example.com');
+
+        $uri = '/api/templates';
+
+        $response = $this->json(Request::METHOD_POST, $uri, $data);
+
+        self::assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
     public function test409()
     {
         /** @var Project $project */

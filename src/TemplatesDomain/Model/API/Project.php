@@ -26,7 +26,7 @@ class Project
     public $id;
 
     /**
-     * @API\Property(type="string", example="Project A", description="Name of the project.")
+     * @API\Property(type="string", example="Project A", description="Project name.")
      */
     public $name;
 

@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Framework\Controller\ApiTemplatesController;
 
+use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,16 +22,9 @@ class ListTemplatesTest extends WebTestCase
 {
     public function testSuccess()
     {
-        $expected = [
-            ['Development', 'Development Task A'],
-            ['Support',     'Support Request A'],
-            ['Development', 'Development Task B'],
-            ['Support',     'Support Request B'],
-            ['Development', 'Development Task C'],
-            ['Support',     'Support Request C'],
-            ['Development', 'Development Task D'],
-            ['Support',     'Support Request D'],
-        ];
+        $expected = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $this->doctrine->getRepository(Template::class)->findAll());
 
         $this->loginAs('admin@example.com');
 

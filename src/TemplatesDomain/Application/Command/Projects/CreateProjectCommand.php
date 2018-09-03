@@ -34,7 +34,7 @@ class CreateProjectCommand
      * @Assert\Length(max="25")
      *
      * @Groups("api")
-     * @API\Property(type="string", maxLength=25, example="Project A", description="Name of the project.")
+     * @API\Property(type="string", maxLength=25, example="Project A", description="Project name.")
      */
     public $name;
 

@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller\ApiGroupsController;
 
+use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,26 +22,9 @@ class ListGroupsTest extends WebTestCase
 {
     public function testSuccess()
     {
-        $expected = [
-            ['Managers',          'Managers A'],
-            ['Developers',        'Developers A'],
-            ['Clients',           'Clients A'],
-            ['Support Engineers', 'Support Engineers A'],
-            ['Managers',          'Managers B'],
-            ['Developers',        'Developers B'],
-            ['Clients',           'Clients B'],
-            ['Support Engineers', 'Support Engineers B'],
-            ['Managers',          'Managers C'],
-            ['Developers',        'Developers C'],
-            ['Clients',           'Clients C'],
-            ['Support Engineers', 'Support Engineers C'],
-            ['Managers',          'Managers D'],
-            ['Developers',        'Developers D'],
-            ['Clients',           'Clients D'],
-            ['Support Engineers', 'Support Engineers D'],
-            ['Company Staff',     null],
-            ['Company Clients',   null],
-        ];
+        $expected = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $this->doctrine->getRepository(Group::class)->findAll());
 
         $this->loginAs('admin@example.com');
 

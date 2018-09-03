@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Framework\Controller\ApiProjectsController;
 
+use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +22,9 @@ class ListProjectsTest extends WebTestCase
 {
     public function testSuccess()
     {
-        $expected = [
-            'Distinctio',
-            'Molestiae',
-            'Excepturi',
-            'Presto',
-        ];
+        $expected = array_map(function (Project $project) {
+            return $project->name;
+        }, $this->doctrine->getRepository(Project::class)->findAll());
 
         $this->loginAs('admin@example.com');
 

@@ -27,17 +27,17 @@ class Template
     public $id;
 
     /**
-     * @API\Property(type="object", ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class), description="Project of the template.")
+     * @API\Property(type="object", ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class), description="Template project.")
      */
     public $project;
 
     /**
-     * @API\Property(type="string", example="Bugfix", description="Name of the template.")
+     * @API\Property(type="string", example="Bugfix", description="Template name.")
      */
     public $name;
 
     /**
-     * @API\Property(type="string", example="bug", description="Prefix of the template (used as a prefix in ID of issues, created using this template).")
+     * @API\Property(type="string", example="bug", description="Template prefix (used as a prefix in ID of the issues, created using this template).")
      */
     public $prefix;
 
