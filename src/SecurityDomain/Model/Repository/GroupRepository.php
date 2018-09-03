@@ -138,7 +138,7 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(grp.name) LIKE LOWER(:name)');
-                    $query->setParameter('name', mb_strtolower("%{$value}%"));
+                    $query->setParameter('name', "%{$value}%");
                 }
 
                 break;
@@ -147,7 +147,7 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(grp.description) LIKE LOWER(:description)');
-                    $query->setParameter('description', mb_strtolower("%{$value}%"));
+                    $query->setParameter('description', "%{$value}%");
                 }
 
                 break;
@@ -175,7 +175,7 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
     {
         $map = [
             Group::JSON_ID          => 'grp.id',
-            Group::JSON_PROJECT     => 'grp.project.name',
+            Group::JSON_PROJECT     => 'project.name',
             Group::JSON_NAME        => 'grp.name',
             Group::JSON_DESCRIPTION => 'grp.description',
             Group::JSON_GLOBAL      => 'COALESCE(project.id - project.id, 1) = 1',

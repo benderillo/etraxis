@@ -139,7 +139,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(template.name) LIKE LOWER(:name)');
-                    $query->setParameter('name', mb_strtolower("%{$value}%"));
+                    $query->setParameter('name', "%{$value}%");
                 }
 
                 break;
@@ -148,7 +148,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(template.prefix) LIKE LOWER(:prefix)');
-                    $query->setParameter('prefix', mb_strtolower("%{$value}%"));
+                    $query->setParameter('prefix', "%{$value}%");
                 }
 
                 break;
@@ -157,14 +157,14 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(template.description) LIKE LOWER(:description)');
-                    $query->setParameter('description', mb_strtolower("%{$value}%"));
+                    $query->setParameter('description', "%{$value}%");
                 }
 
                 break;
 
             case Template::JSON_CRITICAL:
 
-                if (ctype_digit($value) !== 0) {
+                if (mb_strlen($value) !== 0) {
                     $query->andWhere('template.criticalAge = :criticalAge');
                     $query->setParameter('criticalAge', (int) $value);
                 }
@@ -173,7 +173,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_FROZEN:
 
-                if (ctype_digit($value) !== 0) {
+                if (mb_strlen($value) !== 0) {
                     $query->andWhere('template.frozenTime = :frozenTime');
                     $query->setParameter('frozenTime', (int) $value);
                 }
@@ -183,7 +183,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
             case Template::JSON_LOCKED:
 
                 $query->andWhere('template.isLocked = :locked');
-                $query->setParameter('locked', $value);
+                $query->setParameter('locked', (bool) $value);
 
                 break;
         }
@@ -204,7 +204,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
     {
         $map = [
             Template::JSON_ID          => 'template.id',
-            Template::JSON_PROJECT     => 'template.project.name',
+            Template::JSON_PROJECT     => 'project.name',
             Template::JSON_NAME        => 'template.name',
             Template::JSON_PREFIX      => 'template.prefix',
             Template::JSON_DESCRIPTION => 'template.description',

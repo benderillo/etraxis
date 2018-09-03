@@ -36,32 +36,15 @@ class GroupRepositoryTest extends WebTestCase
 
     public function testGetCollectionDefault()
     {
-        $expected = [
-            ['Managers',          'Managers A'],
-            ['Developers',        'Developers A'],
-            ['Clients',           'Clients A'],
-            ['Support Engineers', 'Support Engineers A'],
-            ['Managers',          'Managers B'],
-            ['Developers',        'Developers B'],
-            ['Clients',           'Clients B'],
-            ['Support Engineers', 'Support Engineers B'],
-            ['Managers',          'Managers C'],
-            ['Developers',        'Developers C'],
-            ['Clients',           'Clients C'],
-            ['Support Engineers', 'Support Engineers C'],
-            ['Managers',          'Managers D'],
-            ['Developers',        'Developers D'],
-            ['Clients',           'Clients D'],
-            ['Support Engineers', 'Support Engineers D'],
-            ['Company Staff',     null],
-            ['Company Clients',   null],
-        ];
-
         $collection = $this->repository->getCollection();
 
         self::assertSame(0, $collection->from);
         self::assertSame(17, $collection->to);
         self::assertSame(18, $collection->total);
+
+        $expected = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $this->repository->findAll());
 
         $actual = array_map(function (Group $group) {
             return [$group->name, $group->description];

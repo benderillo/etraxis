@@ -36,22 +36,15 @@ class TemplateRepositoryTest extends WebTestCase
 
     public function testGetCollectionDefault()
     {
-        $expected = [
-            ['Development', 'Development Task A'],
-            ['Support',     'Support Request A'],
-            ['Development', 'Development Task B'],
-            ['Support',     'Support Request B'],
-            ['Development', 'Development Task C'],
-            ['Support',     'Support Request C'],
-            ['Development', 'Development Task D'],
-            ['Support',     'Support Request D'],
-        ];
-
         $collection = $this->repository->getCollection();
 
         self::assertSame(0, $collection->from);
         self::assertSame(7, $collection->to);
         self::assertSame(8, $collection->total);
+
+        $expected = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $this->repository->findAll());
 
         $actual = array_map(function (Template $template) {
             return [$template->name, $template->description];

@@ -35,18 +35,15 @@ class ProjectRepositoryTest extends WebTestCase
 
     public function testGetCollectionDefault()
     {
-        $expected = [
-            'Distinctio',
-            'Molestiae',
-            'Excepturi',
-            'Presto',
-        ];
-
         $collection = $this->repository->getCollection();
 
         self::assertSame(0, $collection->from);
         self::assertSame(3, $collection->to);
         self::assertSame(4, $collection->total);
+
+        $expected = array_map(function (Project $project) {
+            return $project->name;
+        }, $this->repository->findAll());
 
         $actual = array_map(function (Project $project) {
             return $project->name;

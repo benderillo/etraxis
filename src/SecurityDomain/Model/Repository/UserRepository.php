@@ -151,7 +151,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(user.email) LIKE LOWER(:email)');
-                    $query->setParameter('email', mb_strtolower("%{$value}%"));
+                    $query->setParameter('email', "%{$value}%");
                 }
 
                 break;
@@ -160,7 +160,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(user.fullname) LIKE LOWER(:fullname)');
-                    $query->setParameter('fullname', mb_strtolower("%{$value}%"));
+                    $query->setParameter('fullname', "%{$value}%");
                 }
 
                 break;
@@ -169,7 +169,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(user.description) LIKE LOWER(:description)');
-                    $query->setParameter('description', mb_strtolower("%{$value}%"));
+                    $query->setParameter('description', "%{$value}%");
                 }
 
                 break;
@@ -184,7 +184,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             case User::JSON_DISABLED:
 
                 $query->andWhere('user.isEnabled = :enabled');
-                $query->setParameter('enabled', !$value);
+                $query->setParameter('enabled', (bool) !$value);
 
                 break;
 
@@ -214,7 +214,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
                 if (AccountProvider::has($value)) {
                     $query->andWhere('LOWER(user.account.provider) = LOWER(:provider)');
-                    $query->setParameter('provider', mb_strtolower($value));
+                    $query->setParameter('provider', $value);
                 }
 
                 break;

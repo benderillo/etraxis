@@ -125,7 +125,7 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(project.name) LIKE LOWER(:name)');
-                    $query->setParameter('name', mb_strtolower("%{$value}%"));
+                    $query->setParameter('name', "%{$value}%");
                 }
 
                 break;
@@ -134,7 +134,7 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
 
                 if (mb_strlen($value) !== 0) {
                     $query->andWhere('LOWER(project.description) LIKE LOWER(:description)');
-                    $query->setParameter('description', mb_strtolower("%{$value}%"));
+                    $query->setParameter('description', "%{$value}%");
                 }
 
                 break;
@@ -142,7 +142,7 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
             case Project::JSON_SUSPENDED:
 
                 $query->andWhere('project.isSuspended = :suspended');
-                $query->setParameter('suspended', $value);
+                $query->setParameter('suspended', (bool) $value);
 
                 break;
         }

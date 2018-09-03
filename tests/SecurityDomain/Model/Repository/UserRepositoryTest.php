@@ -53,49 +53,15 @@ class UserRepositoryTest extends WebTestCase
 
     public function testGetCollectionDefault()
     {
-        $expected = [
-            'eTraxis Admin',
-            'Artem Rodygin',
-            'Albert Einstein',
-            'Ted Berge',
-            'Joe Gutmann',
-            'Lucas O\'Connell',
-            'Carson Legros',
-            'Jeramy Mueller',
-            'Derrick Tillman',
-            'Hunter Stroman',
-            'Alyson Schinner',
-            'Denis Murazik',
-            'Leland Doyle',
-            'Dorcas Ernser',
-            'Berenice O\'Connell',
-            'Carolyn Hill',
-            'Dangelo Hill',
-            'Emmanuelle Bartell',
-            'Juanita Goodwin',
-            'Francesca Dooley',
-            'Lola Abshire',
-            'Dennis Quigley',
-            'Ansel Koepp',
-            'Christy McDermott',
-            'Anissa Marvin',
-            'Millie Bogisich',
-            'Tracy Marquardt',
-            'Bell Kemmer',
-            'Carter Batz',
-            'Kailyn Bahringer',
-            'Kyla Schultz',
-            'Vida Parker',
-            'Tony Buckridge',
-            'Nikko Hills',
-            'Jarrell Kiehn',
-        ];
-
         $collection = $this->repository->getCollection();
 
         self::assertSame(0, $collection->from);
         self::assertSame(34, $collection->to);
         self::assertSame(35, $collection->total);
+
+        $expected = array_map(function (User $user) {
+            return $user->fullname;
+        }, $this->repository->findAll());
 
         $actual = array_map(function (User $user) {
             return $user->fullname;
