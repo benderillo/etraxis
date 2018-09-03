@@ -43,12 +43,21 @@ use Webinarium\PropertyTrait;
  * @property-read StateGroupTransition[]  $groupTransitions  List of state group transitions.
  * @property-read StateResponsibleGroup[] $responsibleGroups List of responsible groups.
  */
-class State
+class State implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_NAME = 50;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_PROJECT     = 'project';
+    public const JSON_TEMPLATE    = 'template';
+    public const JSON_NAME        = 'name';
+    public const JSON_TYPE        = 'type';
+    public const JSON_RESPONSIBLE = 'responsible';
+    public const JSON_NEXT_STATE  = 'next_state';
 
     /**
      * @var int
@@ -137,13 +146,29 @@ class State
             throw new \UnexpectedValueException('Unknown state type: ' . $type);
         }
 
-        $this->template = $template;
-        $this->type     = $type;
+        $this->template    = $template;
+        $this->type        = $type;
+        $this->responsible = StateResponsible::REMOVE;
 
         $this->fieldsCollection            = new ArrayCollection();
         $this->roleTransitionsCollection   = new ArrayCollection();
         $this->groupTransitionsCollection  = new ArrayCollection();
         $this->responsibleGroupsCollection = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_TEMPLATE    => $this->template->jsonSerialize(),
+            self::JSON_NAME        => $this->name,
+            self::JSON_TYPE        => $this->type,
+            self::JSON_RESPONSIBLE => $this->responsible,
+            self::JSON_NEXT_STATE  => $this->nextState === null ? null : $this->nextState->id,
+        ];
     }
 
     /**
