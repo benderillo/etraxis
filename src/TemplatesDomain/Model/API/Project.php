@@ -36,7 +36,7 @@ class Project
     public $description;
 
     /**
-     * @API\Property(type="int", example=1089280800, description="Unix Epoch timestamp when the project has been registered.")
+     * @API\Property(type="integer", example=1089280800, description="Unix Epoch timestamp when the project has been registered.")
      */
     public $created;
 

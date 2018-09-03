@@ -11,37 +11,40 @@
 //
 //----------------------------------------------------------------------
 
-namespace eTraxis\SecurityDomain\Framework\Controller\ApiGroupsController;
+namespace eTraxis\TemplatesDomain\Framework\Controller\ApiTemplatesController;
 
-use eTraxis\SecurityDomain\Model\Entity\Group;
+use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class GetGroupTest extends TransactionalTestCase
+class GetTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
-        /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['description' => 'ASC']);
+        /** @var Template $template */
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['description' => 'ASC']);
 
         $expected = [
-            'id'          => $group->id,
+            'id'          => $template->id,
             'project'     => [
-                'id'          => $group->project->id,
+                'id'          => $template->project->id,
                 'name'        => 'Distinctio',
                 'description' => 'Project A',
-                'created'     => $group->project->createdAt,
+                'created'     => $template->project->createdAt,
                 'suspended'   => true,
             ],
-            'name'        => 'Managers',
-            'description' => 'Managers A',
-            'global'      => false,
+            'name'        => 'Support',
+            'prefix'      => 'req',
+            'description' => 'Support Request A',
+            'critical'    => 3,
+            'frozen'      => 7,
+            'locked'      => true,
         ];
 
         $this->loginAs('admin@example.com');
 
-        $uri = sprintf('/api/groups/%s', $group->id);
+        $uri = sprintf('/api/templates/%s', $template->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
 
@@ -51,10 +54,10 @@ class GetGroupTest extends TransactionalTestCase
 
     public function test401()
     {
-        /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['description' => 'ASC']);
+        /** @var Template $template */
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['description' => 'ASC']);
 
-        $uri = sprintf('/api/groups/%s', $group->id);
+        $uri = sprintf('/api/templates/%s', $template->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
 
@@ -63,12 +66,12 @@ class GetGroupTest extends TransactionalTestCase
 
     public function test403()
     {
-        /** @var Group $group */
-        [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['description' => 'ASC']);
+        /** @var Template $template */
+        [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['description' => 'ASC']);
 
         $this->loginAs('artem@example.com');
 
-        $uri = sprintf('/api/groups/%s', $group->id);
+        $uri = sprintf('/api/templates/%s', $template->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
 
@@ -79,7 +82,7 @@ class GetGroupTest extends TransactionalTestCase
     {
         $this->loginAs('admin@example.com');
 
-        $uri = sprintf('/api/groups/%s', self::UNKNOWN_ENTITY_ID);
+        $uri = sprintf('/api/templates/%s', self::UNKNOWN_ENTITY_ID);
 
         $response = $this->json(Request::METHOD_GET, $uri);
 
