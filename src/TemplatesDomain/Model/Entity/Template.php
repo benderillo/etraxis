@@ -51,7 +51,7 @@ use Webinarium\PropertyTrait;
  * @property-read TemplateRolePermission[]  $rolePermissions  List of template role permissions.
  * @property-read TemplateGroupPermission[] $groupPermissions List of template group permissions.
  */
-class Template
+class Template implements \JsonSerializable
 {
     use PropertyTrait;
 
@@ -59,6 +59,16 @@ class Template
     public const MAX_NAME        = 50;
     public const MAX_PREFIX      = 5;
     public const MAX_DESCRIPTION = 100;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_PROJECT     = 'project';
+    public const JSON_NAME        = 'name';
+    public const JSON_PREFIX      = 'prefix';
+    public const JSON_DESCRIPTION = 'description';
+    public const JSON_CRITICAL    = 'critical';
+    public const JSON_FROZEN      = 'frozen';
+    public const JSON_LOCKED      = 'locked';
 
     /**
      * @var int
@@ -148,11 +158,29 @@ class Template
      */
     public function __construct(Project $project)
     {
-        $this->project = $project;
+        $this->project  = $project;
+        $this->isLocked = true;
 
         $this->statesCollection           = new ArrayCollection();
         $this->rolePermissionsCollection  = new ArrayCollection();
         $this->groupPermissionsCollection = new ArrayCollection();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_PROJECT     => $this->project->jsonSerialize(),
+            self::JSON_NAME        => $this->name,
+            self::JSON_PREFIX      => $this->prefix,
+            self::JSON_DESCRIPTION => $this->description,
+            self::JSON_CRITICAL    => $this->criticalAge,
+            self::JSON_FROZEN      => $this->frozenTime,
+            self::JSON_LOCKED      => $this->isLocked,
+        ];
     }
 
     /**

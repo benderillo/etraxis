@@ -30,6 +30,42 @@ class TemplateTest extends TestCase
         self::assertSame($project, $this->getProperty($template, 'project'));
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'          => 2,
+            'project'     => [
+                'id'          => 1,
+                'name'        => 'Project',
+                'description' => 'Test project',
+                'created'     => time(),
+                'suspended'   => false,
+            ],
+            'name'        => 'Bugfix',
+            'prefix'      => 'bug',
+            'description' => 'Found bugs',
+            'critical'    => 5,
+            'frozen'      => null,
+            'locked'      => true,
+        ];
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $project->name        = 'Project';
+        $project->description = 'Test project';
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $template->name        = 'Bugfix';
+        $template->prefix      = 'bug';
+        $template->description = 'Found bugs';
+        $template->criticalAge = 5;
+
+        self::assertSame($expected, $template->jsonSerialize());
+    }
+
     public function testInitialState()
     {
         $template = new Template(new Project());
