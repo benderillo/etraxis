@@ -146,9 +146,6 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
-    "paragonie/random_compat": {
-        "version": "v2.0.11"
-    },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
     },
@@ -263,9 +260,6 @@
     "symfony/inflector": {
         "version": "v4.0.6"
     },
-    "symfony/lts": {
-        "version": "4-dev"
-    },
     "symfony/maker-bundle": {
         "version": "1.0",
         "recipe": {
@@ -301,9 +295,6 @@
             "version": "3.3",
             "ref": "179470cb6492db92dffee208cfdb436f175c93b4"
         }
-    },
-    "symfony/polyfill-ctype": {
-        "version": "v1.8.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.7.0"
