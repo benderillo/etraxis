@@ -13,6 +13,7 @@
 
 namespace eTraxis\IssuesDomain\Application\CommandHandler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\IssuesDomain\Application\Command\CreateIssueCommand;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
@@ -22,12 +23,12 @@ use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
-use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use eTraxis\TemplatesDomain\Model\Repository\TemplateRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -40,29 +41,31 @@ class CreateIssueHandler extends AbstractIssueHandler
     /**
      * Dependency Injection constructor.
      *
+     * @param TranslatorInterface           $translator
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param TokenStorageInterface         $tokens
      * @param UserRepository                $userRepository
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
-     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
+     * @param EntityManagerInterface        $manager
      * @param TemplateRepository            $templateRepository
      */
     public function __construct(
+        TranslatorInterface           $translator,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         TokenStorageInterface         $tokens,
         UserRepository                $userRepository,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
-        FieldRepository               $fieldRepository,
         FieldValueRepository          $valueRepository,
+        EntityManagerInterface        $manager,
         TemplateRepository            $templateRepository
     )
     {
-        parent::__construct($security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $fieldRepository, $valueRepository);
+        parent::__construct($translator, $security, $validator, $tokens, $userRepository, $issueRepository, $eventRepository, $valueRepository, $manager);
 
         $this->templateRepository = $templateRepository;
     }

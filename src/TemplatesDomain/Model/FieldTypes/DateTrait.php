@@ -29,7 +29,7 @@ trait DateTrait
      *
      * @return DateInterface
      */
-    public function asDate(): DateInterface
+    protected function asDate(): DateInterface
     {
         return new class($this, $this->parameters) implements DateInterface {
             protected const SECS_IN_DAY = 86400;

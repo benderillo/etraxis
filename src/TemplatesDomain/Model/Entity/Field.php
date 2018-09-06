@@ -14,9 +14,11 @@
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\FieldTypes;
+use eTraxis\TemplatesDomain\Model\FieldTypes\FieldInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Webinarium\PropertyTrait;
 
@@ -179,6 +181,60 @@ class Field
         if ($this->removedAt === null) {
             $this->removedAt = time();
         }
+    }
+
+    /**
+     * Returns field's facade corresponding to its type.
+     *
+     * @param EntityManagerInterface $manager
+     *
+     * @return FieldInterface
+     */
+    public function getFacade(EntityManagerInterface $manager): ?FieldInterface
+    {
+        switch ($this->type) {
+
+            case FieldType::CHECKBOX:
+                return $this->asCheckbox();
+
+            case FieldType::DATE:
+                return $this->asDate();
+
+            case FieldType::DECIMAL:
+                /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
+                $repository = $manager->getRepository(DecimalValue::class);
+
+                return $this->asDecimal($repository);
+
+            case FieldType::DURATION:
+                return $this->asDuration();
+
+            case FieldType::ISSUE:
+                return $this->asIssue();
+
+            case FieldType::LIST:
+                /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+                $repository = $manager->getRepository(ListItem::class);
+
+                return $this->asList($repository);
+
+            case FieldType::NUMBER:
+                return $this->asNumber();
+
+            case FieldType::STRING:
+                /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
+                $repository = $manager->getRepository(StringValue::class);
+
+                return $this->asString($repository);
+
+            case FieldType::TEXT:
+                /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
+                $repository = $manager->getRepository(TextValue::class);
+
+                return $this->asText($repository);
+        }
+
+        return null;
     }
 
     /**

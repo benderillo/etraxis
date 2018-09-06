@@ -37,6 +37,9 @@ class DateTraitTest extends WebTestCase
     /** @var Field */
     protected $object;
 
+    /** @var DateInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -48,108 +51,107 @@ class DateTraitTest extends WebTestCase
 
         $this->object = new Field($state, FieldType::DATE);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
-        $this->object->asDate()
+        $this->facade
             ->setMinimumValue(0)
             ->setMaximumValue(7);
 
         $now = time();
 
-        $errors = $this->validator->validate(date('Y-m-d', $now), $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(date('Y-m-d', $now), $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 7), $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 7), $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(date('Y-m-d', $now - self::SECS_IN_DAY), $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(date('Y-m-d', $now - self::SECS_IN_DAY), $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame(sprintf('\'Custom field\' should be in range from %s to %s.', date('n/j/y', $now), date('n/j/y', $now + self::SECS_IN_DAY * 7)), $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 8), $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(date('Y-m-d', $now + self::SECS_IN_DAY * 8), $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame(sprintf('\'Custom field\' should be in range from %s to %s.', date('n/j/y', $now), date('n/j/y', $now + self::SECS_IN_DAY * 7)), $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('2015-22-11', $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('2015-22-11', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asDate()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()
     {
-        $field      = $this->object->asDate();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(DateInterface::MIN_VALUE, DateInterface::MAX_VALUE);
         $min   = DateInterface::MIN_VALUE - 1;
         $max   = DateInterface::MAX_VALUE + 1;
 
-        $field->setMinimumValue($value);
-        self::assertSame($value, $field->getMinimumValue());
+        $this->facade->setMinimumValue($value);
+        self::assertSame($value, $this->facade->getMinimumValue());
         self::assertSame($value, $this->getProperty($parameters, 'parameter1'));
 
-        $field->setMinimumValue($min);
-        self::assertSame(DateInterface::MIN_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($min);
+        self::assertSame(DateInterface::MIN_VALUE, $this->facade->getMinimumValue());
 
-        $field->setMinimumValue($max);
-        self::assertSame(DateInterface::MAX_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($max);
+        self::assertSame(DateInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
     public function testMaximumValue()
     {
-        $field      = $this->object->asDate();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(DateInterface::MIN_VALUE, DateInterface::MAX_VALUE);
         $min   = DateInterface::MIN_VALUE - 1;
         $max   = DateInterface::MAX_VALUE + 1;
 
-        $field->setMaximumValue($value);
-        self::assertSame($value, $field->getMaximumValue());
+        $this->facade->setMaximumValue($value);
+        self::assertSame($value, $this->facade->getMaximumValue());
         self::assertSame($value, $this->getProperty($parameters, 'parameter2'));
 
-        $field->setMaximumValue($min);
-        self::assertSame(DateInterface::MIN_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($min);
+        self::assertSame(DateInterface::MIN_VALUE, $this->facade->getMaximumValue());
 
-        $field->setMaximumValue($max);
-        self::assertSame(DateInterface::MAX_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($max);
+        self::assertSame(DateInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
     public function testDefaultValue()
     {
-        $field      = $this->object->asDate();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(DateInterface::MIN_VALUE, DateInterface::MAX_VALUE);
         $min   = DateInterface::MIN_VALUE - 1;
         $max   = DateInterface::MAX_VALUE + 1;
 
-        $field->setDefaultValue($value);
-        self::assertSame($value, $field->getDefaultValue());
+        $this->facade->setDefaultValue($value);
+        self::assertSame($value, $this->facade->getDefaultValue());
         self::assertSame($value, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue($min);
-        self::assertSame(DateInterface::MIN_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($min);
+        self::assertSame(DateInterface::MIN_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue($max);
-        self::assertSame(DateInterface::MAX_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($max);
+        self::assertSame(DateInterface::MAX_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 }

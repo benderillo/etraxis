@@ -13,8 +13,14 @@
 
 namespace eTraxis\TemplatesDomain\Model\Entity;
 
+use Doctrine\ORM\EntityManager;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
+use eTraxis\TemplatesDomain\Model\FieldTypes;
+use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
+use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -41,6 +47,41 @@ class FieldTest extends TestCase
         $this->setProperty($state, 'id', 1);
 
         new Field($state, 'foo');
+    }
+
+    public function testGetFacade()
+    {
+        $expected = [
+            FieldType::CHECKBOX => FieldTypes\CheckboxInterface::class,
+            FieldType::DATE     => FieldTypes\DateInterface::class,
+            FieldType::DECIMAL  => FieldTypes\DecimalInterface::class,
+            FieldType::DURATION => FieldTypes\DurationInterface::class,
+            FieldType::ISSUE    => FieldTypes\IssueInterface::class,
+            FieldType::LIST     => FieldTypes\ListInterface::class,
+            FieldType::NUMBER   => FieldTypes\NumberInterface::class,
+            FieldType::STRING   => FieldTypes\StringInterface::class,
+            FieldType::TEXT     => FieldTypes\TextInterface::class,
+        ];
+
+        $manager = $this->createMock(EntityManager::class);
+        $manager
+            ->method('getRepository')
+            ->willReturnMap([
+                [DecimalValue::class, $this->createMock(DecimalValueRepository::class)],
+                [ListItem::class, $this->createMock(ListItemRepository::class)],
+                [StringValue::class, $this->createMock(StringValueRepository::class)],
+                [TextValue::class, $this->createMock(TextValueRepository::class)],
+            ]);
+
+        /** @var EntityManager $manager */
+        foreach ($expected as $type => $class) {
+            $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), $type);
+            self::assertInstanceOf($class, $field->getFacade($manager));
+        }
+
+        $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);
+        $this->setProperty($field, 'type', 'unknown');
+        self::assertNull($field->getFacade($manager));
     }
 
     public function testIsRemoved()

@@ -31,6 +31,9 @@ class ListTraitTest extends TransactionalTestCase
     /** @var Field */
     protected $object;
 
+    /** @var ListInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -44,48 +47,47 @@ class ListTraitTest extends TransactionalTestCase
         [$this->object] = $repository->findBy([
             'name' => 'Priority',
         ]);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
-        $repository = $this->doctrine->getRepository(ListItem::class);
-
-        $errors = $this->validator->validate(1, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(3, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(3, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(0, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(0, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should be greater than 0.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(4, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(4, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('The value you selected is not a valid choice.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(-1, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(-1, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(12.34, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(12.34, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('test', $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('test', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asList($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
@@ -114,19 +116,18 @@ class ListTraitTest extends TransactionalTestCase
             'value' => 2,
         ]);
 
-        $field      = $fields[0]->asList($itemRepository);
         $parameters = $this->getProperty($fields[0], 'parameters');
 
-        $field->setDefaultValue($item1);
-        self::assertSame($item1, $field->getDefaultValue());
+        $this->facade->setDefaultValue($item1);
+        self::assertSame($item1, $this->facade->getDefaultValue());
         self::assertSame($item1->id, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue($item2);
-        self::assertSame($item1, $field->getDefaultValue());
+        $this->facade->setDefaultValue($item2);
+        self::assertSame($item1, $this->facade->getDefaultValue());
         self::assertSame($item1->id, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 }

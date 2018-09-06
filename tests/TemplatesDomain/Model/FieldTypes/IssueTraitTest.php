@@ -35,6 +35,9 @@ class IssueTraitTest extends WebTestCase
     /** @var Field */
     protected $object;
 
+    /** @var IssueInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,38 +49,40 @@ class IssueTraitTest extends WebTestCase
 
         $this->object = new Field($state, FieldType::ISSUE);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
-        $errors = $this->validator->validate(1, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(0, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(0, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should be greater than 0.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(-1, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(-1, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(12.34, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(12.34, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('test', $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('test', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asIssue()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 }

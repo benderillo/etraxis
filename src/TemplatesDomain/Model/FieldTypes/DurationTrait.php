@@ -29,7 +29,7 @@ trait DurationTrait
      *
      * @return DurationInterface
      */
-    public function asDuration(): DurationInterface
+    protected function asDuration(): DurationInterface
     {
         return new class($this, $this->parameters) implements DurationInterface {
             protected $field;

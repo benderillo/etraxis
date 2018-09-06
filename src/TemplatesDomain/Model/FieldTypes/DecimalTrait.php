@@ -33,7 +33,7 @@ trait DecimalTrait
      *
      * @return DecimalInterface
      */
-    public function asDecimal(DecimalValueRepository $repository): DecimalInterface
+    protected function asDecimal(DecimalValueRepository $repository): DecimalInterface
     {
         return new class($repository, $this, $this->parameters) implements DecimalInterface {
             protected $repository;

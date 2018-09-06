@@ -27,7 +27,7 @@ trait IssueTrait
      *
      * @return IssueInterface
      */
-    public function asIssue(): IssueInterface
+    protected function asIssue(): IssueInterface
     {
         return new class($this) implements IssueInterface {
             protected $field;

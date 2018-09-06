@@ -35,6 +35,9 @@ class DurationTraitTest extends WebTestCase
     /** @var Field */
     protected $object;
 
+    /** @var DurationInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,44 +49,45 @@ class DurationTraitTest extends WebTestCase
 
         $this->object = new Field($state, FieldType::DURATION);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
-        $this->object->asDuration()
+        $this->facade
             ->setMinimumValue('0:00')
             ->setMaximumValue('24:00');
 
-        $errors = $this->validator->validate('0:00', $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('0:00', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('24:00', $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('24:00', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('24:01', $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('24:01', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('\'Custom field\' should be in range from 0:00 to 24:00.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('0:60', $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('0:60', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asDuration()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()
     {
-        $field      = $this->object->asDuration();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $duration = 866;
@@ -91,20 +95,19 @@ class DurationTraitTest extends WebTestCase
         $min      = '0:00';
         $max      = '999999:59';
 
-        $field->setMinimumValue($value);
-        self::assertSame($value, $field->getMinimumValue());
+        $this->facade->setMinimumValue($value);
+        self::assertSame($value, $this->facade->getMinimumValue());
         self::assertSame($duration, $this->getProperty($parameters, 'parameter1'));
 
-        $field->setMinimumValue($min);
-        self::assertSame($min, $field->getMinimumValue());
+        $this->facade->setMinimumValue($min);
+        self::assertSame($min, $this->facade->getMinimumValue());
 
-        $field->setMinimumValue($max);
-        self::assertSame($max, $field->getMinimumValue());
+        $this->facade->setMinimumValue($max);
+        self::assertSame($max, $this->facade->getMinimumValue());
     }
 
     public function testMaximumValue()
     {
-        $field      = $this->object->asDuration();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $duration = 866;
@@ -112,20 +115,19 @@ class DurationTraitTest extends WebTestCase
         $min      = '0:00';
         $max      = '999999:59';
 
-        $field->setMaximumValue($value);
-        self::assertSame($value, $field->getMaximumValue());
+        $this->facade->setMaximumValue($value);
+        self::assertSame($value, $this->facade->getMaximumValue());
         self::assertSame($duration, $this->getProperty($parameters, 'parameter2'));
 
-        $field->setMaximumValue($min);
-        self::assertSame($min, $field->getMaximumValue());
+        $this->facade->setMaximumValue($min);
+        self::assertSame($min, $this->facade->getMaximumValue());
 
-        $field->setMaximumValue($max);
-        self::assertSame($max, $field->getMaximumValue());
+        $this->facade->setMaximumValue($max);
+        self::assertSame($max, $this->facade->getMaximumValue());
     }
 
     public function testDefaultValue()
     {
-        $field      = $this->object->asDuration();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $duration = 866;
@@ -133,37 +135,33 @@ class DurationTraitTest extends WebTestCase
         $min      = '0:00';
         $max      = '999999:59';
 
-        $field->setDefaultValue($value);
-        self::assertSame($value, $field->getDefaultValue());
+        $this->facade->setDefaultValue($value);
+        self::assertSame($value, $this->facade->getDefaultValue());
         self::assertSame($duration, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue($min);
-        self::assertSame($min, $field->getDefaultValue());
+        $this->facade->setDefaultValue($min);
+        self::assertSame($min, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue($max);
-        self::assertSame($max, $field->getDefaultValue());
+        $this->facade->setDefaultValue($max);
+        self::assertSame($max, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 
     public function testToNumber()
     {
-        $field = $this->object->asDuration();
-
-        self::assertNull($field->toNumber(null));
-        self::assertNull($field->toNumber('0:99'));
-        self::assertSame(866, $field->toNumber('14:26'));
+        self::assertNull($this->facade->toNumber(null));
+        self::assertNull($this->facade->toNumber('0:99'));
+        self::assertSame(866, $this->facade->toNumber('14:26'));
     }
 
     public function testToString()
     {
-        $field = $this->object->asDuration();
-
-        self::assertNull($field->toString(null));
-        self::assertSame('0:00', $field->toString(DurationInterface::MIN_VALUE - 1));
-        self::assertSame('999999:59', $field->toString(DurationInterface::MAX_VALUE + 1));
-        self::assertSame('14:26', $field->toString(866));
+        self::assertNull($this->facade->toString(null));
+        self::assertSame('0:00', $this->facade->toString(DurationInterface::MIN_VALUE - 1));
+        self::assertSame('999999:59', $this->facade->toString(DurationInterface::MAX_VALUE + 1));
+        self::assertSame('14:26', $this->facade->toString(866));
     }
 }

@@ -13,13 +13,10 @@
 
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
-use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
-use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
-use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
-use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -40,26 +37,20 @@ class UpdateFieldHandler extends AbstractFieldHandler
      * Dependency Injection constructor.
      *
      * @param TranslatorInterface           $translator
-     * @param DecimalValueRepository        $decimalRepository
-     * @param StringValueRepository         $stringRepository
-     * @param TextValueRepository           $textRepository
-     * @param ListItemRepository            $listRepository
+     * @param EntityManagerInterface        $manager
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param FieldRepository               $repository
      */
     public function __construct(
         TranslatorInterface           $translator,
-        DecimalValueRepository        $decimalRepository,
-        StringValueRepository         $stringRepository,
-        TextValueRepository           $textRepository,
-        ListItemRepository            $listRepository,
+        EntityManagerInterface        $manager,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         FieldRepository               $repository
     )
     {
-        parent::__construct($translator, $decimalRepository, $stringRepository, $textRepository, $listRepository);
+        parent::__construct($translator, $manager);
 
         $this->security   = $security;
         $this->validator  = $validator;

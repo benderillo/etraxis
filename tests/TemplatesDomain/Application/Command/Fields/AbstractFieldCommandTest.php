@@ -15,10 +15,8 @@ namespace eTraxis\TemplatesDomain\Application\Command\Fields;
 
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
 use eTraxis\TemplatesDomain\Application\CommandHandler\Fields\AbstractFieldHandler;
-use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
-use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
@@ -29,20 +27,11 @@ class AbstractFieldCommandTest extends TransactionalTestCase
 {
     use ReflectionTrait;
 
+    /** @var \Doctrine\ORM\EntityManagerInterface */
+    protected $manager;
+
     /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository */
     protected $fieldRepository;
-
-    /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository */
-    protected $decimalRepository;
-
-    /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository */
-    protected $stringRepository;
-
-    /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository */
-    protected $textRepository;
-
-    /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository */
-    protected $listRepository;
 
     /** @var AbstractFieldHandler $handler */
     protected $handler;
@@ -51,16 +40,14 @@ class AbstractFieldCommandTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->fieldRepository   = $this->doctrine->getRepository(Field::class);
-        $this->decimalRepository = $this->doctrine->getRepository(DecimalValue::class);
-        $this->stringRepository  = $this->doctrine->getRepository(StringValue::class);
-        $this->textRepository    = $this->doctrine->getRepository(TextValue::class);
-        $this->listRepository    = $this->doctrine->getRepository(ListItem::class);
+        $this->manager = $this->doctrine->getManager();
+
+        $this->fieldRepository = $this->doctrine->getRepository(Field::class);
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->client->getContainer()->get('translator');
 
-        $this->handler = new DummyFieldHandler($translator, $this->decimalRepository, $this->stringRepository, $this->textRepository, $this->listRepository);
+        $this->handler = new DummyFieldHandler($translator, $this->manager);
     }
 
     public function testCopyAsCheckboxSuccess()
@@ -68,15 +55,18 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'New feature'], ['id' => 'ASC']);
 
-        self::assertFalse($field->asCheckbox()->getDefaultValue());
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\CheckboxInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertFalse($facade->getDefaultValue());
 
         $command = new Command\UpdateCheckboxFieldCommand([
             'defaultValue' => true,
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertTrue($field->asCheckbox()->getDefaultValue());
+        self::assertTrue($facade->getDefaultValue());
     }
 
     public function testCopyAsDateSuccess()
@@ -84,9 +74,12 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Due date'], ['id' => 'ASC']);
 
-        self::assertSame(0, $field->asDate()->getMinimumValue());
-        self::assertSame(14, $field->asDate()->getMaximumValue());
-        self::assertSame(14, $field->asDate()->getDefaultValue());
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DateInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame(0, $facade->getMinimumValue());
+        self::assertSame(14, $facade->getMaximumValue());
+        self::assertSame(14, $facade->getDefaultValue());
 
         $command = new Command\UpdateDateFieldCommand([
             'minimumValue' => '1',
@@ -94,11 +87,11 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '3',
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame(1, $field->asDate()->getMinimumValue());
-        self::assertSame(7, $field->asDate()->getMaximumValue());
-        self::assertSame(3, $field->asDate()->getDefaultValue());
+        self::assertSame(1, $facade->getMinimumValue());
+        self::assertSame(7, $facade->getMaximumValue());
+        self::assertSame(3, $facade->getDefaultValue());
     }
 
     public function testCopyAsDateMinMaxValuesError()
@@ -140,9 +133,12 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Test coverage'], ['id' => 'ASC']);
 
-        self::assertSame('0', $field->asDecimal($this->decimalRepository)->getMinimumValue());
-        self::assertSame('100', $field->asDecimal($this->decimalRepository)->getMaximumValue());
-        self::assertNull($field->asDecimal($this->decimalRepository)->getDefaultValue());
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DecimalInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame('0', $facade->getMinimumValue());
+        self::assertSame('100', $facade->getMaximumValue());
+        self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateDecimalFieldCommand([
             'minimumValue' => '1',
@@ -150,11 +146,11 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '5',
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame('1', $field->asDecimal($this->decimalRepository)->getMinimumValue());
-        self::assertSame('10', $field->asDecimal($this->decimalRepository)->getMaximumValue());
-        self::assertSame('5', $field->asDecimal($this->decimalRepository)->getDefaultValue());
+        self::assertSame('1', $facade->getMinimumValue());
+        self::assertSame('10', $facade->getMaximumValue());
+        self::assertSame('5', $facade->getDefaultValue());
     }
 
     public function testCopyAsDecimalMinMaxValuesError()
@@ -196,9 +192,12 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
-        self::assertSame('0:00', $field->asDuration()->getMinimumValue());
-        self::assertSame('999999:59', $field->asDuration()->getMaximumValue());
-        self::assertNull($field->asDuration()->getDefaultValue());
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame('0:00', $facade->getMinimumValue());
+        self::assertSame('999999:59', $facade->getMaximumValue());
+        self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateDurationFieldCommand([
             'minimumValue' => '0:01',
@@ -206,11 +205,11 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '0:30',
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame('0:01', $field->asDuration()->getMinimumValue());
-        self::assertSame('0:59', $field->asDuration()->getMaximumValue());
-        self::assertSame('0:30', $field->asDuration()->getDefaultValue());
+        self::assertSame('0:01', $facade->getMinimumValue());
+        self::assertSame('0:59', $facade->getMaximumValue());
+        self::assertSame('0:30', $facade->getDefaultValue());
     }
 
     public function testCopyAsDurationMinMaxValuesError()
@@ -261,29 +260,35 @@ class AbstractFieldCommandTest extends TransactionalTestCase
 
     public function testCopyAsListSuccess()
     {
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+        $repository = $this->doctrine->getRepository(ListItem::class);
+
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
-        /** @var ListItem $item */
-        [$item] = $this->listRepository->findBy(['value' => 2], ['id' => 'ASC']);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\ListInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
-        self::assertNull($field->asList($this->listRepository)->getDefaultValue());
+        /** @var ListItem $item */
+        [$item] = $repository->findBy(['value' => 2], ['id' => 'ASC']);
+
+        self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateListFieldCommand([
             'defaultValue' => $item->id,
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame($item, $field->asList($this->listRepository)->getDefaultValue());
+        self::assertSame($item, $facade->getDefaultValue());
 
         $command = new Command\UpdateListFieldCommand([
             'defaultValue' => null,
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertNull($field->asList($this->listRepository)->getDefaultValue());
+        self::assertNull($facade->getDefaultValue());
     }
 
     public function testCopyAsListUnknownItem()
@@ -304,11 +309,14 @@ class AbstractFieldCommandTest extends TransactionalTestCase
     {
         $this->expectException(NotFoundHttpException::class);
 
+        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
+        $repository = $this->doctrine->getRepository(ListItem::class);
+
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         /** @var ListItem $item */
-        [$item] = $this->listRepository->findBy(['value' => 2], ['id' => 'DESC']);
+        [$item] = $repository->findBy(['value' => 2], ['id' => 'DESC']);
 
         $command = new Command\UpdateListFieldCommand([
             'defaultValue' => $item->id,
@@ -322,9 +330,12 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
 
-        self::assertSame(0, $field->asNumber()->getMinimumValue());
-        self::assertSame(1000000000, $field->asNumber()->getMaximumValue());
-        self::assertNull($field->asNumber()->getDefaultValue());
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\NumberInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame(0, $facade->getMinimumValue());
+        self::assertSame(1000000000, $facade->getMaximumValue());
+        self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateNumberFieldCommand([
             'minimumValue' => -100000,
@@ -332,11 +343,11 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'defaultValue' => 100,
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame(-100000, $field->asNumber()->getMinimumValue());
-        self::assertSame(100000, $field->asNumber()->getMaximumValue());
-        self::assertSame(100, $field->asNumber()->getDefaultValue());
+        self::assertSame(-100000, $facade->getMinimumValue());
+        self::assertSame(100000, $facade->getMaximumValue());
+        self::assertSame(100, $facade->getDefaultValue());
     }
 
     public function testCopyAsNumberMinMaxValuesError()
@@ -378,11 +389,14 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Commit ID'], ['id' => 'ASC']);
 
-        self::assertSame(40, $field->asString($this->stringRepository)->getMaximumLength());
-        self::assertNull($field->asString($this->stringRepository)->getDefaultValue());
-        self::assertNull($field->asString($this->stringRepository)->getPCRE()->check);
-        self::assertNull($field->asString($this->stringRepository)->getPCRE()->search);
-        self::assertNull($field->asString($this->stringRepository)->getPCRE()->replace);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\StringInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame(40, $facade->getMaximumLength());
+        self::assertNull($facade->getDefaultValue());
+        self::assertNull($facade->getPCRE()->check);
+        self::assertNull($facade->getPCRE()->search);
+        self::assertNull($facade->getPCRE()->replace);
 
         $command = new Command\UpdateStringFieldCommand([
             'maximumLength' => 20,
@@ -392,13 +406,13 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame(20, $field->asString($this->stringRepository)->getMaximumLength());
-        self::assertSame('123-456-7890', $field->asString($this->stringRepository)->getDefaultValue());
-        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $field->asString($this->stringRepository)->getPCRE()->check);
-        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $field->asString($this->stringRepository)->getPCRE()->search);
-        self::assertSame('($1) $2-$3', $field->asString($this->stringRepository)->getPCRE()->replace);
+        self::assertSame(20, $facade->getMaximumLength());
+        self::assertSame('123-456-7890', $facade->getDefaultValue());
+        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $facade->getPCRE()->check);
+        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $facade->getPCRE()->search);
+        self::assertSame('($1) $2-$3', $facade->getPCRE()->replace);
     }
 
     public function testCopyAsStringDefaultValueLengthError()
@@ -444,11 +458,14 @@ class AbstractFieldCommandTest extends TransactionalTestCase
         /** @var Field $field */
         [$field] = $this->fieldRepository->findBy(['name' => 'Description'], ['id' => 'ASC']);
 
-        self::assertSame(TextValue::MAX_VALUE, $field->asText($this->textRepository)->getMaximumLength());
-        self::assertNull($field->asText($this->textRepository)->getDefaultValue());
-        self::assertNull($field->asText($this->textRepository)->getPCRE()->check);
-        self::assertNull($field->asText($this->textRepository)->getPCRE()->search);
-        self::assertNull($field->asText($this->textRepository)->getPCRE()->replace);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+        $facade = $field->getFacade($this->manager);
+
+        self::assertSame(TextValue::MAX_VALUE, $facade->getMaximumLength());
+        self::assertNull($facade->getDefaultValue());
+        self::assertNull($facade->getPCRE()->check);
+        self::assertNull($facade->getPCRE()->search);
+        self::assertNull($facade->getPCRE()->replace);
 
         $command = new Command\UpdateTextFieldCommand([
             'maximumLength' => 20,
@@ -458,13 +475,13 @@ class AbstractFieldCommandTest extends TransactionalTestCase
             'pcreReplace'   => '($1) $2-$3',
         ]);
 
-        $field = $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
+        $this->callMethod($this->handler, 'copyCommandToField', [$command, $field]);
 
-        self::assertSame(20, $field->asText($this->textRepository)->getMaximumLength());
-        self::assertSame('123-456-7890', $field->asText($this->textRepository)->getDefaultValue());
-        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $field->asText($this->textRepository)->getPCRE()->check);
-        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $field->asText($this->textRepository)->getPCRE()->search);
-        self::assertSame('($1) $2-$3', $field->asText($this->textRepository)->getPCRE()->replace);
+        self::assertSame(20, $facade->getMaximumLength());
+        self::assertSame('123-456-7890', $facade->getDefaultValue());
+        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $facade->getPCRE()->check);
+        self::assertSame('(\d{3})-(\d{3})-(\d{4})', $facade->getPCRE()->search);
+        self::assertSame('($1) $2-$3', $facade->getPCRE()->replace);
     }
 
     public function testCopyAsTextDefaultValueLengthError()

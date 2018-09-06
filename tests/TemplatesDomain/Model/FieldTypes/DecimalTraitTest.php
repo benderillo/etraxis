@@ -15,7 +15,6 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
-use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
@@ -36,6 +35,9 @@ class DecimalTraitTest extends TransactionalTestCase
     /** @var Field */
     protected $object;
 
+    /** @var DecimalInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -47,124 +49,111 @@ class DecimalTraitTest extends TransactionalTestCase
 
         $this->object = new Field($state, FieldType::DECIMAL);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-        $repository = $this->doctrine->getRepository(DecimalValue::class);
-
         $this->object->name = 'Custom field';
-        $this->object->asDecimal($repository)
+        $this->facade
             ->setMinimumValue('0')
             ->setMaximumValue('100');
 
-        $errors = $this->validator->validate('0', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('0', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('100', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('100', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('0.0000000000', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('0.0000000000', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('100.0000000000', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('100.0000000000', $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate('-0.000000001', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('-0.000000001', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('\'Custom field\' should be in range from 0 to 100.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('100.0000000001', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('100.0000000001', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('\'Custom field\' should be in range from 0 to 100.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('test', $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('test', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asDecimal($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-        $repository = $this->doctrine->getRepository(DecimalValue::class);
-
-        $field      = $this->object->asDecimal($repository);
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = '3.14159292';
         $min   = '-10000000000.00';
         $max   = '10000000000.00';
 
-        $field->setMinimumValue($value);
-        self::assertSame($value, $field->getMinimumValue());
+        $this->facade->setMinimumValue($value);
+        self::assertSame($value, $this->facade->getMinimumValue());
         self::assertNotNull($this->getProperty($parameters, 'parameter1'));
 
-        $field->setMinimumValue($min);
-        self::assertSame(DecimalInterface::MIN_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($min);
+        self::assertSame(DecimalInterface::MIN_VALUE, $this->facade->getMinimumValue());
 
-        $field->setMinimumValue($max);
-        self::assertSame(DecimalInterface::MAX_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($max);
+        self::assertSame(DecimalInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
     public function testMaximumValue()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-        $repository = $this->doctrine->getRepository(DecimalValue::class);
-
-        $field      = $this->object->asDecimal($repository);
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = '3.14159292';
         $min   = '-10000000000.00';
         $max   = '10000000000.00';
 
-        $field->setMaximumValue($value);
-        self::assertSame($value, $field->getMaximumValue());
+        $this->facade->setMaximumValue($value);
+        self::assertSame($value, $this->facade->getMaximumValue());
         self::assertNotNull($this->getProperty($parameters, 'parameter2'));
 
-        $field->setMaximumValue($min);
-        self::assertSame(DecimalInterface::MIN_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($min);
+        self::assertSame(DecimalInterface::MIN_VALUE, $this->facade->getMaximumValue());
 
-        $field->setMaximumValue($max);
-        self::assertSame(DecimalInterface::MAX_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($max);
+        self::assertSame(DecimalInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
     public function testDefaultValue()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-        $repository = $this->doctrine->getRepository(DecimalValue::class);
-
-        $field      = $this->object->asDecimal($repository);
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = '3.14159292';
         $min   = '-10000000000.00';
         $max   = '10000000000.00';
 
-        $field->setDefaultValue($value);
-        self::assertSame($value, $field->getDefaultValue());
+        $this->facade->setDefaultValue($value);
+        self::assertSame($value, $this->facade->getDefaultValue());
         self::assertNotNull($this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue($min);
-        self::assertSame(DecimalInterface::MIN_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($min);
+        self::assertSame(DecimalInterface::MIN_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue($max);
-        self::assertSame(DecimalInterface::MAX_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($max);
+        self::assertSame(DecimalInterface::MAX_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 }

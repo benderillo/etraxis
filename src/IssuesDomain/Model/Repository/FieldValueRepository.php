@@ -90,7 +90,10 @@ class FieldValueRepository extends ServiceEntityRepository
 
                 case FieldType::DURATION:
 
-                    return $fieldValue->field->asDuration()->toString($fieldValue->value);
+                    /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
+                    $facade = $fieldValue->field->getFacade($this->getEntityManager());
+
+                    return $facade->toString($fieldValue->value);
 
                 case FieldType::ISSUE:
 
@@ -160,7 +163,9 @@ class FieldValueRepository extends ServiceEntityRepository
                     break;
 
                 case FieldType::DURATION:
-                    $newValue = $field->asDuration()->toNumber($value);
+                    /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
+                    $facade   = $field->getFacade($this->getEntityManager());
+                    $newValue = $facade->toNumber($value);
                     break;
 
                 case FieldType::ISSUE:

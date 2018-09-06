@@ -35,6 +35,9 @@ class CheckboxTraitTest extends WebTestCase
     /** @var Field */
     protected $object;
 
+    /** @var CheckboxInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,28 +49,29 @@ class CheckboxTraitTest extends WebTestCase
 
         $this->object = new Field($state, FieldType::CHECKBOX);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
         $value = false;
-        self::assertCount(0, $this->validator->validate($value, $this->object->asCheckbox()->getValidationConstraints($this->translator)));
+        self::assertCount(0, $this->validator->validate($value, $this->facade->getValidationConstraints($this->translator)));
 
         $value = true;
-        self::assertCount(0, $this->validator->validate($value, $this->object->asCheckbox()->getValidationConstraints($this->translator)));
+        self::assertCount(0, $this->validator->validate($value, $this->facade->getValidationConstraints($this->translator)));
     }
 
     public function testDefaultValue()
     {
-        $field      = $this->object->asCheckbox();
         $parameters = $this->getProperty($this->object, 'parameters');
 
-        $field->setDefaultValue(true);
-        self::assertTrue($field->getDefaultValue());
+        $this->facade->setDefaultValue(true);
+        self::assertTrue($this->facade->getDefaultValue());
         self::assertSame(1, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue(false);
-        self::assertFalse($field->getDefaultValue());
+        $this->facade->setDefaultValue(false);
+        self::assertFalse($this->facade->getDefaultValue());
         self::assertSame(0, $this->getProperty($parameters, 'defaultValue'));
     }
 }

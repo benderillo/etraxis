@@ -20,7 +20,6 @@ use eTraxis\TemplatesDomain\Model\Entity\FieldPCRE;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
-use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
@@ -37,6 +36,9 @@ class TextTraitTest extends TransactionalTestCase
     /** @var Field */
     protected $object;
 
+    /** @var TextInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -48,94 +50,80 @@ class TextTraitTest extends TransactionalTestCase
 
         $this->object = new Field($state, FieldType::TEXT);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-        $repository = $this->doctrine->getRepository(TextValue::class);
+        $this->facade->setMaximumLength(2000);
+        $this->facade->getPCRE()->check = '(\*+)';
 
-        $this->object->asText($repository)->setMaximumLength(2000);
-        $this->object->asText($repository)->getPCRE()->check = '(\*+)';
-
-        $errors = $this->validator->validate(str_pad(null, 2000, '*'), $this->object->asText($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(str_pad(null, 2000, '*'), $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(str_pad(null, 2001, '*'), $this->object->asText($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(str_pad(null, 2001, '*'), $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is too long. It should have 2000 characters or less.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(str_pad(null, 2000, '-'), $this->object->asText($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(str_pad(null, 2000, '-'), $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asText($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asText($repository)->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
     public function testMaximumLength()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-        $repository = $this->doctrine->getRepository(TextValue::class);
-
-        $field      = $this->object->asText($repository);
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(TextInterface::MIN_LENGTH, TextInterface::MAX_LENGTH);
         $min   = TextInterface::MIN_LENGTH - 1;
         $max   = TextInterface::MAX_LENGTH + 1;
 
-        $field->setMaximumLength($value);
-        self::assertSame($value, $field->getMaximumLength());
+        $this->facade->setMaximumLength($value);
+        self::assertSame($value, $this->facade->getMaximumLength());
         self::assertSame($value, $this->getProperty($parameters, 'parameter1'));
 
-        $field->setMaximumLength($min);
-        self::assertSame(TextInterface::MIN_LENGTH, $field->getMaximumLength());
+        $this->facade->setMaximumLength($min);
+        self::assertSame(TextInterface::MIN_LENGTH, $this->facade->getMaximumLength());
 
-        $field->setMaximumLength($max);
-        self::assertSame(TextInterface::MAX_LENGTH, $field->getMaximumLength());
+        $this->facade->setMaximumLength($max);
+        self::assertSame(TextInterface::MAX_LENGTH, $this->facade->getMaximumLength());
     }
 
     public function testDefaultValue()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-        $repository = $this->doctrine->getRepository(TextValue::class);
-
-        $field      = $this->object->asText($repository);
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = 'eTraxis';
 
-        $field->setDefaultValue($value);
-        self::assertSame($value, $field->getDefaultValue());
+        $this->facade->setDefaultValue($value);
+        self::assertSame($value, $this->facade->getDefaultValue());
         self::assertNotNull($this->getProperty($parameters, 'defaultValue'));
 
         $huge = str_pad(null, TextInterface::MAX_LENGTH + 1);
         $trim = str_pad(null, TextInterface::MAX_LENGTH);
 
-        $field->setDefaultValue($huge);
-        self::assertSame($trim, $field->getDefaultValue());
+        $this->facade->setDefaultValue($huge);
+        self::assertSame($trim, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 
     public function testPCRE()
     {
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-        $repository = $this->doctrine->getRepository(TextValue::class);
-
-        $field = $this->object->asText($repository);
-
-        self::assertInstanceOf(FieldPCRE::class, $field->getPCRE());
+        self::assertInstanceOf(FieldPCRE::class, $this->facade->getPCRE());
     }
 }

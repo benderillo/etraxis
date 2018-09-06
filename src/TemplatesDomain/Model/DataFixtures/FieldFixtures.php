@@ -17,10 +17,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
-use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
-use eTraxis\TemplatesDomain\Model\Entity\StringValue;
-use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\TemplatesDomain\Model\FieldTypes\NumberInterface;
 use eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface;
 
@@ -59,10 +56,10 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'required'   => false,
                     'position'   => 2,
                     'parameters' => function (Field $field) use ($manager) {
-                        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-                        $repository = $manager->getRepository(TextValue::class);
-
-                        $field->asText($repository)
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMaximumLength(TextInterface::MAX_LENGTH);
                     },
                 ],
@@ -87,8 +84,11 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'name'       => 'Due date',
                     'required'   => false,
                     'position'   => 1,
-                    'parameters' => function (Field $field) {
-                        $field->asDate()
+                    'parameters' => function (Field $field) use ($manager) {
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DateInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMinimumValue(0)
                             ->setMaximumValue(14)
                             ->setDefaultValue(14);
@@ -103,10 +103,10 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'required'   => false,
                     'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {
-                        /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
-                        $repository = $manager->getRepository(StringValue::class);
-
-                        $field->asString($repository)
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\StringInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMaximumLength(40);
                     },
                 ],
@@ -116,8 +116,11 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'description' => 'NCLOC',
                     'required'    => true,
                     'position'    => 2,
-                    'parameters'  => function (Field $field) {
-                        $field->asNumber()
+                    'parameters'  => function (Field $field) use ($manager) {
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\NumberInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMinimumValue(0)
                             ->setMaximumValue(NumberInterface::MAX_VALUE);
                     },
@@ -128,8 +131,11 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'description' => 'HH:MM',
                     'required'    => true,
                     'position'    => 3,
-                    'parameters'  => function (Field $field) {
-                        $field->asDuration()
+                    'parameters'  => function (Field $field) use ($manager) {
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMinimumValue('0:00')
                             ->setMaximumValue('999999:59');
                     },
@@ -140,10 +146,10 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'required'   => false,
                     'position'   => 4,
                     'parameters' => function (Field $field) use ($manager) {
-                        /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
-                        $repository = $manager->getRepository(DecimalValue::class);
-
-                        $field->asDecimal($repository)
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DecimalInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMinimumValue('0')
                             ->setMaximumValue('100');
                     },
@@ -173,10 +179,10 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'required'   => true,
                     'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {
-                        /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */
-                        $repository = $manager->getRepository(TextValue::class);
-
-                        $field->asText($repository)
+                        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+                        $facade = $field->getFacade($manager);
+                        $facade
                             ->setMaximumLength(250);
                     },
                 ],

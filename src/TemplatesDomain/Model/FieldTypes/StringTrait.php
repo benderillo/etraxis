@@ -32,7 +32,7 @@ trait StringTrait
      *
      * @return StringInterface
      */
-    public function asString(StringValueRepository $repository): StringInterface
+    protected function asString(StringValueRepository $repository): StringInterface
     {
         return new class($repository, $this, $this->pcre, $this->parameters) implements StringInterface {
             protected $repository;

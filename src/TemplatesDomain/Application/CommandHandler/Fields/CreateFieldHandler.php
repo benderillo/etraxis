@@ -13,16 +13,13 @@
 
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
-use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
-use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
 use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
-use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
-use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -56,10 +53,7 @@ class CreateFieldHandler extends AbstractFieldHandler
      * Dependency Injection constructor.
      *
      * @param TranslatorInterface           $translator
-     * @param DecimalValueRepository        $decimalRepository
-     * @param StringValueRepository         $stringRepository
-     * @param TextValueRepository           $textRepository
-     * @param ListItemRepository            $listRepository
+     * @param EntityManagerInterface        $manager
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param StateRepository               $stateRepository
@@ -67,17 +61,14 @@ class CreateFieldHandler extends AbstractFieldHandler
      */
     public function __construct(
         TranslatorInterface           $translator,
-        DecimalValueRepository        $decimalRepository,
-        StringValueRepository         $stringRepository,
-        TextValueRepository           $textRepository,
-        ListItemRepository            $listRepository,
+        EntityManagerInterface        $manager,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         StateRepository               $stateRepository,
         FieldRepository               $fieldRepository
     )
     {
-        parent::__construct($translator, $decimalRepository, $stringRepository, $textRepository, $listRepository);
+        parent::__construct($translator, $manager);
 
         $this->security        = $security;
         $this->validator       = $validator;

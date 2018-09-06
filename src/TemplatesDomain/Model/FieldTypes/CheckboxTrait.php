@@ -28,7 +28,7 @@ trait CheckboxTrait
      *
      * @return CheckboxInterface
      */
-    public function asCheckbox(): CheckboxInterface
+    protected function asCheckbox(): CheckboxInterface
     {
         return new class($this, $this->parameters) implements CheckboxInterface {
             protected $field;

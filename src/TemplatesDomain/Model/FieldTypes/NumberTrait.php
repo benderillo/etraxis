@@ -28,7 +28,7 @@ trait NumberTrait
      *
      * @return NumberInterface
      */
-    public function asNumber(): NumberInterface
+    protected function asNumber(): NumberInterface
     {
         return new class($this, $this->parameters) implements NumberInterface {
             protected $field;

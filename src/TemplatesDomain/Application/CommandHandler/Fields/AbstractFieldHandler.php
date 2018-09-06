@@ -15,15 +15,13 @@
 
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractFieldCommand;
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
-use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
-use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
-use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
-use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
+use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -34,33 +32,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 class AbstractFieldHandler
 {
     protected $translator;
-    protected $decimalRepository;
-    protected $stringRepository;
-    protected $textRepository;
-    protected $listRepository;
+    protected $manager;
 
     /**
      * Dependency Injection constructor.
      *
      * @param TranslatorInterface    $translator
-     * @param DecimalValueRepository $decimalRepository
-     * @param StringValueRepository  $stringRepository
-     * @param TextValueRepository    $textRepository
-     * @param ListItemRepository     $listRepository
+     * @param EntityManagerInterface $manager
      */
-    public function __construct(
-        TranslatorInterface    $translator,
-        DecimalValueRepository $decimalRepository,
-        StringValueRepository  $stringRepository,
-        TextValueRepository    $textRepository,
-        ListItemRepository     $listRepository
-    )
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $manager)
     {
-        $this->translator        = $translator;
-        $this->decimalRepository = $decimalRepository;
-        $this->stringRepository  = $stringRepository;
-        $this->textRepository    = $textRepository;
-        $this->listRepository    = $listRepository;
+        $this->translator = $translator;
+        $this->manager    = $manager;
     }
 
     /**
@@ -101,7 +84,8 @@ class AbstractFieldHandler
     private function copyAsCheckbox(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\CheckboxCommandTrait $command */
-        $facade = $field->asCheckbox();
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\CheckboxInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         $facade->setDefaultValue($command->defaultValue);
 
@@ -119,7 +103,8 @@ class AbstractFieldHandler
     private function copyAsDate(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DateCommandTrait $command */
-        $facade = $field->asDate();
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DateInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         if ($command->minimumValue > $command->maximumValue) {
             throw new BadRequestHttpException($this->translator->trans('field.error.min_max_values'));
@@ -156,7 +141,8 @@ class AbstractFieldHandler
     private function copyAsDecimal(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DecimalCommandTrait $command */
-        $facade = $field->asDecimal($this->decimalRepository);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DecimalInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         if (bccomp($command->minimumValue, $command->maximumValue, DecimalValue::PRECISION) > 0) {
             throw new BadRequestHttpException($this->translator->trans('field.error.min_max_values'));
@@ -195,7 +181,8 @@ class AbstractFieldHandler
     private function copyAsDuration(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\DurationCommandTrait $command */
-        $facade = $field->asDuration();
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         $minimumValue = $facade->toNumber($command->minimumValue);
         $maximumValue = $facade->toNumber($command->maximumValue);
@@ -254,7 +241,8 @@ class AbstractFieldHandler
     private function copyAsList(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\ListCommandTrait $command */
-        $facade = $field->asList($this->listRepository);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\ListInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         if (get_parent_class($command) === AbstractUpdateFieldCommand::class) {
 
@@ -264,7 +252,7 @@ class AbstractFieldHandler
             }
             else {
                 /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
-                $item = $this->listRepository->find($command->defaultValue);
+                $item = $this->manager->getRepository(ListItem::class)->find($command->defaultValue);
 
                 if (!$item || $item->field !== $field) {
                     throw new NotFoundHttpException();
@@ -288,7 +276,8 @@ class AbstractFieldHandler
     private function copyAsNumber(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\NumberCommandTrait $command */
-        $facade = $field->asNumber();
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\NumberInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         if ($command->minimumValue > $command->maximumValue) {
             throw new BadRequestHttpException($this->translator->trans('field.error.min_max_values'));
@@ -325,7 +314,8 @@ class AbstractFieldHandler
     private function copyAsString(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\StringCommandTrait $command */
-        $facade = $field->asString($this->stringRepository);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\StringInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         $pcre = $facade->getPCRE();
 
@@ -363,7 +353,8 @@ class AbstractFieldHandler
     private function copyAsText(AbstractFieldCommand $command, Field $field): Field
     {
         /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\TextCommandTrait $command */
-        $facade = $field->asText($this->textRepository);
+        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+        $facade = $field->getFacade($this->manager);
 
         $pcre = $facade->getPCRE();
 

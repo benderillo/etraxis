@@ -32,7 +32,7 @@ trait TextTrait
      *
      * @return TextInterface
      */
-    public function asText(TextValueRepository $repository): TextInterface
+    protected function asText(TextValueRepository $repository): TextInterface
     {
         return new class($repository, $this, $this->pcre, $this->parameters) implements TextInterface {
             protected $repository;

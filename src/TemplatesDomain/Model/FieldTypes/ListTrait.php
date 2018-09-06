@@ -32,7 +32,7 @@ trait ListTrait
      *
      * @return ListInterface
      */
-    public function asList(ListItemRepository $repository): ListInterface
+    protected function asList(ListItemRepository $repository): ListInterface
     {
         return new class($repository, $this, $this->parameters) implements ListInterface {
             protected $repository;

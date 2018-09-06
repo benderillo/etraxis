@@ -35,6 +35,9 @@ class NumberTraitTest extends WebTestCase
     /** @var Field */
     protected $object;
 
+    /** @var NumberInterface */
+    protected $facade;
+
     protected function setUp()
     {
         parent::setUp();
@@ -46,110 +49,109 @@ class NumberTraitTest extends WebTestCase
 
         $this->object = new Field($state, FieldType::NUMBER);
         $this->setProperty($this->object, 'id', 1);
+
+        $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
-        $this->object->asNumber()
+        $this->facade
             ->setMinimumValue(1)
             ->setMaximumValue(100);
 
-        $errors = $this->validator->validate(1, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(100, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(100, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
 
-        $errors = $this->validator->validate(0, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(0, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('\'Custom field\' should be in range from 1 to 100.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(101, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(101, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('\'Custom field\' should be in range from 1 to 100.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate(12.34, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(12.34, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value is not valid.', $errors->get(0)->getMessage());
 
-        $errors = $this->validator->validate('test', $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate('test', $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should be a valid number.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = true;
 
-        $errors = $this->validator->validate(null, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertNotCount(0, $errors);
         self::assertSame('This value should not be blank.', $errors->get(0)->getMessage());
 
         $this->object->isRequired = false;
 
-        $errors = $this->validator->validate(null, $this->object->asNumber()->getValidationConstraints($this->translator));
+        $errors = $this->validator->validate(null, $this->facade->getValidationConstraints($this->translator));
         self::assertCount(0, $errors);
     }
 
     public function testMinimumValue()
     {
-        $field      = $this->object->asNumber();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(NumberInterface::MIN_VALUE, NumberInterface::MAX_VALUE);
         $min   = NumberInterface::MIN_VALUE - 1;
         $max   = NumberInterface::MAX_VALUE + 1;
 
-        $field->setMinimumValue($value);
-        self::assertSame($value, $field->getMinimumValue());
+        $this->facade->setMinimumValue($value);
+        self::assertSame($value, $this->facade->getMinimumValue());
         self::assertSame($value, $this->getProperty($parameters, 'parameter1'));
 
-        $field->setMinimumValue($min);
-        self::assertSame(NumberInterface::MIN_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($min);
+        self::assertSame(NumberInterface::MIN_VALUE, $this->facade->getMinimumValue());
 
-        $field->setMinimumValue($max);
-        self::assertSame(NumberInterface::MAX_VALUE, $field->getMinimumValue());
+        $this->facade->setMinimumValue($max);
+        self::assertSame(NumberInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
     public function testMaximumValue()
     {
-        $field      = $this->object->asNumber();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(NumberInterface::MIN_VALUE, NumberInterface::MAX_VALUE);
         $min   = NumberInterface::MIN_VALUE - 1;
         $max   = NumberInterface::MAX_VALUE + 1;
 
-        $field->setMaximumValue($value);
-        self::assertSame($value, $field->getMaximumValue());
+        $this->facade->setMaximumValue($value);
+        self::assertSame($value, $this->facade->getMaximumValue());
         self::assertSame($value, $this->getProperty($parameters, 'parameter2'));
 
-        $field->setMaximumValue($min);
-        self::assertSame(NumberInterface::MIN_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($min);
+        self::assertSame(NumberInterface::MIN_VALUE, $this->facade->getMaximumValue());
 
-        $field->setMaximumValue($max);
-        self::assertSame(NumberInterface::MAX_VALUE, $field->getMaximumValue());
+        $this->facade->setMaximumValue($max);
+        self::assertSame(NumberInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
     public function testDefaultValue()
     {
-        $field      = $this->object->asNumber();
         $parameters = $this->getProperty($this->object, 'parameters');
 
         $value = random_int(NumberInterface::MIN_VALUE, NumberInterface::MAX_VALUE);
         $min   = NumberInterface::MIN_VALUE - 1;
         $max   = NumberInterface::MAX_VALUE + 1;
 
-        $field->setDefaultValue($value);
-        self::assertSame($value, $field->getDefaultValue());
+        $this->facade->setDefaultValue($value);
+        self::assertSame($value, $this->facade->getDefaultValue());
         self::assertSame($value, $this->getProperty($parameters, 'defaultValue'));
 
-        $field->setDefaultValue($min);
-        self::assertSame(NumberInterface::MIN_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($min);
+        self::assertSame(NumberInterface::MIN_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue($max);
-        self::assertSame(NumberInterface::MAX_VALUE, $field->getDefaultValue());
+        $this->facade->setDefaultValue($max);
+        self::assertSame(NumberInterface::MAX_VALUE, $this->facade->getDefaultValue());
 
-        $field->setDefaultValue(null);
-        self::assertNull($field->getDefaultValue());
+        $this->facade->setDefaultValue(null);
+        self::assertNull($this->facade->getDefaultValue());
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 }

@@ -44,9 +44,6 @@ class ListItemFixtures extends Fixture implements DependentFixtureInterface
             3 => 'low',
         ];
 
-        /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
-        $repository = $manager->getRepository(ListItem::class);
-
         foreach (['a', 'b', 'c', 'd'] as $pref) {
 
             foreach ($data as $value => $text) {
@@ -59,7 +56,10 @@ class ListItemFixtures extends Fixture implements DependentFixtureInterface
                 $item->value = $value;
                 $item->text  = $text;
 
-                $field->asList($repository)->setDefaultValue($item);
+                /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+                /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\ListInterface $facade */
+                $facade = $field->getFacade($manager);
+                $facade->setDefaultValue($item);
 
                 $manager->persist($item);
             }

@@ -13,6 +13,7 @@
 
 namespace eTraxis\IssuesDomain\Application\CommandHandler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\IssuesDomain\Application\Command\UpdateIssueCommand;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
@@ -20,12 +21,12 @@ use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FieldValueRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
-use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -34,42 +35,46 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class UpdateIssueHandler
 {
+    protected $translator;
     protected $security;
     protected $validator;
     protected $tokens;
     protected $issueRepository;
     protected $eventRepository;
-    protected $fieldRepository;
     protected $valueRepository;
+    protected $manager;
 
     /**
      * Dependency Injection constructor.
      *
+     * @param TranslatorInterface           $translator
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator
      * @param TokenStorageInterface         $tokens
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
-     * @param FieldRepository               $fieldRepository
      * @param FieldValueRepository          $valueRepository
+     * @param EntityManagerInterface        $manager
      */
     public function __construct(
+        TranslatorInterface           $translator,
         AuthorizationCheckerInterface $security,
         ValidatorInterface            $validator,
         TokenStorageInterface         $tokens,
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
-        FieldRepository               $fieldRepository,
-        FieldValueRepository          $valueRepository
+        FieldValueRepository          $valueRepository,
+        EntityManagerInterface        $manager
     )
     {
+        $this->translator      = $translator;
         $this->security        = $security;
         $this->validator       = $validator;
         $this->tokens          = $tokens;
         $this->issueRepository = $issueRepository;
         $this->eventRepository = $eventRepository;
-        $this->fieldRepository = $fieldRepository;
         $this->valueRepository = $valueRepository;
+        $this->manager         = $manager;
     }
 
     /**
@@ -109,8 +114,10 @@ class UpdateIssueHandler
         $constraints = [];
 
         foreach ($issue->values as $fieldValue) {
-            $defaults[$fieldValue->field->id]    = $this->valueRepository->getFieldValue($fieldValue, $user);
-            $constraints[$fieldValue->field->id] = $this->fieldRepository->getValidationConstraints($fieldValue->field, $fieldValue->createdAt);
+            $field = $fieldValue->field;
+
+            $defaults[$field->id]    = $this->valueRepository->getFieldValue($fieldValue, $user);
+            $constraints[$field->id] = $field->getFacade($this->manager)->getValidationConstraints($this->translator, $fieldValue->createdAt);
         }
 
         $command->fields = $command->fields + $defaults;
