@@ -15,12 +15,40 @@ namespace eTraxis\SharedDomain\Application\Voter;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\User;
 
 class VoterTraitTest extends TestCase
 {
+    /** @var Voter */
+    protected $voter;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->voter = new class() extends Voter {
+            use VoterTrait;
+
+            public const CREATE = 'create';
+            public const UPDATE = 'update';
+            public const DELETE = 'delete';
+
+            protected $attributes = [
+                self::CREATE => null,
+                self::UPDATE => User::class,
+                self::DELETE => [User::class, Role::class],
+            ];
+
+            protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
+            {
+                return true;
+            }
+        };
+    }
+
     public function testSupportedAttribute()
     {
         $user = new User('artem', 'secret');
@@ -28,11 +56,10 @@ class VoterTraitTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = self::createMock(TokenInterface::class);
-        $voter = new DummyVoter();
 
-        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, ['create']));
-        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, $user, ['update']));
-        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, [$user, $role], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, null, ['create']));
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $user, ['update']));
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, [$user, $role], ['delete']));
     }
 
     public function testUnsupportedAttribute()
@@ -42,11 +69,10 @@ class VoterTraitTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = self::createMock(TokenInterface::class);
-        $voter = new DummyVoter();
 
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, ['unknown']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, $user, ['unknown']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$user, $role], ['unknown']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, null, ['unknown']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, $user, ['unknown']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$user, $role], ['unknown']));
     }
 
     public function testMissingClass()
@@ -56,16 +82,15 @@ class VoterTraitTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = self::createMock(TokenInterface::class);
-        $voter = new DummyVoter();
 
-        self::assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, ['create']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, ['update']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, null, ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$user], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$role], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$user, null], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [null, $role], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, null, ['create']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, null, ['update']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, null, ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$user], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$role], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$user, null], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [null, $role], ['delete']));
     }
 
     public function testWrongClass()
@@ -75,11 +100,10 @@ class VoterTraitTest extends TestCase
 
         /** @var TokenInterface $token */
         $token = self::createMock(TokenInterface::class);
-        $voter = new DummyVoter();
 
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, new \stdClass(), ['update']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$user, new \stdClass()], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [new \stdClass(), $role], ['delete']));
-        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote($token, [$role, $user], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, new \stdClass(), ['update']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$user, new \stdClass()], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [new \stdClass(), $role], ['delete']));
+        self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$role, $user], ['delete']));
     }
 }

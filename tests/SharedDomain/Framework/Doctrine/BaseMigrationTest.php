@@ -30,7 +30,7 @@ class BaseMigrationTest extends TestCase
         $expected = '4.0.0';
 
         $version   = $this->getVersion(MySqlPlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         self::assertSame($expected, $migration->getVersion());
         self::assertSame($expected, $migration->getDescription());
@@ -39,7 +39,7 @@ class BaseMigrationTest extends TestCase
     public function testIsMysql()
     {
         $version   = $this->getVersion(MySqlPlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         self::assertTrue($migration->isMysql());
         self::assertFalse($migration->isPostgresql());
@@ -48,7 +48,7 @@ class BaseMigrationTest extends TestCase
     public function testIsPostgresql()
     {
         $version   = $this->getVersion(PostgreSqlPlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         self::assertTrue($migration->isPostgresql());
         self::assertFalse($migration->isMysql());
@@ -58,7 +58,7 @@ class BaseMigrationTest extends TestCase
     {
         $schema    = new Schema();
         $version   = $this->getVersion(MySqlPlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         $this->expectOutputString('migrating up');
         $migration->preUp($schema);
@@ -69,7 +69,7 @@ class BaseMigrationTest extends TestCase
     {
         $schema    = new Schema();
         $version   = $this->getVersion(MySqlPlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         $this->expectOutputString('migrating down');
         $migration->preDown($schema);
@@ -83,7 +83,7 @@ class BaseMigrationTest extends TestCase
 
         $schema    = new Schema();
         $version   = $this->getVersion(SqlitePlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         $migration->preUp($schema);
         $migration->up($schema);
@@ -96,7 +96,7 @@ class BaseMigrationTest extends TestCase
 
         $schema    = new Schema();
         $version   = $this->getVersion(SqlitePlatform::class);
-        $migration = new DummyMigration($version);
+        $migration = $this->getMigration($version);
 
         $migration->preDown($schema);
         $migration->down($schema);
@@ -124,5 +124,25 @@ class BaseMigrationTest extends TestCase
 
         /** @var Version $version */
         return $version;
+    }
+
+    protected function getMigration(Version $version)
+    {
+        return new class($version) extends BaseMigration {
+            public function getVersion(): string
+            {
+                return '4.0.0';
+            }
+
+            public function up(Schema $schema)
+            {
+                echo 'migrating up';
+            }
+
+            public function down(Schema $schema)
+            {
+                echo 'migrating down';
+            }
+        };
     }
 }
