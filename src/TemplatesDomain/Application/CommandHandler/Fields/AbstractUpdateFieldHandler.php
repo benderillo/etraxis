@@ -14,8 +14,10 @@
 namespace eTraxis\TemplatesDomain\Application\CommandHandler\Fields;
 
 use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractFieldCommand;
 use eTraxis\TemplatesDomain\Application\Command\Fields\AbstractUpdateFieldCommand;
 use eTraxis\TemplatesDomain\Application\Voter\FieldVoter;
+use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -25,37 +27,51 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Command handler.
+ * Abstract "Update field" command handler.
  */
-class UpdateFieldHandler extends AbstractFieldHandler
+abstract class AbstractUpdateFieldHandler
 {
     protected $security;
+    protected $translator;
     protected $validator;
     protected $repository;
+    protected $manager;
 
     /**
      * Dependency Injection constructor.
      *
-     * @param TranslatorInterface           $translator
-     * @param EntityManagerInterface        $manager
      * @param AuthorizationCheckerInterface $security
+     * @param TranslatorInterface           $translator
      * @param ValidatorInterface            $validator
      * @param FieldRepository               $repository
+     * @param EntityManagerInterface        $manager
      */
     public function __construct(
-        TranslatorInterface           $translator,
-        EntityManagerInterface        $manager,
         AuthorizationCheckerInterface $security,
+        TranslatorInterface           $translator,
         ValidatorInterface            $validator,
-        FieldRepository               $repository
+        FieldRepository               $repository,
+        EntityManagerInterface        $manager
     )
     {
-        parent::__construct($translator, $manager);
-
         $this->security   = $security;
+        $this->translator = $translator;
         $this->validator  = $validator;
         $this->repository = $repository;
+        $this->manager    = $manager;
     }
+
+    /**
+     * Copies field-specific parameters from create/update command to specified field.
+     *
+     * @param TranslatorInterface    $translator
+     * @param EntityManagerInterface $manager
+     * @param AbstractFieldCommand   $command
+     * @param Field                  $field
+     *
+     * @return Field Updated field entity.
+     */
+    abstract protected function copyCommandToField(TranslatorInterface $translator, EntityManagerInterface $manager, AbstractFieldCommand $command, Field $field): Field;
 
     /**
      * Command handler.
@@ -66,7 +82,7 @@ class UpdateFieldHandler extends AbstractFieldHandler
      * @throws ConflictHttpException
      * @throws NotFoundHttpException
      */
-    public function handle(AbstractUpdateFieldCommand $command): void
+    protected function update(AbstractUpdateFieldCommand $command): void
     {
         /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Field $field */
         $field = $this->repository->find($command->field);
@@ -83,7 +99,7 @@ class UpdateFieldHandler extends AbstractFieldHandler
         $field->description = $command->description;
         $field->isRequired  = $command->required;
 
-        $field = $this->copyCommandToField($command, $field);
+        $field = $this->copyCommandToField($this->translator, $this->manager, $command, $field);
 
         $errors = $this->validator->validate($field);
 
