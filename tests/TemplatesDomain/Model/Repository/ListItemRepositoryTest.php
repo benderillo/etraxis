@@ -15,9 +15,9 @@ namespace eTraxis\TemplatesDomain\Model\Repository;
 
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
-use eTraxis\Tests\WebTestCase;
+use eTraxis\Tests\TransactionalTestCase;
 
-class ListItemRepositoryTest extends WebTestCase
+class ListItemRepositoryTest extends TransactionalTestCase
 {
     /** @var ListItemRepository */
     protected $repository;
@@ -32,6 +32,21 @@ class ListItemRepositoryTest extends WebTestCase
     public function testRepository()
     {
         self::assertInstanceOf(ListItemRepository::class, $this->repository);
+    }
+
+    public function testFind()
+    {
+        /** @var Field $field */
+        [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority', 'removedAt' => null], ['id' => 'ASC']);
+
+        /** @var ListItemRepository $repository */
+        $repository = $this->doctrine->getRepository(ListItem::class);
+
+        $expected = $repository->findOneBy(['field' => $field, 'text' => 'normal']);
+        self::assertNotNull($expected);
+
+        $value = $repository->find($expected->id);
+        self::assertSame($expected, $value);
     }
 
     public function testFindAllByField()
@@ -115,5 +130,20 @@ class ListItemRepositoryTest extends WebTestCase
         $item = $this->repository->findOneByText($field, 'normal');
 
         self::assertNull($item);
+    }
+
+    public function testWarmup()
+    {
+        /** @var Field $field */
+        [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority', 'removedAt' => null], ['id' => 'ASC']);
+
+        $item1 = $this->repository->findOneByText($field, 'high');
+        $item2 = $this->repository->findOneByText($field, 'low');
+
+        self::assertSame(2, $this->repository->warmup([
+            self::UNKNOWN_ENTITY_ID,
+            $item1->id,
+            $item2->id,
+        ]));
     }
 }

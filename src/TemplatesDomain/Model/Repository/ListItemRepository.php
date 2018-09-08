@@ -20,12 +20,16 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class ListItemRepository extends ServiceEntityRepository
 {
+    use CacheTrait;
+
     /**
      * {@inheritdoc}
      */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, ListItem::class);
+
+        $this->createCache();
     }
 
     /**
@@ -34,6 +38,7 @@ class ListItemRepository extends ServiceEntityRepository
     public function persist(ListItem $entity): void
     {
         $this->getEntityManager()->persist($entity);
+        $this->deleteFromCache($entity->id);
     }
 
     /**
@@ -42,6 +47,17 @@ class ListItemRepository extends ServiceEntityRepository
     public function remove(ListItem $entity): void
     {
         $this->getEntityManager()->remove($entity);
+        $this->deleteFromCache($entity->id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find($id, $lockMode = null, $lockVersion = null)
+    {
+        return $this->findInCache($id, function ($id) {
+            return parent::find($id);
+        });
     }
 
     /**
@@ -96,5 +112,19 @@ class ListItemRepository extends ServiceEntityRepository
         ]);
 
         return $entity;
+    }
+
+    /**
+     * Warms up the cache with all entities specified by IDs.
+     *
+     * @param array $ids
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return int Number of entities pushed to the cache.
+     */
+    public function warmup(array $ids): int
+    {
+        return $this->warmupCache($this, $ids);
     }
 }

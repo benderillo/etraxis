@@ -23,6 +23,7 @@
         "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "*",
+        "symfony/cache": "*",
         "symfony/console": "*",
         "symfony/expression-language": "*",
         "symfony/flex": "*",

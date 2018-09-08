@@ -19,12 +19,26 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class StringValueRepository extends ServiceEntityRepository
 {
+    use CacheTrait;
+
     /**
      * {@inheritdoc}
      */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, StringValue::class);
+
+        $this->createCache();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function find($id, $lockMode = null, $lockVersion = null)
+    {
+        return $this->findInCache($id, function ($id) {
+            return parent::find($id);
+        });
     }
 
     /**
@@ -55,5 +69,19 @@ class StringValueRepository extends ServiceEntityRepository
         }
 
         return $entity;
+    }
+
+    /**
+     * Warms up the cache with all entities specified by IDs.
+     *
+     * @param array $ids
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return int Number of entities pushed to the cache.
+     */
+    public function warmup(array $ids): int
+    {
+        return $this->warmupCache($this, $ids);
     }
 }

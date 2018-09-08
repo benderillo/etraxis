@@ -18,41 +18,70 @@ use eTraxis\Tests\TransactionalTestCase;
 
 class StringValueRepositoryTest extends TransactionalTestCase
 {
-    public function testRepository()
-    {
-        $repository = $this->doctrine->getRepository(StringValue::class);
+    /** @var StringValueRepository */
+    protected $repository;
 
-        self::assertInstanceOf(StringValueRepository::class, $repository);
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->repository = $this->doctrine->getRepository(StringValue::class);
     }
 
-    public function testSave()
+    public function testRepository()
+    {
+        self::assertInstanceOf(StringValueRepository::class, $this->repository);
+    }
+
+    public function testFind()
+    {
+        $expected = $this->repository->findOneBy(['value' => 'Development task 1']);
+        self::assertNotNull($expected);
+
+        $value = $this->repository->find($expected->id);
+        self::assertSame($expected, $value);
+    }
+
+    public function testFindOne()
     {
         $expected = 'eTraxis';
 
-        /** @var StringValueRepository $repository */
-        $repository = $this->doctrine->getRepository(StringValue::class);
-
-        $count = count($repository->findAll());
+        $count = count($this->repository->findAll());
 
         /** @var StringValue $value */
-        $value = $repository->findOneBy(['value' => $expected]);
+        $value = $this->repository->findOneBy(['value' => $expected]);
 
         self::assertNull($value);
 
         // First attempt.
-        $value1 = $repository->get($expected);
+        $value1 = $this->repository->get($expected);
 
         /** @var StringValue $value */
-        $value = $repository->findOneBy(['value' => $expected]);
+        $value = $this->repository->findOneBy(['value' => $expected]);
 
         self::assertSame($value1, $value);
         self::assertSame($expected, $value->value);
-        self::assertCount($count + 1, $repository->findAll());
+        self::assertCount($count + 1, $this->repository->findAll());
 
         // Second attempt.
-        $value2 = $repository->get($expected);
+        $value2 = $this->repository->get($expected);
 
         self::assertSame($value1, $value2);
-        self::assertCount($count + 1, $repository->findAll());
+        self::assertCount($count + 1, $this->repository->findAll());
+    }
+
+    public function testWarmup()
+    {
+        /** @var StringValue $value1 */
+        $value1 = $this->repository->findOneBy(['value' => 'Task 1']);
+
+        /** @var StringValue $value2 */
+        $value2 = $this->repository->findOneBy(['value' => 'Development task 1']);
+
+        self::assertSame(2, $this->repository->warmup([
+            self::UNKNOWN_ENTITY_ID,
+            $value1->id,
+            $value2->id,
+        ]));
     }
 }
