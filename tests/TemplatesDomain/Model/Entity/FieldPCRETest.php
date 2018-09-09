@@ -75,4 +75,20 @@ class FieldPCRETest extends TestCase
         $pcre->search = '(\d{3})-(\d{3})-(\d{4})';
         self::assertNotSame($expected, $pcre->transform($expected));
     }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'check'   => null,
+            'search'  => '(\d{3})-(\d{3})-(\d{4})',
+            'replace' => '($1) $2-$3',
+        ];
+
+        $pcre = new FieldPCRE();
+
+        $pcre->search  = '(\d{3})-(\d{3})-(\d{4})';
+        $pcre->replace = '($1) $2-$3';
+
+        self::assertSame($expected, $pcre->jsonSerialize());
+    }
 }

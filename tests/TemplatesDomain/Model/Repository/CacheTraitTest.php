@@ -84,6 +84,7 @@ class CacheTraitTest extends TransactionalTestCase
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
 
+        self::assertNull($this->repository->find(null));
         self::assertSame(0, $this->repository->getCalls());
 
         $first = $this->repository->find($user->id);

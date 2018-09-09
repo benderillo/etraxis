@@ -18,7 +18,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * Generic field interface.
  */
-interface FieldInterface
+interface FieldInterface extends \JsonSerializable
 {
     /**
      * Returns list of constraints for field value validation.

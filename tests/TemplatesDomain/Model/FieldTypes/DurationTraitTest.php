@@ -53,6 +53,17 @@ class DurationTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'minimum' => '0:00',
+            'maximum' => '999999:59',
+            'default' => null,
+        ];
+
+        self::assertSame($expected, $this->facade->jsonSerialize());
+    }
+
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';

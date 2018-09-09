@@ -84,6 +84,69 @@ class FieldTest extends TestCase
         self::assertNull($field->getFacade($manager));
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'          => 4,
+            'state'       => [
+                'id'          => 3,
+                'template'    => [
+                    'id'          => 2,
+                    'project'     => [
+                        'id'          => 1,
+                        'name'        => 'Project',
+                        'description' => 'Test project',
+                        'created'     => time(),
+                        'suspended'   => false,
+                    ],
+                    'name'        => 'Bugfix',
+                    'prefix'      => 'bug',
+                    'description' => 'Found bugs',
+                    'critical'    => 5,
+                    'frozen'      => null,
+                    'locked'      => true,
+                ],
+                'name'        => 'New',
+                'type'        => 'initial',
+                'responsible' => 'remove',
+                'next_state'  => null,
+            ],
+            'name'        => 'Customer reported',
+            'type'        => 'checkbox',
+            'description' => null,
+            'position'    => 1,
+            'required'    => false,
+        ];
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $project->name        = 'Project';
+        $project->description = 'Test project';
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $template->name        = 'Bugfix';
+        $template->prefix      = 'bug';
+        $template->description = 'Found bugs';
+        $template->criticalAge = 5;
+
+        $state = new State($template, StateType::INITIAL);
+        $this->setProperty($state, 'id', 3);
+
+        $state->name = 'New';
+
+        $field = new Field($state, FieldType::CHECKBOX);
+        $this->setProperty($field, 'id', 4);
+
+        $field->name       = 'Customer reported';
+        $field->position   = 1;
+        $field->isRequired = false;
+
+        self::assertSame($expected, $field->jsonSerialize());
+    }
+
     public function testIsRemoved()
     {
         $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);

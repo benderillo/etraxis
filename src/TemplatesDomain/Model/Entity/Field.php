@@ -46,7 +46,7 @@ use Webinarium\PropertyTrait;
  * @property-read FieldRolePermission[]  $rolePermissions  List of field role permissions.
  * @property-read FieldGroupPermission[] $groupPermissions List of field group permissions.
  */
-class Field
+class Field implements \JsonSerializable
 {
     use PropertyTrait;
 
@@ -63,6 +63,22 @@ class Field
     // Constraints.
     public const MAX_NAME        = 50;
     public const MAX_DESCRIPTION = 1000;
+
+    // JSON properties.
+    public const JSON_ID          = 'id';
+    public const JSON_PROJECT     = 'project';
+    public const JSON_TEMPLATE    = 'template';
+    public const JSON_STATE       = 'state';
+    public const JSON_NAME        = 'name';
+    public const JSON_TYPE        = 'type';
+    public const JSON_DESCRIPTION = 'description';
+    public const JSON_POSITION    = 'position';
+    public const JSON_REQUIRED    = 'required';
+    public const JSON_MINIMUM     = 'minimum';
+    public const JSON_MAXIMUM     = 'maximum';
+    public const JSON_MAXLENGTH   = 'maxlength';
+    public const JSON_DEFAULT     = 'default';
+    public const JSON_PCRE        = 'pcre';
 
     /**
      * @var int
@@ -235,6 +251,22 @@ class Field
         }
 
         return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID          => $this->id,
+            self::JSON_STATE       => $this->state->jsonSerialize(),
+            self::JSON_NAME        => $this->name,
+            self::JSON_TYPE        => $this->type,
+            self::JSON_DESCRIPTION => $this->description,
+            self::JSON_POSITION    => $this->position,
+            self::JSON_REQUIRED    => $this->isRequired,
+        ];
     }
 
     /**

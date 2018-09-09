@@ -53,6 +53,14 @@ class IssueTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+        ];
+
+        self::assertSame($expected, $this->facade->jsonSerialize());
+    }
+
     public function testValidationConstraints()
     {
         $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));
