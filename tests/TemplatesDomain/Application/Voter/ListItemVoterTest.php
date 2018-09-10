@@ -44,7 +44,10 @@ class ListItemVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new ListItemVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new ListItemVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -91,14 +94,19 @@ class ListItemVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        [/* skipping */, $itemB, $itemC] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
+        [/* skipping */, $highB, $highC] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
+        [/* skipping */, $lowB, $lowC]   = $this->repository->findBy(['value' => 3], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(ListItemVoter::DELETE_ITEM, $itemB));
-        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $itemC));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $highB));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $highC));
+        self::assertTrue($this->security->isGranted(ListItemVoter::DELETE_ITEM, $lowB));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $lowC));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $itemB));
-        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $itemC));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $highB));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $highC));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $lowB));
+        self::assertFalse($this->security->isGranted(ListItemVoter::DELETE_ITEM, $lowC));
     }
 }

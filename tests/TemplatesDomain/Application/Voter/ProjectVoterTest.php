@@ -43,7 +43,10 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new ProjectVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new ProjectVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         $project = $this->repository->findOneBy(['name' => 'Distinctio']);
@@ -77,13 +80,16 @@ class ProjectVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        $project = $this->repository->findOneBy(['name' => 'Distinctio']);
+        $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);
+        $projectD = $this->repository->findOneBy(['name' => 'Presto']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $project));
+        self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $projectA));
+        self::assertTrue($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $projectD));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $project));
+        self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $projectA));
+        self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $projectD));
     }
 
     public function testSuspend()

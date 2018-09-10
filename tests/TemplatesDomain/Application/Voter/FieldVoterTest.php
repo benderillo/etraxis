@@ -44,7 +44,10 @@ class FieldVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new FieldVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new FieldVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
@@ -53,6 +56,7 @@ class FieldVoterTest extends TransactionalTestCase
 
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $state, [FieldVoter::CREATE_FIELD]));
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::UPDATE_FIELD]));
+        self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::REMOVE_FIELD]));
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::DELETE_FIELD]));
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::MANAGE_PERMISSIONS]));
     }
@@ -86,17 +90,34 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldC));
     }
 
-    public function testDelete()
+    public function testRemove()
     {
-        [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+        [/* skipping */, $fieldB, $fieldC, $fieldD] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldB));
+        self::assertTrue($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldB));
+        self::assertFalse($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldC));
+        self::assertTrue($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldD));
+
+        $this->loginAs('artem@example.com');
+        self::assertFalse($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldB));
+        self::assertFalse($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldC));
+        self::assertFalse($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldD));
+    }
+
+    public function testDelete()
+    {
+        [/* skipping */, $fieldB, $fieldC, $fieldD] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
+
+        $this->loginAs('admin@example.com');
+        self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldC));
+        self::assertTrue($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldD));
 
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldB));
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldC));
+        self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldD));
     }
 
     public function testManagePermissions()

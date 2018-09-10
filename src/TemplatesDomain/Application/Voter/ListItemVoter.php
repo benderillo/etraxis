@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Entity\FieldValue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
@@ -37,6 +39,18 @@ class ListItemVoter extends Voter
         self::UPDATE_ITEM => ListItem::class,
         self::DELETE_ITEM => ListItem::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -100,12 +114,30 @@ class ListItemVoter extends Voter
      * @param ListItem $subject Subject item.
      * @param User     $user    Current user.
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return bool
      */
     protected function isDeleteGranted(ListItem $subject, User $user): bool
     {
-        /** @todo Can't delete item if it was used in at least one issue. */
+        // User must be an admin and template must be locked.
+        if (!$user->isAdmin || !$subject->field->state->template->isLocked) {
+            return false;
+        }
 
-        return $user->isAdmin && $subject->field->state->template->isLocked;
+        // Can't delete an item if it was used in at least one issue.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(fv.issue)')
+            ->from(FieldValue::class, 'fv')
+            ->where('fv.field = :field')
+            ->andWhere('fv.value = :value')
+            ->setParameter('field', $subject->field->id)
+            ->setParameter('value', $subject->id);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 }

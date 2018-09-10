@@ -30,7 +30,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Field::class);
     }
 
-    public function testSuccess()
+    public function testSuccessDelete()
     {
         $this->loginAs('admin@example.com');
 
@@ -58,6 +58,46 @@ class DeleteFieldCommandTest extends TransactionalTestCase
 
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'DESC']);
+
+        self::assertCount(2, $state->fields);
+
+        [$field1, $field2] = $state->fields;
+
+        self::assertSame(1, $field1->position);
+        self::assertSame(2, $field2->position);
+    }
+
+    public function testSuccessRemove()
+    {
+        $this->loginAs('admin@example.com');
+
+        /** @var State $state */
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
+
+        self::assertCount(3, $state->fields);
+
+        [$field1, $field2, $field3] = $state->fields;
+
+        self::assertSame(1, $field1->position);
+        self::assertSame(2, $field2->position);
+        self::assertSame(3, $field3->position);
+
+        $command = new DeleteFieldCommand([
+            'field' => $field1->id,
+        ]);
+
+        $this->commandbus->handle($command);
+
+        $this->doctrine->getManager()->clear();
+
+        /** @var Field $field */
+        $field = $this->repository->find($command->field);
+        self::assertNotNull($field);
+        self::assertTrue($field->isRemoved);
+        self::assertSame(1, $field->position);
+
+        /** @var State $state */
+        [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
 
         self::assertCount(2, $state->fields);
 

@@ -53,14 +53,20 @@ class DeleteFieldHandler
 
         if ($field && !$field->isRemoved) {
 
-            if (!$this->security->isGranted(FieldVoter::DELETE_FIELD, $field)) {
+            if (!$this->security->isGranted(FieldVoter::REMOVE_FIELD, $field)) {
                 throw new AccessDeniedHttpException();
             }
 
             $position = $field->position;
             $fields   = $field->state->fields;
 
-            $this->repository->remove($field);
+            if ($this->security->isGranted(FieldVoter::DELETE_FIELD, $field)) {
+                $this->repository->remove($field);
+            }
+            else {
+                $field->remove();
+                $this->repository->persist($field);
+            }
 
             // Reorder remaining fields.
             foreach ($fields as $field) {

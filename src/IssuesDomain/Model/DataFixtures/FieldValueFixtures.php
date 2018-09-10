@@ -132,7 +132,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
 
             'task:%s:6' => [
                 EventType::ISSUE_CREATED => [
-                    'new:%s:priority'    => 3,
+                    'new:%s:priority'    => 1,
                     'new:%s:description' => 'Voluptatum qui ratione sed molestias quo aliquam.',
                     'new:%s:new feature' => true,
                 ],

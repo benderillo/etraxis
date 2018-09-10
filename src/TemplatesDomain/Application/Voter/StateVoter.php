@@ -13,6 +13,9 @@
 
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Dictionary\EventType;
+use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
@@ -44,6 +47,18 @@ class StateVoter extends Voter
         self::MANAGE_TRANSITIONS        => State::class,
         self::MANAGE_RESPONSIBLE_GROUPS => State::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -116,13 +131,36 @@ class StateVoter extends Voter
      * @param State $subject Subject state.
      * @param User  $user    Current user.
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return bool
      */
     protected function isDeleteGranted(State $subject, User $user): bool
     {
-        /** @todo Can't delete state if it was used in at least one issue. */
+        // User must be an admin and template must be locked.
+        if (!$user->isAdmin || !$subject->template->isLocked) {
+            return false;
+        }
 
-        return $user->isAdmin && $subject->template->isLocked;
+        // Can't delete a state if it was used in at least one issue.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(event.id)')
+            ->from(Event::class, 'event')
+            ->where($query->expr()->in('event.type', ':types'))
+            ->andWhere('event.parameter = :state')
+            ->setParameter('state', $subject->id)
+            ->setParameter('types', [
+                EventType::ISSUE_CREATED,
+                EventType::ISSUE_REOPENED,
+                EventType::ISSUE_CLOSED,
+                EventType::STATE_CHANGED,
+            ]);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 
     /**

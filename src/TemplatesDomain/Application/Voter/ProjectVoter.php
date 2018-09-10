@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
@@ -39,6 +41,18 @@ class ProjectVoter extends Voter
         self::SUSPEND_PROJECT => Project::class,
         self::RESUME_PROJECT  => Project::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -107,13 +121,31 @@ class ProjectVoter extends Voter
      * @param Project $subject Subject project.
      * @param User    $user    Current user.
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return bool
      */
     protected function isDeleteGranted(Project $subject, User $user): bool
     {
-        /** @todo Can't delete project if there is at least one issue there. */
+        // User must be an admin.
+        if (!$user->isAdmin) {
+            return false;
+        }
 
-        return $user->isAdmin;
+        // Can't delete a project if there is at least one issue there.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(issue.id)')
+            ->from(Issue::class, 'issue')
+            ->leftJoin('issue.state', 'state')
+            ->leftJoin('state.template', 'template')
+            ->where('template.project = :project')
+            ->setParameter('project', $subject->id);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 
     /**

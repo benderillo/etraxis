@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Entity\FieldValue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
@@ -29,15 +31,29 @@ class FieldVoter extends Voter
 
     public const CREATE_FIELD       = 'field.create';
     public const UPDATE_FIELD       = 'field.update';
+    public const REMOVE_FIELD       = 'field.remove';
     public const DELETE_FIELD       = 'field.delete';
     public const MANAGE_PERMISSIONS = 'field.permissions';
 
     protected $attributes = [
         self::CREATE_FIELD       => State::class,
         self::UPDATE_FIELD       => Field::class,
+        self::REMOVE_FIELD       => Field::class,
         self::DELETE_FIELD       => Field::class,
         self::MANAGE_PERMISSIONS => Field::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -60,6 +76,9 @@ class FieldVoter extends Voter
 
             case self::UPDATE_FIELD:
                 return $this->isUpdateGranted($subject, $user);
+
+            case self::REMOVE_FIELD:
+                return $this->isRemoveGranted($subject, $user);
 
             case self::DELETE_FIELD:
                 return $this->isDeleteGranted($subject, $user);
@@ -99,16 +118,48 @@ class FieldVoter extends Voter
     }
 
     /**
-     * Whether the specified field can be deleted.
+     * Whether the specified field can be removed (soft-deleted).
      *
      * @param Field $subject Subject field.
      * @param User  $user    Current user.
      *
      * @return bool
      */
+    protected function isRemoveGranted(Field $subject, User $user): bool
+    {
+        // User must be an admin and template must be locked.
+        return $user->isAdmin && $subject->state->template->isLocked;
+    }
+
+    /**
+     * Whether the specified field can be deleted.
+     *
+     * @param Field $subject Subject field.
+     * @param User  $user    Current user.
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
+     * @return bool
+     */
     protected function isDeleteGranted(Field $subject, User $user): bool
     {
-        return $user->isAdmin && $subject->state->template->isLocked;
+        // It must be allowed to soft-delete the field.
+        if (!$this->isRemoveGranted($subject, $user)) {
+            return false;
+        }
+
+        // Can't delete a field if it was used in at least one issue.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(fv.issue)')
+            ->from(FieldValue::class, 'fv')
+            ->where('fv.field = :field')
+            ->setParameter('field', $subject->id);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 
     /**

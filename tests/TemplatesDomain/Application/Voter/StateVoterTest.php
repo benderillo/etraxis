@@ -44,7 +44,10 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new StateVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new StateVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
@@ -90,15 +93,17 @@ class StateVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        [/* skipping */, $stateB, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
+        [/* skipping */, $stateB, $stateC, $stateD] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(StateVoter::DELETE_STATE, $stateB));
+        self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateB));
         self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateC));
+        self::assertTrue($this->security->isGranted(StateVoter::DELETE_STATE, $stateD));
 
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateB));
         self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateC));
+        self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateD));
     }
 
     public function testSetInitial()

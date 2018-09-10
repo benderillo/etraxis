@@ -13,6 +13,9 @@
 
 namespace eTraxis\SecurityDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Dictionary\EventType;
+use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,6 +45,18 @@ class UserVoter extends Voter
         self::UNLOCK_USER  => User::class,
         self::SET_PASSWORD => User::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -107,7 +122,7 @@ class UserVoter extends Voter
      */
     protected function isUpdateGranted(User $subject, User $user): bool
     {
-        return $user->isAdmin || $subject->id === $user->id;
+        return $user->isAdmin;
     }
 
     /**
@@ -116,18 +131,34 @@ class UserVoter extends Voter
      * @param User $subject Subject user.
      * @param User $user    Current user.
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return bool
      */
     protected function isDeleteGranted(User $subject, User $user): bool
     {
-        // Can't delete oneself.
-        if ($subject->id === $user->id) {
+        // User must be an admin and cannot delete oneself.
+        if (!$user->isAdmin || $subject->id === $user->id) {
             return false;
         }
 
-        /** @todo Can't delete user if mentioned in an issue history. */
+        // Can't delete a user if mentioned in an issue history.
+        $query = $this->manager->createQueryBuilder();
 
-        return $user->isAdmin;
+        $query
+            ->select('COUNT(event.id)')
+            ->from(Event::class, 'event')
+            ->where('event.user = :user')
+            ->orWhere($query->expr()->andX(
+                'event.type = :type',
+                'event.parameter = :user'
+            ))
+            ->setParameter('user', $subject->id)
+            ->setParameter('type', EventType::ISSUE_ASSIGNED);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 
     /**

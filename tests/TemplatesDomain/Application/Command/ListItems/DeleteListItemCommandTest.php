@@ -34,7 +34,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var ListItem $item */
-        [/* skipping */, $item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
+        [/* skipping */, $item] = $this->repository->findBy(['value' => 3], ['id' => 'ASC']);
         self::assertNotNull($item);
 
         $command = new DeleteListItemCommand([
@@ -69,7 +69,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
         $this->loginAs('artem@example.com');
 
         /** @var ListItem $item */
-        [/* skipping */, $item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
+        [/* skipping */, $item] = $this->repository->findBy(['value' => 3], ['id' => 'ASC']);
 
         $command = new DeleteListItemCommand([
             'item' => $item->id,
@@ -85,7 +85,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         /** @var ListItem $item */
-        [$item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
+        [$item] = $this->repository->findBy(['value' => 3], ['id' => 'ASC']);
 
         $command = new DeleteListItemCommand([
             'item' => $item->id,

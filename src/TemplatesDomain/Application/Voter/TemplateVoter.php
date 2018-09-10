@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
+use Doctrine\ORM\EntityManagerInterface;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Application\Voter\VoterTrait;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
@@ -42,6 +44,18 @@ class TemplateVoter extends Voter
         self::UNLOCK_TEMPLATE    => Template::class,
         self::MANAGE_PERMISSIONS => Template::class,
     ];
+
+    protected $manager;
+
+    /**
+     * Dependency Injection constructor.
+     *
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
+    {
+        $this->manager = $manager;
+    }
 
     /**
      * {@inheritdoc}
@@ -114,13 +128,30 @@ class TemplateVoter extends Voter
      * @param Template $subject Subject template.
      * @param User     $user    Current user.
      *
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     *
      * @return bool
      */
     protected function isDeleteGranted(Template $subject, User $user): bool
     {
-        /** @todo Can't delete template if at least one issue is created using it. */
+        // User must be an admin.
+        if (!$user->isAdmin) {
+            return false;
+        }
 
-        return $user->isAdmin;
+        // Can't delete a template if at least one issue is created using it.
+        $query = $this->manager->createQueryBuilder();
+
+        $query
+            ->select('COUNT(issue.id)')
+            ->from(Issue::class, 'issue')
+            ->leftJoin('issue.state', 'state')
+            ->where('state.template = :template')
+            ->setParameter('template', $subject->id);
+
+        $result = (int) $query->getQuery()->getSingleScalarResult();
+
+        return $result === 0;
     }
 
     /**

@@ -44,7 +44,10 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new TemplateVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new TemplateVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
@@ -83,13 +86,16 @@ class TemplateVoterTest extends TransactionalTestCase
 
     public function testDelete()
     {
-        [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$templateA] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [$templateD] = $this->repository->findBy(['name' => 'Development'], ['id' => 'DESC']);
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $template));
+        self::assertFalse($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $templateA));
+        self::assertTrue($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $templateD));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $template));
+        self::assertFalse($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $templateA));
+        self::assertFalse($this->security->isGranted(TemplateVoter::DELETE_TEMPLATE, $templateD));
     }
 
     public function testLock()

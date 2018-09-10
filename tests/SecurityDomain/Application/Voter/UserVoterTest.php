@@ -43,7 +43,10 @@ class UserVoterTest extends TransactionalTestCase
 
     public function testAnonymous()
     {
-        $voter = new UserVoter();
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new UserVoter($manager);
         $token = new AnonymousToken('', 'anon.');
 
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -69,27 +72,27 @@ class UserVoterTest extends TransactionalTestCase
     public function testUpdate()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
-        $artem  = $this->repository->findOneByUsername('artem@example.com');
 
         $this->loginAs('admin@example.com');
         self::assertTrue($this->security->isGranted(UserVoter::UPDATE_USER, $nhills));
 
         $this->loginAs('artem@example.com');
         self::assertFalse($this->security->isGranted(UserVoter::UPDATE_USER, $nhills));
-        self::assertTrue($this->security->isGranted(UserVoter::UPDATE_USER, $artem));
     }
 
     public function testDelete()
     {
-        $nhills = $this->repository->findOneByUsername('nhills@example.com');
-        $admin  = $this->repository->findOneByUsername('admin@example.com');
+        $amarvin = $this->repository->findOneByUsername('amarvin@example.com');
+        $nhills  = $this->repository->findOneByUsername('nhills@example.com');
+        $admin   = $this->repository->findOneByUsername('admin@example.com');
 
         $this->loginAs('admin@example.com');
-        self::assertTrue($this->security->isGranted(UserVoter::DELETE_USER, $nhills));
+        self::assertTrue($this->security->isGranted(UserVoter::DELETE_USER, $amarvin));
+        self::assertFalse($this->security->isGranted(UserVoter::DELETE_USER, $nhills));
         self::assertFalse($this->security->isGranted(UserVoter::DELETE_USER, $admin));
 
         $this->loginAs('artem@example.com');
-        self::assertFalse($this->security->isGranted(UserVoter::DELETE_USER, $nhills));
+        self::assertFalse($this->security->isGranted(UserVoter::DELETE_USER, $amarvin));
     }
 
     public function testDisable()
