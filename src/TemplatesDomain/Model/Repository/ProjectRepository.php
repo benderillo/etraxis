@@ -123,7 +123,10 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
 
             case Project::JSON_NAME:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('project.name IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(project.name) LIKE LOWER(:name)');
                     $query->setParameter('name', "%{$value}%");
                 }
@@ -132,7 +135,10 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
 
             case Project::JSON_DESCRIPTION:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('project.description IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(project.description) LIKE LOWER(:description)');
                     $query->setParameter('description', "%{$value}%");
                 }

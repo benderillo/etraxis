@@ -170,6 +170,19 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByProjectNull()
+    {
+        $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
+            State::JSON_PROJECT => null,
+        ], [
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByTemplate()
     {
         $expected = [
@@ -196,6 +209,19 @@ class StateRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByTemplateNull()
+    {
+        $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
+            State::JSON_TEMPLATE => null,
+        ], [
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionFilterByName()
@@ -233,6 +259,19 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByNameNull()
+    {
+        $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
+            State::JSON_NAME => null,
+        ], [
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByType()
     {
         $expected = [
@@ -265,6 +304,19 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByTypeNull()
+    {
+        $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
+            State::JSON_TYPE => null,
+        ], [
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByResponsible()
     {
         $expected = [
@@ -290,6 +342,19 @@ class StateRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByResponsibleNull()
+    {
+        $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
+            State::JSON_RESPONSIBLE => null,
+        ], [
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionSort()

@@ -171,6 +171,31 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByProjectNull()
+    {
+        $expected = [
+            ['Company Clients', null],
+            ['Company Staff',   null],
+        ];
+
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [
+            Group::JSON_PROJECT => null,
+        ], [
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(1, $collection->to);
+        self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -206,6 +231,19 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByNameNull()
+    {
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [
+            Group::JSON_NAME => null,
+        ], [
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -232,7 +270,7 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionFilterByGlobal()
+    public function testGetCollectionFilterByDescriptionNull()
     {
         $expected = [
             ['Company Clients', null],
@@ -240,7 +278,7 @@ class GroupRepositoryTest extends WebTestCase
         ];
 
         $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [
-            Group::JSON_GLOBAL => true,
+            Group::JSON_DESCRIPTION => null,
         ], [
             Group::JSON_NAME        => GroupRepository::SORT_ASC,
             Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
@@ -249,6 +287,45 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame(0, $collection->from);
         self::assertSame(1, $collection->to);
         self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByGlobal()
+    {
+        $expected = [
+            ['Clients',           'Clients A'],
+            ['Clients',           'Clients B'],
+            ['Clients',           'Clients C'],
+            ['Clients',           'Clients D'],
+            ['Developers',        'Developers A'],
+            ['Developers',        'Developers B'],
+            ['Developers',        'Developers C'],
+            ['Developers',        'Developers D'],
+            ['Managers',          'Managers A'],
+            ['Managers',          'Managers B'],
+            ['Managers',          'Managers C'],
+            ['Managers',          'Managers D'],
+            ['Support Engineers', 'Support Engineers A'],
+            ['Support Engineers', 'Support Engineers B'],
+            ['Support Engineers', 'Support Engineers C'],
+            ['Support Engineers', 'Support Engineers D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [
+            Group::JSON_GLOBAL => false,
+        ], [
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(15, $collection->to);
+        self::assertSame(16, $collection->total);
 
         $actual = array_map(function (Group $group) {
             return [$group->name, $group->description];

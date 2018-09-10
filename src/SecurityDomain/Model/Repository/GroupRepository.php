@@ -127,7 +127,10 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
 
             case Group::JSON_PROJECT:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('grp.project IS NULL');
+                }
+                else {
                     $query->andWhere('grp.project = :project');
                     $query->setParameter('project', (int) $value);
                 }
@@ -136,7 +139,10 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
 
             case Group::JSON_NAME:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('grp.name IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(grp.name) LIKE LOWER(:name)');
                     $query->setParameter('name', "%{$value}%");
                 }
@@ -145,7 +151,10 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
 
             case Group::JSON_DESCRIPTION:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('grp.description IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(grp.description) LIKE LOWER(:description)');
                     $query->setParameter('description', "%{$value}%");
                 }

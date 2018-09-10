@@ -211,34 +211,31 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
 
             case Field::JSON_PROJECT:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('template.project = :project');
-                    $query->setParameter('project', (int) $value);
-                }
+                $query->andWhere('template.project = :project');
+                $query->setParameter('project', (int) $value);
 
                 break;
 
             case Field::JSON_TEMPLATE:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('state.template = :template');
-                    $query->setParameter('template', (int) $value);
-                }
+                $query->andWhere('state.template = :template');
+                $query->setParameter('template', (int) $value);
 
                 break;
 
             case Field::JSON_STATE:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('field.state= :state');
-                    $query->setParameter('state', (int) $value);
-                }
+                $query->andWhere('field.state= :state');
+                $query->setParameter('state', (int) $value);
 
                 break;
 
             case Field::JSON_NAME:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('field.name IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(field.name) LIKE LOWER(:name)');
                     $query->setParameter('name', "%{$value}%");
                 }
@@ -247,7 +244,10 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
 
             case Field::JSON_TYPE:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('field.type IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(field.type) = LOWER(:type)');
                     $query->setParameter('type', $value);
                 }
@@ -256,7 +256,10 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
 
             case Field::JSON_DESCRIPTION:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('field.description IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(field.description) LIKE LOWER(:description)');
                     $query->setParameter('description', "%{$value}%");
                 }
@@ -265,10 +268,8 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
 
             case Field::JSON_POSITION:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('field.position = :position');
-                    $query->setParameter('position', (int) $value);
-                }
+                $query->andWhere('field.position = :position');
+                $query->setParameter('position', (int) $value);
 
                 break;
 

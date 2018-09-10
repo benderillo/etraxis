@@ -159,6 +159,19 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByProjectNull()
+    {
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_PROJECT => null,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -184,6 +197,19 @@ class TemplateRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByNameNull()
+    {
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_NAME => null,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionFilterByPrefix()
@@ -213,6 +239,19 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByPrefixNull()
+    {
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_PREFIX => null,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -236,6 +275,19 @@ class TemplateRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByDescriptionNull()
+    {
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_DESCRIPTION => null,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionFilterByCriticalAge()
@@ -265,6 +317,33 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByCriticalAgeNull()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_CRITICAL => null,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
     public function testGetCollectionFilterByFrozenTime()
     {
         $expected = [
@@ -276,6 +355,33 @@ class TemplateRepositoryTest extends WebTestCase
 
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
             Template::JSON_FROZEN => 7,
+        ], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByFrozenTimeNull()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
+            Template::JSON_FROZEN => null,
         ], [
             Template::JSON_NAME        => TemplateRepository::SORT_ASC,
             Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,

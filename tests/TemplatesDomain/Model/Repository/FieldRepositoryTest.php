@@ -218,6 +218,19 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByProjectNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_PROJECT => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByTemplate()
     {
         $expected = [
@@ -252,6 +265,19 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByTemplateNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_TEMPLATE => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByState()
     {
         $expected = [
@@ -278,6 +304,19 @@ class FieldRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByStateNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_STATE => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionFilterByName()
@@ -311,6 +350,19 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByNameNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_NAME => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByType()
     {
         $expected = [
@@ -342,6 +394,19 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByTypeNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_TYPE => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -361,6 +426,61 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame(0, $collection->from);
         self::assertSame(3, $collection->to);
         self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByDescriptionNull()
+    {
+        $expected = [
+            ['Commit ID',     'Distinctio'],
+            ['Description',   'Distinctio'],
+            ['Details',       'Distinctio'],
+            ['Due date',      'Distinctio'],
+            ['Issue ID',      'Distinctio'],
+            ['New feature',   'Distinctio'],
+            ['Priority',      'Distinctio'],
+            ['Test coverage', 'Distinctio'],
+            ['Commit ID',     'Excepturi'],
+            ['Description',   'Excepturi'],
+            ['Details',       'Excepturi'],
+            ['Due date',      'Excepturi'],
+            ['Issue ID',      'Excepturi'],
+            ['New feature',   'Excepturi'],
+            ['Priority',      'Excepturi'],
+            ['Test coverage', 'Excepturi'],
+            ['Commit ID',     'Molestiae'],
+            ['Description',   'Molestiae'],
+            ['Details',       'Molestiae'],
+            ['Due date',      'Molestiae'],
+            ['Issue ID',      'Molestiae'],
+            ['New feature',   'Molestiae'],
+            ['Priority',      'Molestiae'],
+            ['Test coverage', 'Molestiae'],
+            ['Commit ID',     'Presto'],
+            ['Description',   'Presto'],
+            ['Details',       'Presto'],
+            ['Due date',      'Presto'],
+            ['Issue ID',      'Presto'],
+            ['New feature',   'Presto'],
+            ['Priority',      'Presto'],
+            ['Test coverage', 'Presto'],
+        ];
+
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_DESCRIPTION => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(31, $collection->to);
+        self::assertSame(32, $collection->total);
 
         $actual = array_map(function (Field $field) {
             return [$field->name, $field->state->template->project->name];
@@ -398,6 +518,19 @@ class FieldRepositoryTest extends WebTestCase
         }, $collection->data);
 
         self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionFilterByPositionNull()
+    {
+        $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
+            Field::JSON_POSITION => null,
+        ], [
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
     }
 
     public function testGetCollectionFilterByRequired()

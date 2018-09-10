@@ -129,7 +129,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Molestiae',
         ];
 
-        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
             Project::JSON_NAME => 'Ti',
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -146,13 +146,25 @@ class ProjectRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByNameNull()
+    {
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
+            Project::JSON_NAME => null,
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
             Project::JSON_DESCRIPTION => ' d',
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -169,6 +181,18 @@ class ProjectRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByDescriptionNull()
+    {
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
+            Project::JSON_DESCRIPTION => null,
+        ], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->total);
+        self::assertCount(0, $collection->data);
+    }
+
     public function testGetCollectionFilterBySuspended()
     {
         $expected = [
@@ -177,7 +201,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
             Project::JSON_SUSPENDED => false,
         ], [
             Project::JSON_NAME => ProjectRepository::SORT_ASC,
@@ -201,7 +225,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Presto',
         ];
 
-        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [
             Project::JSON_NAME      => 'R',
             Project::JSON_SUSPENDED => false,
         ], [
@@ -228,7 +252,7 @@ class ProjectRepositoryTest extends WebTestCase
             'Distinctio',
         ];
 
-        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, '', [], [
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [], [
             Project::JSON_SUSPENDED => ProjectRepository::SORT_ASC,
             Project::JSON_NAME      => ProjectRepository::SORT_ASC,
         ]);

@@ -130,25 +130,24 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
 
             case State::JSON_PROJECT:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('template.project = :project');
-                    $query->setParameter('project', (int) $value);
-                }
+                $query->andWhere('template.project = :project');
+                $query->setParameter('project', (int) $value);
 
                 break;
 
             case State::JSON_TEMPLATE:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('state.template = :template');
-                    $query->setParameter('template', (int) $value);
-                }
+                $query->andWhere('state.template = :template');
+                $query->setParameter('template', (int) $value);
 
                 break;
 
             case State::JSON_NAME:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('state.name IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(state.name) LIKE LOWER(:name)');
                     $query->setParameter('name', "%{$value}%");
                 }
@@ -157,7 +156,10 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
 
             case State::JSON_TYPE:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('state.type IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(state.type) = LOWER(:type)');
                     $query->setParameter('type', $value);
                 }
@@ -166,7 +168,10 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
 
             case State::JSON_RESPONSIBLE:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('state.responsible IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(state.responsible) = LOWER(:responsible)');
                     $query->setParameter('responsible', $value);
                 }

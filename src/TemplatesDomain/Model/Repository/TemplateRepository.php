@@ -128,16 +128,17 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_PROJECT:
 
-                if (mb_strlen($value) !== 0) {
-                    $query->andWhere('template.project = :project');
-                    $query->setParameter('project', (int) $value);
-                }
+                $query->andWhere('template.project = :project');
+                $query->setParameter('project', (int) $value);
 
                 break;
 
             case Template::JSON_NAME:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('template.name IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(template.name) LIKE LOWER(:name)');
                     $query->setParameter('name', "%{$value}%");
                 }
@@ -146,7 +147,10 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_PREFIX:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('template.prefix IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(template.prefix) LIKE LOWER(:prefix)');
                     $query->setParameter('prefix', "%{$value}%");
                 }
@@ -155,7 +159,10 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_DESCRIPTION:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('template.description IS NULL');
+                }
+                else {
                     $query->andWhere('LOWER(template.description) LIKE LOWER(:description)');
                     $query->setParameter('description', "%{$value}%");
                 }
@@ -164,7 +171,10 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_CRITICAL:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('template.criticalAge IS NULL');
+                }
+                else {
                     $query->andWhere('template.criticalAge = :criticalAge');
                     $query->setParameter('criticalAge', (int) $value);
                 }
@@ -173,7 +183,10 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
             case Template::JSON_FROZEN:
 
-                if (mb_strlen($value) !== 0) {
+                if (mb_strlen($value) === 0) {
+                    $query->andWhere('template.frozenTime IS NULL');
+                }
+                else {
                     $query->andWhere('template.frozenTime = :frozenTime');
                     $query->setParameter('frozenTime', (int) $value);
                 }
