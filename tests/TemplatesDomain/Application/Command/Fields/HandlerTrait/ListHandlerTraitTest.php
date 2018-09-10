@@ -68,9 +68,9 @@ class ListHandlerTraitTest extends TransactionalTestCase
         $facade = $field->getFacade($this->manager);
 
         /** @var ListItem $item */
-        [$item] = $repository->findBy(['value' => 2], ['id' => 'ASC']);
+        [$item] = $repository->findBy(['value' => 1], ['id' => 'ASC']);
 
-        self::assertNull($facade->getDefaultValue());
+        self::assertSame(2, $facade->getDefaultValue()->value);
 
         $command = new Command\UpdateListFieldCommand([
             'defaultValue' => $item->id,
@@ -78,7 +78,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
 
-        self::assertSame($item, $facade->getDefaultValue());
+        self::assertSame(1, $facade->getDefaultValue()->value);
 
         $command = new Command\UpdateListFieldCommand([
             'defaultValue' => null,

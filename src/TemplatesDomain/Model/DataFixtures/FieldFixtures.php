@@ -60,7 +60,8 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
                         $facade = $field->getFacade($manager);
                         $facade
-                            ->setMaximumLength(TextInterface::MAX_LENGTH);
+                            ->setMaximumLength(TextInterface::MAX_LENGTH)
+                            ->setDefaultValue('How to reproduce:');
                     },
                 ],
                 [
@@ -107,7 +108,8 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\StringInterface $facade */
                         $facade = $field->getFacade($manager);
                         $facade
-                            ->setMaximumLength(40);
+                            ->setMaximumLength(40)
+                            ->setDefaultValue('Git commit ID');
                     },
                 ],
                 [

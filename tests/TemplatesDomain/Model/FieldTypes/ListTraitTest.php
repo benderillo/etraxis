@@ -53,15 +53,6 @@ class ListTraitTest extends TransactionalTestCase
 
     public function testJsonSerialize()
     {
-        $expected = [
-            'default' => null,
-        ];
-
-        self::assertSame($expected, $this->facade->jsonSerialize());
-    }
-
-    public function testJsonSerializeExtended()
-    {
         /** @var ListItem $item */
         $item = $this->doctrine->getRepository(ListItem::class)->findOneBy([
             'field' => $this->object,

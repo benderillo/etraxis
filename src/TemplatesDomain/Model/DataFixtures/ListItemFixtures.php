@@ -56,13 +56,29 @@ class ListItemFixtures extends Fixture implements DependentFixtureInterface
                 $item->value = $value;
                 $item->text  = $text;
 
-                /** @var \Doctrine\ORM\EntityManagerInterface $manager */
-                /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\ListInterface $facade */
-                $facade = $field->getFacade($manager);
-                $facade->setDefaultValue($item);
-
                 $manager->persist($item);
             }
+        }
+
+        $manager->flush();
+
+        foreach (['a', 'b', 'c', 'd'] as $pref) {
+
+            /** @var \eTraxis\TemplatesDomain\Model\Entity\Field $field */
+            $field = $this->getReference(sprintf('new:%s:priority', $pref));
+
+            /** @var ListItem $item */
+            $item = $manager->getRepository(ListItem::class)->findOneBy([
+                'field' => $field,
+                'value' => 2,
+            ]);
+
+            /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+            /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\ListInterface $facade */
+            $facade = $field->getFacade($manager);
+            $facade->setDefaultValue($item);
+
+            $manager->persist($field);
         }
 
         $manager->flush();

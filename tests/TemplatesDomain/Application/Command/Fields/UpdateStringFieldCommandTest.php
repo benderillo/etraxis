@@ -43,7 +43,7 @@ class UpdateStringFieldCommandTest extends TransactionalTestCase
         $facade = $field->getFacade($this->manager);
 
         self::assertSame(40, $facade->getMaximumLength());
-        self::assertNull($facade->getDefaultValue());
+        self::assertSame('Git commit ID', $facade->getDefaultValue());
         self::assertNull($facade->getPCRE()->check);
         self::assertNull($facade->getPCRE()->search);
         self::assertNull($facade->getPCRE()->replace);

@@ -43,7 +43,7 @@ class UpdateTextFieldCommandTest extends TransactionalTestCase
         $facade = $field->getFacade($this->manager);
 
         self::assertSame(10000, $facade->getMaximumLength());
-        self::assertNull($facade->getDefaultValue());
+        self::assertSame('How to reproduce:', $facade->getDefaultValue());
         self::assertNull($facade->getPCRE()->check);
         self::assertNull($facade->getPCRE()->search);
         self::assertNull($facade->getPCRE()->replace);
@@ -53,7 +53,7 @@ class UpdateTextFieldCommandTest extends TransactionalTestCase
             'name'          => $field->name,
             'required'      => $field->isRequired,
             'maximumLength' => 2000,
-            'defaultValue'  => 'How to reproduce:',
+            'defaultValue'  => 'How to replicate:',
             'pcreCheck'     => '.+',
             'pcreSearch'    => 'search',
             'pcreReplace'   => 'replace',
@@ -64,7 +64,7 @@ class UpdateTextFieldCommandTest extends TransactionalTestCase
         $this->doctrine->getManager()->refresh($field);
 
         self::assertSame(2000, $facade->getMaximumLength());
-        self::assertSame('How to reproduce:', $facade->getDefaultValue());
+        self::assertSame('How to replicate:', $facade->getDefaultValue());
         self::assertSame('.+', $facade->getPCRE()->check);
         self::assertSame('search', $facade->getPCRE()->search);
         self::assertSame('replace', $facade->getPCRE()->replace);

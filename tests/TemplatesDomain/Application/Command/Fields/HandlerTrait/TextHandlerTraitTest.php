@@ -65,7 +65,7 @@ class TextHandlerTraitTest extends TransactionalTestCase
         $facade = $field->getFacade($this->manager);
 
         self::assertSame(TextValue::MAX_VALUE, $facade->getMaximumLength());
-        self::assertNull($facade->getDefaultValue());
+        self::assertSame('How to reproduce:', $facade->getDefaultValue());
         self::assertNull($facade->getPCRE()->check);
         self::assertNull($facade->getPCRE()->search);
         self::assertNull($facade->getPCRE()->replace);
