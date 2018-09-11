@@ -15,9 +15,11 @@ namespace eTraxis\TemplatesDomain\Framework\Controller;
 
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use eTraxis\TemplatesDomain\Application\Command\Fields as Command;
+use eTraxis\TemplatesDomain\Application\Command\ListItems\CreateListItemCommand;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Repository\FieldRepository;
+use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
 use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -250,6 +252,72 @@ class ApiFieldsController extends Controller
         $commandBus->handle($command);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns field's list items.
+     *
+     * @Route("/{id}/items", name="api_items_list", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Field ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\TemplatesDomain\Model\API\ListItem::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Field is not found.")
+     *
+     * @param Field              $field
+     * @param ListItemRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function listItems(Field $field, ListItemRepository $repository): JsonResponse
+    {
+        $items = $repository->findAllByField($field);
+
+        return $this->json($items);
+    }
+
+    /**
+     * Creates new list item.
+     *
+     * @Route("/{id}/items", name="api_items_create", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Field ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=CreateListItemCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Field is not found.")
+     * @API\Response(response=409, description="Item with specified value or text already exists.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createItem(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new CreateListItemCommand($request->request->all());
+
+        $command->field = $id;
+
+        /** @var Field $field */
+        $field = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_items_get', [
+            'id' => $field->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
 
     /**
