@@ -32,7 +32,7 @@ class State
     public $template;
 
     /**
-     * @API\Property(type="string", example="Bugfix", description="State name.")
+     * @API\Property(type="string", example="Assigned", description="State name.")
      */
     public $name;
 

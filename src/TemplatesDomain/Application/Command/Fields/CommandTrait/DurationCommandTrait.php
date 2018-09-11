@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait;
 
+use Swagger\Annotations as API;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,17 +29,26 @@ trait DurationCommandTrait
     /**
      * @Assert\NotBlank
      * @Assert\Regex("/^\d{1,6}:[0-5][0-9]$/")
+     *
+     * @Groups("api")
+     * @API\Property(type="string", example="23:59", description="Minimum value.")
      */
     public $minimumValue;
 
     /**
      * @Assert\NotBlank
      * @Assert\Regex("/^\d{1,6}:[0-5][0-9]$/")
+     *
+     * @Groups("api")
+     * @API\Property(type="string", example="23:59", description="Maximum value.")
      */
     public $maximumValue;
 
     /**
      * @Assert\Regex("/^\d{1,6}:[0-5][0-9]$/")
+     *
+     * @Groups("api")
+     * @API\Property(type="string", example="23:59", description="Default value.")
      */
     public $defaultValue;
 }
