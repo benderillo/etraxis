@@ -68,10 +68,15 @@ class ApiGroupsController extends Controller
      * ))
      *
      * @API\Response(response=200, description="Success.", @API\Schema(
-     *     type="array",
-     *     @API\Items(
-     *         ref=@Model(type=eTraxis\SecurityDomain\Model\API\Group::class)
-     *     )
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="from",  type="integer", example=0,   description="Zero-based index of the first returned group."),
+     *         @API\Property(property="to",    type="integer", example=99,  description="Zero-based index of the last returned group."),
+     *         @API\Property(property="total", type="integer", example=100, description="Total number of all found groups."),
+     *         @API\Property(property="data",  type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\SecurityDomain\Model\API\Group::class)
+     *         ))
+     *     }
      * ))
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Client is not authorized for this request.")

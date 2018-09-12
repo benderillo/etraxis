@@ -74,10 +74,15 @@ class ApiTemplatesController extends Controller
      * ))
      *
      * @API\Response(response=200, description="Success.", @API\Schema(
-     *     type="array",
-     *     @API\Items(
-     *         ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Template::class)
-     *     )
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="from",  type="integer", example=0,   description="Zero-based index of the first returned template."),
+     *         @API\Property(property="to",    type="integer", example=99,  description="Zero-based index of the last returned template."),
+     *         @API\Property(property="total", type="integer", example=100, description="Total number of all found templates."),
+     *         @API\Property(property="data",  type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Template::class)
+     *         ))
+     *     }
      * ))
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Client is not authorized for this request.")
