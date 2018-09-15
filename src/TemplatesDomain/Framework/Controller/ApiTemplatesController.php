@@ -241,6 +241,115 @@ class ApiTemplatesController extends Controller
     }
 
     /**
+     * Returns permissions of specified template.
+     *
+     * @Route("/{id}/permissions", name="api_templates_get_permissions", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Template ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="roles", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\TemplateRolePermission::class)
+     *         )),
+     *         @API\Property(property="groups", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\TemplateGroupPermission::class)
+     *         ))
+     *     }
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Template is not found.")
+     *
+     * @param Template $template
+     *
+     * @return JsonResponse
+     */
+    public function getPermissions(Template $template): JsonResponse
+    {
+        return $this->json([
+            'roles'  => $template->rolePermissions,
+            'groups' => $template->groupPermissions,
+        ]);
+    }
+
+    /**
+     * Sets permissions of specified template.
+     *
+     * @Route("/{id}/permissions", name="api_templates_set_permissions", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Template ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     type="object",
+     *     required={"permission"},
+     *     properties={
+     *         @API\Property(property="permission", type="string", enum={
+     *             "comment.add",
+     *             "comment.private",
+     *             "dependency.add",
+     *             "dependency.remove",
+     *             "file.attach",
+     *             "file.delete",
+     *             "issue.create",
+     *             "issue.delete",
+     *             "issue.edit",
+     *             "issue.reassign",
+     *             "issue.reopen",
+     *             "issue.resume",
+     *             "issue.suspend",
+     *             "issue.view",
+     *             "reminder.send"
+     *         }, example="issue.edit", description="Specific permission."),
+     *         @API\Property(property="roles",  type="array", @API\Items(type="string", enum={"anyone", "author", "responsible"}, example="author", description="System role.")),
+     *         @API\Property(property="groups", type="array", @API\Items(type="integer", example=123, description="Group ID."))
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Template is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setPermissions(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $permission = $request->get('permission');
+        $roles      = $request->get('roles');
+        $groups     = $request->get('groups');
+
+        if ($roles !== null) {
+
+            $command = new Command\SetRolesPermissionCommand([
+                'template'   => $id,
+                'permission' => $permission,
+                'roles'      => $roles,
+            ]);
+
+            $commandBus->handle($command);
+        }
+
+        if ($groups !== null) {
+
+            $command = new Command\SetGroupsPermissionCommand([
+                'template'   => $id,
+                'permission' => $permission,
+                'groups'     => $groups,
+            ]);
+
+            $commandBus->handle($command);
+        }
+
+        return $this->json(null);
+    }
+
+    /**
      * Unlocks specified template.
      *
      * @Route("/{id}/unlock", name="api_templates_suspend", methods={"POST"}, requirements={"id": "\d+"})
