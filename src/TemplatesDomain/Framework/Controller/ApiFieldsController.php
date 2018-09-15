@@ -326,6 +326,99 @@ class ApiFieldsController extends Controller
     }
 
     /**
+     * Returns permissions of specified field.
+     *
+     * @Route("/{id}/permissions", name="api_fields_get_permissions", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Field ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="roles", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\FieldRolePermission::class)
+     *         )),
+     *         @API\Property(property="groups", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\FieldGroupPermission::class)
+     *         ))
+     *     }
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Field is not found.")
+     *
+     * @param Field $field
+     *
+     * @return JsonResponse
+     */
+    public function getPermissions(Field $field): JsonResponse
+    {
+        return $this->json([
+            'roles'  => $field->rolePermissions,
+            'groups' => $field->groupPermissions,
+        ]);
+    }
+
+    /**
+     * Sets permissions of specified field.
+     *
+     * @Route("/{id}/permissions", name="api_fields_set_permissions", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Field ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     type="object",
+     *     required={"permission"},
+     *     properties={
+     *         @API\Property(property="permission", type="string", enum={"R", "RW"}, example="RW", description="Specific permission."),
+     *         @API\Property(property="roles",  type="array", @API\Items(type="string", enum={"anyone", "author", "responsible"}, example="author", description="System role.")),
+     *         @API\Property(property="groups", type="array", @API\Items(type="integer", example=123, description="Group ID."))
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Field is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setPermissions(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $permission = $request->get('permission');
+        $roles      = $request->get('roles');
+        $groups     = $request->get('groups');
+
+        if ($roles !== null) {
+
+            $command = new Command\SetRolesPermissionCommand([
+                'field'      => $id,
+                'permission' => $permission,
+                'roles'      => $roles,
+            ]);
+
+            $commandBus->handle($command);
+        }
+
+        if ($groups !== null) {
+
+            $command = new Command\SetGroupsPermissionCommand([
+                'field'      => $id,
+                'permission' => $permission,
+                'groups'     => $groups,
+            ]);
+
+            $commandBus->handle($command);
+        }
+
+        return $this->json(null);
+    }
+
+    /**
      * Sets position of the specified field.
      *
      * @Route("/{id}/position", name="api_fields_position", methods={"POST"}, requirements={"id": "\d+"})

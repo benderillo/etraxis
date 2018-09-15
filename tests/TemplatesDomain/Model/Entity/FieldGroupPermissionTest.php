@@ -96,4 +96,31 @@ class FieldGroupPermissionTest extends TestCase
 
         new FieldGroupPermission($field, $group, 'bar');
     }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'group'      => 5,
+            'permission' => 'RW',
+        ];
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $state = new State($template, StateType::INTERMEDIATE);
+        $this->setProperty($state, 'id', 3);
+
+        $field = new Field($state, FieldType::CHECKBOX);
+        $this->setProperty($field, 'id', 4);
+
+        $group = new Group($project);
+        $this->setProperty($group, 'id', 5);
+
+        $permission = new FieldGroupPermission($field, $group, FieldPermission::READ_WRITE);
+
+        self::assertSame($expected, $permission->jsonSerialize());
+    }
 }
