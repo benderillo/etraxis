@@ -54,7 +54,7 @@ class CreateStateCommand
      * @Assert\Choice(callback={"eTraxis\TemplatesDomain\Model\Dictionary\StateType", "keys"}, strict=true)
      *
      * @Groups("api")
-     * @API\Property(type="string", example="intermediate", description="State type.")
+     * @API\Property(type="string", enum={"initial", "intermediate", "final"}, example="intermediate", description="State type.")
      */
     public $type;
 
@@ -63,7 +63,7 @@ class CreateStateCommand
      * @Assert\Choice(callback={"eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible", "keys"}, strict=true)
      *
      * @Groups("api")
-     * @API\Property(type="string", example="assign", description="State responsibility.")
+     * @API\Property(type="string", enum={"keep", "assign", "remove"}, example="assign", description="State responsibility.")
      */
     public $responsible;
 

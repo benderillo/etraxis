@@ -37,7 +37,17 @@ class Field
     public $name;
 
     /**
-     * @API\Property(type="string", enum={"checkbox", "date", "decimal", "duration", "issue", "list", "number", "string", "text"}, example="list", description="Field type.")
+     * @API\Property(type="string", enum={
+     *     "checkbox",
+     *     "date",
+     *     "decimal",
+     *     "duration",
+     *     "issue",
+     *     "list",
+     *     "number",
+     *     "string",
+     *     "text"
+     * }, example="list", description="Field type.")
      */
     public $type;
 

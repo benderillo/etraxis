@@ -38,7 +38,17 @@ abstract class AbstractCreateFieldCommand extends AbstractFieldCommand
      * @internal Descriptive property for API annotations.
      *
      * @Groups("api")
-     * @API\Property(type="string", enum={"checkbox", "date", "decimal", "duration", "issue", "list", "number", "string", "text"}, example="list", description="Field type.")
+     * @API\Property(type="string", enum={
+     *     "checkbox",
+     *     "date",
+     *     "decimal",
+     *     "duration",
+     *     "issue",
+     *     "list",
+     *     "number",
+     *     "string",
+     *     "text"
+     * }, example="list", description="Field type.")
      */
     protected $type;
 }

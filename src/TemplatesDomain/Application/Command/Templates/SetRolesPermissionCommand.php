@@ -34,7 +34,7 @@ class SetRolesPermissionCommand
     public $template;
 
     /**
-     * @Assert\NotBlank,
+     * @Assert\NotBlank
      * @Assert\Choice(callback={"eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission", "keys"}, strict=true)
      */
     public $permission;

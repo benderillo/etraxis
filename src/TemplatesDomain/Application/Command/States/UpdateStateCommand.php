@@ -50,7 +50,7 @@ class UpdateStateCommand
      * @Assert\Choice(callback={"eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible", "keys"}, strict=true)
      *
      * @Groups("api")
-     * @API\Property(type="string", example="assign", description="State responsibility.")
+     * @API\Property(type="string", enum={"keep", "assign", "remove"}, example="assign", description="State responsibility.")
      */
     public $responsible;
 
