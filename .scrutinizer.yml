@@ -8,7 +8,7 @@ build:
 
 tools:
     external_code_coverage:
-        timeout: 1200
+        timeout: 1800
         runs: 2
 
 filter:

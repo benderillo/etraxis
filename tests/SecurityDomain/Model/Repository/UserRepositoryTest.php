@@ -439,7 +439,7 @@ class UserRepositoryTest extends WebTestCase
             ['Joe Gutmann',         'Locked account'],
             ['Dangelo Hill',        'Manager A'],
             ['Dorcas Ernser',       'Manager A+B'],
-            ['Leland Doyle',        'Manager A+B+C'],
+            ['Leland Doyle',        'Manager A+B+C+D'],
             ['Berenice O\'Connell', 'Manager A+C'],
             ['Emmanuelle Bartell',  'Manager B'],
             ['Carolyn Hill',        'Manager B+C'],

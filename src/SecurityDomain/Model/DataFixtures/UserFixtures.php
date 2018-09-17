@@ -112,7 +112,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             'ldoyle@example.com' => [
                 'fullname'    => 'Leland Doyle',
-                'description' => 'Manager A+B+C',
+                'description' => 'Manager A+B+C+D',
             ],
 
             'dorcas.ernser@example.com' => [
