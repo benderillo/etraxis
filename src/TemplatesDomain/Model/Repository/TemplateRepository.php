@@ -15,9 +15,14 @@ namespace eTraxis\TemplatesDomain\Model\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Model\Collection\Collection;
 use eTraxis\SharedDomain\Model\Collection\CollectionInterface;
+use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
+use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
+use eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission;
+use eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class TemplateRepository extends ServiceEntityRepository implements CollectionInterface
@@ -44,6 +49,48 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
     public function remove(Template $entity): void
     {
         $this->getEntityManager()->remove($entity);
+    }
+
+    /**
+     * Returns list of templates which can be used by specified user to create new issues.
+     *
+     * @param User $user
+     *
+     * @return Template[]
+     */
+    public function getTemplatesByUser(User $user): array
+    {
+        $query = $this->createQueryBuilder('template');
+
+        $query
+            ->distinct()
+            ->addSelect('project')
+            ->from(TemplateRolePermission::class, 'trp')
+            ->from(TemplateGroupPermission::class, 'tgp')
+            ->leftJoin('template.project', 'project')
+            ->where($query->expr()->andX(
+                'project.isSuspended = 0',
+                'template.isLocked = 0',
+                'trp.template = template',
+                'trp.permission = :permission',
+                'trp.role = :role'
+            ))
+            ->orWhere($query->expr()->andX(
+                'project.isSuspended = 0',
+                'template.isLocked = 0',
+                'tgp.template = template',
+                'tgp.permission = :permission',
+                $query->expr()->in('tgp.group', ':groups')
+            ))
+            ->orderBy('project.name')
+            ->orderBy('template.name')
+            ->setParameters([
+                'permission' => TemplatePermission::CREATE_ISSUES,
+                'role'       => SystemRole::ANYONE,
+                'groups'     => $user->groups,
+            ]);
+
+        return $query->getQuery()->getResult();
     }
 
     /**

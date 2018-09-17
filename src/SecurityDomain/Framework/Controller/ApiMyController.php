@@ -14,6 +14,8 @@
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\SecurityDomain\Application\Command\Users as Command;
+use eTraxis\TemplatesDomain\Model\Entity\Template;
+use eTraxis\TemplatesDomain\Model\Repository\TemplateRepository;
 use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -162,5 +164,53 @@ class ApiMyController extends Controller
         $commandBus->handle($settings);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns list of projects which can be used to create new issue.
+     *
+     * @Route("/projects", name="api_profile_projects", methods={"GET"})
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Project::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param TemplateRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function getProjects(TemplateRepository $repository): JsonResponse
+    {
+        $projects = array_map(function (Template $template) {
+            return $template->project;
+        }, $repository->getTemplatesByUser($this->getUser()));
+
+        return $this->json(array_values(array_unique($projects, SORT_REGULAR)));
+    }
+
+    /**
+     * Returns list of templates which can be used to create new issue.
+     *
+     * @Route("/templates", name="api_profile_templates", methods={"GET"})
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\TemplatesDomain\Model\API\Template::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param TemplateRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function getTemplates(TemplateRepository $repository): JsonResponse
+    {
+        return $this->json($repository->getTemplatesByUser($this->getUser()));
     }
 }

@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\Repository;
 
+use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\WebTestCase;
@@ -32,6 +33,26 @@ class TemplateRepositoryTest extends WebTestCase
     public function testRepository()
     {
         self::assertInstanceOf(TemplateRepository::class, $this->repository);
+    }
+
+    public function testGetTemplatesByUser()
+    {
+        /** @var User $ldoyle */
+        /** @var User $nhills */
+        /** @var User $clegros */
+        $ldoyle  = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
+        $nhills  = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
+        $clegros = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'clegros@example.com']);
+
+        /** @var Template $taskC */
+        /** @var Template $reqC */
+        /** @var Template $reqD */
+        [/* skipping */, /* skipping */, $taskC]       = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);
+        [/* skipping */, /* skipping */, $reqC, $reqD] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);
+
+        self::assertSame([$taskC, $reqC, $reqD], $this->repository->getTemplatesByUser($ldoyle));
+        self::assertSame([$taskC], $this->repository->getTemplatesByUser($nhills));
+        self::assertEmpty($this->repository->getTemplatesByUser($clegros));
     }
 
     public function testGetCollectionDefault()
