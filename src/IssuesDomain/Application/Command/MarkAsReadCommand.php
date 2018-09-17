@@ -26,7 +26,7 @@ class MarkAsReadCommand
     use DataTransferObjectTrait;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull
      * @Assert\Type(type="array")
      * @Assert\Count(min="1", max="100")
      * @Assert\All({

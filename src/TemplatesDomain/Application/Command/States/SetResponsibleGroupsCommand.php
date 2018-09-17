@@ -33,7 +33,7 @@ class SetResponsibleGroupsCommand
     public $state;
 
     /**
-     * @Assert\NotBlank
+     * @Assert\NotNull
      * @Assert\Type(type="array")
      * @Assert\Count(min="0", max="100")
      * @Assert\All({
