@@ -16,6 +16,7 @@ namespace eTraxis\TemplatesDomain\Framework\Controller;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use eTraxis\TemplatesDomain\Application\Command\States as Command;
 use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\TemplatesDomain\Model\Entity\StateResponsibleGroup;
 use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
 use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -232,6 +233,160 @@ class ApiStatesController extends Controller
         ]);
 
         $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Returns responsible groups of specified state.
+     *
+     * @Route("/{id}/responsibles", name="api_states_get_responsibles", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="State ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(type="array", @API\Items(type="integer", example=123, description="Group ID.")))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="State is not found.")
+     *
+     * @param State $state
+     *
+     * @return JsonResponse
+     */
+    public function getResponsibles(State $state): JsonResponse
+    {
+        $groups = array_map(function (StateResponsibleGroup $group) {
+            return $group->group->id;
+        }, $state->responsibleGroups);
+
+        return $this->json($groups);
+    }
+
+    /**
+     * Sets responsible groups of specified state.
+     *
+     * @Route("/{id}/responsibles", name="api_states_set_responsibles", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="State ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     type="object",
+     *     required={"groups"},
+     *     properties={
+     *         @API\Property(property="groups", type="array", @API\Items(type="integer", example=123, description="Group ID."))
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="State is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setResponsibles(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\SetResponsibleGroupsCommand($request->request->all());
+
+        $command->state = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Returns available transitions from specified state.
+     *
+     * @Route("/{id}/transitions", name="api_states_get_transitions", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="State ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="roles", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\StateRoleTransition::class)
+     *         )),
+     *         @API\Property(property="groups", type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\TemplatesDomain\Model\API\StateGroupTransition::class)
+     *         ))
+     *     }
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="State is not found.")
+     *
+     * @param State $state
+     *
+     * @return JsonResponse
+     */
+    public function getTransitions(State $state): JsonResponse
+    {
+        return $this->json([
+            'roles'  => $state->roleTransitions,
+            'groups' => $state->groupTransitions,
+        ]);
+    }
+
+    /**
+     * Sets transitions from specified state.
+     *
+     * @Route("/{id}/transitions", name="api_states_set_transitions", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="State ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     type="object",
+     *     required={"state"},
+     *     properties={
+     *         @API\Property(property="state", type="integer", example="123", description="Destination state ID."),
+     *         @API\Property(property="roles",  type="array", @API\Items(type="string", enum={"anyone", "author", "responsible"}, example="author", description="System role.")),
+     *         @API\Property(property="groups", type="array", @API\Items(type="integer", example=123, description="Group ID."))
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="State is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setTransitions(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $state  = $request->get('state');
+        $roles  = $request->get('roles');
+        $groups = $request->get('groups');
+
+        if ($roles !== null) {
+
+            $command = new Command\SetRolesTransitionCommand([
+                'from'  => $id,
+                'to'    => $state,
+                'roles' => $roles,
+            ]);
+
+            $commandBus->handle($command);
+        }
+
+        if ($groups !== null) {
+
+            $command = new Command\SetGroupsTransitionCommand([
+                'from'   => $id,
+                'to'     => $state,
+                'groups' => $groups,
+            ]);
+
+            $commandBus->handle($command);
+        }
 
         return $this->json(null);
     }
