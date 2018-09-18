@@ -283,7 +283,7 @@ class Issue implements \JsonSerializable
             },
 
             'age' => function (): int {
-                return ceil((($this->closedAt ?? time()) - $this->createdAt) / self::SECS_IN_DAY);
+                return (int) ceil((($this->closedAt ?? time()) - $this->createdAt) / self::SECS_IN_DAY);
             },
 
             'isCloned' => function (): bool {
