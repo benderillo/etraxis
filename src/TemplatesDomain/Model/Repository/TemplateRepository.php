@@ -69,22 +69,24 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
             ->from(TemplateGroupPermission::class, 'tgp')
             ->leftJoin('template.project', 'project')
             ->where($query->expr()->andX(
-                'project.isSuspended = 0',
-                'template.isLocked = 0',
+                'project.isSuspended = :suspended',
+                'template.isLocked = :locked',
                 'trp.template = template',
                 'trp.permission = :permission',
                 'trp.role = :role'
             ))
             ->orWhere($query->expr()->andX(
-                'project.isSuspended = 0',
-                'template.isLocked = 0',
+                'project.isSuspended = :suspended',
+                'template.isLocked = :locked',
                 'tgp.template = template',
                 'tgp.permission = :permission',
                 $query->expr()->in('tgp.group', ':groups')
             ))
             ->orderBy('project.name')
-            ->orderBy('template.name')
+            ->addOrderBy('template.name')
             ->setParameters([
+                'suspended'  => false,
+                'locked'     => false,
                 'permission' => TemplatePermission::CREATE_ISSUES,
                 'role'       => SystemRole::ANYONE,
                 'groups'     => $user->groups,
