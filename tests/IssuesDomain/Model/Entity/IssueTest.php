@@ -175,6 +175,25 @@ class IssueTest extends TestCase
         $issue->state = $state2;
     }
 
+    public function testAge()
+    {
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $state = new State($template, StateType::INITIAL);
+        $this->setProperty($state, 'id', 3);
+
+        $issue = new Issue(new User());
+
+        $issue->state = $state;
+
+        $this->setProperty($issue, 'createdAt', time() - 86401);
+        self::assertSame(2, $issue->age);
+    }
+
     public function testIsCloned()
     {
         $issue = new Issue(new User());

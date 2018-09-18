@@ -44,7 +44,8 @@ use Webinarium\PropertyTrait;
  * @property-read int          $createdAt    Unix Epoch timestamp when the issue has been created.
  * @property-read int          $changedAt    Unix Epoch timestamp when the issue has been changed last time.
  * @property-read null|int     $closedAt     Unix Epoch timestamp when the issue has been closed, if so.
- * @property-read null|int     $suspendedAt  Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read null|int     $resumesAt    Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read int          $age          Number of days the issue remained or remains opened.
  * @property-read bool         $isCloned     Whether the issue was cloned.
  * @property-read bool         $isCritical   Whether the issue is critical (remains opened for too long).
  * @property-read bool         $isFrozen     Whether the issue is frozen (read-only).
@@ -136,9 +137,9 @@ class Issue
     /**
      * @var int
      *
-     * @ORM\Column(name="suspended_at", type="integer", nullable=true)
+     * @ORM\Column(name="resumes_at", type="integer", nullable=true)
      */
-    protected $suspendedAt;
+    protected $resumesAt;
 
     /**
      * @var ArrayCollection|Event[]
@@ -198,7 +199,7 @@ class Issue
      */
     public function suspend(int $timestamp): void
     {
-        $this->suspendedAt = $timestamp;
+        $this->resumesAt = $timestamp;
     }
 
     /**
@@ -206,7 +207,7 @@ class Issue
      */
     public function resume(): void
     {
-        $this->suspendedAt = null;
+        $this->resumesAt = null;
     }
 
     /**
@@ -228,20 +229,18 @@ class Issue
                 return $this->state->template;
             },
 
+            'age' => function (): int {
+                return ceil((($this->closedAt ?? time()) - $this->createdAt) / self::SECS_IN_DAY);
+            },
+
             'isCloned' => function (): bool {
                 return $this->origin !== null;
             },
 
             'isCritical' => function (): bool {
-
-                if ($this->state->template->criticalAge !== null && $this->closedAt === null) {
-                    $duration = ($this->closedAt ?? time()) - $this->createdAt;
-                    $period   = ceil($duration / self::SECS_IN_DAY);
-
-                    return $this->state->template->criticalAge < $period;
-                }
-
-                return false;
+                return $this->state->template->criticalAge !== null && $this->closedAt === null
+                    ? $this->state->template->criticalAge < $this->age
+                    : false;
             },
 
             'isFrozen' => function (): bool {
@@ -261,7 +260,7 @@ class Issue
             },
 
             'isSuspended' => function (): bool {
-                return $this->suspendedAt !== null && $this->suspendedAt > time();
+                return $this->resumesAt !== null && $this->resumesAt > time();
             },
 
             'events' => function (): array {
