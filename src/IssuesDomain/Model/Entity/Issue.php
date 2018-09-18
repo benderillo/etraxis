@@ -44,7 +44,7 @@ use Webinarium\PropertyTrait;
  * @property-read int          $createdAt    Unix Epoch timestamp when the issue has been created.
  * @property-read int          $changedAt    Unix Epoch timestamp when the issue has been changed last time.
  * @property-read null|int     $closedAt     Unix Epoch timestamp when the issue has been closed, if so.
- * @property-read null|int     $resumesAt    Unix Epoch timestamp when the issue should be resumed, if suspended.
+ * @property-read null|int     $resumesAt    Unix Epoch timestamp when the issue will be resumed, if suspended.
  * @property-read int          $age          Number of days the issue remained or remains opened.
  * @property-read bool         $isCloned     Whether the issue was cloned.
  * @property-read bool         $isCritical   Whether the issue is critical (remains opened for too long).
@@ -55,12 +55,31 @@ use Webinarium\PropertyTrait;
  * @property-read FieldValue[] $values       List of field values.
  * @property-read Issue[]      $dependencies List of issue dependencies.
  */
-class Issue
+class Issue implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_SUBJECT = 250;
+
+    // JSON properties.
+    public const JSON_ID           = 'id';
+    public const JSON_SUBJECT      = 'subject';
+    public const JSON_CREATED_AT   = 'created_at';
+    public const JSON_CHANGED_AT   = 'changed_at';
+    public const JSON_CLOSED_AT    = 'closed_at';
+    public const JSON_AUTHOR       = 'author';
+    public const JSON_STATE        = 'state';
+    public const JSON_RESPONSIBLE  = 'responsible';
+    public const JSON_IS_CLONED    = 'is_cloned';
+    public const JSON_ORIGIN       = 'origin';
+    public const JSON_AGE          = 'age';
+    public const JSON_IS_CRITICAL  = 'is_critical';
+    public const JSON_IS_SUSPENDED = 'is_suspended';
+    public const JSON_RESUMES_AT   = 'resumes_at';
+    public const JSON_IS_CLOSED    = 'is_closed';
+    public const JSON_IS_FROZEN    = 'is_frozen';
+    public const JSON_READ_AT      = 'read_at';
 
     // Utility constants.
     protected const SECS_IN_DAY = 86400;
@@ -208,6 +227,40 @@ class Issue
     public function resume(): void
     {
         $this->resumesAt = null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID           => $this->id,
+            self::JSON_SUBJECT      => $this->subject,
+            self::JSON_CREATED_AT   => $this->createdAt,
+            self::JSON_CHANGED_AT   => $this->changedAt,
+            self::JSON_CLOSED_AT    => $this->closedAt,
+            self::JSON_AUTHOR       => [
+                User::JSON_ID       => $this->author->id,
+                User::JSON_EMAIL    => $this->author->email,
+                User::JSON_FULLNAME => $this->author->fullname,
+            ],
+            self::JSON_STATE        => $this->state->jsonSerialize(),
+            self::JSON_RESPONSIBLE  => $this->responsible === null ? null : [
+                User::JSON_ID       => $this->responsible->id,
+                User::JSON_EMAIL    => $this->responsible->email,
+                User::JSON_FULLNAME => $this->responsible->fullname,
+            ],
+            self::JSON_IS_CLONED    => $this->isCloned,
+            self::JSON_ORIGIN       => $this->origin === null ? null : $this->origin->id,
+            self::JSON_AGE          => $this->age,
+            self::JSON_IS_CRITICAL  => $this->isCritical,
+            self::JSON_IS_SUSPENDED => $this->isSuspended,
+            self::JSON_RESUMES_AT   => $this->resumesAt,
+            self::JSON_IS_CLOSED    => $this->isClosed,
+            self::JSON_IS_FROZEN    => $this->isFrozen,
+            self::JSON_READ_AT      => null,
+        ];
     }
 
     /**

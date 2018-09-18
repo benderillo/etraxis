@@ -14,6 +14,7 @@
 namespace eTraxis\IssuesDomain\Model\Entity;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\State;
@@ -63,6 +64,100 @@ class IssueTest extends TestCase
 
         $changedAt = $this->getProperty($issue, 'changedAt');
         self::assertLessThanOrEqual(2, time() - $changedAt);
+    }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'           => 6,
+            'subject'      => 'Test issue',
+            'created_at'   => time(),
+            'changed_at'   => time(),
+            'closed_at'    => null,
+            'author'       => [
+                'id'       => 4,
+                'email'    => 'anna@example.com',
+                'fullname' => 'Anna Rodygina',
+            ],
+            'state'        => [
+                'id'          => 3,
+                'template'    => [
+                    'id'          => 2,
+                    'project'     => [
+                        'id'          => 1,
+                        'name'        => 'Project',
+                        'description' => 'Test project',
+                        'created'     => time(),
+                        'suspended'   => false,
+                    ],
+                    'name'        => 'Bugfix',
+                    'prefix'      => 'bug',
+                    'description' => 'Found bugs',
+                    'critical'    => 5,
+                    'frozen'      => null,
+                    'locked'      => true,
+                ],
+                'name'        => 'New',
+                'type'        => 'initial',
+                'responsible' => 'assign',
+                'next_state'  => null,
+            ],
+            'responsible'  => [
+                'id'       => 5,
+                'email'    => 'artem@example.com',
+                'fullname' => 'Artem Rodygin',
+            ],
+            'is_cloned'    => false,
+            'origin'       => null,
+            'age'          => 0,
+            'is_critical'  => false,
+            'is_suspended' => false,
+            'resumes_at'   => null,
+            'is_closed'    => false,
+            'is_frozen'    => false,
+            'read_at'      => null,
+        ];
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $project->name        = 'Project';
+        $project->description = 'Test project';
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 2);
+
+        $template->name        = 'Bugfix';
+        $template->prefix      = 'bug';
+        $template->description = 'Found bugs';
+        $template->criticalAge = 5;
+
+        $state = new State($template, StateType::INITIAL);
+        $this->setProperty($state, 'id', 3);
+
+        $state->name        = 'New';
+        $state->responsible = StateResponsible::ASSIGN;
+
+        $author = new User();
+        $this->setProperty($author, 'id', 4);
+
+        $author->email    = 'anna@example.com';
+        $author->fullname = 'Anna Rodygina';
+
+        $responsible = new User();
+        $this->setProperty($responsible, 'id', 5);
+
+        $responsible->email    = 'artem@example.com';
+        $responsible->fullname = 'Artem Rodygin';
+
+        $issue = new Issue($author);
+        $this->setProperty($issue, 'id', 6);
+
+        $issue->subject     = 'Test issue';
+        $issue->state       = $state;
+        $issue->responsible = $responsible;
+
+        self::assertSame($expected, $issue->jsonSerialize());
     }
 
     public function testFullId()

@@ -1,3 +1,7 @@
+IssuesDomain:
+    resource: '../../src/IssuesDomain/Framework/Controller/'
+    type: annotation
+
 SecurityDomain:
     resource: '../../src/SecurityDomain/Framework/Controller/'
     type: annotation
