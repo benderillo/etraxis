@@ -576,30 +576,287 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByProject()
     {
         $expected = [
-            ['Test coverage', 'Presto'],
-            ['Priority',      'Presto'],
-            ['New feature',   'Presto'],
-            ['Issue ID',      'Presto'],
-            ['Effort',        'Presto'],
-            ['Due date',      'Presto'],
-            ['Description',   'Presto'],
-            ['Delta',         'Presto'],
-            ['Commit ID',     'Presto'],
-            ['Details',       'Presto'],
-            ['Test coverage', 'Molestiae'],
-            ['Priority',      'Molestiae'],
-            ['New feature',   'Molestiae'],
-            ['Issue ID',      'Molestiae'],
-            ['Effort',        'Molestiae'],
+            ['Commit ID',     'Distinctio'],
+            ['Delta',         'Distinctio'],
+            ['Description',   'Distinctio'],
+            ['Details',       'Distinctio'],
+            ['Due date',      'Distinctio'],
+            ['Effort',        'Distinctio'],
+            ['Issue ID',      'Distinctio'],
+            ['New feature',   'Distinctio'],
+            ['Priority',      'Distinctio'],
+            ['Test coverage', 'Distinctio'],
+            ['Commit ID',     'Excepturi'],
+            ['Delta',         'Excepturi'],
+            ['Description',   'Excepturi'],
+            ['Details',       'Excepturi'],
+            ['Due date',      'Excepturi'],
         ];
 
         $collection = $this->repository->getCollection(0, 15, null, [], [
-            Field::JSON_PROJECT  => FieldRepository::SORT_DESC,
-            Field::JSON_TEMPLATE => FieldRepository::SORT_ASC,
-            Field::JSON_NAME     => FieldRepository::SORT_DESC,
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByTemplate()
+    {
+        $expected = [
+            ['Details',     'Distinctio'],
+            ['Details',     'Excepturi'],
+            ['Details',     'Molestiae'],
+            ['Details',     'Presto'],
+            ['Commit ID',   'Distinctio'],
+            ['Commit ID',   'Excepturi'],
+            ['Commit ID',   'Molestiae'],
+            ['Commit ID',   'Presto'],
+            ['Delta',       'Distinctio'],
+            ['Delta',       'Excepturi'],
+            ['Delta',       'Molestiae'],
+            ['Delta',       'Presto'],
+            ['Description', 'Distinctio'],
+            ['Description', 'Excepturi'],
+            ['Description', 'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_TEMPLATE => FieldRepository::SORT_DESC,
+            Field::JSON_NAME     => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT  => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByState()
+    {
+        $expected = [
+            ['Due date',  'Distinctio'],
+            ['Due date',  'Excepturi'],
+            ['Due date',  'Molestiae'],
+            ['Due date',  'Presto'],
+            ['Commit ID', 'Distinctio'],
+            ['Commit ID', 'Excepturi'],
+            ['Commit ID', 'Molestiae'],
+            ['Commit ID', 'Presto'],
+            ['Delta',     'Distinctio'],
+            ['Delta',     'Excepturi'],
+            ['Delta',     'Molestiae'],
+            ['Delta',     'Presto'],
+            ['Effort',    'Distinctio'],
+            ['Effort',    'Excepturi'],
+            ['Effort',    'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_STATE   => FieldRepository::SORT_ASC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByName()
+    {
+        $expected = [
+            ['Commit ID',   'Distinctio'],
+            ['Commit ID',   'Excepturi'],
+            ['Commit ID',   'Molestiae'],
+            ['Commit ID',   'Presto'],
+            ['Delta',       'Distinctio'],
+            ['Delta',       'Excepturi'],
+            ['Delta',       'Molestiae'],
+            ['Delta',       'Presto'],
+            ['Description', 'Distinctio'],
+            ['Description', 'Excepturi'],
+            ['Description', 'Molestiae'],
+            ['Description', 'Presto'],
+            ['Details',     'Distinctio'],
+            ['Details',     'Excepturi'],
+            ['Details',     'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByType()
+    {
+        $expected = [
+            ['Description', 'Distinctio'],
+            ['Description', 'Excepturi'],
+            ['Description', 'Molestiae'],
+            ['Description', 'Presto'],
+            ['Details',     'Distinctio'],
+            ['Details',     'Excepturi'],
+            ['Details',     'Molestiae'],
+            ['Details',     'Presto'],
+            ['Commit ID',   'Distinctio'],
+            ['Commit ID',   'Excepturi'],
+            ['Commit ID',   'Molestiae'],
+            ['Commit ID',   'Presto'],
+            ['Delta',       'Distinctio'],
+            ['Delta',       'Excepturi'],
+            ['Delta',       'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_TYPE    => FieldRepository::SORT_DESC,
+            Field::JSON_NAME    => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByDescription()
+    {
+        $expected = [
+            ['Delta',       'Distinctio'],
+            ['Delta',       'Excepturi'],
+            ['Delta',       'Molestiae'],
+            ['Delta',       'Presto'],
+            ['Effort',      'Distinctio'],
+            ['Effort',      'Excepturi'],
+            ['Effort',      'Molestiae'],
+            ['Effort',      'Presto'],
+            ['Commit ID',   'Distinctio'],
+            ['Commit ID',   'Excepturi'],
+            ['Commit ID',   'Molestiae'],
+            ['Commit ID',   'Presto'],
+            ['Description', 'Distinctio'],
+            ['Description', 'Excepturi'],
+            ['Description', 'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_DESCRIPTION => FieldRepository::SORT_DESC,
+            Field::JSON_NAME        => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT     => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByPosition()
+    {
+        $expected = [
+            ['Test coverage', 'Distinctio'],
+            ['Test coverage', 'Excepturi'],
+            ['Test coverage', 'Molestiae'],
+            ['Test coverage', 'Presto'],
+            ['Effort',        'Distinctio'],
+            ['Effort',        'Excepturi'],
+            ['Effort',        'Molestiae'],
+            ['Effort',        'Presto'],
+            ['New feature',   'Distinctio'],
+            ['New feature',   'Excepturi'],
+            ['New feature',   'Molestiae'],
+            ['New feature',   'Presto'],
+            ['Delta',         'Distinctio'],
+            ['Delta',         'Excepturi'],
+            ['Delta',         'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_POSITION => FieldRepository::SORT_DESC,
+            Field::JSON_NAME     => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT  => FieldRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(14, $collection->to);
+        self::assertSame(40, $collection->total);
+
+        $actual = array_map(function (Field $field) {
+            return [$field->name, $field->state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByRequired()
+    {
+        $expected = [
+            ['Commit ID',   'Distinctio'],
+            ['Commit ID',   'Excepturi'],
+            ['Commit ID',   'Molestiae'],
+            ['Commit ID',   'Presto'],
+            ['Description', 'Distinctio'],
+            ['Description', 'Excepturi'],
+            ['Description', 'Molestiae'],
+            ['Description', 'Presto'],
+            ['Due date',    'Distinctio'],
+            ['Due date',    'Excepturi'],
+            ['Due date',    'Molestiae'],
+            ['Due date',    'Presto'],
+            ['New feature', 'Distinctio'],
+            ['New feature', 'Excepturi'],
+            ['New feature', 'Molestiae'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 15, null, [], [
+            Field::JSON_REQUIRED => FieldRepository::SORT_ASC,
+            Field::JSON_NAME     => FieldRepository::SORT_ASC,
+            Field::JSON_PROJECT  => FieldRepository::SORT_ASC,
         ]);
 
         self::assertSame(0, $collection->from);

@@ -446,7 +446,65 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByProject()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Support',     'Support Request A'],
+            ['Development', 'Development Task C'],
+            ['Support',     'Support Request C'],
+            ['Development', 'Development Task B'],
+            ['Support',     'Support Request B'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_PROJECT => TemplateRepository::SORT_ASC,
+            Template::JSON_NAME    => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByName()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request A'],
+            ['Support',     'Support Request B'],
+            ['Support',     'Support Request C'],
+            ['Support',     'Support Request D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_NAME        => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByPrefix()
     {
         $expected = [
             ['Support',     'Support Request A'],
@@ -460,7 +518,122 @@ class TemplateRepositoryTest extends WebTestCase
         ];
 
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
-            Template::JSON_NAME        => TemplateRepository::SORT_DESC,
+            Template::JSON_PREFIX      => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByDescription()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request A'],
+            ['Support',     'Support Request B'],
+            ['Support',     'Support Request C'],
+            ['Support',     'Support Request D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByCritical()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request A'],
+            ['Support',     'Support Request B'],
+            ['Support',     'Support Request C'],
+            ['Support',     'Support Request D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_CRITICAL    => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByFrozen()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task C'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request A'],
+            ['Support',     'Support Request B'],
+            ['Support',     'Support Request C'],
+            ['Support',     'Support Request D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_FROZEN      => TemplateRepository::SORT_ASC,
+            Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(7, $collection->to);
+        self::assertSame(8, $collection->total);
+
+        $actual = array_map(function (Template $template) {
+            return [$template->name, $template->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByLocked()
+    {
+        $expected = [
+            ['Development', 'Development Task A'],
+            ['Development', 'Development Task C'],
+            ['Support',     'Support Request C'],
+            ['Support',     'Support Request D'],
+            ['Development', 'Development Task B'],
+            ['Development', 'Development Task D'],
+            ['Support',     'Support Request A'],
+            ['Support',     'Support Request B'],
+        ];
+
+        $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [], [
+            Template::JSON_LOCKED      => TemplateRepository::SORT_ASC,
             Template::JSON_DESCRIPTION => TemplateRepository::SORT_ASC,
         ]);
 

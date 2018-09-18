@@ -243,7 +243,79 @@ class ProjectRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByName()
+    {
+        $expected = [
+            'Distinctio',
+            'Excepturi',
+            'Molestiae',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [], [
+            Project::JSON_NAME => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByDescription()
+    {
+        $expected = [
+            'Distinctio',
+            'Molestiae',
+            'Excepturi',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [], [
+            Project::JSON_DESCRIPTION => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByCreated()
+    {
+        $expected = [
+            'Distinctio',
+            'Molestiae',
+            'Excepturi',
+            'Presto',
+        ];
+
+        $collection = $this->repository->getCollection(0, ProjectRepository::MAX_LIMIT, null, [], [
+            Project::JSON_CREATED => ProjectRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(3, $collection->to);
+        self::assertSame(4, $collection->total);
+
+        $actual = array_map(function (Project $project) {
+            return $project->name;
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortBySuspended()
     {
         $expected = [
             'Excepturi',

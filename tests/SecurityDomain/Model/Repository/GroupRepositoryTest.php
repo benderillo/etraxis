@@ -334,7 +334,47 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByProject()
+    {
+        $expected = [
+            ['Company Clients',   null],
+            ['Company Staff',     null],
+            ['Clients',           'Clients A'],
+            ['Developers',        'Developers A'],
+            ['Managers',          'Managers A'],
+            ['Support Engineers', 'Support Engineers A'],
+            ['Clients',           'Clients C'],
+            ['Developers',        'Developers C'],
+            ['Managers',          'Managers C'],
+            ['Support Engineers', 'Support Engineers C'],
+            ['Clients',           'Clients B'],
+            ['Developers',        'Developers B'],
+            ['Managers',          'Managers B'],
+            ['Support Engineers', 'Support Engineers B'],
+            ['Clients',           'Clients D'],
+            ['Developers',        'Developers D'],
+            ['Managers',          'Managers D'],
+            ['Support Engineers', 'Support Engineers D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [], [
+            Group::JSON_PROJECT     => GroupRepository::SORT_ASC,
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(17, $collection->to);
+        self::assertSame(18, $collection->total);
+
+        $actual = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByName()
     {
         $expected = [
             ['Clients',           'Clients A'],
@@ -358,6 +398,85 @@ class GroupRepositoryTest extends WebTestCase
         ];
 
         $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [], [
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(17, $collection->to);
+        self::assertSame(18, $collection->total);
+
+        $actual = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByDescription()
+    {
+        $expected = [
+            ['Company Clients',   null],
+            ['Company Staff',     null],
+            ['Clients',           'Clients A'],
+            ['Clients',           'Clients B'],
+            ['Clients',           'Clients C'],
+            ['Clients',           'Clients D'],
+            ['Developers',        'Developers A'],
+            ['Developers',        'Developers B'],
+            ['Developers',        'Developers C'],
+            ['Developers',        'Developers D'],
+            ['Managers',          'Managers A'],
+            ['Managers',          'Managers B'],
+            ['Managers',          'Managers C'],
+            ['Managers',          'Managers D'],
+            ['Support Engineers', 'Support Engineers A'],
+            ['Support Engineers', 'Support Engineers B'],
+            ['Support Engineers', 'Support Engineers C'],
+            ['Support Engineers', 'Support Engineers D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [], [
+            Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
+            Group::JSON_NAME        => GroupRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(17, $collection->to);
+        self::assertSame(18, $collection->total);
+
+        $actual = array_map(function (Group $group) {
+            return [$group->name, $group->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByGlobal()
+    {
+        $expected = [
+            ['Company Clients',   null],
+            ['Company Staff',     null],
+            ['Clients',           'Clients A'],
+            ['Clients',           'Clients B'],
+            ['Clients',           'Clients C'],
+            ['Clients',           'Clients D'],
+            ['Developers',        'Developers A'],
+            ['Developers',        'Developers B'],
+            ['Developers',        'Developers C'],
+            ['Developers',        'Developers D'],
+            ['Managers',          'Managers A'],
+            ['Managers',          'Managers B'],
+            ['Managers',          'Managers C'],
+            ['Managers',          'Managers D'],
+            ['Support Engineers', 'Support Engineers A'],
+            ['Support Engineers', 'Support Engineers B'],
+            ['Support Engineers', 'Support Engineers C'],
+            ['Support Engineers', 'Support Engineers D'],
+        ];
+
+        $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [], [
+            Group::JSON_GLOBAL      => GroupRepository::SORT_ASC,
             Group::JSON_NAME        => GroupRepository::SORT_ASC,
             Group::JSON_DESCRIPTION => GroupRepository::SORT_ASC,
         ]);

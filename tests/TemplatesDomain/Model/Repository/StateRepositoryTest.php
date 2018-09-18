@@ -357,25 +357,152 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByProject()
     {
         $expected = [
-            ['Opened',     'Presto'],
-            ['Resolved',   'Presto'],
-            ['Submitted',  'Presto'],
-            ['Assigned',   'Presto'],
-            ['Completed',  'Presto'],
-            ['Duplicated', 'Presto'],
-            ['New',        'Presto'],
-            ['Opened',     'Molestiae'],
-            ['Resolved',   'Molestiae'],
-            ['Submitted',  'Molestiae'],
+            ['Assigned',   'Distinctio'],
+            ['Completed',  'Distinctio'],
+            ['Duplicated', 'Distinctio'],
+            ['New',        'Distinctio'],
+            ['Opened',     'Distinctio'],
+            ['Resolved',   'Distinctio'],
+            ['Submitted',  'Distinctio'],
+            ['Assigned',   'Excepturi'],
+            ['Completed',  'Excepturi'],
+            ['Duplicated', 'Excepturi'],
         ];
 
         $collection = $this->repository->getCollection(0, 10, null, [], [
-            State::JSON_PROJECT  => StateRepository::SORT_DESC,
-            State::JSON_TEMPLATE => StateRepository::SORT_DESC,
+            State::JSON_PROJECT  => StateRepository::SORT_ASC,
+            State::JSON_TEMPLATE => StateRepository::SORT_ASC,
             State::JSON_NAME     => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(9, $collection->to);
+        self::assertSame(28, $collection->total);
+
+        $actual = array_map(function (State $state) {
+            return [$state->name, $state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByTemplate()
+    {
+        $expected = [
+            ['Assigned',   'Distinctio'],
+            ['Assigned',   'Excepturi'],
+            ['Assigned',   'Molestiae'],
+            ['Assigned',   'Presto'],
+            ['Completed',  'Distinctio'],
+            ['Completed',  'Excepturi'],
+            ['Completed',  'Molestiae'],
+            ['Completed',  'Presto'],
+            ['Duplicated', 'Distinctio'],
+            ['Duplicated', 'Excepturi'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 10, null, [], [
+            State::JSON_TEMPLATE => StateRepository::SORT_ASC,
+            State::JSON_NAME     => StateRepository::SORT_ASC,
+            State::JSON_PROJECT  => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(9, $collection->to);
+        self::assertSame(28, $collection->total);
+
+        $actual = array_map(function (State $state) {
+            return [$state->name, $state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByName()
+    {
+        $expected = [
+            ['Assigned',   'Distinctio'],
+            ['Assigned',   'Excepturi'],
+            ['Assigned',   'Molestiae'],
+            ['Assigned',   'Presto'],
+            ['Completed',  'Distinctio'],
+            ['Completed',  'Excepturi'],
+            ['Completed',  'Molestiae'],
+            ['Completed',  'Presto'],
+            ['Duplicated', 'Distinctio'],
+            ['Duplicated', 'Excepturi'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 10, null, [], [
+            State::JSON_NAME     => StateRepository::SORT_ASC,
+            State::JSON_PROJECT  => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(9, $collection->to);
+        self::assertSame(28, $collection->total);
+
+        $actual = array_map(function (State $state) {
+            return [$state->name, $state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByType()
+    {
+        $expected = [
+            ['Completed',  'Distinctio'],
+            ['Completed',  'Excepturi'],
+            ['Completed',  'Molestiae'],
+            ['Duplicated', 'Distinctio'],
+            ['Duplicated', 'Excepturi'],
+            ['Duplicated', 'Molestiae'],
+            ['Resolved',   'Distinctio'],
+            ['Resolved',   'Excepturi'],
+            ['Resolved',   'Molestiae'],
+            ['New',        'Distinctio'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 10, null, [], [
+            State::JSON_TYPE    => StateRepository::SORT_ASC,
+            State::JSON_NAME    => StateRepository::SORT_ASC,
+            State::JSON_PROJECT => StateRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(9, $collection->to);
+        self::assertSame(28, $collection->total);
+
+        $actual = array_map(function (State $state) {
+            return [$state->name, $state->template->project->name];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByResponsible()
+    {
+        $expected = [
+            ['Assigned',  'Distinctio'],
+            ['Assigned',  'Excepturi'],
+            ['Assigned',  'Molestiae'],
+            ['Assigned',  'Presto'],
+            ['Opened',    'Distinctio'],
+            ['Opened',    'Excepturi'],
+            ['Opened',    'Molestiae'],
+            ['Opened',    'Presto'],
+            ['Submitted', 'Distinctio'],
+            ['Submitted', 'Excepturi'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 10, null, [], [
+            State::JSON_RESPONSIBLE => StateRepository::SORT_ASC,
+            State::JSON_NAME        => StateRepository::SORT_ASC,
+            State::JSON_PROJECT     => StateRepository::SORT_ASC,
         ]);
 
         self::assertSame(0, $collection->from);

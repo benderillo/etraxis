@@ -187,7 +187,7 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
             Group::JSON_PROJECT     => 'project.name',
             Group::JSON_NAME        => 'grp.name',
             Group::JSON_DESCRIPTION => 'grp.description',
-            Group::JSON_GLOBAL      => 'COALESCE(project.id - project.id, 1) = 1',
+            Group::JSON_GLOBAL      => 'project.id - project.id',
         ];
 
         if (mb_strtoupper($direction) !== self::SORT_DESC) {

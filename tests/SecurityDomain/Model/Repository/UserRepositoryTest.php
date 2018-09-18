@@ -415,7 +415,97 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testGetCollectionSort()
+    public function testGetCollectionSortByEmail()
+    {
+        $expected = [
+            ['eTraxis Admin',       'Built-in administrator'],
+            ['Ansel Koepp',         'Developer B+C'],
+            ['Anissa Marvin',       'Developer B'],
+            ['Artem Rodygin',       null],
+            ['Alyson Schinner',     'Client B'],
+            ['Berenice O\'Connell', 'Manager A+C'],
+            ['Bell Kemmer',         'Support Engineer A+B'],
+            ['Carolyn Hill',        'Manager B+C'],
+            ['Carter Batz',         'Support Engineer A+C'],
+            ['Christy McDermott',   'Developer A'],
+            ['Carson Legros',       'Client A+B'],
+            ['Dangelo Hill',        'Manager A'],
+            ['Denis Murazik',       'Client C'],
+            ['Dorcas Ernser',       'Manager A+B'],
+            ['Dennis Quigley',      'Developer A+C'],
+            ['Derrick Tillman',     'Client B+C'],
+            ['Albert Einstein',     null],
+            ['Emmanuelle Bartell',  'Manager B'],
+            ['Francesca Dooley',    'Developer A+B+C'],
+            ['Hunter Stroman',      'Client A'],
+            ['Juanita Goodwin',     'Manager C'],
+            ['Joe Gutmann',         'Locked account'],
+            ['Jarrell Kiehn',       'Support Engineer A, Developer B, Manager C'],
+            ['Jeramy Mueller',      'Client A+C'],
+            ['Kailyn Bahringer',    'Support Engineer B+C'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [], [
+            User::JSON_EMAIL => UserRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(24, $collection->to);
+        self::assertSame(35, $collection->total);
+
+        $actual = array_map(function (User $user) {
+            return [$user->fullname, $user->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByFullname()
+    {
+        $expected = [
+            ['Albert Einstein',     null],
+            ['Alyson Schinner',     'Client B'],
+            ['Anissa Marvin',       'Developer B'],
+            ['Ansel Koepp',         'Developer B+C'],
+            ['Artem Rodygin',       null],
+            ['Bell Kemmer',         'Support Engineer A+B'],
+            ['Berenice O\'Connell', 'Manager A+C'],
+            ['Carolyn Hill',        'Manager B+C'],
+            ['Carson Legros',       'Client A+B'],
+            ['Carter Batz',         'Support Engineer A+C'],
+            ['Christy McDermott',   'Developer A'],
+            ['Dangelo Hill',        'Manager A'],
+            ['Denis Murazik',       'Client C'],
+            ['Dennis Quigley',      'Developer A+C'],
+            ['Derrick Tillman',     'Client B+C'],
+            ['Dorcas Ernser',       'Manager A+B'],
+            ['Emmanuelle Bartell',  'Manager B'],
+            ['eTraxis Admin',       'Built-in administrator'],
+            ['Francesca Dooley',    'Developer A+B+C'],
+            ['Hunter Stroman',      'Client A'],
+            ['Jarrell Kiehn',       'Support Engineer A, Developer B, Manager C'],
+            ['Jeramy Mueller',      'Client A+C'],
+            ['Joe Gutmann',         'Locked account'],
+            ['Juanita Goodwin',     'Manager C'],
+            ['Kailyn Bahringer',    'Support Engineer B+C'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [], [
+            User::JSON_FULLNAME => UserRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(24, $collection->to);
+        self::assertSame(35, $collection->total);
+
+        $actual = array_map(function (User $user) {
+            return [$user->fullname, $user->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByDescription()
     {
         $expected = [
             ['Artem Rodygin',       null],
@@ -448,6 +538,98 @@ class UserRepositoryTest extends WebTestCase
         $collection = $this->repository->getCollection(0, 25, '', [], [
             User::JSON_DESCRIPTION => UserRepository::SORT_ASC,
             User::JSON_FULLNAME    => UserRepository::SORT_DESC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(24, $collection->to);
+        self::assertSame(35, $collection->total);
+
+        $actual = array_map(function (User $user) {
+            return [$user->fullname, $user->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByAdmin()
+    {
+        $expected = [
+            ['eTraxis Admin',       'Built-in administrator'],
+            ['Albert Einstein',     null],
+            ['Alyson Schinner',     'Client B'],
+            ['Anissa Marvin',       'Developer B'],
+            ['Ansel Koepp',         'Developer B+C'],
+            ['Artem Rodygin',       null],
+            ['Bell Kemmer',         'Support Engineer A+B'],
+            ['Berenice O\'Connell', 'Manager A+C'],
+            ['Carolyn Hill',        'Manager B+C'],
+            ['Carson Legros',       'Client A+B'],
+            ['Carter Batz',         'Support Engineer A+C'],
+            ['Christy McDermott',   'Developer A'],
+            ['Dangelo Hill',        'Manager A'],
+            ['Denis Murazik',       'Client C'],
+            ['Dennis Quigley',      'Developer A+C'],
+            ['Derrick Tillman',     'Client B+C'],
+            ['Dorcas Ernser',       'Manager A+B'],
+            ['Emmanuelle Bartell',  'Manager B'],
+            ['Francesca Dooley',    'Developer A+B+C'],
+            ['Hunter Stroman',      'Client A'],
+            ['Jarrell Kiehn',       'Support Engineer A, Developer B, Manager C'],
+            ['Jeramy Mueller',      'Client A+C'],
+            ['Joe Gutmann',         'Locked account'],
+            ['Juanita Goodwin',     'Manager C'],
+            ['Kailyn Bahringer',    'Support Engineer B+C'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [], [
+            User::JSON_ADMIN    => UserRepository::SORT_ASC,
+            User::JSON_FULLNAME => UserRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(24, $collection->to);
+        self::assertSame(35, $collection->total);
+
+        $actual = array_map(function (User $user) {
+            return [$user->fullname, $user->description];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
+    public function testGetCollectionSortByProvider()
+    {
+        $expected = [
+            ['Albert Einstein',     null],
+            ['Vida Parker',         'Support Engineer B'],
+            ['Tracy Marquardt',     'Support Engineer A+B+C'],
+            ['Tony Buckridge',      'Support Engineer C'],
+            ['Ted Berge',           'Disabled account'],
+            ['Nikko Hills',         'Support Engineer A+B, Developer C'],
+            ['Millie Bogisich',     'Developer C'],
+            ['Lucas O\'Connell',    'Client A+B+C'],
+            ['Lola Abshire',        'Developer A+B'],
+            ['Leland Doyle',        'Manager A+B+C+D'],
+            ['Kyla Schultz',        'Support Engineer A'],
+            ['Kailyn Bahringer',    'Support Engineer B+C'],
+            ['Juanita Goodwin',     'Manager C'],
+            ['Joe Gutmann',         'Locked account'],
+            ['Jeramy Mueller',      'Client A+C'],
+            ['Jarrell Kiehn',       'Support Engineer A, Developer B, Manager C'],
+            ['Hunter Stroman',      'Client A'],
+            ['Francesca Dooley',    'Developer A+B+C'],
+            ['eTraxis Admin',       'Built-in administrator'],
+            ['Emmanuelle Bartell',  'Manager B'],
+            ['Dorcas Ernser',       'Manager A+B'],
+            ['Derrick Tillman',     'Client B+C'],
+            ['Dennis Quigley',      'Developer A+C'],
+            ['Denis Murazik',       'Client C'],
+            ['Dangelo Hill',        'Manager A'],
+        ];
+
+        $collection = $this->repository->getCollection(0, 25, '', [], [
+            User::JSON_PROVIDER => UserRepository::SORT_DESC,
+            User::JSON_FULLNAME => UserRepository::SORT_DESC,
         ]);
 
         self::assertSame(0, $collection->from);
