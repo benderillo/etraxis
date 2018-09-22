@@ -145,7 +145,7 @@ class TemplateVoter extends Voter
         $query
             ->select('COUNT(issue.id)')
             ->from(Issue::class, 'issue')
-            ->leftJoin('issue.state', 'state')
+            ->innerJoin('issue.state', 'state')
             ->where('state.template = :template')
             ->setParameter('template', $subject->id);
 

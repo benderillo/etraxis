@@ -56,11 +56,11 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
         $query = $this->createQueryBuilder('state');
 
         // Include templates.
-        $query->leftJoin('state.template', 'template');
+        $query->innerJoin('state.template', 'template');
         $query->addSelect('template');
 
         // Include projects.
-        $query->leftJoin('template.project', 'project');
+        $query->innerJoin('template.project', 'project');
         $query->addSelect('project');
 
         // Search.

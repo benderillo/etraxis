@@ -14,6 +14,7 @@
 namespace eTraxis\TemplatesDomain\Model\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\SharedDomain\Model\Collection\Collection;
@@ -21,8 +22,6 @@ use eTraxis\SharedDomain\Model\Collection\CollectionInterface;
 use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
 use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
-use eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission;
-use eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class TemplateRepository extends ServiceEntityRepository implements CollectionInterface
@@ -64,22 +63,13 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
 
         $query
             ->distinct()
+            ->innerJoin('template.project', 'project', Join::WITH, 'project.isSuspended = :suspended')
             ->addSelect('project')
-            ->from(TemplateRolePermission::class, 'trp')
-            ->from(TemplateGroupPermission::class, 'tgp')
-            ->leftJoin('template.project', 'project')
-            ->where($query->expr()->andX(
-                'project.isSuspended = :suspended',
-                'template.isLocked = :locked',
-                'trp.template = template',
-                'trp.permission = :permission',
-                'trp.role = :role'
-            ))
-            ->orWhere($query->expr()->andX(
-                'project.isSuspended = :suspended',
-                'template.isLocked = :locked',
-                'tgp.template = template',
-                'tgp.permission = :permission',
+            ->leftJoin('template.rolePermissionsCollection', 'trp', Join::WITH, 'trp.permission = :permission')
+            ->leftJoin('template.groupPermissionsCollection', 'tgp', Join::WITH, 'tgp.permission = :permission')
+            ->where('template.isLocked = :locked')
+            ->andWhere($query->expr()->orX(
+                'trp.role = :role',
                 $query->expr()->in('tgp.group', ':groups')
             ))
             ->orderBy('project.name')
@@ -105,7 +95,7 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
         $query = $this->createQueryBuilder('template');
 
         // Include projects.
-        $query->leftJoin('template.project', 'project');
+        $query->innerJoin('template.project', 'project');
         $query->addSelect('project');
 
         // Search.

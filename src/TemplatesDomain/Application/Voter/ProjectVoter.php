@@ -138,8 +138,8 @@ class ProjectVoter extends Voter
         $query
             ->select('COUNT(issue.id)')
             ->from(Issue::class, 'issue')
-            ->leftJoin('issue.state', 'state')
-            ->leftJoin('state.template', 'template')
+            ->innerJoin('issue.state', 'state')
+            ->innerJoin('state.template', 'template')
             ->where('template.project = :project')
             ->setParameter('project', $subject->id);
 

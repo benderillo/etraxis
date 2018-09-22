@@ -129,15 +129,15 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
         $query = $this->createQueryBuilder('field');
 
         // Include states.
-        $query->leftJoin('field.state', 'state');
+        $query->innerJoin('field.state', 'state');
         $query->addSelect('state');
 
         // Include templates.
-        $query->leftJoin('state.template', 'template');
+        $query->innerJoin('state.template', 'template');
         $query->addSelect('template');
 
         // Include projects.
-        $query->leftJoin('template.project', 'project');
+        $query->innerJoin('template.project', 'project');
         $query->addSelect('project');
 
         // Ignore removed fields.
