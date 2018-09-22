@@ -176,7 +176,9 @@ class IssueVoter extends Voter
             return true;
         }
 
-        return $this->hasGroupPermission($subject->template, $user, TemplatePermission::VIEW_ISSUES);
+        return
+            $this->hasRolePermission($subject->template, SystemRole::ANYONE, TemplatePermission::VIEW_ISSUES) ||
+            $this->hasGroupPermission($subject->template, $user, TemplatePermission::VIEW_ISSUES);
     }
 
     /**
