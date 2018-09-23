@@ -16,6 +16,7 @@
         "ext-iconv": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "beberlei/DoctrineExtensions": "^1.1",
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "league/iso3166": "^2.1",
         "league/tactician-bundle": "^1.1",
