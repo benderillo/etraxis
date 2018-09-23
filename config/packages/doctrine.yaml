@@ -8,6 +8,12 @@ doctrine:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
+        dql:
+            numeric_functions:
+                ceil: DoctrineExtensions\Query\Mysql\Ceil
+            string_functions:
+                greatest: DoctrineExtensions\Query\Mysql\Greatest
+                lpad: DoctrineExtensions\Query\Mysql\Lpad
         mappings:
             IssuesDomain:
                 is_bundle: false
