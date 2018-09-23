@@ -1615,32 +1615,32 @@ class IssueRepositoryTest extends TransactionalTestCase
     public function testGetCollectionSortByAge()
     {
         $expected = [
-            [1,    'Molestiae',  'Development task 4'],
-            [2,    'Distinctio', 'Support request 1'],
-            [2,    'Distinctio', 'Support request 3'],
-            [2,    'Molestiae',  'Development task 7'],
-            [2,    'Molestiae',  'Support request 1'],
-            [2,    'Molestiae',  'Support request 3'],
-            [2,    'Excepturi',  'Support request 1'],
-            [2,    'Excepturi',  'Support request 3'],
-            [3,    'Molestiae',  'Development task 1'],
-            [5,    'Molestiae',  'Development task 3'],
-            [345,  'Excepturi',  'Support request 6'],
-            [348,  'Excepturi',  'Support request 5'],
-            [366,  'Excepturi',  'Support request 4'],
-            [410,  'Excepturi',  'Support request 2'],
-            [482,  'Molestiae',  'Support request 5'],
-            [494,  'Molestiae',  'Support request 4'],
-            [512,  'Molestiae',  'Support request 6'],
-            [518,  'Molestiae',  'Development task 8'],
-            [553,  'Molestiae',  'Support request 2'],
-            [606,  'Molestiae',  'Development task 6'],
-            [661,  'Molestiae',  'Development task 5'],
-            [693,  'Distinctio', 'Support request 6'],
-            [725,  'Molestiae',  'Development task 2'],
-            [933,  'Distinctio', 'Support request 5'],
-            [946,  'Distinctio', 'Support request 4'],
-            [1057, 'Distinctio', 'Support request 2'],
+            ['Molestiae',  'Development task 4'],   //    1 day
+            ['Distinctio', 'Support request 1'],    //    2 days
+            ['Distinctio', 'Support request 3'],    //    2 days
+            ['Molestiae',  'Development task 7'],   //    2 days
+            ['Molestiae',  'Support request 1'],    //    2 days
+            ['Molestiae',  'Support request 3'],    //    2 days
+            ['Excepturi',  'Support request 1'],    //    2 days
+            ['Excepturi',  'Support request 3'],    //    2 days
+            ['Molestiae',  'Development task 1'],   //    3 days
+            ['Molestiae',  'Development task 3'],   //    5 days
+            ['Excepturi',  'Support request 6'],    //  345 days
+            ['Excepturi',  'Support request 5'],    //  348 days
+            ['Excepturi',  'Support request 4'],    //  366 days
+            ['Excepturi',  'Support request 2'],    //  410 days
+            ['Molestiae',  'Support request 5'],    //  482 days
+            ['Molestiae',  'Support request 4'],    //  494 days
+            ['Molestiae',  'Support request 6'],    //  512 days
+            ['Molestiae',  'Development task 8'],   //  518 days
+            ['Molestiae',  'Support request 2'],    //  553 days
+            ['Molestiae',  'Development task 6'],   //  606 days
+            ['Molestiae',  'Development task 5'],   //  661 days
+            ['Distinctio', 'Support request 6'],    //  693 days
+            ['Molestiae',  'Development task 2'],   //  725 days
+            ['Distinctio', 'Support request 5'],    //  933 days
+            ['Distinctio', 'Support request 4'],    //  946 days
+            ['Distinctio', 'Support request 2'],    // 1057 days
         ];
 
         $this->loginAs('amarvin@example.com');
@@ -1654,11 +1654,7 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame(26, $collection->total);
 
         $actual = array_map(function (Issue $issue) {
-            return [
-                $issue->age,
-                $issue->state->template->project->name,
-                $issue->subject,
-            ];
+            return [$issue->state->template->project->name, $issue->subject];
         }, $collection->data);
 
         self::assertSame($expected, $actual);
