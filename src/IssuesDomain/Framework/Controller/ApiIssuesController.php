@@ -13,11 +13,13 @@
 
 namespace eTraxis\IssuesDomain\Framework\Controller;
 
+use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
+use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
@@ -25,6 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * API controller for '/issues' resource.
@@ -131,6 +134,38 @@ class ApiIssuesController extends Controller
     }
 
     /**
+     * Creates new issue.
+     *
+     * @Route("", name="api_issues_create", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\CreateIssueCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Template is not found.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createIssue(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\CreateIssueCommand($request->request->all());
+
+        /** @var Issue $issue */
+        $issue = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_issues_get', [
+            'id' => $issue->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
+    }
+
+    /**
      * Returns specified issue.
      *
      * @Route("/{id}", name="api_issues_get", methods={"GET"}, requirements={"id": "\d+"})
@@ -167,5 +202,320 @@ class ApiIssuesController extends Controller
         $repository->markAsRead($issue, $this->getUser());
 
         return $this->json($data);
+    }
+
+    /**
+     * Clones specified issue.
+     *
+     * @Route("/{id}", name="api_issues_clone", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\CloneIssueCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function cloneIssue(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\CloneIssueCommand($request->request->all());
+
+        $command->issue = $id;
+
+        /** @var Issue $issue */
+        $issue = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_issues_get', [
+            'id' => $issue->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
+    }
+
+    /**
+     * Updates specified issue.
+     *
+     * @Route("/{id}", name="api_issues_update", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\UpdateIssueCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function updateIssue(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UpdateIssueCommand($request->request->all());
+
+        $command->issue = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Deletes specified issue.
+     *
+     * @Route("/{id}", name="api_issues_delete", methods={"DELETE"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function deleteIssue(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\DeleteIssueCommand([
+            'issue' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Changes state of specified issue.
+     *
+     * @Route("/{id}/state/{state}", name="api_issues_state", methods={"POST"}, requirements={"id": "\d+", "state": "\d+"})
+     *
+     * @API\Parameter(name="id",    in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="state", in="path", type="integer", required=true, description="State ID.")
+     * @API\Parameter(name="",      in="body", @Model(type=Command\ChangeStateCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue or state is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param int        $state
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function changeState(Request $request, int $id, int $state, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\ChangeStateCommand($request->request->all());
+
+        $command->issue = $id;
+        $command->state = $state;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Reassigns specified issue.
+     *
+     * @Route("/{id}/assign/{user}", name="api_issues_assign", methods={"POST"}, requirements={"id": "\d+", "user": "\d+"})
+     *
+     * @API\Parameter(name="id",   in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="user", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue or user is not found.")
+     *
+     * @param int        $id
+     * @param int        $user
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function assignIssue(int $id, int $user, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\ReassignIssueCommand([
+            'issue'       => $id,
+            'responsible' => $user,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Suspends specified issue.
+     *
+     * @Route("/{id}/suspend", name="api_issues_suspend", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\SuspendIssueCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function suspendIssue(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\SuspendIssueCommand($request->request->all());
+
+        $command->issue = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Resumes specified issue.
+     *
+     * @Route("/{id}/resume", name="api_issues_resume", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function resumeIssue(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\ResumeIssueCommand([
+            'issue' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Marks specified issues as read.
+     *
+     * @Route("/read", name="api_issues_read", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\MarkAsReadCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function readIssues(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\MarkAsReadCommand($request->request->all());
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Marks specified issues as unread.
+     *
+     * @Route("/unread", name="api_issues_unread", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\MarkAsUnreadCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function unreadIssues(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\MarkAsUnreadCommand($request->request->all());
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Starts watching for specified issues.
+     *
+     * @Route("/watch", name="api_issues_watch", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\WatchIssuesCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function watchIssues(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\WatchIssuesCommand($request->request->all());
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Stops watching for specified issues.
+     *
+     * @Route("/unwatch", name="api_issues_unwatch", methods={"POST"})
+     *
+     * @API\Parameter(name="", in="body", @Model(type=Command\UnwatchIssuesCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     *
+     * @param Request    $request
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function unwatchIssues(Request $request, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UnwatchIssuesCommand($request->request->all());
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
     }
 }
