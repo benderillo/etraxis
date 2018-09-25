@@ -43,7 +43,6 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             TemplatePermission::REMOVE_DEPENDENCIES,
             TemplatePermission::ATTACH_FILES,
             TemplatePermission::EDIT_ISSUES,
-            TemplatePermission::REOPEN_ISSUES,
         ];
 
         $after = [
@@ -52,7 +51,6 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             TemplatePermission::ADD_DEPENDENCIES,
             TemplatePermission::REMOVE_DEPENDENCIES,
             TemplatePermission::EDIT_ISSUES,
-            TemplatePermission::REOPEN_ISSUES,
         ];
 
         /** @var Template $template */

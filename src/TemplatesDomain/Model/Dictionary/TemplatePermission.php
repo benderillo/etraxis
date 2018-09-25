@@ -26,7 +26,6 @@ class TemplatePermission extends StaticDictionary
     public const REASSIGN_ISSUES     = 'issue.reassign';
     public const SUSPEND_ISSUES      = 'issue.suspend';
     public const RESUME_ISSUES       = 'issue.resume';
-    public const REOPEN_ISSUES       = 'issue.reopen';
     public const ADD_COMMENTS        = 'comment.add';
     public const PRIVATE_COMMENTS    = 'comment.private';
     public const ATTACH_FILES        = 'file.attach';
@@ -43,7 +42,6 @@ class TemplatePermission extends StaticDictionary
         self::REASSIGN_ISSUES     => 'template.permission.reassign_issues',
         self::SUSPEND_ISSUES      => 'template.permission.suspend_issues',
         self::RESUME_ISSUES       => 'template.permission.resume_issues',
-        self::REOPEN_ISSUES       => 'template.permission.reopen_issues',
         self::ADD_COMMENTS        => 'template.permission.add_comments',
         self::PRIVATE_COMMENTS    => 'template.permission.private_comments',
         self::ATTACH_FILES        => 'template.permission.attach_files',
