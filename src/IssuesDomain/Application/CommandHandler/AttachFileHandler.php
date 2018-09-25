@@ -13,6 +13,7 @@
 
 namespace eTraxis\IssuesDomain\Application\CommandHandler;
 
+use Doctrine\ORM\EntityManagerInterface;
 use eTraxis\IssuesDomain\Application\Command\AttachFileCommand;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
@@ -39,6 +40,7 @@ class AttachFileHandler
     protected $issueRepository;
     protected $eventRepository;
     protected $fileRepository;
+    protected $manager;
 
     /** @var string Maximum allowed size of a single file. */
     protected $maxsize;
@@ -51,6 +53,7 @@ class AttachFileHandler
      * @param IssueRepository               $issueRepository
      * @param EventRepository               $eventRepository
      * @param FileRepository                $fileRepository
+     * @param EntityManagerInterface        $manager
      * @param string                        $maxsize
      */
     public function __construct(
@@ -59,6 +62,7 @@ class AttachFileHandler
         IssueRepository               $issueRepository,
         EventRepository               $eventRepository,
         FileRepository                $fileRepository,
+        EntityManagerInterface        $manager,
         string                        $maxsize
     )
     {
@@ -67,6 +71,7 @@ class AttachFileHandler
         $this->issueRepository = $issueRepository;
         $this->eventRepository = $eventRepository;
         $this->fileRepository  = $fileRepository;
+        $this->manager         = $manager;
         $this->maxsize         = $maxsize;
     }
 
@@ -109,6 +114,18 @@ class AttachFileHandler
 
         $this->eventRepository->persist($event);
         $this->fileRepository->persist($file);
+
+        $this->manager->flush();
+
+        $query = $this->manager->createQueryBuilder()
+            ->update(Event::class, 'event')
+            ->set('event.parameter', $file->id)
+            ->where('event.id = :event')
+            ->setParameter('event', $event->id);
+
+        $query->getQuery()->execute();
+
+        $this->manager->refresh($event);
 
         $directory = dirname($this->fileRepository->getFullPath($file));
         $command->file->move($directory, $file->uuid);

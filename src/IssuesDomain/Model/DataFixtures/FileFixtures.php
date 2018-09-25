@@ -19,12 +19,15 @@ use Doctrine\Common\Persistence\ObjectManager;
 use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\File;
+use eTraxis\Tests\ReflectionTrait;
 
 /**
  * Test fixtures for 'File' entity.
  */
 class FileFixtures extends Fixture implements DependentFixtureInterface
 {
+    use ReflectionTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -86,10 +89,12 @@ class FileFixtures extends Fixture implements DependentFixtureInterface
                     $file = new File($events[$index], $row[0], $row[1], $row[2]);
 
                     $manager->persist($file);
+                    $manager->flush();
+
+                    $this->setProperty($events[$index], 'parameter', $file->id);
+                    $manager->persist($events[$index]);
                 }
             }
         }
-
-        $manager->flush();
     }
 }

@@ -90,7 +90,7 @@ class AttachFileCommandTest extends TransactionalTestCase
         self::assertSame($issue, $event->issue);
         self::assertSame($user, $event->user);
         self::assertLessThanOrEqual(2, time() - $event->createdAt);
-        self::assertNull($event->parameter);
+        self::assertSame($result->id, $event->parameter);
 
         /** @var File $file */
         $file = $this->doctrine->getRepository(File::class)->findOneBy(['event' => $event]);
