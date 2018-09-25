@@ -406,13 +406,12 @@ class ApiIssuesController extends Controller
      * @API\Response(response=403, description="Client is not authorized for this request.")
      * @API\Response(response=404, description="Issue is not found.")
      *
-     * @param Request    $request
      * @param int        $id
      * @param CommandBus $commandBus
      *
      * @return JsonResponse
      */
-    public function resumeIssue(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    public function resumeIssue(int $id, CommandBus $commandBus): JsonResponse
     {
         $command = new Command\ResumeIssueCommand([
             'issue' => $id,
