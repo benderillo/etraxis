@@ -34,4 +34,26 @@ class WatcherTest extends TestCase
         self::assertSame($issue, $watcher->issue);
         self::assertSame($user, $watcher->user);
     }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'       => 1,
+            'email'    => 'anna@example.com',
+            'fullname' => 'Anna Rodygina',
+        ];
+
+        $user = new User();
+        $this->setProperty($user, 'id', 1);
+
+        $user->email    = 'anna@example.com';
+        $user->fullname = 'Anna Rodygina';
+
+        $issue = new Issue($user);
+        $this->setProperty($issue, 'id', 2);
+
+        $watcher = new Watcher($issue, $user);
+
+        self::assertSame($expected, $watcher->jsonSerialize());
+    }
 }

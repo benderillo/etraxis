@@ -47,6 +47,7 @@ class WatcherFixtures extends Fixture implements DependentFixtureInterface
                 'task:%s:3',
                 'task:%s:5',
                 'task:%s:6',
+                'req:%s:2',
             ],
             'tmarquardt@example.com' => [
                 'req:%s:1',

@@ -26,7 +26,7 @@ use Webinarium\PropertyTrait;
  * @property-read Issue $issue Issue.
  * @property-read User  $user  User.
  */
-class Watcher
+class Watcher implements \JsonSerializable
 {
     use PropertyTrait;
 
@@ -58,5 +58,17 @@ class Watcher
     {
         $this->issue = $issue;
         $this->user  = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            User::JSON_ID       => $this->user->id,
+            User::JSON_EMAIL    => $this->user->email,
+            User::JSON_FULLNAME => $this->user->fullname,
+        ];
     }
 }
