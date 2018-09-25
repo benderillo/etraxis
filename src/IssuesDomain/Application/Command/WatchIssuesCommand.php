@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Webinarium\DataTransferObjectTrait;
 
 /**
- * Makes user watching specified issues.
+ * Starts watching for specified issues.
  *
  * @property int[] $issues Issue IDs.
  */

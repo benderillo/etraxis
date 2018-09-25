@@ -241,6 +241,34 @@ class ApiTemplatesController extends Controller
     }
 
     /**
+     * Unlocks specified template.
+     *
+     * @Route("/{id}/unlock", name="api_templates_suspend", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Template ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Template is not found.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function unlockTemplate(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UnlockTemplateCommand([
+            'template' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
      * Returns permissions of specified template.
      *
      * @Route("/{id}/permissions", name="api_templates_get_permissions", methods={"GET"}, requirements={"id": "\d+"})
@@ -345,34 +373,6 @@ class ApiTemplatesController extends Controller
 
             $commandBus->handle($command);
         }
-
-        return $this->json(null);
-    }
-
-    /**
-     * Unlocks specified template.
-     *
-     * @Route("/{id}/unlock", name="api_templates_suspend", methods={"POST"}, requirements={"id": "\d+"})
-     *
-     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Template ID.")
-     *
-     * @API\Response(response=200, description="Success.")
-     * @API\Response(response=401, description="Client is not authenticated.")
-     * @API\Response(response=403, description="Client is not authorized for this request.")
-     * @API\Response(response=404, description="Template is not found.")
-     *
-     * @param int        $id
-     * @param CommandBus $commandBus
-     *
-     * @return JsonResponse
-     */
-    public function unlockTemplate(int $id, CommandBus $commandBus): JsonResponse
-    {
-        $command = new Command\UnlockTemplateCommand([
-            'template' => $id,
-        ]);
-
-        $commandBus->handle($command);
 
         return $this->json(null);
     }

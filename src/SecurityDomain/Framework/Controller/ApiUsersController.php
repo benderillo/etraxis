@@ -130,58 +130,6 @@ class ApiUsersController extends Controller
     }
 
     /**
-     * Disables specified users.
-     *
-     * @Route("/disable", name="api_users_disable", methods={"POST"})
-     *
-     * @API\Parameter(name="", in="body", @Model(type=Command\DisableUsersCommand::class, groups={"api"}))
-     *
-     * @API\Response(response=200, description="Success.")
-     * @API\Response(response=401, description="Client is not authenticated.")
-     * @API\Response(response=403, description="Client is not authorized for this request.")
-     * @API\Response(response=404, description="User is not found.")
-     *
-     * @param Request    $request
-     * @param CommandBus $commandBus
-     *
-     * @return JsonResponse
-     */
-    public function disableUsers(Request $request, CommandBus $commandBus): JsonResponse
-    {
-        $command = new Command\DisableUsersCommand($request->request->all());
-
-        $commandBus->handle($command);
-
-        return $this->json(null);
-    }
-
-    /**
-     * Enables specified users.
-     *
-     * @Route("/enable", name="api_users_enable", methods={"POST"})
-     *
-     * @API\Parameter(name="", in="body", @Model(type=Command\EnableUsersCommand::class, groups={"api"}))
-     *
-     * @API\Response(response=200, description="Success.")
-     * @API\Response(response=401, description="Client is not authenticated.")
-     * @API\Response(response=403, description="Client is not authorized for this request.")
-     * @API\Response(response=404, description="User is not found.")
-     *
-     * @param Request    $request
-     * @param CommandBus $commandBus
-     *
-     * @return JsonResponse
-     */
-    public function enableUsers(Request $request, CommandBus $commandBus): JsonResponse
-    {
-        $command = new Command\EnableUsersCommand($request->request->all());
-
-        $commandBus->handle($command);
-
-        return $this->json(null);
-    }
-
-    /**
      * Returns specified user.
      *
      * @Route("/{id}", name="api_users_get", methods={"GET"}, requirements={"id": "\d+"})
@@ -253,6 +201,65 @@ class ApiUsersController extends Controller
     public function deleteUser(int $id, CommandBus $commandBus): JsonResponse
     {
         $command = new Command\DeleteUserCommand([
+            'user' => $id,
+        ]);
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Sets password for the specified user.
+     *
+     * @Route("/{id}/password", name="api_users_password", methods={"PUT"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\SetPasswordCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setPassword(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\SetPasswordCommand($request->request->all());
+
+        $command->user = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
+    }
+
+    /**
+     * Unlocks specified user.
+     *
+     * @Route("/{id}/unlock", name="api_users_unlock", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="User is not found.")
+     *
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function unlockUser(int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\UnlockUserCommand([
             'user' => $id,
         ]);
 
@@ -350,30 +357,25 @@ class ApiUsersController extends Controller
     }
 
     /**
-     * Sets password for the specified user.
+     * Disables specified users.
      *
-     * @Route("/{id}/password", name="api_users_password", methods={"PUT"}, requirements={"id": "\d+"})
+     * @Route("/disable", name="api_users_disable", methods={"POST"})
      *
-     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
-     * @API\Parameter(name="",   in="body", @Model(type=Command\SetPasswordCommand::class, groups={"api"}))
+     * @API\Parameter(name="", in="body", @Model(type=Command\DisableUsersCommand::class, groups={"api"}))
      *
      * @API\Response(response=200, description="Success.")
-     * @API\Response(response=400, description="The request is malformed.")
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Client is not authorized for this request.")
      * @API\Response(response=404, description="User is not found.")
      *
      * @param Request    $request
-     * @param int        $id
      * @param CommandBus $commandBus
      *
      * @return JsonResponse
      */
-    public function setPassword(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    public function disableUsers(Request $request, CommandBus $commandBus): JsonResponse
     {
-        $command = new Command\SetPasswordCommand($request->request->all());
-
-        $command->user = $id;
+        $command = new Command\DisableUsersCommand($request->request->all());
 
         $commandBus->handle($command);
 
@@ -381,27 +383,25 @@ class ApiUsersController extends Controller
     }
 
     /**
-     * Unlocks specified user.
+     * Enables specified users.
      *
-     * @Route("/{id}/unlock", name="api_users_unlock", methods={"POST"}, requirements={"id": "\d+"})
+     * @Route("/enable", name="api_users_enable", methods={"POST"})
      *
-     * @API\Parameter(name="id", in="path", type="integer", required=true, description="User ID.")
+     * @API\Parameter(name="", in="body", @Model(type=Command\EnableUsersCommand::class, groups={"api"}))
      *
      * @API\Response(response=200, description="Success.")
      * @API\Response(response=401, description="Client is not authenticated.")
      * @API\Response(response=403, description="Client is not authorized for this request.")
      * @API\Response(response=404, description="User is not found.")
      *
-     * @param int        $id
+     * @param Request    $request
      * @param CommandBus $commandBus
      *
      * @return JsonResponse
      */
-    public function unlockUser(int $id, CommandBus $commandBus): JsonResponse
+    public function enableUsers(Request $request, CommandBus $commandBus): JsonResponse
     {
-        $command = new Command\UnlockUserCommand([
-            'user' => $id,
-        ]);
+        $command = new Command\EnableUsersCommand($request->request->all());
 
         $commandBus->handle($command);
 

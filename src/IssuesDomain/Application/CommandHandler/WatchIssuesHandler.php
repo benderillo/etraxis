@@ -97,7 +97,7 @@ class WatchIssuesHandler
             'issues'    => $command->issues,
         ]);
 
-        // Delete existing watchings of resulted issues.
+        // Delete existing watchings for resulted issues.
         $query = $this->manager->createQueryBuilder();
 
         $query
