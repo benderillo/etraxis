@@ -22,11 +22,11 @@ class ListTemplatesTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (Template $template) {
             return [$template->name, $template->description];
         }, $this->doctrine->getRepository(Template::class)->findAll());
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/templates';
 

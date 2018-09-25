@@ -22,11 +22,11 @@ class ListUsersTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (User $user) {
             return $user->fullname;
         }, $this->doctrine->getRepository(User::class)->findAll());
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/users';
 

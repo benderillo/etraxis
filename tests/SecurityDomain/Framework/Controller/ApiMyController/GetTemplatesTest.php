@@ -22,6 +22,8 @@ class GetTemplatesTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('ldoyle@example.com');
+
         /** @var Template $taskC */
         /** @var Template $reqC */
         /** @var Template $reqD */
@@ -34,8 +36,6 @@ class GetTemplatesTest extends WebTestCase
             $reqD->jsonSerialize(),
         ];
 
-        $this->loginAs('ldoyle@example.com');
-
         $uri = '/api/my/templates';
 
         $response = $this->json(Request::METHOD_GET, $uri);
@@ -46,9 +46,9 @@ class GetTemplatesTest extends WebTestCase
 
     public function testSuccessEmpty()
     {
-        $expected = [];
-
         $this->loginAs('admin@example.com');
+
+        $expected = [];
 
         $uri = '/api/my/templates';
 

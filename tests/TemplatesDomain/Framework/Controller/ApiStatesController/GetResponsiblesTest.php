@@ -23,6 +23,8 @@ class GetResponsiblesTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -32,8 +34,6 @@ class GetResponsiblesTest extends TransactionalTestCase
         $expected = [
             $group->id,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 
@@ -57,10 +57,10 @@ class GetResponsiblesTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 

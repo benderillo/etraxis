@@ -27,6 +27,8 @@ class SetPermissionsTest extends TransactionalTestCase
 {
     public function testSuccessAll()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -53,8 +55,6 @@ class SetPermissionsTest extends TransactionalTestCase
                 $group->id,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
@@ -78,6 +78,8 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function testSuccessRoles()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -102,8 +104,6 @@ class SetPermissionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -126,6 +126,8 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function testSuccessGroups()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -150,8 +152,6 @@ class SetPermissionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -174,6 +174,8 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function testSuccessNone()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -194,8 +196,6 @@ class SetPermissionsTest extends TransactionalTestCase
         $data = [
             'permission' => FieldPermission::READ_WRITE,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
@@ -219,6 +219,8 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -227,8 +229,6 @@ class SetPermissionsTest extends TransactionalTestCase
                 SystemRole::AUTHOR,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
@@ -258,6 +258,8 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -268,8 +270,6 @@ class SetPermissionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -279,14 +279,14 @@ class SetPermissionsTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'permission' => FieldPermission::READ_WRITE,
             'roles'      => [
                 SystemRole::AUTHOR,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', self::UNKNOWN_ENTITY_ID);
 

@@ -22,13 +22,13 @@ class DeleteGroupTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
         self::assertNotNull($group);
 
         $id = $group->id;
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 
@@ -52,10 +52,10 @@ class DeleteGroupTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 

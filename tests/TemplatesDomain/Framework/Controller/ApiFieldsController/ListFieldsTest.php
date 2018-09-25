@@ -22,11 +22,11 @@ class ListFieldsTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (Field $field) {
             return [$field->name, $field->state->template->project->name];
         }, $this->doctrine->getRepository(Field::class)->findBy(['removedAt' => null]));
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/fields';
 

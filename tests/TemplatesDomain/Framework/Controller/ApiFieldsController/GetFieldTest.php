@@ -22,6 +22,8 @@ class GetFieldTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Details'], ['id' => 'ASC']);
 
@@ -64,8 +66,6 @@ class GetFieldTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/fields/%s', $field->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
@@ -88,10 +88,10 @@ class GetFieldTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Details'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 

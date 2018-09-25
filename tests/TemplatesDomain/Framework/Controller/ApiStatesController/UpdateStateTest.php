@@ -22,6 +22,8 @@ class UpdateStateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -30,8 +32,6 @@ class UpdateStateTest extends TransactionalTestCase
             'responsible' => $state->responsible,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 
@@ -46,10 +46,10 @@ class UpdateStateTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 
@@ -78,6 +78,8 @@ class UpdateStateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -86,8 +88,6 @@ class UpdateStateTest extends TransactionalTestCase
             'responsible' => $state->responsible,
             'nextState'   => null,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 
@@ -98,6 +98,8 @@ class UpdateStateTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -106,8 +108,6 @@ class UpdateStateTest extends TransactionalTestCase
             'responsible' => $state->responsible,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s', self::UNKNOWN_ENTITY_ID);
 
@@ -118,6 +118,8 @@ class UpdateStateTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -126,8 +128,6 @@ class UpdateStateTest extends TransactionalTestCase
             'responsible' => $state->responsible,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 

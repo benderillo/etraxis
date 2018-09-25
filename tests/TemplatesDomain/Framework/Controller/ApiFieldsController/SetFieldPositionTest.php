@@ -22,6 +22,8 @@ class SetFieldPositionTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature'], ['id' => 'ASC']);
         self::assertNotSame(2, $field->position);
@@ -29,8 +31,6 @@ class SetFieldPositionTest extends TransactionalTestCase
         $data = [
             'position' => 2,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/position', $field->id);
 
@@ -45,10 +45,10 @@ class SetFieldPositionTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature'], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/position', $field->id);
 
@@ -75,14 +75,14 @@ class SetFieldPositionTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature'], ['id' => 'ASC']);
 
         $data = [
             'position' => 2,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s/position', $field->id);
 
@@ -93,11 +93,11 @@ class SetFieldPositionTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'position' => 2,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/position', self::UNKNOWN_ENTITY_ID);
 

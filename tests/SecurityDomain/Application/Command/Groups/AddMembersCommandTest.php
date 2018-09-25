@@ -33,6 +33,8 @@ class AddMembersCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             'christy.mcdermott@example.com',
             'dquigley@example.com',
@@ -47,8 +49,6 @@ class AddMembersCommandTest extends TransactionalTestCase
             'labshire@example.com',
             'nhills@example.com',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $userRepository */
         $userRepository = $this->doctrine->getRepository(User::class);

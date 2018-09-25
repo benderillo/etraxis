@@ -22,6 +22,8 @@ class GetStateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
 
@@ -49,8 +51,6 @@ class GetStateTest extends TransactionalTestCase
             'next_state'  => null,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s', $state->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
@@ -73,10 +73,10 @@ class GetStateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Submitted'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 

@@ -22,6 +22,8 @@ class CreateProjectTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Awesome Express']);
         self::assertNull($project);
@@ -31,8 +33,6 @@ class CreateProjectTest extends TransactionalTestCase
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/projects';
 
@@ -73,13 +73,13 @@ class CreateProjectTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         $data = [
             'name'        => 'Awesome Express',
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = '/api/projects';
 
@@ -90,13 +90,13 @@ class CreateProjectTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'name'        => 'Distinctio',
             'description' => 'Newspaper-delivery company',
             'suspended'   => true,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/projects';
 

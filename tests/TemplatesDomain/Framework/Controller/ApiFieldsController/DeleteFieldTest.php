@@ -22,11 +22,11 @@ class DeleteFieldTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Details'], ['id' => 'ASC']);
         self::assertFalse($field->isRemoved);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 
@@ -53,10 +53,10 @@ class DeleteFieldTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Details'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 

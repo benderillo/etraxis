@@ -22,6 +22,8 @@ class GetProjectsTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('ldoyle@example.com');
+
         /** @var Project $projectC */
         /** @var Project $projectD */
         $projectC = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Excepturi']);
@@ -31,8 +33,6 @@ class GetProjectsTest extends WebTestCase
             $projectC->jsonSerialize(),
             $projectD->jsonSerialize(),
         ];
-
-        $this->loginAs('ldoyle@example.com');
 
         $uri = '/api/my/projects';
 
@@ -44,9 +44,9 @@ class GetProjectsTest extends WebTestCase
 
     public function testSuccessEmpty()
     {
-        $expected = [];
-
         $this->loginAs('admin@example.com');
+
+        $expected = [];
 
         $uri = '/api/my/projects';
 

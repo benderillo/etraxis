@@ -34,6 +34,8 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
 
     public function testSuccessAppending()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             'Developers',
         ];
@@ -42,8 +44,6 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             'Developers',
             'Support Engineers',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var State $state */
         [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
@@ -72,6 +72,8 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
 
     public function testSuccessReplacing()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             'Developers',
         ];
@@ -79,8 +81,6 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
         $after = [
             'Support Engineers',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var State $state */
         [/* skipping */, $state] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);

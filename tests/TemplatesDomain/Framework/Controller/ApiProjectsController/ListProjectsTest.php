@@ -22,11 +22,11 @@ class ListProjectsTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (Project $project) {
             return $project->name;
         }, $this->doctrine->getRepository(Project::class)->findAll());
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/projects';
 

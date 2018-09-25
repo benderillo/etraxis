@@ -22,6 +22,8 @@ class GetUserTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
 
@@ -38,8 +40,6 @@ class GetUserTest extends TransactionalTestCase
             'theme'       => 'azure',
             'timezone'    => 'UTC',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 
@@ -63,10 +63,10 @@ class GetUserTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 

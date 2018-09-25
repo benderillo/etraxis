@@ -22,10 +22,10 @@ class GetPermissionsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['description' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 
@@ -63,10 +63,10 @@ class GetPermissionsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['description' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s/permissions', $field->id);
 

@@ -22,10 +22,10 @@ class GetPermissionsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['description' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s/permissions', $template->id);
 
@@ -63,10 +63,10 @@ class GetPermissionsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['description' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/templates/%s/permissions', $template->id);
 

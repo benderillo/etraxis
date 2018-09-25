@@ -22,11 +22,11 @@ class DeleteProjectTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Presto']);
         self::assertNotNull($project);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 
@@ -54,10 +54,10 @@ class DeleteProjectTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Presto']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 

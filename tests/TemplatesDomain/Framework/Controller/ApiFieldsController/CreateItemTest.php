@@ -23,6 +23,8 @@ class CreateItemTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -34,8 +36,6 @@ class CreateItemTest extends TransactionalTestCase
             'value' => 4,
             'text'  => 'typo',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 
@@ -50,10 +50,10 @@ class CreateItemTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 
@@ -81,6 +81,8 @@ class CreateItemTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -88,8 +90,6 @@ class CreateItemTest extends TransactionalTestCase
             'value' => 4,
             'text'  => 'typo',
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 
@@ -100,12 +100,12 @@ class CreateItemTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'value' => 4,
             'text'  => 'typo',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/items', self::UNKNOWN_ENTITY_ID);
 
@@ -116,6 +116,8 @@ class CreateItemTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
@@ -123,8 +125,6 @@ class CreateItemTest extends TransactionalTestCase
             'value' => 3,
             'text'  => 'typo',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 

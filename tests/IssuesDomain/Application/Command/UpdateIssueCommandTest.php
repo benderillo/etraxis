@@ -42,6 +42,8 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('ldoyle@example.com');
+
         $index = [
             'Commit ID'     => 0,
             'Delta'         => 1,
@@ -67,8 +69,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
@@ -148,6 +148,8 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
     public function testSuccessOnlySubject()
     {
+        $this->loginAs('ldoyle@example.com');
+
         $index = [
             'Commit ID'     => 0,
             'Delta'         => 1,
@@ -170,8 +172,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
@@ -238,6 +238,8 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
     public function testSuccessOnlyRequiredFields()
     {
+        $this->loginAs('ldoyle@example.com');
+
         $index = [
             'Commit ID'     => 0,
             'Delta'         => 1,
@@ -260,8 +262,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
 
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);

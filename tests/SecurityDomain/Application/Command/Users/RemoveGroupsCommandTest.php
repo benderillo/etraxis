@@ -33,6 +33,8 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             'Company Staff',
             'Developers A',
@@ -43,8 +45,6 @@ class RemoveGroupsCommandTest extends TransactionalTestCase
             'Company Staff',
             'Developers B',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
         $groupRepository = $this->doctrine->getRepository(Group::class);

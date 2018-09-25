@@ -22,11 +22,11 @@ class UnlockUserTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'jgutmann@example.com']);
         self::assertFalse($user->isAccountNonLocked());
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/unlock', $user->id);
 
@@ -53,10 +53,10 @@ class UnlockUserTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'jgutmann@example.com']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s/unlock', $user->id);
 

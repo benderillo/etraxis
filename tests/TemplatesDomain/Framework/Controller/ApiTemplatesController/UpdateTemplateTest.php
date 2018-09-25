@@ -22,6 +22,8 @@ class UpdateTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['description' => 'ASC']);
 
@@ -32,8 +34,6 @@ class UpdateTemplateTest extends TransactionalTestCase
             'criticalAge' => $template->criticalAge,
             'frozenTime'  => $template->frozenTime,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 
@@ -48,10 +48,10 @@ class UpdateTemplateTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['description' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 
@@ -82,6 +82,8 @@ class UpdateTemplateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['description' => 'ASC']);
 
@@ -92,8 +94,6 @@ class UpdateTemplateTest extends TransactionalTestCase
             'criticalAge' => $template->criticalAge,
             'frozenTime'  => $template->frozenTime,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 
@@ -104,6 +104,8 @@ class UpdateTemplateTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['description' => 'ASC']);
 
@@ -115,8 +117,6 @@ class UpdateTemplateTest extends TransactionalTestCase
             'frozenTime'  => $template->frozenTime,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/templates/%s', self::UNKNOWN_ENTITY_ID);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -126,6 +126,8 @@ class UpdateTemplateTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['description' => 'ASC']);
 
@@ -136,8 +138,6 @@ class UpdateTemplateTest extends TransactionalTestCase
             'criticalAge' => $template->criticalAge,
             'frozenTime'  => $template->frozenTime,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 

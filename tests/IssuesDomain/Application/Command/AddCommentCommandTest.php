@@ -35,10 +35,10 @@ class AddCommentCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('jmueller@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'jmueller@example.com']);
-
-        $this->loginAs('jmueller@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Support request 2'], ['id' => 'ASC']);

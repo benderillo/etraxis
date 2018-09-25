@@ -22,6 +22,8 @@ class UpdateProfileTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('nhills@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -30,8 +32,6 @@ class UpdateProfileTest extends TransactionalTestCase
         self::assertSame('en_US', $user->locale);
         self::assertSame('azure', $user->theme);
         self::assertSame('UTC', $user->timezone);
-
-        $this->loginAs('nhills@example.com');
 
         $uri = '/api/my/profile';
 
@@ -58,6 +58,8 @@ class UpdateProfileTest extends TransactionalTestCase
 
     public function testSuccessPartial()
     {
+        $this->loginAs('einstein@ldap.forumsys.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'einstein@ldap.forumsys.com']);
 
@@ -66,8 +68,6 @@ class UpdateProfileTest extends TransactionalTestCase
         self::assertSame('en_US', $user->locale);
         self::assertSame('azure', $user->theme);
         self::assertSame('UTC', $user->timezone);
-
-        $this->loginAs('einstein@ldap.forumsys.com');
 
         $uri = '/api/my/profile';
 

@@ -24,6 +24,8 @@ class SetResponsiblesTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -40,8 +42,6 @@ class SetResponsiblesTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -57,6 +57,8 @@ class SetResponsiblesTest extends TransactionalTestCase
 
     public function testSuccessNone()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -65,8 +67,6 @@ class SetResponsiblesTest extends TransactionalTestCase
         $data = [
             'groups' => [],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 
@@ -81,10 +81,10 @@ class SetResponsiblesTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 
@@ -111,14 +111,14 @@ class SetResponsiblesTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $data = [
             'groups' => [],
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', $state->id);
 
@@ -129,11 +129,11 @@ class SetResponsiblesTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'groups' => [],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/responsibles', self::UNKNOWN_ENTITY_ID);
 

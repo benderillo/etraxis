@@ -22,6 +22,8 @@ class GetGroupsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -31,8 +33,6 @@ class GetGroupsTest extends TransactionalTestCase
             ['Support Engineers', 'Support Engineers A'],
             ['Support Engineers', 'Support Engineers B'],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/groups', $user->id);
 
@@ -62,10 +62,10 @@ class GetGroupsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s/groups', $user->id);
 

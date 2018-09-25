@@ -25,6 +25,8 @@ class CreateStateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
@@ -39,8 +41,6 @@ class CreateStateTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/states';
 
@@ -86,6 +86,8 @@ class CreateStateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Template $template */
         [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
@@ -96,8 +98,6 @@ class CreateStateTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
             'nextState'   => null,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = '/api/states';
 
@@ -108,6 +108,8 @@ class CreateStateTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'template'    => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Started',
@@ -115,8 +117,6 @@ class CreateStateTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/states';
 
@@ -127,6 +127,8 @@ class CreateStateTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [/* skipping */, $template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'ASC']);
 
@@ -137,8 +139,6 @@ class CreateStateTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
             'nextState'   => null,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/states';
 

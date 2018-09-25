@@ -23,6 +23,8 @@ class SetMembersTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers']);
 
@@ -54,8 +56,6 @@ class SetMembersTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/groups/%s/members', $group->id);
 
         $response = $this->json(Request::METHOD_PATCH, $uri, $data);
@@ -80,6 +80,8 @@ class SetMembersTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers']);
 
@@ -91,8 +93,6 @@ class SetMembersTest extends TransactionalTestCase
                 'bar',
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s/members', $group->id);
 
@@ -130,6 +130,8 @@ class SetMembersTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers']);
 
@@ -148,8 +150,6 @@ class SetMembersTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = sprintf('/api/groups/%s/members', $group->id);
 
         $response = $this->json(Request::METHOD_PATCH, $uri, $data);
@@ -159,6 +159,8 @@ class SetMembersTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $ldoyle */
         $ldoyle = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
 
@@ -173,8 +175,6 @@ class SetMembersTest extends TransactionalTestCase
                 $ldoyle->id,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s/members', self::UNKNOWN_ENTITY_ID);
 

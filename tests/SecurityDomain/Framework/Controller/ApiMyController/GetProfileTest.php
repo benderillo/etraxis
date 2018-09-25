@@ -22,6 +22,8 @@ class GetProfileTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
 
@@ -35,8 +37,6 @@ class GetProfileTest extends WebTestCase
             'timezone' => 'UTC',
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = '/api/my/profile';
 
         $response = $this->json(Request::METHOD_GET, $uri);
@@ -47,6 +47,8 @@ class GetProfileTest extends WebTestCase
 
     public function testSuccessExternal()
     {
+        $this->loginAs('einstein@ldap.forumsys.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'einstein@ldap.forumsys.com']);
 
@@ -59,8 +61,6 @@ class GetProfileTest extends WebTestCase
             'theme'    => 'azure',
             'timezone' => 'UTC',
         ];
-
-        $this->loginAs('einstein@ldap.forumsys.com');
 
         $uri = '/api/my/profile';
 

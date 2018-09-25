@@ -22,11 +22,11 @@ class ListGroupsTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (Group $group) {
             return [$group->name, $group->description];
         }, $this->doctrine->getRepository(Group::class)->findAll());
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/groups';
 

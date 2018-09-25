@@ -22,6 +22,8 @@ class UpdateUserTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -34,8 +36,6 @@ class UpdateUserTest extends TransactionalTestCase
             'theme'    => $user->theme,
             'timezone' => $user->timezone,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 
@@ -50,10 +50,10 @@ class UpdateUserTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 
@@ -86,6 +86,8 @@ class UpdateUserTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -98,8 +100,6 @@ class UpdateUserTest extends TransactionalTestCase
             'theme'    => $user->theme,
             'timezone' => $user->timezone,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 
@@ -110,6 +110,8 @@ class UpdateUserTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -123,8 +125,6 @@ class UpdateUserTest extends TransactionalTestCase
             'timezone' => $user->timezone,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/users/%s', self::UNKNOWN_ENTITY_ID);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -134,6 +134,8 @@ class UpdateUserTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -146,8 +148,6 @@ class UpdateUserTest extends TransactionalTestCase
             'theme'    => $user->theme,
             'timezone' => $user->timezone,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 

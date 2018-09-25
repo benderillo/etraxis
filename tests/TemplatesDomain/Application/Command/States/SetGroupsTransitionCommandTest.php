@@ -34,6 +34,8 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             'Managers',
             'Support Engineers',
@@ -43,8 +45,6 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             'Developers',
             'Support Engineers',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository $groupRepository */
         $groupRepository = $this->doctrine->getRepository(Group::class);

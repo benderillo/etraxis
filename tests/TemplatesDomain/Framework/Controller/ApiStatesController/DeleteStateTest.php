@@ -22,13 +22,13 @@ class DeleteStateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
         self::assertNotNull($state);
 
         $id = $state->id;
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 
@@ -52,10 +52,10 @@ class DeleteStateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'DESC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s', $state->id);
 

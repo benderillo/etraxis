@@ -22,6 +22,8 @@ class UpdateGroupTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
@@ -29,8 +31,6 @@ class UpdateGroupTest extends TransactionalTestCase
             'name'        => 'Programmers',
             'description' => $group->description,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 
@@ -45,10 +45,10 @@ class UpdateGroupTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 
@@ -76,6 +76,8 @@ class UpdateGroupTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
@@ -83,8 +85,6 @@ class UpdateGroupTest extends TransactionalTestCase
             'name'        => 'Programmers',
             'description' => $group->description,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 
@@ -95,6 +95,8 @@ class UpdateGroupTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
@@ -102,8 +104,6 @@ class UpdateGroupTest extends TransactionalTestCase
             'name'        => 'Programmers',
             'description' => $group->description,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', self::UNKNOWN_ENTITY_ID);
 
@@ -114,6 +114,8 @@ class UpdateGroupTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
@@ -121,8 +123,6 @@ class UpdateGroupTest extends TransactionalTestCase
             'name'        => 'Managers',
             'description' => $group->description,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 

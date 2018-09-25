@@ -22,6 +22,8 @@ class UpdateProjectTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -30,8 +32,6 @@ class UpdateProjectTest extends TransactionalTestCase
             'description' => $project->description,
             'suspended'   => $project->isSuspended,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 
@@ -46,10 +46,10 @@ class UpdateProjectTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 
@@ -78,6 +78,8 @@ class UpdateProjectTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -86,8 +88,6 @@ class UpdateProjectTest extends TransactionalTestCase
             'description' => $project->description,
             'suspended'   => $project->isSuspended,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 
@@ -98,6 +98,8 @@ class UpdateProjectTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -106,8 +108,6 @@ class UpdateProjectTest extends TransactionalTestCase
             'description' => $project->description,
             'suspended'   => $project->isSuspended,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', self::UNKNOWN_ENTITY_ID);
 
@@ -118,6 +118,8 @@ class UpdateProjectTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -126,8 +128,6 @@ class UpdateProjectTest extends TransactionalTestCase
             'description' => $project->description,
             'suspended'   => $project->isSuspended,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 

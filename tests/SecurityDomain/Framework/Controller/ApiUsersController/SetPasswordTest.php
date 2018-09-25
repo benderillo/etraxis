@@ -22,6 +22,8 @@ class SetPasswordTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
         $encoder = $this->client->getContainer()->get('security.password_encoder');
 
@@ -33,8 +35,6 @@ class SetPasswordTest extends TransactionalTestCase
         $data = [
             'password' => 'P@ssw0rd',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/password', $user->id);
 
@@ -49,10 +49,10 @@ class SetPasswordTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/password', $user->id);
 
@@ -79,14 +79,14 @@ class SetPasswordTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
         $data = [
             'password' => 'P@ssw0rd',
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s/password', $user->id);
 
@@ -97,11 +97,11 @@ class SetPasswordTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'password' => 'P@ssw0rd',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/password', self::UNKNOWN_ENTITY_ID);
 

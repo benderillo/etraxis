@@ -24,6 +24,8 @@ class CreateFieldTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -40,8 +42,6 @@ class CreateFieldTest extends TransactionalTestCase
             'maximumValue' => 53,
             'defaultValue' => 7,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/fields';
 
@@ -89,6 +89,8 @@ class CreateFieldTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -102,8 +104,6 @@ class CreateFieldTest extends TransactionalTestCase
             'defaultValue' => 7,
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = '/api/fields';
 
         $response = $this->json(Request::METHOD_POST, $uri, $data);
@@ -113,6 +113,8 @@ class CreateFieldTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'state'        => self::UNKNOWN_ENTITY_ID,
             'type'         => FieldType::NUMBER,
@@ -123,8 +125,6 @@ class CreateFieldTest extends TransactionalTestCase
             'defaultValue' => 7,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = '/api/fields';
 
         $response = $this->json(Request::METHOD_POST, $uri, $data);
@@ -134,6 +134,8 @@ class CreateFieldTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -146,8 +148,6 @@ class CreateFieldTest extends TransactionalTestCase
             'maximumValue' => 53,
             'defaultValue' => 7,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/fields';
 

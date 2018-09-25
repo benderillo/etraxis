@@ -22,11 +22,11 @@ class UnlockTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['id' => 'ASC']);
         self::assertTrue($template->isLocked);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s/unlock', $template->id);
 
@@ -53,10 +53,10 @@ class UnlockTemplateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Support'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/templates/%s/unlock', $template->id);
 

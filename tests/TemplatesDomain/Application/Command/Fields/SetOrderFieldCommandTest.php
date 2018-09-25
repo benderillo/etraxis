@@ -33,14 +33,14 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
 
     public function testSuccessUp()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = [
             'Commit ID',
             'Effort',
             'Delta',
             'Test coverage',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Field $field */
         [/* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
@@ -57,14 +57,14 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
 
     public function testSuccessDown()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = [
             'Commit ID',
             'Effort',
             'Delta',
             'Test coverage',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Field $field */
         [/* skipping */, $field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
@@ -81,14 +81,14 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
 
     public function testSuccessTop()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = [
             'Effort',
             'Commit ID',
             'Delta',
             'Test coverage',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Field $field */
         [/* skipping */, $field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
@@ -105,14 +105,14 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
 
     public function testSuccessBottom()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = [
             'Commit ID',
             'Effort',
             'Test coverage',
             'Delta',
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Field $field */
         [/* skipping */, $field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);

@@ -23,6 +23,8 @@ class GetIssueTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('nhills@example.com');
+
         /** @var Issue $issue */
         [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Support request 6']);
 
@@ -75,8 +77,6 @@ class GetIssueTest extends TransactionalTestCase
             'read_at'      => null,
         ];
 
-        $this->loginAs('nhills@example.com');
-
         $uri = sprintf('/api/issues/%s', $issue->id);
 
         $response = $this->json(Request::METHOD_GET, $uri);
@@ -99,10 +99,10 @@ class GetIssueTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Issue $issue */
         [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Support request 6']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/issues/%s', $issue->id);
 

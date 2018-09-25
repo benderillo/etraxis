@@ -22,6 +22,8 @@ class CreateUserTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'anna@example.com']);
         self::assertNull($user);
@@ -37,8 +39,6 @@ class CreateUserTest extends TransactionalTestCase
             'theme'       => 'humanity',
             'timezone'    => 'Pacific/Auckland',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/users';
 
@@ -85,6 +85,8 @@ class CreateUserTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         $data = [
             'email'       => 'anna@example.com',
             'password'    => 'secret',
@@ -97,8 +99,6 @@ class CreateUserTest extends TransactionalTestCase
             'timezone'    => 'Pacific/Auckland',
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = '/api/users';
 
         $response = $this->json(Request::METHOD_POST, $uri, $data);
@@ -108,6 +108,8 @@ class CreateUserTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'email'       => 'artem@example.com',
             'password'    => 'secret',
@@ -119,8 +121,6 @@ class CreateUserTest extends TransactionalTestCase
             'theme'       => 'humanity',
             'timezone'    => 'Pacific/Auckland',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/users';
 

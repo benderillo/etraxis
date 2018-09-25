@@ -35,6 +35,8 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             TemplatePermission::CREATE_ISSUES,
             TemplatePermission::VIEW_ISSUES,
@@ -45,8 +47,6 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             TemplatePermission::CREATE_ISSUES,
             TemplatePermission::VIEW_ISSUES,
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Template $template */
         [$template] = $this->repository->findBy(['name' => 'Development'], ['id' => 'ASC']);

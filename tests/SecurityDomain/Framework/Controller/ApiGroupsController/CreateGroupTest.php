@@ -23,6 +23,8 @@ class CreateGroupTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -35,8 +37,6 @@ class CreateGroupTest extends TransactionalTestCase
             'name'        => 'Testers',
             'description' => 'Test Engineers',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/groups';
 
@@ -80,6 +80,8 @@ class CreateGroupTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -88,8 +90,6 @@ class CreateGroupTest extends TransactionalTestCase
             'name'        => 'Testers',
             'description' => 'Test Engineers',
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = '/api/groups';
 
@@ -100,13 +100,13 @@ class CreateGroupTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('artem@example.com');
+
         $data = [
             'project'     => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Testers',
             'description' => 'Test Engineers',
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = '/api/groups';
 
@@ -117,6 +117,8 @@ class CreateGroupTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -125,8 +127,6 @@ class CreateGroupTest extends TransactionalTestCase
             'name'        => 'Managers',
             'description' => 'Project management',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/groups';
 

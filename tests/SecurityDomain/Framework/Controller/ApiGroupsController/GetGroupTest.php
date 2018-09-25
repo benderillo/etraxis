@@ -22,6 +22,8 @@ class GetGroupTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['description' => 'ASC']);
 
@@ -38,8 +40,6 @@ class GetGroupTest extends TransactionalTestCase
             'description' => 'Managers A',
             'global'      => false,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 
@@ -63,10 +63,10 @@ class GetGroupTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Group $group */
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['description' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/groups/%s', $group->id);
 

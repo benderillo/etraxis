@@ -22,6 +22,8 @@ class EnableUsersTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $nhills */
         /** @var User $tberge */
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
@@ -36,8 +38,6 @@ class EnableUsersTest extends TransactionalTestCase
                 $tberge->id,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/users/enable';
 
@@ -75,6 +75,8 @@ class EnableUsersTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $nhills */
         /** @var User $tberge */
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
@@ -87,8 +89,6 @@ class EnableUsersTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = '/api/users/enable';
 
         $response = $this->json(Request::METHOD_POST, $uri, $data);
@@ -98,6 +98,8 @@ class EnableUsersTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $nhills */
         /** @var User $tberge */
         $nhills = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
@@ -110,8 +112,6 @@ class EnableUsersTest extends TransactionalTestCase
                 self::UNKNOWN_ENTITY_ID,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/users/enable';
 

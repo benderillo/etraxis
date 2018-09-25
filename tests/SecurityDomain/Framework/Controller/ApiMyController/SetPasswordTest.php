@@ -23,6 +23,8 @@ class SetPasswordTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('nhills@example.com');
+
         /** @var \Symfony\Component\Security\Core\Encoder\UserPasswordEncoder $encoder */
         $encoder = $this->client->getContainer()->get('security.password_encoder');
 
@@ -30,8 +32,6 @@ class SetPasswordTest extends TransactionalTestCase
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
         self::assertTrue($encoder->isPasswordValid($user, 'secret'));
-
-        $this->loginAs('nhills@example.com');
 
         $uri = '/api/my/password';
 

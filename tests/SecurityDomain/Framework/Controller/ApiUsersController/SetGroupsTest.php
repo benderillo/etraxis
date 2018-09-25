@@ -23,6 +23,8 @@ class SetGroupsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -53,8 +55,6 @@ class SetGroupsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/users/%s/groups', $user->id);
 
         $response = $this->json(Request::METHOD_PATCH, $uri, $data);
@@ -79,6 +79,8 @@ class SetGroupsTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -92,8 +94,6 @@ class SetGroupsTest extends TransactionalTestCase
                 'foo2',
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/groups', $user->id);
 
@@ -130,6 +130,8 @@ class SetGroupsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'nhills@example.com']);
 
@@ -147,8 +149,6 @@ class SetGroupsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = sprintf('/api/users/%s/groups', $user->id);
 
         $response = $this->json(Request::METHOD_PATCH, $uri, $data);
@@ -158,6 +158,8 @@ class SetGroupsTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Group[] $support */
         $support = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Support Engineers'], ['description' => 'ASC']);
 
@@ -171,8 +173,6 @@ class SetGroupsTest extends TransactionalTestCase
                 $support[1]->id,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s/groups', self::UNKNOWN_ENTITY_ID);
 

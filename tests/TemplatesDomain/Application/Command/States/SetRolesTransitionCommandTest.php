@@ -34,6 +34,8 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             SystemRole::AUTHOR,
             SystemRole::RESPONSIBLE,
@@ -43,8 +45,6 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             SystemRole::ANYONE,
             SystemRole::RESPONSIBLE,
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var State $fromState */
         [$fromState] = $this->repository->findBy(['name' => 'Opened'], ['id' => 'ASC']);

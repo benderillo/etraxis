@@ -22,11 +22,11 @@ class ResumeProjectTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
         self::assertTrue($project->isSuspended);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s/resume', $project->id);
 
@@ -53,10 +53,10 @@ class ResumeProjectTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/projects/%s/resume', $project->id);
 

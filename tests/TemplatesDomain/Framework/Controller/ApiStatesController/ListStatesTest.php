@@ -22,11 +22,11 @@ class ListStatesTest extends WebTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $expected = array_map(function (State $state) {
             return [$state->name, $state->template->project->name];
         }, $this->doctrine->getRepository(State::class)->findAll());
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/states';
 

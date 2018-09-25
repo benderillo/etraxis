@@ -23,14 +23,14 @@ class ListItemsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $expected = array_map(function (ListItem $item) {
             return $item->text;
         }, $this->doctrine->getRepository(ListItem::class)->findBy(['field' => $field]));
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 
@@ -63,10 +63,10 @@ class ListItemsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s/items', $field->id);
 

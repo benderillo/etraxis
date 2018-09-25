@@ -23,6 +23,8 @@ class CreateTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -38,8 +40,6 @@ class CreateTemplateTest extends TransactionalTestCase
             'criticalAge' => 5,
             'frozenTime'  => 10,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/templates';
 
@@ -86,6 +86,8 @@ class CreateTemplateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -98,8 +100,6 @@ class CreateTemplateTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = '/api/templates';
 
         $response = $this->json(Request::METHOD_POST, $uri, $data);
@@ -109,6 +109,8 @@ class CreateTemplateTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         $data = [
             'project'     => self::UNKNOWN_ENTITY_ID,
             'name'        => 'Bugfix',
@@ -117,8 +119,6 @@ class CreateTemplateTest extends TransactionalTestCase
             'criticalAge' => 5,
             'frozenTime'  => 10,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/templates';
 
@@ -129,6 +129,8 @@ class CreateTemplateTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -140,8 +142,6 @@ class CreateTemplateTest extends TransactionalTestCase
             'criticalAge' => 5,
             'frozenTime'  => 10,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = '/api/templates';
 

@@ -22,6 +22,8 @@ class UpdateItemTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var ListItem $item */
         [/* skipping */, $item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
 
@@ -29,8 +31,6 @@ class UpdateItemTest extends TransactionalTestCase
             'value' => $item->value,
             'text'  => 'medium',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 
@@ -45,10 +45,10 @@ class UpdateItemTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var ListItem $item */
         [/* skipping */, $item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 
@@ -76,6 +76,8 @@ class UpdateItemTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var ListItem $item */
         [/* skipping */, $item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
 
@@ -83,8 +85,6 @@ class UpdateItemTest extends TransactionalTestCase
             'value' => $item->value,
             'text'  => 'medium',
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 
@@ -95,6 +95,8 @@ class UpdateItemTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var ListItem $item */
         [/* skipping */, $item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
 
@@ -102,8 +104,6 @@ class UpdateItemTest extends TransactionalTestCase
             'value' => $item->value,
             'text'  => 'medium',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/items/%s', self::UNKNOWN_ENTITY_ID);
 
@@ -114,6 +114,8 @@ class UpdateItemTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var ListItem $item */
         [/* skipping */, $item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
 
@@ -121,8 +123,6 @@ class UpdateItemTest extends TransactionalTestCase
             'value' => $item->value,
             'text'  => 'high',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 

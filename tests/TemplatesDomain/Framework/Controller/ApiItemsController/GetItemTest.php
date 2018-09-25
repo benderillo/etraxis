@@ -22,6 +22,8 @@ class GetItemTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var ListItem $item */
         [$item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
 
@@ -30,8 +32,6 @@ class GetItemTest extends TransactionalTestCase
             'value' => 2,
             'text'  => 'normal',
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 
@@ -55,10 +55,10 @@ class GetItemTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var ListItem $item */
         [$item] = $this->doctrine->getRepository(ListItem::class)->findBy(['value' => 2], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/items/%s', $item->id);
 

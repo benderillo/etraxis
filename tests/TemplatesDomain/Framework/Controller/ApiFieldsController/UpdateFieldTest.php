@@ -22,6 +22,8 @@ class UpdateFieldTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
 
@@ -38,8 +40,6 @@ class UpdateFieldTest extends TransactionalTestCase
             'defaultValue' => true,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/fields/%s', $field->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -53,10 +53,10 @@ class UpdateFieldTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 
@@ -85,6 +85,8 @@ class UpdateFieldTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
@@ -93,8 +95,6 @@ class UpdateFieldTest extends TransactionalTestCase
             'required'     => $field->isRequired,
             'defaultValue' => true,
         ];
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 
@@ -105,6 +105,8 @@ class UpdateFieldTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
@@ -113,8 +115,6 @@ class UpdateFieldTest extends TransactionalTestCase
             'required'     => $field->isRequired,
             'defaultValue' => true,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s', self::UNKNOWN_ENTITY_ID);
 
@@ -125,6 +125,8 @@ class UpdateFieldTest extends TransactionalTestCase
 
     public function test409()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Field $field */
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
@@ -133,8 +135,6 @@ class UpdateFieldTest extends TransactionalTestCase
             'required'     => $field->isRequired,
             'defaultValue' => true,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/fields/%s', $field->id);
 

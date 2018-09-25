@@ -34,10 +34,10 @@ class DeleteFileCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('ldoyle@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var File $file */
         [/* skipping */, /* skipping */, $file] = $this->repository->findBy(['name' => 'Inventore.pdf'], ['id' => 'ASC']);

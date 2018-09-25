@@ -23,11 +23,11 @@ class SetInitialStateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
         self::assertNotSame(StateType::INITIAL, $state->type);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/initial', $state->id);
 
@@ -54,10 +54,10 @@ class SetInitialStateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $state */
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/states/%s/initial', $state->id);
 

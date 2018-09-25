@@ -22,6 +22,8 @@ class GetProjectTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
@@ -32,8 +34,6 @@ class GetProjectTest extends TransactionalTestCase
             'created'     => $project->createdAt,
             'suspended'   => true,
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 
@@ -57,10 +57,10 @@ class GetProjectTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Project $project */
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/projects/%s', $project->id);
 

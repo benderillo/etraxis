@@ -26,6 +26,8 @@ class SetTransitionsTest extends TransactionalTestCase
 {
     public function testSuccessAll()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -56,8 +58,6 @@ class SetTransitionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -80,6 +80,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function testSuccessRoles()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -107,8 +109,6 @@ class SetTransitionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -131,6 +131,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function testSuccessGroups()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -158,8 +160,6 @@ class SetTransitionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -182,6 +182,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function testSuccessNone()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -206,8 +208,6 @@ class SetTransitionsTest extends TransactionalTestCase
             'state' => $stateTo->id,
         ];
 
-        $this->loginAs('admin@example.com');
-
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -230,6 +230,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function test400()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -238,8 +240,6 @@ class SetTransitionsTest extends TransactionalTestCase
                 SystemRole::AUTHOR,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
@@ -272,6 +272,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var State $stateFrom */
         [/* skipping */, $stateFrom] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
@@ -285,8 +287,6 @@ class SetTransitionsTest extends TransactionalTestCase
             ],
         ];
 
-        $this->loginAs('artem@example.com');
-
         $uri = sprintf('/api/states/%s/transitions', $stateFrom->id);
 
         $response = $this->json(Request::METHOD_PUT, $uri, $data);
@@ -296,6 +296,8 @@ class SetTransitionsTest extends TransactionalTestCase
 
     public function test404()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var State $stateTo */
         [/* skipping */, $stateTo] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Completed'], ['id' => 'ASC']);
 
@@ -305,8 +307,6 @@ class SetTransitionsTest extends TransactionalTestCase
                 SystemRole::AUTHOR,
             ],
         ];
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/states/%s/transitions', self::UNKNOWN_ENTITY_ID);
 

@@ -35,6 +35,8 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         $before = [
             TemplatePermission::ADD_COMMENTS,
             TemplatePermission::ADD_DEPENDENCIES,
@@ -52,8 +54,6 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             TemplatePermission::EDIT_ISSUES,
             TemplatePermission::REOPEN_ISSUES,
         ];
-
-        $this->loginAs('admin@example.com');
 
         /** @var Template $template */
         [$template] = $this->repository->findBy(['name' => 'Support'], ['id' => 'ASC']);

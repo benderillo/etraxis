@@ -22,11 +22,11 @@ class DeleteUserTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'hstroman@example.com']);
         self::assertNotNull($user);
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 
@@ -54,10 +54,10 @@ class DeleteUserTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'hstroman@example.com']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/users/%s', $user->id);
 

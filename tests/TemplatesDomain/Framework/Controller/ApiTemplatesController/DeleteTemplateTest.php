@@ -22,13 +22,13 @@ class DeleteTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
+        $this->loginAs('admin@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'DESC']);
         self::assertNotNull($template);
 
         $id = $template->id;
-
-        $this->loginAs('admin@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 
@@ -52,10 +52,10 @@ class DeleteTemplateTest extends TransactionalTestCase
 
     public function test403()
     {
+        $this->loginAs('artem@example.com');
+
         /** @var Template $template */
         [$template] = $this->doctrine->getRepository(Template::class)->findBy(['name' => 'Development'], ['id' => 'DESC']);
-
-        $this->loginAs('artem@example.com');
 
         $uri = sprintf('/api/templates/%s', $template->id);
 

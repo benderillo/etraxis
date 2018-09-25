@@ -59,10 +59,10 @@ class AttachFileCommandTest extends TransactionalTestCase
 
     public function testSuccess()
     {
+        $this->loginAs('ldoyle@example.com');
+
         /** @var User $user */
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'ldoyle@example.com']);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 6'], ['id' => 'ASC']);
@@ -112,11 +112,11 @@ class AttachFileCommandTest extends TransactionalTestCase
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessage('The file size must not exceed 2 MB.');
 
+        $this->loginAs('ldoyle@example.com');
+
         $filename = getcwd() . '/var/_' . md5('huge.txt');
         file_put_contents($filename, str_repeat('*', self::MEGABYTE * 2 + 1));
         $file = new UploadedFile($filename, 'huge.txt', 'text/plain', null, true);
-
-        $this->loginAs('ldoyle@example.com');
 
         /** @var Issue $issue */
         [/* skipping */, /* skipping */, $issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
