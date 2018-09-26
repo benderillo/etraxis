@@ -428,6 +428,7 @@ class ApiIssuesController extends Controller
      *
      * @Route("/{id}/watchers", name="api_issues_watchers", methods={"GET"}, requirements={"id": "\d+"})
      *
+     * @API\Parameter(name="id",       in="path",  type="integer", required=true,  description="Issue ID.")
      * @API\Parameter(name="offset",   in="query", type="integer", required=false, minimum=0, default=0, description="Zero-based index of the first watcher to return.")
      * @API\Parameter(name="limit",    in="query", type="integer", required=false, minimum=1, maximum=100, default=100, description="Maximum number of watchers to return.")
      * @API\Parameter(name="X-Search", in="body",  type="string",  required=false, description="Optional search value.", @API\Schema(type="string"))
@@ -472,10 +473,7 @@ class ApiIssuesController extends Controller
         $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
 
         $filter = json_decode($request->headers->get('X-Filter'), true);
-
-        if (!is_array($filter)) {
-            $filter = [];
-        }
+        $filter = is_array($filter) ? $filter : [];
 
         $request->headers->set('X-Filter', json_encode($filter + ['id' => $issue->id]));
 
