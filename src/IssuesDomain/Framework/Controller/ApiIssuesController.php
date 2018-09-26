@@ -18,6 +18,7 @@ use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
+use eTraxis\IssuesDomain\Model\Repository\WatcherRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -420,6 +421,67 @@ class ApiIssuesController extends Controller
         $commandBus->handle($command);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns list of issue watchers.
+     *
+     * @Route("/{id}/watchers", name="api_issues_watchers", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="offset",   in="query", type="integer", required=false, minimum=0, default=0, description="Zero-based index of the first watcher to return.")
+     * @API\Parameter(name="limit",    in="query", type="integer", required=false, minimum=1, maximum=100, default=100, description="Maximum number of watchers to return.")
+     * @API\Parameter(name="X-Search", in="body",  type="string",  required=false, description="Optional search value.", @API\Schema(type="string"))
+     * @API\Parameter(name="X-Filter", in="body",  type="object",  required=false, description="Optional filters.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="email",    type="string"),
+     *         @API\Property(property="fullname", type="string")
+     *     }
+     * ))
+     * @API\Parameter(name="X-Sort", in="body", type="object", required=false, description="Optional sorting.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="email",    type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="fullname", type="string", enum={"ASC", "DESC"}, example="ASC")
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="from",  type="integer", example=0,   description="Zero-based index of the first returned watcher."),
+     *         @API\Property(property="to",    type="integer", example=99,  description="Zero-based index of the last returned watcher."),
+     *         @API\Property(property="total", type="integer", example=100, description="Total number of all found watchers."),
+     *         @API\Property(property="data",  type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\IssuesDomain\Model\API\UserInfo::class)
+     *         ))
+     *     }
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request           $request
+     * @param Issue             $issue
+     * @param WatcherRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function listWatchers(Request $request, Issue $issue, WatcherRepository $repository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        $filter = json_decode($request->headers->get('X-Filter'), true);
+
+        if (!is_array($filter)) {
+            $filter = [];
+        }
+
+        $request->headers->set('X-Filter', json_encode($filter + ['id' => $issue->id]));
+
+        $collection = $this->getCollection($request, $repository);
+
+        return $this->json($collection);
     }
 
     /**
