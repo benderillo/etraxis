@@ -18,6 +18,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use eTraxis\IssuesDomain\Model\Entity\Change;
 use eTraxis\IssuesDomain\Model\Entity\Comment;
+use eTraxis\IssuesDomain\Model\Entity\Dependency;
 use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SharedDomain\Model\Collection\Collection;
@@ -202,8 +203,7 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
         if (mb_strlen($search) !== 0) {
 
             // Search in comments.
-            $comments = $this->getEntityManager()->createQueryBuilder();
-            $comments
+            $comments = $this->getEntityManager()->createQueryBuilder()
                 ->select('issue.id')
                 ->from(Comment::class, 'comment')
                 ->innerJoin('comment.event', 'event')
@@ -409,6 +409,23 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
             case Issue::JSON_IS_CLOSED:
 
                 $query->andWhere($value ? 'issue.closedAt IS NOT NULL' : 'issue.closedAt IS NULL');
+
+                break;
+
+            case Issue::JSON_DEPENDENCY:
+
+                $dependencies = $this->getEntityManager()->createQueryBuilder()
+                    ->select('dependency')
+                    ->from(Dependency::class, 'dependency')
+                    ->where('dependency.issue = :issue')
+                    ->setParameter('issue', (int) $value);
+
+                $issues = array_map(function (Dependency $entry) {
+                    return $entry->dependency->id;
+                }, $dependencies->getQuery()->execute());
+
+                $query->andWhere($query->expr()->in('issue', ':dependencies'));
+                $query->setParameter('dependencies', $issues);
 
                 break;
         }

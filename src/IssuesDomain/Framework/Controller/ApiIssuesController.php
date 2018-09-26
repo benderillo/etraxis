@@ -483,6 +483,171 @@ class ApiIssuesController extends Controller
     }
 
     /**
+     * Returns list of issue dependencies.
+     *
+     * @Route("/{id}/dependencies", name="api_issues_dependencies_get", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id",       in="path",  type="integer", required=true,  description="Issue ID.")
+     * @API\Parameter(name="offset",   in="query", type="integer", required=false, minimum=0, default=0, description="Zero-based index of the first issue to return.")
+     * @API\Parameter(name="limit",    in="query", type="integer", required=false, minimum=1, maximum=100, default=100, description="Maximum number of issues to return.")
+     * @API\Parameter(name="X-Search", in="body",  type="string",  required=false, description="Optional search value.", @API\Schema(type="string"))
+     * @API\Parameter(name="X-Filter", in="body",  type="object",  required=false, description="Optional filters.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="id",               type="string"),
+     *         @API\Property(property="subject",          type="string"),
+     *         @API\Property(property="author",           type="integer"),
+     *         @API\Property(property="author_name",      type="string"),
+     *         @API\Property(property="project",          type="integer"),
+     *         @API\Property(property="project_name",     type="string"),
+     *         @API\Property(property="template",         type="integer"),
+     *         @API\Property(property="template_name",    type="string"),
+     *         @API\Property(property="state",            type="integer"),
+     *         @API\Property(property="state_name",       type="string"),
+     *         @API\Property(property="responsible",      type="integer"),
+     *         @API\Property(property="responsible_name", type="string"),
+     *         @API\Property(property="is_cloned",        type="boolean"),
+     *         @API\Property(property="age",              type="integer"),
+     *         @API\Property(property="is_critical",      type="boolean"),
+     *         @API\Property(property="is_suspended",     type="boolean"),
+     *         @API\Property(property="is_closed",        type="boolean")
+     *     }
+     * ))
+     * @API\Parameter(name="X-Sort", in="body", type="object", required=false, description="Optional sorting.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="id",          type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="subject",     type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="created_at",  type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="changed_at",  type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="closed_at",   type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="author",      type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="project",     type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="template",    type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="state",       type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="responsible", type="string", enum={"ASC", "DESC"}, example="ASC"),
+     *         @API\Property(property="age",         type="string", enum={"ASC", "DESC"}, example="ASC")
+     *     }
+     * ))
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="object",
+     *     properties={
+     *         @API\Property(property="from",  type="integer", example=0,   description="Zero-based index of the first returned issue."),
+     *         @API\Property(property="to",    type="integer", example=99,  description="Zero-based index of the last returned issue."),
+     *         @API\Property(property="total", type="integer", example=100, description="Total number of all found issues."),
+     *         @API\Property(property="data",  type="array", @API\Items(
+     *             ref=@Model(type=eTraxis\IssuesDomain\Model\API\Issue::class)
+     *         ))
+     *     }
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request            $request
+     * @param Issue              $issue
+     * @param IssueRepository    $repository
+     * @param LastReadRepository $lastReadRepository
+     *
+     * @return JsonResponse
+     */
+    public function getDependencies(Request $request, Issue $issue, IssueRepository $repository, LastReadRepository $lastReadRepository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        $filter = json_decode($request->headers->get('X-Filter'), true);
+        $filter = is_array($filter) ? $filter : [];
+
+        $request->headers->set('X-Filter', json_encode($filter + ['dependency' => $issue->id]));
+
+        $collection = $this->getCollection($request, $repository);
+
+        /** @var \eTraxis\IssuesDomain\Model\Entity\LastRead[] $lastReads */
+        $lastReads = $lastReadRepository->findBy([
+            'issue' => $collection->data,
+            'user'  => $this->getUser(),
+        ]);
+
+        $values = [];
+
+        foreach ($lastReads as $lastRead) {
+            $values[$lastRead->issue->id] = $lastRead->readAt;
+        }
+
+        array_walk($collection->data, function (Issue &$issue) use ($values) {
+            $readAt = $values[$issue->id] ?? null;
+            $issue  = $issue->jsonSerialize();
+
+            $issue[Issue::JSON_READ_AT] = $readAt;
+        });
+
+        return $this->json($collection);
+    }
+
+    /**
+     * Updates list of issue dependencies.
+     *
+     * @Route("/{id}/dependencies", name="api_issues_dependencies_set", methods={"PATCH"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="",   in="body", @API\Schema(
+     *     @API\Property(property="add", type="array", example={123, 456}, description="List of issue IDs to add.",
+     *         @API\Items(type="integer")
+     *     ),
+     *     @API\Property(property="remove", type="array", example={123, 456}, description="List of issue IDs to remove.",
+     *         @API\Items(type="integer")
+     *     )
+     * ))
+     *
+     * @API\Response(response=200, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function setDependencies(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $add    = $request->request->get('add');
+        $remove = $request->request->get('remove');
+
+        $add    = is_array($add) ? $add : [];
+        $remove = is_array($remove) ? $remove : [];
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->getDoctrine()->getManager();
+        $manager->beginTransaction();
+
+        $command = new Command\AddDependenciesCommand([
+            'issue'        => $id,
+            'dependencies' => array_diff($add, $remove),
+        ]);
+
+        if (count($command->dependencies)) {
+            $commandBus->handle($command);
+        }
+
+        $command = new Command\RemoveDependenciesCommand([
+            'issue'        => $id,
+            'dependencies' => array_diff($remove, $add),
+        ]);
+
+        if (count($command->dependencies)) {
+            $commandBus->handle($command);
+        }
+
+        $manager->commit();
+
+        return $this->json(null);
+    }
+
+    /**
      * Marks specified issues as read.
      *
      * @Route("/read", name="api_issues_read", methods={"POST"})

@@ -1115,6 +1115,34 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    public function testGetCollectionFilterByDependency()
+    {
+        $expected = [
+            ['Distinctio', 'Support request 1'],
+            ['Distinctio', 'Development task 8'],
+        ];
+
+        /** @var Issue $issue */
+        [$issue] = $this->repository->findBy(['subject' => 'Support request 6'], ['id' => 'ASC']);
+
+        $this->loginAs('ldoyle@example.com');
+        $collection = $this->repository->getCollection(0, IssueRepository::MAX_LIMIT, null, [
+            Issue::JSON_DEPENDENCY => $issue->id,
+        ], [
+            Issue::JSON_ID => IssueRepository::SORT_ASC,
+        ]);
+
+        self::assertSame(0, $collection->from);
+        self::assertSame(1, $collection->to);
+        self::assertSame(2, $collection->total);
+
+        $actual = array_map(function (Issue $issue) {
+            return [$issue->state->template->project->name, $issue->subject];
+        }, $collection->data);
+
+        self::assertSame($expected, $actual);
+    }
+
     public function testGetCollectionSortById()
     {
         $expected = [

@@ -87,6 +87,7 @@ class Issue implements \JsonSerializable
     public const JSON_IS_CLOSED        = 'is_closed';
     public const JSON_IS_FROZEN        = 'is_frozen';
     public const JSON_READ_AT          = 'read_at';
+    public const JSON_DEPENDENCY       = 'dependency';
 
     // Utility constants.
     protected const SECS_IN_DAY = 86400;
