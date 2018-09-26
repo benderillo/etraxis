@@ -38,6 +38,41 @@ class CommentTest extends TestCase
         self::assertSame($event, $comment->event);
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'        => 4,
+            'user'      => [
+                'id'       => 1,
+                'email'    => 'anna@example.com',
+                'fullname' => 'Anna Rodygina',
+            ],
+            'timestamp' => time(),
+            'text'      => 'Lorem ipsum',
+            'private'   => false,
+        ];
+
+        $user = new User();
+        $this->setProperty($user, 'id', 1);
+
+        $user->email    = 'anna@example.com';
+        $user->fullname = 'Anna Rodygina';
+
+        $issue = new Issue($user);
+        $this->setProperty($issue, 'id', 2);
+
+        $event = new Event(EventType::PUBLIC_COMMENT, $issue, $user);
+        $this->setProperty($event, 'id', 3);
+
+        $comment = new Comment($event);
+        $this->setProperty($comment, 'id', 4);
+
+        $comment->body      = 'Lorem ipsum';
+        $comment->isPrivate = false;
+
+        self::assertSame($expected, $comment->jsonSerialize());
+    }
+
     public function testIssue()
     {
         $user = new User();

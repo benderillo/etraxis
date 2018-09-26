@@ -14,6 +14,7 @@
 namespace eTraxis\IssuesDomain\Model\Repository;
 
 use eTraxis\IssuesDomain\Model\Entity\Comment;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\Tests\WebTestCase;
 
 class CommentRepositoryTest extends WebTestCase
@@ -31,5 +32,48 @@ class CommentRepositoryTest extends WebTestCase
     public function testRepository()
     {
         self::assertInstanceOf(CommentRepository::class, $this->repository);
+    }
+
+    public function testFindAllByIssueWithPrivate()
+    {
+        $this->loginAs('ldoyle@example.com');
+
+        $expected = [
+            'Assumenda dolor tempora nisi tempora tempore.',
+            'Ut ipsum explicabo iste sequi dignissimos.',
+            'Natus excepturi est eaque nostrum non.',
+        ];
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $comments = $this->repository->findAllByIssue($issue, true);
+
+        self::assertCount(3, $comments);
+
+        foreach ($comments as $index => $comment) {
+            self::assertSame($expected[$index], mb_substr($comment->body, 0, mb_strlen($expected[$index])));
+        }
+    }
+
+    public function testFindAllByIssueNoPrivate()
+    {
+        $this->loginAs('nhills@example.com');
+
+        $expected = [
+            'Assumenda dolor tempora nisi tempora tempore.',
+            'Natus excepturi est eaque nostrum non.',
+        ];
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $comments = $this->repository->findAllByIssue($issue, false);
+
+        self::assertCount(2, $comments);
+
+        foreach ($comments as $index => $comment) {
+            self::assertSame($expected[$index], mb_substr($comment->body, 0, mb_strlen($expected[$index])));
+        }
     }
 }

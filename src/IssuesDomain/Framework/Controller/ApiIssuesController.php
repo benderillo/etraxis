@@ -16,6 +16,7 @@ namespace eTraxis\IssuesDomain\Framework\Controller;
 use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
+use eTraxis\IssuesDomain\Model\Repository\CommentRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
 use eTraxis\IssuesDomain\Model\Repository\WatcherRepository;
@@ -480,6 +481,68 @@ class ApiIssuesController extends Controller
         $collection = $this->getCollection($request, $repository);
 
         return $this->json($collection);
+    }
+
+    /**
+     * Returns list of issue comments.
+     *
+     * @Route("/{id}/comments", name="api_issues_comments_list", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\IssuesDomain\Model\API\Comment::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Issue             $issue
+     * @param CommentRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function listComments(Issue $issue, CommentRepository $repository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        $comments = $repository->findAllByIssue($issue, $this->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issue));
+
+        return $this->json($comments);
+    }
+
+    /**
+     * Creates new comment.
+     *
+     * @Route("/{id}/comments", name="api_issues_comments_create", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="",   in="body", @Model(type=Command\AddCommentCommand::class, groups={"api"}))
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createComment(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        $command = new Command\AddCommentCommand($request->request->all());
+
+        $command->issue = $id;
+
+        $commandBus->handle($command);
+
+        return $this->json(null);
     }
 
     /**

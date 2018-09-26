@@ -15,6 +15,7 @@ namespace eTraxis\IssuesDomain\Model\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use eTraxis\IssuesDomain\Model\Entity\Comment;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class CommentRepository extends ServiceEntityRepository
@@ -33,5 +34,32 @@ class CommentRepository extends ServiceEntityRepository
     public function persist(Comment $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
+
+    /**
+     * Finds all comments of specified issue.
+     *
+     * @param Issue $issue
+     * @param bool  $showPrivate
+     *
+     * @return Comment[]
+     */
+    public function findAllByIssue(Issue $issue, bool $showPrivate): array
+    {
+        $query = $this->createQueryBuilder('comment')
+            ->innerJoin('comment.event', 'event')
+            ->addSelect('event')
+            ->innerJoin('event.user', 'user')
+            ->addSelect('user')
+            ->where('event.issue = :issue')
+            ->orderBy('event.createdAt', 'ASC')
+            ->setParameter('issue', $issue);
+
+        if (!$showPrivate) {
+            $query->andWhere('comment.isPrivate = :private');
+            $query->setParameter('private', false);
+        }
+
+        return $query->getQuery()->getResult();
     }
 }

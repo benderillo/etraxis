@@ -14,6 +14,7 @@
 namespace eTraxis\IssuesDomain\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use eTraxis\SecurityDomain\Model\Entity\User;
 use Webinarium\PropertyTrait;
 
 /**
@@ -32,12 +33,19 @@ use Webinarium\PropertyTrait;
  * @property      string $body      Comment's body.
  * @property      bool   $isPrivate Whether the comment is private.
  */
-class Comment
+class Comment implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_VALUE = 10000;
+
+    // JSON properties.
+    public const JSON_ID        = 'id';
+    public const JSON_USER      = 'user';
+    public const JSON_TIMESTAMP = 'timestamp';
+    public const JSON_TEXT      = 'text';
+    public const JSON_PRIVATE   = 'private';
 
     /**
      * @var int
@@ -78,6 +86,24 @@ class Comment
     public function __construct(Event $event)
     {
         $this->event = $event;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID        => $this->id,
+            self::JSON_USER      => [
+                User::JSON_ID       => $this->event->user->id,
+                User::JSON_EMAIL    => $this->event->user->email,
+                User::JSON_FULLNAME => $this->event->user->fullname,
+            ],
+            self::JSON_TIMESTAMP => $this->event->createdAt,
+            self::JSON_TEXT      => $this->body,
+            self::JSON_PRIVATE   => $this->isPrivate,
+        ];
     }
 
     /**
