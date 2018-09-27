@@ -98,6 +98,8 @@ class ChangeFixtures extends Fixture implements DependentFixtureInterface
                     $events = $manager->getRepository(Event::class)->findBy([
                         'type'  => $row[self::EVENT_TYPE],
                         'issue' => $issue,
+                    ], [
+                        'createdAt' => 'ASC',
                     ]);
 
                     $event = $events[$row[self::EVENT_INDEX]];

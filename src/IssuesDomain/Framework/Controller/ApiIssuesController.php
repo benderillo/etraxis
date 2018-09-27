@@ -15,14 +15,21 @@ namespace eTraxis\IssuesDomain\Framework\Controller;
 
 use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
+use eTraxis\IssuesDomain\Model\Entity\Change;
 use eTraxis\IssuesDomain\Model\Entity\File;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
+use eTraxis\IssuesDomain\Model\Repository\ChangeRepository;
 use eTraxis\IssuesDomain\Model\Repository\CommentRepository;
 use eTraxis\IssuesDomain\Model\Repository\FileRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
 use eTraxis\IssuesDomain\Model\Repository\WatcherRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
+use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
+use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
+use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
+use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -424,6 +431,80 @@ class ApiIssuesController extends Controller
         $commandBus->handle($command);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns list of issue changes.
+     *
+     * @Route("/{id}/changes", name="api_issues_changes", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\IssuesDomain\Model\API\Change::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Issue                  $issue
+     * @param ChangeRepository       $repository
+     * @param DecimalValueRepository $decimalRepository
+     * @param StringValueRepository  $stringRepository
+     * @param TextValueRepository    $textRepository
+     * @param ListItemRepository     $listRepository
+     *
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     *
+     * @return JsonResponse
+     */
+    public function listChanges(
+        Issue                  $issue,
+        ChangeRepository       $repository,
+        DecimalValueRepository $decimalRepository,
+        StringValueRepository  $stringRepository,
+        TextValueRepository    $textRepository,
+        ListItemRepository     $listRepository
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        /** @var \Doctrine\Common\Persistence\ObjectRepository[] $repositories */
+        $repositories = [
+            FieldType::DECIMAL => $decimalRepository,
+            FieldType::STRING  => $stringRepository,
+            FieldType::TEXT    => $textRepository,
+            FieldType::LIST    => $listRepository,
+        ];
+
+        $changes = $repository->findAllByIssue($issue, $this->getUser());
+
+        $data = [];
+
+        foreach ($changes as $change) {
+
+            $entry = $change->jsonSerialize();
+
+            if ($change->field === null || array_key_exists($change->field->type, $repositories)) {
+
+                $type = $change->field === null ? FieldType::STRING : $change->field->type;
+
+                /** @var \JsonSerializable $oldValue */
+                /** @var \JsonSerializable $newValue */
+                $oldValue = $repositories[$type]->find($change->oldValue);
+                $newValue = $repositories[$type]->find($change->newValue);
+
+                $entry[Change::JSON_OLD_VALUE] = $oldValue === null ? null : $oldValue->jsonSerialize();
+                $entry[Change::JSON_NEW_VALUE] = $newValue === null ? null : $newValue->jsonSerialize();
+            }
+
+            $data[] = $entry;
+        }
+
+        return $this->json($data);
     }
 
     /**

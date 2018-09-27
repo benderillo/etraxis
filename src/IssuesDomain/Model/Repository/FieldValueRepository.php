@@ -29,6 +29,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class FieldValueRepository extends ServiceEntityRepository
 {
+    protected $changeRepository;
     protected $decimalRepository;
     protected $stringRepository;
     protected $textRepository;
@@ -40,6 +41,7 @@ class FieldValueRepository extends ServiceEntityRepository
      */
     public function __construct(
         RegistryInterface      $registry,
+        ChangeRepository       $changeRepository,
         DecimalValueRepository $decimalRepository,
         StringValueRepository  $stringRepository,
         TextValueRepository    $textRepository,
@@ -49,11 +51,20 @@ class FieldValueRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, FieldValue::class);
 
+        $this->changeRepository  = $changeRepository;
         $this->decimalRepository = $decimalRepository;
         $this->stringRepository  = $stringRepository;
         $this->textRepository    = $textRepository;
         $this->listRepository    = $listRepository;
         $this->issueRepository   = $issueRepository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function persist(FieldValue $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
     }
 
     /**
@@ -202,7 +213,7 @@ class FieldValueRepository extends ServiceEntityRepository
         }
 
         /** @var null|FieldValue $fieldValue */
-        $fieldValue = $this->getEntityManager()->getRepository(FieldValue::class)->findOneBy([
+        $fieldValue = $this->findOneBy([
             'issue' => $issue,
             'field' => $field,
         ]);
@@ -214,13 +225,13 @@ class FieldValueRepository extends ServiceEntityRepository
         }
         elseif ($fieldValue->value !== $newValue) {
             $change = new Change($event, $field, $fieldValue->value, $newValue);
-            $this->getEntityManager()->persist($change);
+            $this->changeRepository->persist($change);
 
             $fieldValue->value = $newValue;
             $issue->touch();
         }
 
-        $this->getEntityManager()->persist($fieldValue);
+        $this->persist($fieldValue);
 
         return $fieldValue;
     }

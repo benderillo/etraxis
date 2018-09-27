@@ -49,4 +49,60 @@ class ChangeTest extends TestCase
         self::assertNull($change->oldValue);
         self::assertSame(100, $change->newValue);
     }
+
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'        => 8,
+            'user'      => [
+                'id'       => 1,
+                'email'    => 'anna@example.com',
+                'fullname' => 'Anna Rodygina',
+            ],
+            'timestamp' => time(),
+            'field'     => [
+                'id'          => 5,
+                'name'        => 'Customer reported',
+                'type'        => 'checkbox',
+                'description' => null,
+                'position'    => 1,
+                'required'    => false,
+            ],
+            'old_value' => 123,
+            'new_value' => 456,
+        ];
+
+        $user = new User();
+        $this->setProperty($user, 'id', 1);
+
+        $user->email    = 'anna@example.com';
+        $user->fullname = 'Anna Rodygina';
+
+        $project = new Project();
+        $this->setProperty($project, 'id', 2);
+
+        $template = new Template($project);
+        $this->setProperty($template, 'id', 3);
+
+        $state = new State($template, StateType::INITIAL);
+        $this->setProperty($state, 'id', 4);
+
+        $field = new Field($state, FieldType::CHECKBOX);
+        $this->setProperty($field, 'id', 5);
+
+        $field->name       = 'Customer reported';
+        $field->position   = 1;
+        $field->isRequired = false;
+
+        $issue = new Issue($user);
+        $this->setProperty($issue, 'id', 6);
+
+        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $this->setProperty($event, 'id', 7);
+
+        $change = new Change($event, $field, 123, 456);
+        $this->setProperty($change, 'id', 8);
+
+        self::assertSame($expected, $change->jsonSerialize());
+    }
 }

@@ -25,6 +25,14 @@ class DecimalValueTest extends TestCase
         self::assertSame($expected, $decimal->value);
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = '1234567890.0987654321';
+        $decimal  = new DecimalValue($expected);
+
+        self::assertSame($expected, $decimal->jsonSerialize());
+    }
+
     public function testTrim()
     {
         $decimal = new DecimalValue('0100');

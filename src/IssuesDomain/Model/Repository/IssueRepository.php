@@ -35,6 +35,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class IssueRepository extends ServiceEntityRepository implements CollectionInterface
 {
     protected $tokens;
+    protected $changeRepository;
     protected $decimalRepository;
     protected $stringRepository;
     protected $textRepository;
@@ -46,6 +47,7 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
     public function __construct(
         RegistryInterface      $registry,
         TokenStorageInterface  $tokens,
+        ChangeRepository       $changeRepository,
         DecimalValueRepository $decimalRepository,
         StringValueRepository  $stringRepository,
         TextValueRepository    $textRepository,
@@ -55,6 +57,7 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
         parent::__construct($registry, Issue::class);
 
         $this->tokens            = $tokens;
+        $this->changeRepository  = $changeRepository;
         $this->decimalRepository = $decimalRepository;
         $this->stringRepository  = $stringRepository;
         $this->textRepository    = $textRepository;
@@ -98,8 +101,8 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
             $issue->subject = $subject;
             $issue->touch();
 
-            $this->getEntityManager()->persist($change);
-            $this->getEntityManager()->persist($issue);
+            $this->changeRepository->persist($change);
+            $this->persist($issue);
         }
     }
 

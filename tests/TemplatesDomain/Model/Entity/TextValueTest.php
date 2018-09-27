@@ -28,4 +28,12 @@ class TextValueTest extends TestCase
         self::assertSame(md5($expected), $this->getProperty($text, 'token'));
         self::assertSame($expected, $text->value);
     }
+
+    public function testJsonSerialize()
+    {
+        $expected = 'Lorem ipsum';
+        $text     = new TextValue($expected);
+
+        self::assertSame($expected, $text->jsonSerialize());
+    }
 }
