@@ -18,7 +18,7 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class GetCommentsTest extends TransactionalTestCase
+class ListCommentsTest extends TransactionalTestCase
 {
     public function testSuccess()
     {
@@ -36,6 +36,9 @@ class GetCommentsTest extends TransactionalTestCase
         $content = json_decode($response->getContent(), true);
 
         self::assertCount(2, $content);
+
+        self::assertSame('Assumenda dolor', mb_substr($content[0]['text'], 0, 15));
+        self::assertSame('Natus excepturi', mb_substr($content[1]['text'], 0, 15));
     }
 
     public function test401()

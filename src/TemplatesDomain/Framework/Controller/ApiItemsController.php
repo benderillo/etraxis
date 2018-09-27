@@ -13,7 +13,6 @@
 
 namespace eTraxis\TemplatesDomain\Framework\Controller;
 
-use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use eTraxis\TemplatesDomain\Application\Command\ListItems as Command;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use League\Tactician\CommandBus;
@@ -35,8 +34,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ApiItemsController extends Controller
 {
-    use CollectionTrait;
-
     /**
      * Returns specified list item.
      *
