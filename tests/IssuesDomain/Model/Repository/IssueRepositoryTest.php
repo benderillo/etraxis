@@ -378,7 +378,7 @@ class IssueRepositoryTest extends TransactionalTestCase
         $expected = range($id * 10, $id * 10 + 9);
 
         $collection = $this->repository->getCollection(0, IssueRepository::MAX_LIMIT, null, [
-            Issue::JSON_ID => '-' . mb_substr('00' . $id, -2),
+            Issue::JSON_ID => '-' . mb_substr('00' . $id, -max(2, mb_strlen($id))),
         ], [
             Issue::JSON_ID => IssueRepository::SORT_ASC,
         ]);
