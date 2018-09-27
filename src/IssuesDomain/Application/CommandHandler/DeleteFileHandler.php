@@ -71,7 +71,7 @@ class DeleteFileHandler
         /** @var null|\eTraxis\IssuesDomain\Model\Entity\File $file */
         $file = $this->fileRepository->find($command->file);
 
-        if (!$file) {
+        if (!$file || $file->isRemoved) {
             throw new NotFoundHttpException('Unknown file.');
         }
 

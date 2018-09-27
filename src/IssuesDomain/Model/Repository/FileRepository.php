@@ -15,6 +15,7 @@ namespace eTraxis\IssuesDomain\Model\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use eTraxis\IssuesDomain\Model\Entity\File;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class FileRepository extends ServiceEntityRepository
@@ -50,5 +51,31 @@ class FileRepository extends ServiceEntityRepository
     public function getFullPath(File $entity): ?string
     {
         return $this->storage . \DIRECTORY_SEPARATOR . $entity->uuid;
+    }
+
+    /**
+     * Finds all files of specified issue.
+     *
+     * @param Issue $issue
+     * @param bool  $showRemoved
+     *
+     * @return File[]
+     */
+    public function findAllByIssue(Issue $issue, bool $showRemoved = false): array
+    {
+        $query = $this->createQueryBuilder('file')
+            ->innerJoin('file.event', 'event')
+            ->addSelect('event')
+            ->innerJoin('event.user', 'user')
+            ->addSelect('user')
+            ->where('event.issue = :issue')
+            ->orderBy('event.createdAt', 'ASC')
+            ->setParameter('issue', $issue);
+
+        if (!$showRemoved) {
+            $query->andWhere('file.removedAt IS NULL');
+        }
+
+        return $query->getQuery()->getResult();
     }
 }

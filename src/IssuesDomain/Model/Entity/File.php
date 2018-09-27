@@ -15,6 +15,7 @@ namespace eTraxis\IssuesDomain\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use eTraxis\IssuesDomain\Model\Dictionary\MimeType;
+use eTraxis\SecurityDomain\Model\Entity\User;
 use Ramsey\Uuid\Uuid;
 use Webinarium\PropertyTrait;
 
@@ -37,13 +38,21 @@ use Webinarium\PropertyTrait;
  * @property-read string $uuid      Unique UUID for storage.
  * @property-read bool   $isRemoved Whether the file is removed (soft-deleted).
  */
-class File
+class File implements \JsonSerializable
 {
     use PropertyTrait;
 
     // Constraints.
     public const MAX_NAME = 100;
     public const MAX_TYPE = 255;
+
+    // JSON properties.
+    public const JSON_ID        = 'id';
+    public const JSON_USER      = 'user';
+    public const JSON_TIMESTAMP = 'timestamp';
+    public const JSON_NAME      = 'name';
+    public const JSON_SIZE      = 'size';
+    public const JSON_TYPE      = 'type';
 
     /**
      * @var int
@@ -126,6 +135,25 @@ class File
         if ($this->removedAt === null) {
             $this->removedAt = time();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        return [
+            self::JSON_ID        => $this->id,
+            self::JSON_USER      => [
+                User::JSON_ID       => $this->event->user->id,
+                User::JSON_EMAIL    => $this->event->user->email,
+                User::JSON_FULLNAME => $this->event->user->fullname,
+            ],
+            self::JSON_TIMESTAMP => $this->event->createdAt,
+            self::JSON_NAME      => $this->name,
+            self::JSON_SIZE      => $this->size,
+            self::JSON_TYPE      => $this->type,
+        ];
     }
 
     /**

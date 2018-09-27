@@ -14,6 +14,7 @@
 namespace eTraxis\IssuesDomain\Model\Repository;
 
 use eTraxis\IssuesDomain\Model\Entity\File;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\Tests\WebTestCase;
 
 class FileRepositoryTest extends WebTestCase
@@ -41,5 +42,44 @@ class FileRepositoryTest extends WebTestCase
         $expected = getcwd() . \DIRECTORY_SEPARATOR . 'var' . \DIRECTORY_SEPARATOR . $file->uuid;
 
         self::assertSame($expected, $this->repository->getFullPath($file));
+    }
+
+    public function testFindAllByIssueWithRemoved()
+    {
+        $this->loginAs('ldoyle@example.com');
+
+        $expected = [
+            'Beatae nesciunt natus suscipit iure assumenda commodi.docx',
+            'Possimus sapiente.pdf',
+            'Nesciunt nulla sint amet.xslx',
+        ];
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $files = array_map(function (File $file) {
+            return $file->name;
+        }, $this->repository->findAllByIssue($issue, true));
+
+        self::assertSame($expected, $files);
+    }
+
+    public function testFindAllByIssueNoRemoved()
+    {
+        $this->loginAs('ldoyle@example.com');
+
+        $expected = [
+            'Beatae nesciunt natus suscipit iure assumenda commodi.docx',
+            'Nesciunt nulla sint amet.xslx',
+        ];
+
+        /** @var Issue $issue */
+        [$issue] = $this->doctrine->getRepository(Issue::class)->findBy(['subject' => 'Development task 2'], ['id' => 'ASC']);
+
+        $files = array_map(function (File $file) {
+            return $file->name;
+        }, $this->repository->findAllByIssue($issue));
+
+        self::assertSame($expected, $files);
     }
 }

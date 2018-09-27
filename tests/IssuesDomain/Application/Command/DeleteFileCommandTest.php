@@ -94,6 +94,23 @@ class DeleteFileCommandTest extends TransactionalTestCase
         $this->commandbus->handle($command);
     }
 
+    public function testRemovedFile()
+    {
+        $this->expectException(NotFoundHttpException::class);
+        $this->expectExceptionMessage('Unknown file.');
+
+        $this->loginAs('ldoyle@example.com');
+
+        /** @var File $file */
+        [/* skipping */, /* skipping */, $file] = $this->repository->findBy(['name' => 'Possimus sapiente.pdf'], ['id' => 'ASC']);
+
+        $command = new DeleteFileCommand([
+            'file' => $file->id,
+        ]);
+
+        $this->commandbus->handle($command);
+    }
+
     public function testAccessDenied()
     {
         $this->expectException(AccessDeniedHttpException::class);

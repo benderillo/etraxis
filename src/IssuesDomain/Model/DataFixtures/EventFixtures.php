@@ -74,13 +74,15 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                 [EventType::STATE_CHANGED,   $this->manager1,   0, 10,  'assigned'],
                 [EventType::ISSUE_ASSIGNED,  $this->manager1,   0, 10,  $this->developer3],
                 [EventType::FILE_ATTACHED,   $this->manager1,   0, 15,  0],
+                [EventType::FILE_ATTACHED,   $this->manager1,   0, 20,  1],
                 [EventType::PUBLIC_COMMENT,  $this->manager1,   1, 0,   null],
                 [EventType::ISSUE_CLOSED,    $this->developer3, 2, 35,  'completed'],
                 [EventType::ISSUE_REOPENED,  $this->manager2,   2, 90,  'new'],
                 [EventType::STATE_CHANGED,   $this->manager2,   2, 95,  'assigned'],
                 [EventType::ISSUE_ASSIGNED,  $this->manager2,   2, 95,  $this->developer3],
-                [EventType::PRIVATE_COMMENT, $this->manager2,   2, 105, null],
-                [EventType::FILE_ATTACHED,   $this->developer3, 3, 60,  1],
+                [EventType::FILE_DELETED,    $this->manager2,   2, 105, 1],
+                [EventType::PRIVATE_COMMENT, $this->manager2,   2, 110, null],
+                [EventType::FILE_ATTACHED,   $this->developer3, 3, 60,  2],
                 [EventType::PUBLIC_COMMENT,  $this->developer3, 3, 65,  null],
             ],
 
@@ -202,6 +204,10 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
                             $this->setProperty($event, 'parameter', $entity->id);
 
                             break;
+
+                        default:
+
+                            $this->setProperty($event, 'parameter', $row[self::EVENT_PARAMETER]);
                     }
 
                     $manager->persist($event);

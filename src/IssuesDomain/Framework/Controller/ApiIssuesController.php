@@ -15,8 +15,10 @@ namespace eTraxis\IssuesDomain\Framework\Controller;
 
 use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
+use eTraxis\IssuesDomain\Model\Entity\File;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\CommentRepository;
+use eTraxis\IssuesDomain\Model\Repository\FileRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
 use eTraxis\IssuesDomain\Model\Repository\WatcherRepository;
@@ -543,6 +545,77 @@ class ApiIssuesController extends Controller
         $commandBus->handle($command);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns list of issue files.
+     *
+     * @Route("/{id}/files", name="api_files_list", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\IssuesDomain\Model\API\File::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Issue          $issue
+     * @param FileRepository $repository
+     *
+     * @return JsonResponse
+     */
+    public function listFiles(Issue $issue, FileRepository $repository): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        $files = $repository->findAllByIssue($issue);
+
+        return $this->json($files);
+    }
+
+    /**
+     * Attaches new file.
+     *
+     * @Route("/{id}/files", name="api_files_create", methods={"POST"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id",         in="path",     type="integer", required=true, description="Issue ID.")
+     * @API\Parameter(name="attachment", in="formData", type="file",    required=true, description="Uploaded file.")
+     *
+     * @API\Response(response=201, description="Success.")
+     * @API\Response(response=400, description="The request is malformed.")
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Request    $request
+     * @param int        $id
+     * @param CommandBus $commandBus
+     *
+     * @return JsonResponse
+     */
+    public function createFile(Request $request, int $id, CommandBus $commandBus): JsonResponse
+    {
+        /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $attachment */
+        $attachment = $request->files->get('attachment');
+
+        $command = new Command\AttachFileCommand([
+            'issue' => $id,
+            'file'  => $attachment,
+        ]);
+
+        /** @var File $file */
+        $file = $commandBus->handle($command);
+
+        $url = $this->generateUrl('api_files_download', [
+            'id' => $file->id,
+        ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        return $this->json(null, JsonResponse::HTTP_CREATED, ['Location' => $url]);
     }
 
     /**

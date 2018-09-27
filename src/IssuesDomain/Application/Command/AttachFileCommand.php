@@ -34,6 +34,7 @@ class AttachFileCommand
     public $issue;
 
     /**
+     * @Assert\NotBlank
      * @Assert\File
      */
     public $file;

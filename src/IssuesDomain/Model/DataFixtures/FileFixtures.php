@@ -51,6 +51,7 @@ class FileFixtures extends Fixture implements DependentFixtureInterface
                     'Inventore.pdf',
                     175971,     // 171.85 KB
                     'application/pdf',
+                    false,
                 ],
             ],
 
@@ -59,11 +60,19 @@ class FileFixtures extends Fixture implements DependentFixtureInterface
                     'Beatae nesciunt natus suscipit iure assumenda commodi.docx',
                     217948,     // 212.84 KB
                     'application/vnd\.ms-word',
+                    false,
+                ],
+                [
+                    'Possimus sapiente.pdf',
+                    10753,      // 10.50 KB
+                    'application/pdf',
+                    true,
                 ],
                 [
                     'Nesciunt nulla sint amet.xslx',
                     6037279,    // 5895.78 KB
                     'application/vnd\.ms-excel',
+                    false,
                 ],
             ],
         ];
@@ -87,6 +96,20 @@ class FileFixtures extends Fixture implements DependentFixtureInterface
                 foreach ($files as $index => $row) {
 
                     $file = new File($events[$index], $row[0], $row[1], $row[2]);
+
+                    if ($row[3]) {
+                        /** @var Event $event */
+                        $event = $manager->getRepository(Event::class)->findOneBy([
+                            'type'      => EventType::FILE_DELETED,
+                            'issue'     => $issue,
+                            'parameter' => $index,
+                        ]);
+
+                        $this->setProperty($event, 'parameter', $file->id);
+                        $this->setProperty($file, 'removedAt', $event->createdAt);
+
+                        $manager->persist($event);
+                    }
 
                     $manager->persist($file);
                     $manager->flush();

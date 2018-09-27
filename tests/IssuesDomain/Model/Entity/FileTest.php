@@ -62,6 +62,39 @@ class FileTest extends TestCase
         self::assertRegExp('/^([[:xdigit:]]{32})$/is', $file->uuid);
     }
 
+    public function testJsonSerialize()
+    {
+        $expected = [
+            'id'        => 4,
+            'user'      => [
+                'id'       => 1,
+                'email'    => 'anna@example.com',
+                'fullname' => 'Anna Rodygina',
+            ],
+            'timestamp' => time(),
+            'name'      => 'example.csv',
+            'size'      => 2309,
+            'type'      => 'text/csv',
+        ];
+
+        $user = new User();
+        $this->setProperty($user, 'id', 1);
+
+        $user->email    = 'anna@example.com';
+        $user->fullname = 'Anna Rodygina';
+
+        $issue = new Issue($user);
+        $this->setProperty($issue, 'id', 2);
+
+        $event = new Event(EventType::FILE_ATTACHED, $issue, $user);
+        $this->setProperty($event, 'id', 3);
+
+        $file = new File($event, 'example.csv', 2309, 'text/csv');
+        $this->setProperty($file, 'id', 4);
+
+        self::assertSame($expected, $file->jsonSerialize());
+    }
+
     public function testIssue()
     {
         $user = new User();
