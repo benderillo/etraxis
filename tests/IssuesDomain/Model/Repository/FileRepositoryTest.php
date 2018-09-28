@@ -46,8 +46,6 @@ class FileRepositoryTest extends WebTestCase
 
     public function testFindAllByIssueWithRemoved()
     {
-        $this->loginAs('ldoyle@example.com');
-
         $expected = [
             'Beatae nesciunt natus suscipit iure assumenda commodi.docx',
             'Possimus sapiente.pdf',
@@ -66,8 +64,6 @@ class FileRepositoryTest extends WebTestCase
 
     public function testFindAllByIssueNoRemoved()
     {
-        $this->loginAs('ldoyle@example.com');
-
         $expected = [
             'Beatae nesciunt natus suscipit iure assumenda commodi.docx',
             'Nesciunt nulla sint amet.xslx',

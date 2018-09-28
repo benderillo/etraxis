@@ -36,8 +36,6 @@ class CommentRepositoryTest extends WebTestCase
 
     public function testFindAllByIssueWithPrivate()
     {
-        $this->loginAs('ldoyle@example.com');
-
         $expected = [
             'Assumenda dolor tempora nisi tempora tempore.',
             'Ut ipsum explicabo iste sequi dignissimos.',
@@ -58,8 +56,6 @@ class CommentRepositoryTest extends WebTestCase
 
     public function testFindAllByIssueNoPrivate()
     {
-        $this->loginAs('nhills@example.com');
-
         $expected = [
             'Assumenda dolor tempora nisi tempora tempore.',
             'Natus excepturi est eaque nostrum non.',
