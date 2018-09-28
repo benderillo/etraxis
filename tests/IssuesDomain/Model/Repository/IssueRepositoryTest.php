@@ -881,9 +881,12 @@ class IssueRepositoryTest extends TransactionalTestCase
             ['Excepturi',  'Support request 3'],
         ];
 
+        /** @var Issue $issue */
+        [$issue] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
+
         $this->loginAs('amarvin@example.com');
         $collection = $this->repository->getCollection(0, IssueRepository::MAX_LIMIT, null, [
-            Issue::JSON_AGE => 2,
+            Issue::JSON_AGE => $issue->age,
         ], [
             Issue::JSON_ID => IssueRepository::SORT_ASC,
         ]);
