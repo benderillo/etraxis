@@ -84,33 +84,22 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(34, $collection->to);
         self::assertSame(35, $collection->total);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 
     public function testOffset()
     {
-        $expected = [
-            'Kyla Schultz',
-            'Vida Parker',
-            'Tony Buckridge',
-            'Nikko Hills',
-            'Jarrell Kiehn',
-        ];
-
         $request = new Request(['offset' => 30]);
         $request->setMethod(Request::METHOD_GET);
 
         $collection = $this->getCollection($request, $this->repository);
 
-        $actual  = array_map(function (User $user) {
-            return $user->fullname;
-        }, $collection->data);
-
         self::assertSame(30, $collection->from);
         self::assertSame(34, $collection->to);
         self::assertSame(35, $collection->total);
-
-        self::assertSame($expected, $actual);
     }
 
     public function testOffsetNegative()
@@ -142,28 +131,14 @@ class CollectionTraitTest extends WebTestCase
 
     public function testLimit()
     {
-        $expected = [
-            'eTraxis Admin',
-            'Artem Rodygin',
-            'Albert Einstein',
-            'Ted Berge',
-            'Joe Gutmann',
-        ];
-
         $request = new Request(['limit' => 5]);
         $request->setMethod(Request::METHOD_GET);
 
         $collection = $this->getCollection($request, $this->repository);
 
-        $actual  = array_map(function (User $user) {
-            return $user->fullname;
-        }, $collection->data);
-
         self::assertSame(0, $collection->from);
         self::assertSame(4, $collection->to);
         self::assertSame(35, $collection->total);
-
-        self::assertSame($expected, $actual);
     }
 
     public function testLimitNegative()
@@ -223,6 +198,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(10, $collection->to);
         self::assertSame(11, $collection->total);
 
+        sort($expected);
+        sort($actual);
+
         self::assertSame($expected, $actual);
     }
 
@@ -252,6 +230,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(0, $collection->from);
         self::assertSame(3, $collection->to);
         self::assertSame(4, $collection->total);
+
+        sort($expected);
+        sort($actual);
 
         self::assertSame($expected, $actual);
     }

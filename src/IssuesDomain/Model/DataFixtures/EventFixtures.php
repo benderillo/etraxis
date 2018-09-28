@@ -172,7 +172,8 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
                     $timestamp = $issue->createdAt
                         + $row[self::EVENT_DAY] * self::SECS_IN_DAY
-                        + $row[self::EVENT_MIN] * self::SECS_IN_MIN;
+                        + $row[self::EVENT_MIN] * self::SECS_IN_MIN
+                        + $index;
 
                     $event = new Event($row[self::EVENT_TYPE], $issue, $user);
 
