@@ -138,10 +138,10 @@ class ChangeRepository extends ServiceEntityRepository
             }
         }
 
-        $this->decimalRepository->warmup($values[FieldType::DECIMAL]);
-        $this->stringRepository->warmup($values[FieldType::STRING]);
-        $this->textRepository->warmup($values[FieldType::TEXT]);
-        $this->listRepository->warmup($values[FieldType::LIST]);
+        $this->decimalRepository->warmup(array_unique($values[FieldType::DECIMAL]));
+        $this->stringRepository->warmup(array_unique($values[FieldType::STRING]));
+        $this->textRepository->warmup(array_unique($values[FieldType::TEXT]));
+        $this->listRepository->warmup(array_unique($values[FieldType::LIST]));
 
         return $changes;
     }

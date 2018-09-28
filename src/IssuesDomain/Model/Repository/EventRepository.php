@@ -14,7 +14,9 @@
 namespace eTraxis\IssuesDomain\Model\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\IssuesDomain\Model\Entity\Event;
+use eTraxis\IssuesDomain\Model\Entity\Issue;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class EventRepository extends ServiceEntityRepository
@@ -33,5 +35,30 @@ class EventRepository extends ServiceEntityRepository
     public function persist(Event $entity): void
     {
         $this->getEntityManager()->persist($entity);
+    }
+
+    /**
+     * Finds all events of specified issue.
+     *
+     * @param Issue $issue
+     * @param bool  $showPrivate
+     *
+     * @return Event[]
+     */
+    public function findAllByIssue(Issue $issue, bool $showPrivate): array
+    {
+        $query = $this->createQueryBuilder('event')
+            ->innerJoin('event.user', 'user')
+            ->addSelect('user')
+            ->where('event.issue = :issue')
+            ->orderBy('event.createdAt', 'ASC')
+            ->setParameter('issue', $issue);
+
+        if (!$showPrivate) {
+            $query->andWhere('event.type <> :private');
+            $query->setParameter('private', EventType::PRIVATE_COMMENT);
+        }
+
+        return $query->getQuery()->getResult();
     }
 }

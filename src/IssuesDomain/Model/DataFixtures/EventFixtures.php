@@ -60,13 +60,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $data = [
 
             'task:%s:1' => [
-                [EventType::ISSUE_CREATED,  $this->manager1,   0, 0,  'new'],
-                [EventType::ISSUE_EDITED,   $this->manager1,   0, 5,  null],
-                [EventType::FILE_ATTACHED,  $this->manager1,   0, 10, 0],
-                [EventType::STATE_CHANGED,  $this->manager1,   0, 25, 'assigned'],
-                [EventType::ISSUE_ASSIGNED, $this->manager1,   0, 25, $this->developer1],
-                [EventType::PUBLIC_COMMENT, $this->manager1,   1, 0,  null],
-                [EventType::ISSUE_CLOSED,   $this->developer1, 3, 0,  'completed'],
+                [EventType::ISSUE_CREATED,    $this->manager1,   0, 0,  'new'],
+                [EventType::ISSUE_EDITED,     $this->manager1,   0, 5,  null],
+                [EventType::FILE_ATTACHED,    $this->manager1,   0, 10, 0],
+                [EventType::STATE_CHANGED,    $this->manager1,   0, 25, 'assigned'],
+                [EventType::ISSUE_ASSIGNED,   $this->manager1,   0, 25, $this->developer1],
+                [EventType::DEPENDENCY_ADDED, $this->manager1,   0, 30, 'task:%s:2'],
+                [EventType::PUBLIC_COMMENT,   $this->manager1,   1, 0,  null],
+                [EventType::ISSUE_CLOSED,     $this->developer1, 3, 0,  'completed'],
             ],
 
             'task:%s:2' => [
@@ -201,6 +202,15 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
 
                             /** @var \eTraxis\SecurityDomain\Model\Entity\User $entity */
                             $entity = $this->getReference($row[self::EVENT_PARAMETER][$pref]);
+                            $this->setProperty($event, 'parameter', $entity->id);
+
+                            break;
+
+                        case EventType::DEPENDENCY_ADDED:
+                        case EventType::DEPENDENCY_REMOVED:
+
+                            /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $entity */
+                            $entity = $this->getReference(sprintf($row[self::EVENT_PARAMETER], $pref));
                             $this->setProperty($event, 'parameter', $entity->id);
 
                             break;

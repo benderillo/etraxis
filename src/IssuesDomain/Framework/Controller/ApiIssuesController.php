@@ -16,18 +16,24 @@ namespace eTraxis\IssuesDomain\Framework\Controller;
 use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Entity\Change;
+use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\File;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\ChangeRepository;
 use eTraxis\IssuesDomain\Model\Repository\CommentRepository;
+use eTraxis\IssuesDomain\Model\Repository\EventRepository;
 use eTraxis\IssuesDomain\Model\Repository\FileRepository;
 use eTraxis\IssuesDomain\Model\Repository\IssueRepository;
 use eTraxis\IssuesDomain\Model\Repository\LastReadRepository;
 use eTraxis\IssuesDomain\Model\Repository\WatcherRepository;
+use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\SharedDomain\Model\Collection\CollectionTrait;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
+use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\ListItemRepository;
+use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
 use eTraxis\TemplatesDomain\Model\Repository\StringValueRepository;
 use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use League\Tactician\CommandBus;
@@ -431,6 +437,145 @@ class ApiIssuesController extends Controller
         $commandBus->handle($command);
 
         return $this->json(null);
+    }
+
+    /**
+     * Returns list of issue events.
+     *
+     * @Route("/{id}/events", name="api_issues_events", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @API\Parameter(name="id", in="path", type="integer", required=true, description="Issue ID.")
+     *
+     * @API\Response(response=200, description="Success.", @API\Schema(
+     *     type="array",
+     *     @API\Items(
+     *         ref=@Model(type=eTraxis\IssuesDomain\Model\API\Event::class)
+     *     )
+     * ))
+     * @API\Response(response=401, description="Client is not authenticated.")
+     * @API\Response(response=403, description="Client is not authorized for this request.")
+     * @API\Response(response=404, description="Issue is not found.")
+     *
+     * @param Issue           $issue
+     * @param EventRepository $repository
+     * @param StateRepository $stateRepository
+     * @param UserRepository  $userRepository
+     * @param FileRepository  $fileRepository
+     * @param IssueRepository $issueRepository
+     *
+     * @return JsonResponse
+     */
+    public function listEvents(
+        Issue           $issue,
+        EventRepository $repository,
+        StateRepository $stateRepository,
+        UserRepository  $userRepository,
+        FileRepository  $fileRepository,
+        IssueRepository $issueRepository
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted(IssueVoter::VIEW_ISSUE, $issue);
+
+        // List of used states, users, files, and issues (ORM).
+        $ids = [
+            Event::JSON_STATE    => [],
+            Event::JSON_ASSIGNEE => [],
+            Event::JSON_FILE     => [],
+            Event::JSON_ISSUE    => [],
+        ];
+
+        // List of used states, users, files, and issues (JSON).
+        $values = [
+            Event::JSON_STATE    => [],
+            Event::JSON_ASSIGNEE => [],
+            Event::JSON_FILE     => [],
+            Event::JSON_ISSUE    => [],
+        ];
+
+        // Get list of events.
+        $events = $repository->findAllByIssue($issue, $this->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $issue));
+
+        // Convert events to JSON representation.
+        $data = array_map(function (Event $event) {
+            return $event->jsonSerialize();
+        }, $events);
+
+        // Find of all used states, users, files, and issues.
+        foreach (array_keys($values) as $key) {
+            $ids[$key] = array_map(function ($entry) use ($key) {
+                return $entry[$key] ?? null;
+            }, $data);
+        }
+
+        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $states */
+        $states = $stateRepository->findBy(['id' => array_unique($ids[Event::JSON_STATE])]);
+
+        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $users */
+        $users = $userRepository->findBy(['id' => array_unique($ids[Event::JSON_ASSIGNEE])]);
+
+        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $files */
+        $files = $fileRepository->findBy(['id' => array_unique($ids[Event::JSON_FILE])]);
+
+        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $issues */
+        $issues = $issueRepository->createQueryBuilder('issue')
+            ->innerJoin('issue.state', 'state')
+            ->addSelect('state')
+            ->innerJoin('state.template', 'template')
+            ->addSelect('template')
+            ->innerJoin('template.project', 'project')
+            ->addSelect('project')
+            ->innerJoin('issue.author', 'author')
+            ->addSelect('author')
+            ->leftJoin('issue.responsible', 'responsible')
+            ->addSelect('responsible')
+            ->where('issue.id IN (:ids)')
+            ->setParameter('ids', array_unique($ids[Event::JSON_ISSUE]))
+            ->getQuery()
+            ->getResult();
+
+        // Convert states to JSON representation.
+        foreach ($states as $state) {
+            $values[Event::JSON_STATE][$state->id] = [
+                State::JSON_ID          => $state->id,
+                State::JSON_NAME        => $state->name,
+                State::JSON_TYPE        => $state->type,
+                State::JSON_RESPONSIBLE => $state->responsible,
+            ];
+        }
+
+        // Convert users to JSON representation.
+        foreach ($users as $user) {
+            /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+            $values[Event::JSON_ASSIGNEE][$user->id] = [
+                User::JSON_ID       => $user->id,
+                User::JSON_EMAIL    => $user->email,
+                User::JSON_FULLNAME => $user->fullname,
+            ];
+        }
+
+        // Convert files to JSON representation.
+        foreach ($files as $file) {
+            /** @var \eTraxis\IssuesDomain\Model\Entity\File $file */
+            $values[Event::JSON_FILE][$file->id] = $file->jsonSerialize();
+        }
+
+        // Convert issues to JSON representation.
+        foreach ($issues as $issue) {
+            /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue */
+            $values[Event::JSON_ISSUE][$issue->id] = $issue->jsonSerialize();
+            unset($values[Event::JSON_ISSUE][$issue->id][Issue::JSON_READ_AT]);
+        }
+
+        // Replace all used IDs with corresponding JSON data.
+        array_walk($data, function (&$entry) use ($values) {
+            foreach (array_keys($values) as $key) {
+                if (array_key_exists($key, $entry)) {
+                    $entry[$key] = $values[$key][$entry[$key]] ?? null;
+                }
+            }
+        });
+
+        return $this->json($data);
     }
 
     /**

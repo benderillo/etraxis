@@ -14,6 +14,7 @@
 namespace eTraxis\IssuesDomain\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use eTraxis\IssuesDomain\Model\Dictionary\EventType;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use Webinarium\PropertyTrait;
 
@@ -34,9 +35,18 @@ use Webinarium\PropertyTrait;
  * @property-read int      $createdAt Unix Epoch timestamp when the event has happened.
  * @property-read null|int $parameter Event parameter.
  */
-class Event
+class Event implements \JsonSerializable
 {
     use PropertyTrait;
+
+    // JSON properties.
+    public const JSON_TYPE      = 'type';
+    public const JSON_USER      = 'user';
+    public const JSON_TIMESTAMP = 'timestamp';
+    public const JSON_ASSIGNEE  = 'assignee';
+    public const JSON_FILE      = 'file';
+    public const JSON_ISSUE     = 'issue';
+    public const JSON_STATE     = 'state';
 
     /**
      * @var int
@@ -113,5 +123,42 @@ class Event
         $this->user      = $user;
         $this->createdAt = time();
         $this->parameter = $parameter;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function jsonSerialize()
+    {
+        $main = [
+            self::JSON_TYPE      => $this->type,
+            self::JSON_USER      => [
+                User::JSON_ID       => $this->user->id,
+                User::JSON_EMAIL    => $this->user->email,
+                User::JSON_FULLNAME => $this->user->fullname,
+            ],
+            self::JSON_TIMESTAMP => $this->createdAt,
+        ];
+
+        $extras = [
+            EventType::ISSUE_CREATED      => self::JSON_STATE,
+            EventType::STATE_CHANGED      => self::JSON_STATE,
+            EventType::ISSUE_REOPENED     => self::JSON_STATE,
+            EventType::ISSUE_CLOSED       => self::JSON_STATE,
+            EventType::ISSUE_ASSIGNED     => self::JSON_ASSIGNEE,
+            EventType::FILE_ATTACHED      => self::JSON_FILE,
+            EventType::FILE_DELETED       => self::JSON_FILE,
+            EventType::DEPENDENCY_ADDED   => self::JSON_ISSUE,
+            EventType::DEPENDENCY_REMOVED => self::JSON_ISSUE,
+        ];
+
+        if (array_key_exists($this->type, $extras)) {
+            $extra = [$extras[$this->type] => $this->parameter];
+        }
+        else {
+            $extra = [];
+        }
+
+        return $main + $extra;
     }
 }
