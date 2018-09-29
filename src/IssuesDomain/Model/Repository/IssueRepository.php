@@ -170,7 +170,7 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
         $collection->total = count($queryTotal->getQuery()->execute());
 
         // Issues age.
-        $query->addSelect('CEIL((COALESCE(issue.closedAt, :now) - issue.createdAt) / 86400) AS age');
+        $query->addSelect('CEIL(CAST(COALESCE(issue.closedAt, :now) - issue.createdAt AS DECIMAL) / 86400) AS age');
         $query->setParameter('now', time());
 
         // Sorting.
@@ -360,7 +360,7 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
             case Issue::JSON_AGE:
 
                 if (mb_strlen($value) !== 0) {
-                    $query->andWhere('CEIL((COALESCE(issue.closedAt, :now) - issue.createdAt) / 86400) = :age');
+                    $query->andWhere('CEIL(CAST(COALESCE(issue.closedAt, :now) - issue.createdAt AS DECIMAL) / 86400) = :age');
                     $query->setParameter('age', (int) $value);
                     $query->setParameter('now', time());
                 }
@@ -373,14 +373,14 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
                     $expr = $query->expr()->andX(
                         'template.criticalAge IS NOT NULL',
                         'issue.closedAt IS NULL',
-                        'template.criticalAge < CEIL((COALESCE(issue.closedAt, :now) - issue.createdAt) / 86400)'
+                        'template.criticalAge < CEIL(CAST(COALESCE(issue.closedAt, :now) - issue.createdAt AS DECIMAL) / 86400)'
                     );
                 }
                 else {
                     $expr = $query->expr()->orX(
                         'template.criticalAge IS NULL',
                         'issue.closedAt IS NOT NULL',
-                        'template.criticalAge >= CEIL((COALESCE(issue.closedAt, :now) - issue.createdAt) / 86400)'
+                        'template.criticalAge >= CEIL(CAST(COALESCE(issue.closedAt, :now) - issue.createdAt AS DECIMAL) / 86400)'
                     );
                 }
 

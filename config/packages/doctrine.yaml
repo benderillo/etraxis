@@ -12,6 +12,7 @@ doctrine:
             numeric_functions:
                 ceil: DoctrineExtensions\Query\Mysql\Ceil
             string_functions:
+                cast: DoctrineExtensions\Query\Mysql\Cast
                 greatest: DoctrineExtensions\Query\Mysql\Greatest
                 lpad: DoctrineExtensions\Query\Mysql\Lpad
         mappings:
