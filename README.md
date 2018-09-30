@@ -25,6 +25,7 @@ It can be used to track almost anything, though the most popular cases are a *bu
 
 * [PHP](https://php.net/)
 * [Composer](https://getcomposer.org/)
+* [npm](https://www.npmjs.com/)
 
 ### Install
 
@@ -34,6 +35,10 @@ composer install
 ./bin/console doctrine:schema:create
 ./bin/console doctrine:fixtures:load -n
 ./bin/console server:run
+```
+
+```bash
+npm install
 ```
 
 ### Development

@@ -1,0 +1,15 @@
+{
+    "description": "eTraxis frontend dependencies",
+    "license": "GPL-3.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/etraxis/etraxis"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "font-awesome": "^4.7.0",
+        "normalize.css": "^8.0.0",
+        "unsemantic": "^1.2.3",
+        "vue": "^2.5.17"
+    }
+}
