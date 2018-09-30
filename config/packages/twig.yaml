@@ -8,3 +8,8 @@ twig:
     globals:
         locale: '%locale%'
         theme:  '%theme%'
+        theme_color:
+            azure:    '#3a8eb7'
+            emerald:  '#146c64'
+            humanity: '#c87629'
+            mars:     '#7a403e'

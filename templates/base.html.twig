@@ -2,9 +2,12 @@
 <html lang="{{ app.user.locale ?? locale }}" dir="{{ (app.user.locale ?? locale) | direction }}">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta name="theme-color" content="{{ theme_color[app.user.theme ?? theme] }}">
     <title>{{ title ?? 'eTraxis' }}</title>
     <link rel="stylesheet" href="{{ asset('css/vendor.css') }}">
     <link rel="stylesheet" href="{{ asset('css/%s.css' | format((app.user.locale ?? locale) | direction)) }}">
+    <link rel="stylesheet" href="{{ asset('css/etraxis-%s.css' | format(app.user.theme ?? theme)) }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 64x64">
 </head>
 <body>

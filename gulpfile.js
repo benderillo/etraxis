@@ -13,6 +13,9 @@ const gulp    = require('gulp');
 const concat  = require('gulp-concat');
 const cssnano = require('gulp-cssnano');
 const gulpif  = require('gulp-if');
+const less    = require('gulp-less');
+const plumber = require('gulp-plumber');
+const rename  = require('gulp-rename');
 const uglify  = require('gulp-uglify');
 const argv    = require('yargs').argv;
 
@@ -80,6 +83,25 @@ const cssRTL = () =>
         .pipe(gulp.dest('public/css/'));
 
 /**
+ * Installs eTraxis CSS theme files as combined "public/css/etraxis-???.css" assets.
+ */
+const etraxisThemes = () =>
+    gulp.src('assets/less/themes/*.less')
+        .pipe(plumber())
+        .pipe(less())
+        .pipe(gulpif(argv.prod, cssnano({ discardComments: { removeAll: true }})))
+        .pipe(rename((path) => {
+            path.basename = `etraxis-${path.basename}`;
+            path.extname  = '.css';
+        }))
+        .pipe(gulp.dest('public/css/'));
+
+/**
+ * Watches for changes in source files and updates affected assets when necessary.
+ */
+gulp.watch('assets/less/**/*.less', gulp.parallel(etraxisThemes));
+
+/**
  * Performs all installation tasks in one.
  */
 gulp.task('default', gulp.series(gulp.parallel(
@@ -88,4 +110,5 @@ gulp.task('default', gulp.series(gulp.parallel(
     jsVendor,               // install vendor JavaScript files as one combined "public/js/vendor.js" asset
     cssLTR,                 // install stylesheets for LTR languages as one combined "public/css/ltr.css" asset
     cssRTL,                 // install stylesheets for RTL languages as one combined "public/css/rtl.css" asset
+    etraxisThemes,          // install eTraxis CSS theme files as combined "public/css/etraxis-???.css" assets
 )));
