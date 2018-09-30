@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ app.user.locale ?? locale }}">
+<html lang="{{ app.user.locale ?? locale }}" dir="{{ (app.user.locale ?? locale) | direction }}">
 <head>
     <meta charset="utf-8">
     <title>{{ title ?? 'eTraxis' }}</title>
     <link rel="stylesheet" href="{{ asset('css/vendor.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/%s.css' | format((app.user.locale ?? locale) | direction)) }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 64x64">
 </head>
 <body>

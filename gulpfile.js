@@ -37,7 +37,6 @@ const cssVendor = () => {
     const files = [
         'node_modules/normalize.css/normalize.css',
         'node_modules/font-awesome/css/font-awesome.css',
-        'node_modules/unsemantic/assets/stylesheets/unsemantic-grid-responsive-no-ie7.css',
     ];
 
     return gulp.src(files)
@@ -63,10 +62,30 @@ const jsVendor = () => {
 };
 
 /**
+ * Installs stylesheets for LTR languages as one combined "public/css/ltr.css" asset.
+ */
+const cssLTR = () =>
+    gulp.src('node_modules/unsemantic/assets/stylesheets/unsemantic-grid-responsive-no-ie7.css')
+        .pipe(gulpif(argv.prod, cssnano({ discardComments: { removeAll: true }})))
+        .pipe(concat('ltr.css'))
+        .pipe(gulp.dest('public/css/'));
+
+/**
+ * Installs stylesheets for RTL languages as one combined "public/css/rtl.css" asset.
+ */
+const cssRTL = () =>
+    gulp.src('node_modules/unsemantic/assets/stylesheets/unsemantic-grid-responsive-no-ie7-rtl.css')
+        .pipe(gulpif(argv.prod, cssnano({ discardComments: { removeAll: true }})))
+        .pipe(concat('rtl.css'))
+        .pipe(gulp.dest('public/css/'));
+
+/**
  * Performs all installation tasks in one.
  */
 gulp.task('default', gulp.series(gulp.parallel(
     fontsVendor,            // install vendor fonts to the "public/fonts" folder
     cssVendor,              // install vendor CSS files as one combined "public/css/vendor.css" asset
     jsVendor,               // install vendor JavaScript files as one combined "public/js/vendor.js" asset
+    cssLTR,                 // install stylesheets for LTR languages as one combined "public/css/ltr.css" asset
+    cssRTL,                 // install stylesheets for RTL languages as one combined "public/css/rtl.css" asset
 )));
