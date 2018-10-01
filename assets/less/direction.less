@@ -1,0 +1,131 @@
+/* Mixins specific to language direction */
+
+.text-left {
+    [dir="ltr"] & {
+        text-align: left;
+    }
+    [dir="rtl"] & {
+        text-align: right;
+    }
+}
+
+.text-right {
+    [dir="ltr"] & {
+        text-align: right;
+    }
+    [dir="rtl"] & {
+        text-align: left;
+    }
+}
+
+.pull-before {
+    [dir="ltr"] & {
+        float: left;
+    }
+    [dir="rtl"] & {
+        float: right;
+    }
+}
+
+.pull-after {
+    [dir="ltr"] & {
+        float: right;
+    }
+    [dir="rtl"] & {
+        float: left;
+    }
+}
+
+.left(@arg) {
+    [dir="ltr"] & {
+        left: @arg;
+    }
+    [dir="rtl"] & {
+        right: @arg;
+    }
+}
+
+.right(@arg) {
+    [dir="ltr"] & {
+        right: @arg;
+    }
+    [dir="rtl"] & {
+        left: @arg;
+    }
+}
+
+.margin-before(@arg) {
+    [dir="ltr"] & {
+        margin-left: @arg;
+    }
+    [dir="rtl"] & {
+        margin-right: @arg;
+    }
+}
+
+.margin-after(@arg) {
+    [dir="ltr"] & {
+        margin-right: @arg;
+    }
+    [dir="rtl"] & {
+        margin-left: @arg;
+    }
+}
+
+.padding-before(@arg) {
+    [dir="ltr"] & {
+        padding-left: @arg;
+    }
+    [dir="rtl"] & {
+        padding-right: @arg;
+    }
+}
+
+.padding-after(@arg) {
+    [dir="ltr"] & {
+        padding-right: @arg;
+    }
+    [dir="rtl"] & {
+        padding-left: @arg;
+    }
+}
+
+.border-before(@arg) {
+    [dir="ltr"] & {
+        border-left: @arg;
+    }
+    [dir="rtl"] & {
+        border-right: @arg;
+    }
+}
+
+.border-after(@arg) {
+    [dir="ltr"] & {
+        border-right: @arg;
+    }
+    [dir="rtl"] & {
+        border-left: @arg;
+    }
+}
+
+.border-radius-before(@arg) {
+    [dir="ltr"] & {
+        border-top-left-radius: @arg;
+        border-bottom-left-radius: @arg;
+    }
+    [dir="rtl"] & {
+        border-top-right-radius: @arg;
+        border-bottom-right-radius: @arg;
+    }
+}
+
+.border-radius-after(@arg) {
+    [dir="ltr"] & {
+        border-top-right-radius: @arg;
+        border-bottom-right-radius: @arg;
+    }
+    [dir="rtl"] & {
+        border-top-left-radius: @arg;
+        border-bottom-left-radius: @arg;
+    }
+}

@@ -11,7 +11,32 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 64x64">
 </head>
 <body>
-{% block content %}{% endblock %}
+<nav>
+    <div class="grid-container grid-parent">
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <div class="hide-on-mobile">
+                <span class="logo"><a href="{{ path('homepage') }}"><img src="{{ asset('etraxis.svg') }}"></a></span>
+                <span class="username">{{ app.user.fullname ?? null }}</span>
+            </div>
+        {% endif %}
+        <div class="hide-on-desktop">
+            <span class="bars"><i class="fa fa-bars fa-lg" aria-hidden="true"></i></span>
+            <span class="logo"><a href="{{ path('homepage') }}"><img src="{{ asset('etraxis.svg') }}"></a></span>
+            <span class="title">{{ title ?? 'eTraxis' }}</span>
+        </div>
+        <div class="menu">
+            {% include 'menu.html.twig' %}
+        </div>
+    </div>
+</nav>
+<main class="grid-container grid-parent">
+    {% block content %}{% endblock %}
+</main>
+<footer>
+    <div class="grid-container">
+        <span>Powered by <a href="https://www.etraxis.com/" target="_blank">eTraxis</a> &copy; 2005-2018 Artem Rodygin</span>
+    </div>
+</footer>
 <script src="{{ asset('js/vendor.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>

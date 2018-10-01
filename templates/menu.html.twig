@@ -1,0 +1,24 @@
+{% macro item(title, url, icon) %}
+    <a href="{{ url }}">
+        <i class="fa {{ icon }}" aria-hidden="true" title="{{ title }}"></i>
+        <span>{{ title }}</span>
+    </a>
+{% endmacro %}
+
+{% import _self as menu %}
+
+{% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+    {{ menu.item('button.login' | trans, path('login'), 'fa-sign-in') }}
+
+{% elseif app.request.uri starts with url('admin') %}
+
+    {{ menu.item('button.back'   | trans, path('homepage'), 'fa-reply')    }}
+    {{ menu.item('button.logout' | trans, path('logout'),   'fa-sign-out') }}
+
+{% else %}
+
+    {{ menu.item('menu.administration' | trans, path('admin'),  'fa-cog')      }}
+    {{ menu.item('button.logout'       | trans, path('logout'), 'fa-sign-out') }}
+
+{% endif %}

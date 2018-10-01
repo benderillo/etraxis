@@ -1,0 +1,115 @@
+/* Forms */
+
+@radius: 3px;
+
+@placeholder: #c5c5c5;
+@fieldset: #c5c5c5;
+
+@widget-focus: #00638f;
+@widget-border: #aaa;
+@widget-background: #fff;
+@widget-text: #212121;
+
+::-webkit-input-placeholder {
+    color: @placeholder;
+}
+
+::-moz-placeholder {
+    color: @placeholder;
+}
+
+:-moz-placeholder {
+    color: @placeholder;
+}
+
+:-ms-input-placeholder {
+    color: @placeholder;
+}
+
+.fieldset {
+    .radius(@radius);
+    border: 1px solid @fieldset;
+    margin-top: 10px;
+    padding: 10px;
+
+    &.disabled {
+        .opacity(.35);
+    }
+
+    .legend {
+        .pull-before;
+        background-color: @background;
+        margin: -20px 5px 10px 5px;
+        max-width: 100%;
+        overflow: hidden;
+        padding: 0 5px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+label {
+    display: inline-block;
+    margin-top: 4px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.disabled {
+        .opacity(.35);
+    }
+}
+
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="text"],
+textarea {
+    .focus(@widget-focus);
+    .radius(@radius);
+    background: @widget-background;
+    border: 1px solid @widget-border;
+    color: @widget-text;
+    padding: 6px 10px;
+
+    &:disabled {
+        .opacity(.35);
+    }
+}
+
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    max-height: 28px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    .focus(@widget-focus);
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+textarea {
+    resize: vertical;
+}
+
+select {
+    .focus(@widget-focus);
+    .radius(@radius);
+    background: @widget-background;
+    border: 1px solid @widget-border;
+    color: @widget-text;
+    overflow-x: hidden;
+    padding: 4px 5px 5px 5px !important;
+
+    &:not([size]) {
+        max-height: 28px;
+    }
+
+    &:disabled {
+        .opacity(.35);
+    }
+}

@@ -1,0 +1,29 @@
+/* Unsemantic CSS framework */
+
+.grid-row:before,
+.grid-row:after {
+    content: ".";
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    font-size: 0;
+    line-height: 0;
+    width: 0;
+    height: 0;
+}
+
+.grid-row:after {
+    clear: both;
+}
+
+.grid-row {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+@media (@mobile) {
+    .mobile-grid-row {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+}

@@ -1,0 +1,189 @@
+/* Navigation menu */
+
+@nav-gradient-from: #525252;
+@nav-gradient-to: #1f1f1f;
+@nav-hover-gradient-from: #7a7a7a;
+@nav-hover-gradient-to: #525252;
+@nav-text: #fbfbfb;
+
+@media (@mobile) {
+
+    body {
+        margin-top: 40px;
+    }
+}
+
+nav {
+    .gradient(@nav-gradient-from, @nav-gradient-to);
+
+    @media (@mobile) {
+        height: 40px;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+    }
+
+    a {
+        color: @nav-text;
+        outline: none;
+        text-decoration: none;
+    }
+
+    .menu > a {
+        display: block;
+        height: 50px;
+        min-width: 100px;
+        position: relative;
+        text-align: center;
+
+        @media (@mobile) {
+            .text-left;
+            background-color: @nav-gradient-to;
+            height: auto;
+            padding: 5px 15px;
+        }
+
+        @media (@desktop) {
+            .pull-before;
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            height: 40px;
+            min-width: 60px;
+        }
+
+        @media (@mobile) {
+
+            &:first-of-type {
+                border-top: 1px solid @nav-gradient-from;
+            }
+        }
+
+        @media (@desktop) {
+
+            &:first-of-type {
+                .border-before(1px solid @nav-gradient-to);
+            }
+
+            &:last-of-type {
+                .border-after(1px solid @nav-gradient-from);
+            }
+
+            &:after {
+                .border-after(1px solid @nav-gradient-to);
+                content: "";
+                display: inline-block;
+                height: 50px;
+                position: absolute;
+                .right(0);
+                top: 0;
+
+                @media (min-width: 768px) and (max-width: 1024px) {
+                    height: 40px;
+                }
+            }
+
+            &:before {
+                .border-after(1px solid @nav-gradient-from);
+                content: "";
+                display: inline-block;
+                height: 50px;
+                position: absolute;
+                .left(0);
+                top: 0;
+
+                @media (min-width: 768px) and (max-width: 1024px) {
+                    height: 40px;
+                }
+            }
+        }
+
+        &:hover {
+            .gradient(@nav-hover-gradient-from, @nav-hover-gradient-to);
+        }
+
+        > .fa {
+            display: block;
+            font-size: 19px;
+            margin: 5px 10px 2px;
+
+            @media (@mobile) {
+                display: none;
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) {
+                font-size: 20px;
+                margin: 10px;
+            }
+        }
+
+        > span {
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            @media (@desktop) {
+                margin: 2px 10px 5px;
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) {
+                display: none;
+            }
+        }
+    }
+
+    .logo {
+        .pull-after;
+
+        @media (@desktop) {
+            .margin-after(10px);
+            margin-top: 10px;
+        }
+
+        @media (@mobile) {
+            margin: 5px 10px 0;
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            margin-top: 5px;
+        }
+
+        img {
+            height: 30px;
+            width: 40px;
+        }
+    }
+
+    .bars,
+    .title,
+    .username {
+        color: @nav-text;
+        display: block;
+        font-weight: bold;
+    }
+
+    .bars {
+        .pull-before;
+        margin: 10px 15px;
+    }
+
+    .title {
+        overflow: hidden;
+        padding: 10px 5px;
+        text-align: center;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .username {
+        .pull-after;
+        height: 20px;
+        margin: 15px;
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            margin: 10px 15px;
+        }
+    }
+}

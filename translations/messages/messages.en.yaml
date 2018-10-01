@@ -1,5 +1,7 @@
 'Authentication required.': 'Your session has expired. Please log in again.'
+button.back: Back
 button.login: Login
+button.logout: Logout
 event.comment_added: 'Comment is added.'
 event.dependency_added: 'Dependency ''%value%'' is added.'
 event.dependency_removed: 'Dependency ''%value%'' is removed.'
@@ -37,6 +39,7 @@ http_error.404.suggestion: 'Check out any misspelling in the URL or <a href="%ur
 http_error.description: 'There was an unknown error that prevented to complete your request.'
 http_error.suggestion: 'Try loading this page again in few minutes or <a href="%url%">go back to the homepage</a>.'
 input.required: 'required field'
+menu.administration: Administration
 role.any: 'Any user'
 role.author: Author
 role.responsible: Responsible

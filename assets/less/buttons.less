@@ -1,0 +1,114 @@
+/* Buttons */
+
+@radius: 3px;
+
+@button-gradient-from: #f2f2f2;
+@button-gradient-to: #e6e6e6;
+@button-border: #d3d3d3;
+@button-text: #555;
+
+@button-hover-gradient-from: #ebebeb;
+@button-hover-gradient-to: #dadada;
+@button-hover-border: #999;
+@button-hover-text: #212121;
+
+@button-active-gradient-from: #fdfdfd;
+@button-active-gradient-to: #f2f2f2;
+@button-active-border: #aaa;
+@button-active-text: #212121;
+
+@danger-gradient-from: #ed867d;
+@danger-gradient-to: #e86055;
+@danger-border: #dc322f;
+@danger-text: #fbfbfb;
+
+@danger-hover-gradient-from: #e86055;
+@danger-hover-gradient-to: #e34234;
+@danger-hover-border: @danger-hover-gradient-to;
+@danger-hover-text: #fff;
+
+@danger-active-gradient-from: #ed9c8d;
+@danger-active-gradient-to: #e67a65;
+@danger-active-border: @danger-active-gradient-to;
+@danger-active-text: #fff;
+
+.buttonset {
+    display: inline-flex;
+
+    &:not(:last-child) {
+        .margin-after(5px);
+    }
+}
+
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+button {
+    .focus(@widget-focus);
+    .gradient(@button-gradient-from, @button-gradient-to);
+    .radius(@radius);
+    border: 1px solid @button-border;
+    color: @button-text;
+    margin: 5px 0;
+    padding: 6px 12px;
+
+    &.fa {
+        line-height: 14px;
+    }
+
+    .fa-caret-down {
+        .margin-before(8px);
+        .margin-after(-3px);
+    }
+
+    &:not(:last-child) {
+        .margin-after(5px);
+    }
+
+    &.danger:not(:disabled) {
+        .gradient(@danger-gradient-from, @danger-gradient-to);
+        border-color: @danger-border;
+        color: @danger-text;
+    }
+
+    &:hover:not(:disabled) {
+        .gradient(@button-hover-gradient-from, @button-hover-gradient-to);
+        border-color: @button-hover-border;
+        color: @button-hover-text;
+
+        &.danger {
+            .gradient(@danger-hover-gradient-from, @danger-hover-gradient-to);
+            border-color: @danger-hover-border;
+            color: @danger-hover-text;
+        }
+    }
+
+    &:active:not(:disabled) {
+        .gradient(@button-active-gradient-from, @button-active-gradient-to);
+        border-color: @button-active-border;
+        color: @button-active-text;
+
+        &.danger {
+            .gradient(@danger-active-gradient-from, @danger-active-gradient-to);
+            border-color: @danger-active-border;
+            color: @danger-active-text;
+        }
+    }
+
+    &:disabled {
+        .gradient(@button-gradient-from, @button-gradient-to);
+        .opacity(.35);
+    }
+
+    .buttonset & {
+        .margin-after(0);
+
+        &:not(:last-child) {
+            .border-radius-after(0);
+        }
+
+        &:not(:first-child) {
+            .border-radius-before(0);
+        }
+    }
+}

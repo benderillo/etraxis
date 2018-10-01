@@ -1,0 +1,69 @@
+/* Typography */
+
+@background: #fbfbfb;
+@text: #212121;
+@link: #00638f;
+@attention: #dc322f;
+@pending: #00638f;
+@muted: #a9a9a9;
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    position: relative;
+}
+
+body {
+    background-color: @background;
+    color: @text;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+main {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+footer {
+    bottom: 0;
+    font-size: 11px;
+    opacity: 0.75;
+    position: absolute;
+    width: 100%;
+
+    a {
+        font-weight: bold;
+    }
+}
+
+p {
+    margin: 0;
+
+    br {
+        content: "";
+        display: block;
+        margin-top: 10px;
+    }
+}
+
+a {
+    color: @link;
+}
+
+.attention {
+    color: @attention;
+}
+
+.pending {
+    color: @pending;
+}
+
+.muted {
+    color: @muted;
+}

@@ -1,0 +1,35 @@
+/* Common mixins */
+
+.focus(@color) when (iscolor(@color)) {
+    &:focus {
+        border: 1px solid @color;
+        box-shadow: 0 0 2px @color;
+        outline: none;
+    }
+}
+
+.gradient(@start, @stop) when (iscolor(@start)) and (iscolor(@stop)) {
+    background-color: @stop;
+    -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@start, endColorstr=@stop, GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=@start, endColorstr=@stop, GradientType=0);
+    background-image: -ms-linear-gradient(top, @start 20%, @stop 80%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(20%, @start), color-stop(80%, @stop));
+    background-image: -webkit-linear-gradient(top, @start 20%, @stop 80%);
+    background-image: -moz-linear-gradient(top, @start 20%, @stop 80%);
+    background-image: -o-linear-gradient(top, @start 20%, @stop 80%);
+    background-image: linear-gradient(to bottom, @start 20%, @stop 80%);
+}
+
+.opacity(@opacity) when (isnumber(@opacity)) {
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=@opacity);
+    filter: alpha(opacity=@opacity);
+    -moz-opacity: @opacity;
+    -khtml-opacity: @opacity;
+    opacity: @opacity;
+}
+
+.radius(@radius) {
+    -webkit-border-radius: @radius;
+    -moz-border-radius: @radius;
+    border-radius: @radius;
+}
