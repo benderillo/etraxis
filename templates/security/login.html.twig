@@ -2,33 +2,56 @@
 
 {% block content %}
 
-    <form action="{{ path('login') }}" method="post">
+    <div class="anonymous grid-100">
+        <div class="panel">
+            <div class="panel-header hide-on-mobile">
+                <div class="grid-100">eTraxis</div>
+            </div>
+            <div class="panel-body">
+                <div class="grid-100">
+                    <form action="{{ path('login') }}" method="post">
 
-        {% if error != null %}
-            <div>{{ error.message | trans }}</div>
-        {% endif %}
+                        {% if error != null %}
+                            <div>{{ error.message | trans }}</div>
+                        {% endif %}
 
-        <div>
-            <label for="username" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
-            <input type="text" id="username" name="_username" value="{{ username }}" placeholder="{{ 'input.required' | trans }}">
+                        <div class="grid-row">
+                            <div class="grid-33">
+                                <label for="username" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+                            </div>
+                            <div class="grid-66">
+                                <input class="grid-100 mobile-grid-100" type="text" id="username" name="_username" value="{{ username }}" placeholder="{{ 'input.required' | trans }}">
+                            </div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="grid-33">
+                                <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
+                            </div>
+                            <div class="grid-66">
+                                <input class="grid-100 mobile-grid-100" type="password" id="password" name="_password" placeholder="{{ 'input.required' | trans }}">
+                            </div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="grid-66 prefix-33">
+                                <label for="remember_me" title="{{ 'security.remember_me' | trans }}">
+                                    <input type="checkbox" id="remember_me" name="_remember_me">
+                                    <span>{{ 'security.remember_me' | trans }}</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="grid-row">
+                            <div class="grid-66 prefix-33">
+                                <button type="submit">{{ 'button.login' | trans }}</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
-            <input type="password" id="password" name="_password" placeholder="{{ 'input.required' | trans }}">
-        </div>
-
-        <div>
-            <label for="remember_me" title="{{ 'security.remember_me' | trans }}">
-                <input type="checkbox" id="remember_me" name="_remember_me">
-                <span>{{ 'security.remember_me' | trans }}</span>
-            </label>
-        </div>
-
-        <div>
-            <button type="submit">{{ 'button.login' | trans }}</button>
-        </div>
-
-    </form>
+    </div>
 
 {% endblock %}

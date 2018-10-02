@@ -1,0 +1,31 @@
+/* Panel */
+
+@panel-radius: 5px;
+
+@panel-gradient-from: #525252;
+@panel-gradient-to: #1f1f1f;
+@panel-text: #fbfbfb;
+@panel-border: #c5c5c5;
+
+.panel {
+    margin: 10px 0;
+
+    .panel-header {
+        .gradient(@panel-gradient-from, @panel-gradient-to);
+        border: 1px solid @panel-gradient-to;
+        border-top-left-radius: @panel-radius;
+        border-top-right-radius: @panel-radius;
+        color: @panel-text;
+        font-weight: bold;
+        padding: 7px 10px;
+    }
+
+    .panel-body {
+        background-color: @background;
+        border: 1px solid @panel-border;
+        border-bottom-left-radius: @panel-radius;
+        border-bottom-right-radius: @panel-radius;
+        border-top: none;
+        padding: 5px 0;
+    }
+}

@@ -1,0 +1,22 @@
+/* Anonymous pages */
+
+.anonymous {
+    margin: 0 auto;
+    max-width: 600px;
+
+    @media (@desktop) {
+        margin-top: 150px;
+    }
+
+    @media (@mobile) {
+
+        .panel-header {
+            display: none;
+        }
+
+        .panel-body {
+            border: 1px solid @panel-border;
+            border-radius: @panel-radius;
+        }
+    }
+}
