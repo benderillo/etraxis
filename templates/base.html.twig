@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ asset('css/etraxis-%s.css' | format(app.user.theme ?? theme)) }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 64x64">
 </head>
-<body>
+<body data-url="{{ url('homepage') }}">
 <nav>
     <div class="grid-container grid-parent">
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
