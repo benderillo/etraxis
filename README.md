@@ -40,6 +40,7 @@ composer install
 ```bash
 npm install
 ./node_modules/gulp/bin/gulp.js
+./node_modules/webpack/bin/webpack.js
 ```
 
 ### Development
