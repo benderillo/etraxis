@@ -7,7 +7,9 @@ module.exports = {
     mode: 'development',
 
     entry: () => {
-        let files = {};
+        let files = {
+            'polyfill.js': 'babel-polyfill/dist/polyfill',
+        };
 
         for (let entry of glob.sync('./templates/**/*.js')) {
             let name = entry.substr('./templates'.length);
