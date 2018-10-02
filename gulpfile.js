@@ -13,10 +13,12 @@ const gulp    = require('gulp');
 const concat  = require('gulp-concat');
 const cssnano = require('gulp-cssnano');
 const gulpif  = require('gulp-if');
+const insert  = require('gulp-insert');
 const less    = require('gulp-less');
 const plumber = require('gulp-plumber');
 const rename  = require('gulp-rename');
 const uglify  = require('gulp-uglify');
+const yaml    = require('gulp-yaml');
 const argv    = require('yargs').argv;
 
 /**
@@ -90,16 +92,34 @@ const etraxisThemes = () =>
         .pipe(plumber())
         .pipe(less())
         .pipe(gulpif(argv.prod, cssnano({ discardComments: { removeAll: true }})))
-        .pipe(rename((path) => {
+        .pipe(rename(path => {
             path.basename = `etraxis-${path.basename}`;
             path.extname  = '.css';
         }))
         .pipe(gulp.dest('public/css/'));
 
 /**
+ * Converts eTraxis translation files into JavaScript and installs them to the "publis/js/i18n" folder.
+ */
+const etraxisTranslations = () =>
+    gulp.src('translations/messages/messages.*.yaml')
+        .pipe(plumber())
+        .pipe(yaml({ space: 4 }))
+        .pipe(insert.prepend('Object.assign(window.i18n, '))
+        .pipe(insert.prepend('window.i18n = window.i18n || {};\n'))
+        .pipe(insert.append(');\n'))
+        .pipe(rename(path => {
+            path.basename = path.basename.replace('messages.', 'etraxis-');
+            path.extname  = '.js';
+        }))
+        .pipe(gulpif(argv.prod, uglify()))
+        .pipe(gulp.dest('public/js/i18n/'));
+
+/**
  * Watches for changes in source files and updates affected assets when necessary.
  */
-gulp.watch('assets/less/**/*.less', gulp.parallel(etraxisThemes));
+gulp.watch('assets/less/**/*.less',                 gulp.parallel(etraxisThemes));
+gulp.watch('translations/messages/messages.*.yaml', gulp.parallel(etraxisTranslations));
 
 /**
  * Performs all installation tasks in one.
@@ -111,4 +131,5 @@ gulp.task('default', gulp.series(gulp.parallel(
     cssLTR,                 // install stylesheets for LTR languages as one combined "public/css/ltr.css" asset
     cssRTL,                 // install stylesheets for RTL languages as one combined "public/css/rtl.css" asset
     etraxisThemes,          // install eTraxis CSS theme files as combined "public/css/etraxis-???.css" assets
+    etraxisTranslations,    // convert eTraxis translation files into JavaScript and install them to the "publis/js/i18n" folder
 )));

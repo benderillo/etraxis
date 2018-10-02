@@ -39,6 +39,7 @@ http_error.404.suggestion: 'Check out any misspelling in the URL or <a href="%ur
 http_error.description: 'There was an unknown error that prevented to complete your request.'
 http_error.suggestion: 'Try loading this page again in few minutes or <a href="%url%">go back to the homepage</a>.'
 input.required: 'required field'
+language: English
 menu.administration: Administration
 role.any: 'Any user'
 role.author: Author
