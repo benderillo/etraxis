@@ -1,5 +1,6 @@
 const glob = require('glob');
 const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
 
@@ -28,12 +29,21 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
             },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+            },
         ],
     },
 
     resolve: {
         alias: {
+            components: path.resolve(__dirname, './assets/vue/'),
             utilities: path.resolve(__dirname, './assets/js/'),
         },
     },
+
+    plugins: [
+        new VueLoaderPlugin(),
+    ],
 };
