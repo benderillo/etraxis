@@ -42,6 +42,7 @@ const cssVendor = () => {
     const files = [
         'node_modules/normalize.css/normalize.css',
         'node_modules/font-awesome/css/font-awesome.css',
+        'node_modules/dialog-polyfill/dialog-polyfill.css',
     ];
 
     return gulp.src(files)
@@ -58,6 +59,7 @@ const jsVendor = () => {
     const files = [
         argv.prod ? 'node_modules/vue/dist/vue.min.js' : 'node_modules/vue/dist/vue.js',
         'node_modules/axios/dist/axios.js',
+        'node_modules/dialog-polyfill/dialog-polyfill.js',
     ];
 
     return gulp.src(files)
