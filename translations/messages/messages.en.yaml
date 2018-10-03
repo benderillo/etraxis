@@ -5,6 +5,7 @@ button.login: Login
 button.logout: Logout
 button.no: No
 button.yes: Yes
+confirm.logout: 'Are you sure you want exit?'
 error: Error
 event.comment_added: 'Comment is added.'
 event.dependency_added: 'Dependency ''%value%'' is added.'

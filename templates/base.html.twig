@@ -11,7 +11,7 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" sizes="16x16 32x32 64x64">
 </head>
 <body data-url="{{ url('homepage') }}">
-<nav>
+<nav v-cloak>
     <div class="grid-container grid-parent">
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <div class="hide-on-mobile">
@@ -20,12 +20,18 @@
             </div>
         {% endif %}
         <div class="hide-on-desktop">
-            <span class="bars"><i class="fa fa-bars fa-lg" aria-hidden="true"></i></span>
+            <span class="bars" @click="toggleMenu"><i class="fa fa-bars fa-lg" aria-hidden="true"></i></span>
             <span class="logo"><a href="{{ path('homepage') }}"><img src="{{ asset('etraxis.svg') }}"></a></span>
             <span class="title">{{ title ?? 'eTraxis' }}</span>
         </div>
-        <div class="menu">
+        <div class="menu {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? null : 'hide-on-desktop' }}" :class="{ 'hide-on-mobile': isMenuHidden }">
             {% include 'menu.html.twig' %}
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a href="{{ path('logout') }}" @click.prevent="logout">
+                    <i class="fa fa-sign-out" aria-hidden="true" title="{{ 'button.logout' | trans }}"></i>
+                    <span>{{ 'button.logout' | trans }}</span>
+                </a>
+            {% endif %}
         </div>
     </div>
 </nav>
@@ -41,6 +47,7 @@
 <script src="{{ asset('js/polyfill.js') }}"></script>
 <script src="{{ asset('js/i18n/etraxis-en.js') }}"></script>
 <script src="{{ asset('js/i18n/etraxis-%s.js' | format(app.user.locale ?? locale)) }}"></script>
+<script src="{{ asset('js/menu.js') }}"></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

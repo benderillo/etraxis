@@ -13,12 +13,12 @@
 
 {% elseif app.request.uri starts with url('admin') %}
 
-    {{ menu.item('button.back'   | trans, path('homepage'), 'fa-reply')    }}
-    {{ menu.item('button.logout' | trans, path('logout'),   'fa-sign-out') }}
+    {{ menu.item('button.back' | trans, path('homepage'), 'fa-reply') }}
 
 {% else %}
 
-    {{ menu.item('menu.administration' | trans, path('admin'),  'fa-cog')      }}
-    {{ menu.item('button.logout'       | trans, path('logout'), 'fa-sign-out') }}
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ menu.item('menu.administration' | trans, path('admin'), 'fa-cog') }}
+    {% endif %}
 
 {% endif %}
