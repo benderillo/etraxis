@@ -29,6 +29,15 @@ services:
         $storage: '%files.storage%'
 
     # autowiring hints
+    eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
+        $locale: '%locale%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Model\DataFixtures\ProductionFixtures:
+        $locale: '%locale%'
+        $theme:  '%theme%'
+
+    # autowiring hints
     eTraxis\SharedDomain\Application\Mailer\Mailer:
         $address: '%mailer.address%'
         $name:    '%mailer.name%'

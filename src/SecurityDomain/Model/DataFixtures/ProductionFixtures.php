@@ -15,6 +15,7 @@ namespace eTraxis\SecurityDomain\Model\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -24,15 +25,21 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class ProductionFixtures extends Fixture
 {
     protected $encoder;
+    protected $locale;
+    protected $theme;
 
     /**
      * Dependency Injection constructor.
      *
      * @param UserPasswordEncoderInterface $encoder
+     * @param string                       $locale
+     * @param string                       $theme
      */
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordEncoderInterface $encoder, string $locale, string $theme)
     {
         $this->encoder = $encoder;
+        $this->locale  = $locale;
+        $this->theme   = $theme;
     }
 
     /**
@@ -47,6 +54,9 @@ class ProductionFixtures extends Fixture
         $user->fullname    = 'eTraxis Admin';
         $user->description = 'Built-in administrator';
         $user->isAdmin     = true;
+        $user->locale      = $this->locale;
+        $user->theme       = $this->theme;
+        $user->timezone    = Timezone::FALLBACK;
 
         $manager->persist($user);
         $manager->flush();
