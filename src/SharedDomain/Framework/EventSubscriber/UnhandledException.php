@@ -19,6 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -51,7 +52,7 @@ class UnhandledException implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'kernel.exception' => 'onException',
+            KernelEvents::EXCEPTION => 'onException',
         ];
     }
 

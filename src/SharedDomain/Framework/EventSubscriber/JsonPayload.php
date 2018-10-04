@@ -16,6 +16,7 @@ namespace eTraxis\SharedDomain\Framework\EventSubscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * Extracts JSON data payload for POST/PUT/PATCH requests.
@@ -28,7 +29,7 @@ class JsonPayload implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'kernel.controller' => 'onJson',
+            KernelEvents::CONTROLLER => 'onJson',
         ];
     }
 
