@@ -31,13 +31,13 @@
 
     <testsuites>
         <testsuite name="eTraxis Test Suite">
-            <directory>tests/</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>src/</directory>
+            <directory>src</directory>
             <exclude>
                 <directory>src/*Domain/Model/DataFixtures</directory>
                 <file>src/Kernel.php</file>
