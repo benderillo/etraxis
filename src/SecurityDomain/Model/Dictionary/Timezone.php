@@ -68,7 +68,7 @@ class Timezone extends StaticDictionary
 
             $parts = explode('/', $timezone);
 
-            $cities[$timezone] = str_replace('_', ' ', $parts[1] ?? $parts[0]);
+            $cities[$timezone] = str_replace('_', ' ', end($parts));
         }
 
         asort($cities);

@@ -26,7 +26,7 @@ class TimezoneTest extends TestCase
         self::assertSame('New Zealand', $countries['NZ']);
     }
 
-    public function testCities()
+    public function testCitiesAustralia()
     {
         $expected = [
             'Australia/Adelaide'    => 'Adelaide',
@@ -45,6 +45,26 @@ class TimezoneTest extends TestCase
         ];
 
         self::assertSame($expected, Timezone::getCities('AU'));
+    }
+
+    public function testCitiesArgentina()
+    {
+        $expected = [
+            'America/Argentina/Buenos_Aires' => 'Buenos Aires',
+            'America/Argentina/Catamarca'    => 'Catamarca',
+            'America/Argentina/Cordoba'      => 'Cordoba',
+            'America/Argentina/Jujuy'        => 'Jujuy',
+            'America/Argentina/La_Rioja'     => 'La Rioja',
+            'America/Argentina/Mendoza'      => 'Mendoza',
+            'America/Argentina/Rio_Gallegos' => 'Rio Gallegos',
+            'America/Argentina/Salta'        => 'Salta',
+            'America/Argentina/San_Juan'     => 'San Juan',
+            'America/Argentina/San_Luis'     => 'San Luis',
+            'America/Argentina/Tucuman'      => 'Tucuman',
+            'America/Argentina/Ushuaia'      => 'Ushuaia',
+        ];
+
+        self::assertSame($expected, Timezone::getCities('AR'));
     }
 
     public function testDictionary()
