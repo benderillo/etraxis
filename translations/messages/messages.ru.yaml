@@ -1,0 +1,75 @@
+'Authentication required.': 'Ваша сессия истекла.'
+button.back: Назад
+button.close: Закрыть
+button.login: Войти
+button.logout: Выйти
+button.no: Нет
+button.yes: Да
+confirm.logout: 'Вы уверены что хотите выйти?'
+error: Ошибка
+event.comment_added: 'Добавлен комментарий.'
+event.dependency_added: 'Добавлена зависимость от "%value%".'
+event.dependency_removed: 'Удалена зависимость от "%value%".'
+event.file_attached: 'Файл "%value%" прикреплен.'
+event.file_deleted: 'Файл "%value%" удален.'
+event.issue_assigned: 'Запись назначена на %value%.'
+event.issue_cloned: 'Запись склонирована из "%value%".'
+event.issue_closed: 'Состояние изменено на "%value%" (запись закрыта).'
+event.issue_created: 'Запись создана в состоянии "%value%".'
+event.issue_edited: 'Запись отредактирована.'
+event.issue_reopened: 'Состояние изменено на "%value%" (запись открыта повторно).'
+event.issue_resumed: 'Запись возобновлена.'
+event.issue_suspended: 'Запись отложена.'
+event.state_changed: 'Состояние изменено на "%value%".'
+field.error.default_value_format: 'Неправильный формат значения по умолчанию.'
+field.error.default_value_length: 'Значение по умолчанию не должно быть длиннее %maximum% символов.'
+field.error.default_value_range: 'Значение по умолчанию должно лежать в диапазоне от %minimum% до %maximum%.'
+field.error.min_max_values: 'Максимальное значение должно быть больше минимального.'
+field.error.value_range: 'Значение поля "%name%" должно лежать в диапазоне от %minimum% до %maximum%.'
+field.permission.read_only: 'только чтение'
+field.permission.read_write: 'чтение и запись'
+field.type.checkbox: '"Флаг"'
+field.type.date: Дата
+field.type.decimal: 'Вещественное число'
+field.type.duration: Длительность
+field.type.issue: Запись
+field.type.list: Список
+field.type.number: 'Целое число'
+field.type.string: Строка
+field.type.text: 'Многострочный текст'
+http_error.403.description: 'У вас нет прав доступа к этому ресурсу.'
+http_error.403.suggestion: 'Обратитесь к своему руководителю или администратору для получения необходимых прав.'
+http_error.404.description: 'Запрошенная страница не найдена.'
+http_error.404.suggestion: 'Проверьте адрес на наличие ошибок или <a href="%url%">перейдите в начало</a>.'
+http_error.description: 'Ваш запрос не был выполнен из-за неизвестной ошибки.'
+http_error.suggestion: 'Попробуйте обновить страницу через несколько минут или <a href="%url%">перейдите в начало</a>.'
+input.required: 'обязательное поле'
+locale: Русский
+menu.administration: Администрирование
+role.any: 'Любой пользователь'
+role.author: Автор
+role.responsible: Ответственный
+security.remember_me: 'Запомнить меня'
+state.responsible.assign: Назначить
+state.responsible.keep: 'Оставить без изменений'
+state.responsible.remove: Убрать
+state.type.final: Финальное
+state.type.initial: Исходное
+state.type.intermediate: Промежуточное
+template.permission.add_comments: 'Добавление комментариев'
+template.permission.add_dependencies: 'Добавление зависимостей'
+template.permission.attach_files: 'Добавление файлов'
+template.permission.create_issues: 'Создание записей'
+template.permission.delete_files: 'Удаление файлов'
+template.permission.delete_issues: 'Удаление записей'
+template.permission.edit_issues: 'Редактирование записей'
+template.permission.private_comments: 'Добавление/чтение приватных комментариев'
+template.permission.reassign_issues: 'Переназначение записей'
+template.permission.remove_dependencies: 'Удаление зависимостей'
+template.permission.resume_issues: 'Возобновление записей'
+template.permission.send_reminders: 'Рассылка напоминаний'
+template.permission.suspend_issues: 'Откладывание записей'
+template.permission.view_issues: 'Просмотр записей'
+text.please_wait: 'Пожалуйста, подождите...'
+user.email: 'Эл. почта'
+user.password: Пароль
