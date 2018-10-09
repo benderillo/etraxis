@@ -20,7 +20,9 @@ security:
             logout:    ~
             user_checker: LazySec\Checker\GenericUserChecker
             guard:
+                entry_point: eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
                 authenticators:
+                    - eTraxis\SecurityDomain\Framework\Authenticator\LdapAuthenticator
                     - eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
             remember_me:
                 secret:   '%kernel.secret%'

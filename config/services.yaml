@@ -10,6 +10,9 @@ parameters:
     files.storage: '%env(FILES_STORAGE)%'
     files.maxsize: '%env(FILES_MAXSIZE)%'
 
+    ldap.url:    '%env(LDAP_URL)%'
+    ldap.basedn: '%env(LDAP_BASEDN)%'
+
 services:
 
     _defaults:
@@ -31,6 +34,11 @@ services:
     # autowiring hints
     eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
         $locale: '%locale%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Framework\Authenticator\LdapAuthenticator:
+        $url:    '%ldap.url%'
+        $basedn: '%ldap.basedn%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Model\DataFixtures\ProductionFixtures:

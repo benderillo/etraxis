@@ -60,6 +60,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             'einstein@ldap.forumsys.com' => [
                 'provider' => AccountProvider::LDAP,
+                'uid'      => 'ldap-9fc3012e',
                 'fullname' => 'Albert Einstein',
             ],
 
@@ -239,6 +240,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
 
             if ($row['provider'] ?? false) {
                 $user->account->provider = $row['provider'];
+                $user->account->uid      = $row['uid'];
                 $user->password          = null;
             }
 

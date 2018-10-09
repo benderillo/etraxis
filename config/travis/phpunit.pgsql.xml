@@ -19,6 +19,8 @@
         <env name="ETRAXIS_THEME" value="azure" />
         <env name="FILES_STORAGE" value="var/" />
         <env name="FILES_MAXSIZE" value="2" />
+        <env name="LDAP_URL" value="none://localhost" />
+        <env name="LDAP_BASEDN" value="dc=example,dc=com" />
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL" value="pgsql://postgres@127.0.0.1/etraxis?charset=utf8" />

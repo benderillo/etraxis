@@ -21,9 +21,19 @@ services:
         resource: '../../src/{IssuesDomain,SecurityDomain,TemplatesDomain}/Application/CommandHandler'
         tags: [{ name: tactician.handler, typehints: true }]
 
+    # autowiring hints
     eTraxis\IssuesDomain\Application\CommandHandler\AttachFileHandler:
         autowire: true
         tags:
             - { name: tactician.handler, command: eTraxis\IssuesDomain\Application\Command\AttachFileCommand }
         arguments:
             $maxsize: '%files.maxsize%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Application\CommandHandler\Users\RegisterExternalAccountHandler:
+        autowire: true
+        tags:
+            - { name: tactician.handler, command: eTraxis\SecurityDomain\Application\Command\Users\RegisterExternalAccountCommand }
+        arguments:
+            $locale: '%locale%'
+            $theme:  '%theme%'
