@@ -48,7 +48,7 @@ class StateGroupTransitionTest extends TestCase
     public function testConstructorExceptionStates()
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('States must belong the same template');
+        $this->expectExceptionMessage('States must belong the same template.');
 
         $project = new Project();
         $this->setProperty($project, 'id', 1);

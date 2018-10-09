@@ -240,7 +240,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
     public function testWrongStates()
     {
         $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('States must belong the same template');
+        $this->expectExceptionMessage('States must belong the same template.');
 
         $this->loginAs('admin@example.com');
 

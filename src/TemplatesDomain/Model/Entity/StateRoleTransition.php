@@ -71,7 +71,7 @@ class StateRoleTransition implements \JsonSerializable
     public function __construct(State $fromState, State $toState, string $role)
     {
         if ($fromState->template !== $toState->template) {
-            throw new \UnexpectedValueException('States must belong the same template');
+            throw new \UnexpectedValueException('States must belong the same template.');
         }
 
         if (!SystemRole::has($role)) {
