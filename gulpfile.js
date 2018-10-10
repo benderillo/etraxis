@@ -66,6 +66,7 @@ const jsVendor = () => {
         .pipe(gulpif(argv.prod, uglify()))
         .pipe(concat('vendor.js'))
         .pipe(insert.append('axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";'))
+        .pipe(insert.append('window.eTraxis = {};'))
         .pipe(gulp.dest('public/js/'));
 };
 

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <div class="anonymous grid-100">
+    <div class="anonymous grid-100" id="vue-login" v-cloak>
         <div class="panel">
             <div class="panel-header hide-on-mobile">
                 <div class="grid-100">eTraxis</div>
@@ -10,10 +10,6 @@
             <div class="panel-body">
                 <div class="grid-100">
                     <form action="{{ path('login') }}" method="post">
-
-                        {% if error != null %}
-                            <div>{{ error.message | trans }}</div>
-                        {% endif %}
 
                         <div class="grid-row">
                             <div class="grid-33">
@@ -53,5 +49,17 @@
             </div>
         </div>
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        {% if error != null %}
+        eTraxis.error = '{{ error.message | trans }}';
+        {% endif %}
+    </script>
+
+    <script src="{{ asset('js/security/login.js') }}"></script>
 
 {% endblock %}
