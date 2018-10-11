@@ -82,7 +82,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -168,7 +168,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -238,7 +238,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -294,7 +294,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'responsible' => $assignee->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -357,7 +357,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -412,7 +412,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnIssueField()
@@ -439,7 +439,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownIssue()
@@ -457,7 +457,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownState()
@@ -475,7 +475,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -497,7 +497,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'responsible' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testResponsibleDenied()
@@ -522,7 +522,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'responsible' => $assignee->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -543,7 +543,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -563,7 +563,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -583,7 +583,7 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedIssue()
@@ -603,6 +603,6 @@ class ChangeStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -64,7 +64,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** Group $group2 */
         [$group2] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Managers'], ['id' => 'ASC']);
@@ -77,7 +77,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($template);
         self::assertSame($after, $this->permissionsToArray($template->groupPermissions, $group->id));
@@ -103,7 +103,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownTemplate()
@@ -123,7 +123,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongGroup()
@@ -146,7 +146,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

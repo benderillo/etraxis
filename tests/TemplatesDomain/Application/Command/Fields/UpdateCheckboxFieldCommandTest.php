@@ -51,7 +51,7 @@ class UpdateCheckboxFieldCommandTest extends TransactionalTestCase
             'defaultValue' => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

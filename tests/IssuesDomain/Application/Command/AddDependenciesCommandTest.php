@@ -53,7 +53,7 @@ class AddDependenciesCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -81,7 +81,7 @@ class AddDependenciesCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -108,7 +108,7 @@ class AddDependenciesCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownDependencies()
@@ -143,6 +143,6 @@ class AddDependenciesCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

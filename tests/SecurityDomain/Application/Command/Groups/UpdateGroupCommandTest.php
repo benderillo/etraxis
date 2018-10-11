@@ -44,7 +44,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'description' => 'Software Engineers',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Group $group */
         $group = $this->repository->find($group->id);
@@ -66,7 +66,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'description' => 'Human beings',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Group $group */
         $group = $this->repository->find($group->id);
@@ -90,7 +90,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'description' => 'Software Engineers',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownGroup()
@@ -105,7 +105,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'description' => 'Software Engineers',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLocalGroupConflict()
@@ -124,7 +124,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         ]);
 
         try {
-            $this->commandbus->handle($command);
+            $this->commandBus->handle($command);
         }
         catch (ConflictHttpException $exception) {
             self::fail($exception->getMessage());
@@ -135,7 +135,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'name'  => 'Managers',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testGlobalGroupConflict()
@@ -154,7 +154,7 @@ class UpdateGroupCommandTest extends TransactionalTestCase
         ]);
 
         try {
-            $this->commandbus->handle($command);
+            $this->commandBus->handle($command);
         }
         catch (ConflictHttpException $exception) {
             self::fail($exception->getMessage());
@@ -165,6 +165,6 @@ class UpdateGroupCommandTest extends TransactionalTestCase
             'name'  => 'Company Clients',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

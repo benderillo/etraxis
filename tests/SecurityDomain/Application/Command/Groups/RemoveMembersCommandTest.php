@@ -74,7 +74,7 @@ class RemoveMembersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Group $group */
         $group = $this->repository->find($group->id);
@@ -106,7 +106,7 @@ class RemoveMembersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownGroup()
@@ -125,6 +125,6 @@ class RemoveMembersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -42,7 +42,7 @@ class UnlockUserCommandTest extends TransactionalTestCase
             'user' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
         self::assertTrue($user->isAccountNonLocked());
@@ -61,7 +61,7 @@ class UnlockUserCommandTest extends TransactionalTestCase
             'user' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -74,6 +74,6 @@ class UnlockUserCommandTest extends TransactionalTestCase
             'user' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

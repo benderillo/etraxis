@@ -54,7 +54,7 @@ class CreateDateFieldCommandTest extends TransactionalTestCase
             'defaultValue' => 3,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Deadline']);

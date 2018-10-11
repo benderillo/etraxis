@@ -109,7 +109,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -202,7 +202,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -297,7 +297,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -361,7 +361,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnListField()
@@ -385,7 +385,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnTextField()
@@ -409,7 +409,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnCheckboxField()
@@ -433,7 +433,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnDateField()
@@ -457,7 +457,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnStringField()
@@ -481,7 +481,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnNumberField()
@@ -505,7 +505,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnDurationField()
@@ -529,7 +529,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnDecimalField()
@@ -553,7 +553,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownIssue()
@@ -568,7 +568,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -586,7 +586,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -603,7 +603,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -620,7 +620,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedIssue()
@@ -637,7 +637,7 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFrozenIssue()
@@ -656,6 +656,6 @@ class UpdateIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

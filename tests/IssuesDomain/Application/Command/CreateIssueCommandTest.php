@@ -75,7 +75,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -176,7 +176,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -257,7 +257,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuccessOnlyRequiredFields()
@@ -282,7 +282,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -345,7 +345,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             'subject'  => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnListField()
@@ -377,7 +377,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnTextField()
@@ -409,7 +409,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationOnCheckboxField()
@@ -441,7 +441,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownTemplate()
@@ -465,7 +465,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -495,7 +495,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -519,7 +519,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testResponsibleDenied()
@@ -556,7 +556,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -579,7 +579,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -602,7 +602,7 @@ class CreateIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testInvalidTemplate()
@@ -619,6 +619,6 @@ class CreateIssueCommandTest extends TransactionalTestCase
             'subject'  => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

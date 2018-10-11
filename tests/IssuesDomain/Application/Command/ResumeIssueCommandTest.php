@@ -46,7 +46,7 @@ class ResumeIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -71,7 +71,7 @@ class ResumeIssueCommandTest extends TransactionalTestCase
             'issue' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -88,7 +88,7 @@ class ResumeIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -104,7 +104,7 @@ class ResumeIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -120,6 +120,6 @@ class ResumeIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

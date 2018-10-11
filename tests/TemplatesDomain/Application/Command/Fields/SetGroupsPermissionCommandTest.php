@@ -62,7 +62,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 
@@ -91,7 +91,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownField()
@@ -111,7 +111,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongGroup()
@@ -134,7 +134,7 @@ class SetGroupsPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

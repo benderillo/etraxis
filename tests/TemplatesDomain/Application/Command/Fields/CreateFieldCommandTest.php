@@ -51,7 +51,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Task ID', 'removedAt' => null]);
@@ -79,7 +79,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -98,7 +98,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -117,7 +117,7 @@ class CreateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -137,6 +137,6 @@ class CreateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

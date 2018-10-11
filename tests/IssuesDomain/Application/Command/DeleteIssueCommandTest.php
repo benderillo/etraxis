@@ -42,7 +42,7 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->find($command->issue);
@@ -60,7 +60,7 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -77,7 +77,7 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -93,7 +93,7 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -109,7 +109,7 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedIssue()
@@ -125,6 +125,6 @@ class DeleteIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -75,7 +75,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -97,7 +97,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'none://localhost',
             'dc=example,dc=com'
         );
@@ -137,7 +137,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -189,7 +189,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -250,7 +250,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -291,7 +291,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -322,7 +322,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -350,7 +350,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );
@@ -373,7 +373,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $authenticator = new LdapAuthenticator(
             $this->router,
             $this->session,
-            $this->commandbus,
+            $this->commandBus,
             'ldap://localhost',
             'dc=example,dc=com'
         );

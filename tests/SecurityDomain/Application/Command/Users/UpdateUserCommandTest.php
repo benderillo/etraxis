@@ -57,7 +57,7 @@ class UpdateUserCommandTest extends TransactionalTestCase
             'timezone' => 'Europe/Madrid',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -92,7 +92,7 @@ class UpdateUserCommandTest extends TransactionalTestCase
             'timezone'    => $user->timezone,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -112,7 +112,7 @@ class UpdateUserCommandTest extends TransactionalTestCase
             'timezone' => 'Europe/Madrid',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUsernameConflict()
@@ -137,6 +137,6 @@ class UpdateUserCommandTest extends TransactionalTestCase
             'timezone'    => $user->timezone,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

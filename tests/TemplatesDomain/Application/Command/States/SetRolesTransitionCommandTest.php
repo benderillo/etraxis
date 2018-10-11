@@ -63,7 +63,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($fromState);
         self::assertSame($after, $this->transitionsToArray($fromState->roleTransitions, $toState));
@@ -90,7 +90,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -114,7 +114,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFinalState()
@@ -138,7 +138,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownFromState()
@@ -159,7 +159,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownToState()
@@ -180,7 +180,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongStates()
@@ -205,7 +205,7 @@ class SetRolesTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

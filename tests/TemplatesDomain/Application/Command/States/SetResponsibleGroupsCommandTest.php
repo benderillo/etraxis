@@ -64,7 +64,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($state);
         self::assertSame($after, $this->responsibleGroupsToArray($state));
@@ -97,7 +97,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($state);
         self::assertSame($after, $this->responsibleGroupsToArray($state));
@@ -122,7 +122,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -144,7 +144,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFinalState()
@@ -166,7 +166,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownState()
@@ -185,7 +185,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongGroup()
@@ -208,7 +208,7 @@ class SetResponsibleGroupsCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

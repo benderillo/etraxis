@@ -55,7 +55,7 @@ class UpdateDateFieldCommandTest extends TransactionalTestCase
             'defaultValue' => 3,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

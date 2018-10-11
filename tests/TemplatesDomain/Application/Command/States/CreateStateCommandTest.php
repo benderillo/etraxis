@@ -56,7 +56,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'nextState'   => $nextState->id,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var State $state */
         $state = $this->repository->findOneBy(['name' => 'Started']);
@@ -92,7 +92,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var State $state */
         $state = $this->repository->findOneBy(['name' => 'Created']);
@@ -122,7 +122,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownNextState()
@@ -143,7 +143,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'nextState'   => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongNextState()
@@ -167,7 +167,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'nextState'   => $nextState->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -186,7 +186,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -205,7 +205,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -225,6 +225,6 @@ class CreateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

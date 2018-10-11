@@ -49,7 +49,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var ListItem $item */
         $item = $this->repository->findOneBy(['value' => 4]);
@@ -73,7 +73,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongField()
@@ -91,7 +91,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -109,7 +109,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -127,7 +127,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValueConflict()
@@ -146,7 +146,7 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'typo',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testTextConflict()
@@ -165,6 +165,6 @@ class CreateListItemCommandTest extends TransactionalTestCase
             'text'  => 'low',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

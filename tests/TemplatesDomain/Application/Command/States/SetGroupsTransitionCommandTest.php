@@ -72,7 +72,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($fromState);
         self::assertSame($after, $this->transitionsToArray($fromState->groupTransitions, $toState));
@@ -108,7 +108,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -141,7 +141,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFinalState()
@@ -174,7 +174,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownFromState()
@@ -204,7 +204,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownToState()
@@ -234,7 +234,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongStates()
@@ -268,7 +268,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongGroup()
@@ -302,7 +302,7 @@ class SetGroupsTransitionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

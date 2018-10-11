@@ -53,7 +53,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -89,7 +89,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testPublicCommentAccessDenied()
@@ -108,7 +108,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testPrivateCommentAccessDenied()
@@ -127,7 +127,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -145,7 +145,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -163,7 +163,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedIssue()
@@ -181,7 +181,7 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFrozenIssue()
@@ -199,6 +199,6 @@ class AddCommentCommandTest extends TransactionalTestCase
             'private' => false,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

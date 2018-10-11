@@ -46,7 +46,7 @@ class UpdateSettingsCommandTest extends TransactionalTestCase
             'timezone' => 'Pacific/Auckland',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -65,6 +65,6 @@ class UpdateSettingsCommandTest extends TransactionalTestCase
             'timezone' => 'Pacific/Auckland',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

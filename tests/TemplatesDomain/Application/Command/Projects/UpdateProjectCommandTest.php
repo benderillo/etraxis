@@ -45,7 +45,7 @@ class UpdateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Project $project */
         $project = $this->repository->find($project->id);
@@ -71,7 +71,7 @@ class UpdateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownProject()
@@ -87,7 +87,7 @@ class UpdateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -106,6 +106,6 @@ class UpdateProjectCommandTest extends TransactionalTestCase
             'suspended' => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

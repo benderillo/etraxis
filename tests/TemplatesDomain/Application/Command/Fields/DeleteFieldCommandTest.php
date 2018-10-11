@@ -49,7 +49,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => $field1->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -86,7 +86,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => $field1->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -115,7 +115,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertTrue(true);
     }
@@ -133,7 +133,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => $field->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -157,7 +157,7 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => $field->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -175,6 +175,6 @@ class DeleteFieldCommandTest extends TransactionalTestCase
             'field' => $field->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

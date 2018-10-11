@@ -56,7 +56,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => $this->date->format('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -84,7 +84,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'issue' => $issue->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValidationInvalidDate()
@@ -102,7 +102,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => gmdate('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownIssue()
@@ -117,7 +117,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => $this->date->format('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -135,7 +135,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => $this->date->format('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -152,7 +152,7 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => $this->date->format('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -169,6 +169,6 @@ class SuspendIssueCommandTest extends TransactionalTestCase
             'date'  => $this->date->format('Y-m-d'),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

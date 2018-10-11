@@ -56,7 +56,7 @@ class CreateStringFieldCommandTest extends TransactionalTestCase
             'pcreReplace'   => 'replace',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Subject']);

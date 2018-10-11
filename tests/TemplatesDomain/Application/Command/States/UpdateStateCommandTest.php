@@ -50,7 +50,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'nextState'   => $nextState->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var State $state */
         $state = $this->repository->find($state->id);
@@ -77,7 +77,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'nextState'   => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testWrongNextState()
@@ -100,7 +100,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'nextState'   => $nextState->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -118,7 +118,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -136,7 +136,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownState()
@@ -151,7 +151,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -170,6 +170,6 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'responsible' => StateResponsible::KEEP,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

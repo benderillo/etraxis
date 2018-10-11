@@ -47,7 +47,7 @@ class SetInitialStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($initial);
         $this->doctrine->getManager()->refresh($state);
@@ -69,7 +69,7 @@ class SetInitialStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($state);
 
@@ -86,7 +86,7 @@ class SetInitialStateCommandTest extends TransactionalTestCase
             'state' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -102,6 +102,6 @@ class SetInitialStateCommandTest extends TransactionalTestCase
             'state' => $state->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

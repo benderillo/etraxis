@@ -41,7 +41,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
             'item' => $item->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -57,7 +57,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
             'item' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertTrue(true);
     }
@@ -75,7 +75,7 @@ class DeleteListItemCommandTest extends TransactionalTestCase
             'item' => $item->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -91,6 +91,6 @@ class DeleteListItemCommandTest extends TransactionalTestCase
             'item' => $item->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

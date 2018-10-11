@@ -55,7 +55,7 @@ class UpdateListFieldCommandTest extends TransactionalTestCase
             'defaultValue' => $item->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

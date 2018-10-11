@@ -53,7 +53,7 @@ class WatchIssuesCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertCount($count + 1, $this->doctrine->getRepository(Watcher::class)->findAll());
     }

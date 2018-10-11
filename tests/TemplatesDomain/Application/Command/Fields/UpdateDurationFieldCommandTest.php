@@ -55,7 +55,7 @@ class UpdateDurationFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '1:30',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

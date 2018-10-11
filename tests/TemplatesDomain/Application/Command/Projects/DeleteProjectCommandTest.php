@@ -41,7 +41,7 @@ class DeleteProjectCommandTest extends TransactionalTestCase
             'project' => $project->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -57,7 +57,7 @@ class DeleteProjectCommandTest extends TransactionalTestCase
             'project' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertTrue(true);
     }
@@ -75,6 +75,6 @@ class DeleteProjectCommandTest extends TransactionalTestCase
             'project' => $project->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

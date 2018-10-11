@@ -44,7 +44,7 @@ class CreateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Project $project */
         $project = $this->repository->findOneBy(['name' => 'Awesome Express']);
@@ -68,7 +68,7 @@ class CreateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -84,6 +84,6 @@ class CreateProjectCommandTest extends TransactionalTestCase
             'suspended'   => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

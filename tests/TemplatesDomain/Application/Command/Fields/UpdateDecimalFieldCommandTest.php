@@ -55,7 +55,7 @@ class UpdateDecimalFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '50.00',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

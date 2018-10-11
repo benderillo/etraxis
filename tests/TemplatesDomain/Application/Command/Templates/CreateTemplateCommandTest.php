@@ -52,7 +52,7 @@ class CreateTemplateCommandTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Template $template */
         $template = $this->repository->findOneBy(['name' => 'Bugfix']);
@@ -83,7 +83,7 @@ class CreateTemplateCommandTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -104,7 +104,7 @@ class CreateTemplateCommandTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -126,7 +126,7 @@ class CreateTemplateCommandTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testPrefixConflict()
@@ -148,6 +148,6 @@ class CreateTemplateCommandTest extends TransactionalTestCase
             'frozenTime'  => 10,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

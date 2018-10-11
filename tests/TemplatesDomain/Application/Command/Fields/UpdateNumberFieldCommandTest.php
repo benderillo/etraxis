@@ -55,7 +55,7 @@ class UpdateNumberFieldCommandTest extends TransactionalTestCase
             'defaultValue' => 10,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

@@ -54,7 +54,7 @@ class CreateDecimalFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '3.1415',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Coverage']);

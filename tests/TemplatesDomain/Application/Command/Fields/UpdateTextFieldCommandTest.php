@@ -59,7 +59,7 @@ class UpdateTextFieldCommandTest extends TransactionalTestCase
             'pcreReplace'   => 'replace',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($field);
 

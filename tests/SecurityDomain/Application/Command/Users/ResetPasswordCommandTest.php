@@ -53,7 +53,7 @@ class ResetPasswordCommandTest extends TransactionalTestCase
             'password' => 'newone',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -71,7 +71,7 @@ class ResetPasswordCommandTest extends TransactionalTestCase
             'password' => 'secret',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testExpiredToken()
@@ -93,7 +93,7 @@ class ResetPasswordCommandTest extends TransactionalTestCase
             'password' => 'secret',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testInvalidPassword()
@@ -114,6 +114,6 @@ class ResetPasswordCommandTest extends TransactionalTestCase
             'password' => str_repeat('*', BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -50,7 +50,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => $field->position - 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertSame($expected, $this->getFields($field->state));
     }
@@ -74,7 +74,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => $field->position + 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertSame($expected, $this->getFields($field->state));
     }
@@ -98,7 +98,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertSame($expected, $this->getFields($field->state));
     }
@@ -122,7 +122,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => PHP_INT_MAX,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertSame($expected, $this->getFields($field->state));
     }
@@ -141,7 +141,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -158,7 +158,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownField()
@@ -172,7 +172,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testRemovedField()
@@ -189,7 +189,7 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
             'position' => 1,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

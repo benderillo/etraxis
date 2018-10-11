@@ -67,7 +67,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $command = new SetRolesPermissionCommand([
             'template'   => $template->id,
@@ -77,7 +77,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($template);
         self::assertSame($after, $this->permissionsToArray($template->rolePermissions, SystemRole::AUTHOR));
@@ -101,7 +101,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownTemplate()
@@ -119,7 +119,7 @@ class SetRolesPermissionCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     /**

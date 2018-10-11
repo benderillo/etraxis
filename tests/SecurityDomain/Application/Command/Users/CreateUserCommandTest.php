@@ -53,7 +53,7 @@ class CreateUserCommandTest extends TransactionalTestCase
             'timezone'    => 'Pacific/Auckland',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var User $user */
         $user = $this->repository->findOneByUsername('anna@example.com');
@@ -90,7 +90,7 @@ class CreateUserCommandTest extends TransactionalTestCase
             'timezone'    => 'Pacific/Auckland',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testInvalidPassword()
@@ -112,7 +112,7 @@ class CreateUserCommandTest extends TransactionalTestCase
             'timezone'    => 'Pacific/Auckland',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUsernameConflict()
@@ -134,6 +134,6 @@ class CreateUserCommandTest extends TransactionalTestCase
             'timezone'    => 'Pacific/Auckland',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -34,7 +34,7 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
             'email' => 'artem@example.com',
         ]);
 
-        $token = $this->commandbus->handle($command);
+        $token = $this->commandBus->handle($command);
         self::assertRegExp('/^([0-9a-f]{32}$)/', $token);
 
         /** @var User $user */
@@ -51,7 +51,7 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
             'email' => 'einstein@ldap.forumsys.com',
         ]);
 
-        $token = $this->commandbus->handle($command);
+        $token = $this->commandBus->handle($command);
         self::assertNull($token);
 
         $users = $this->repository->findBy(['resetToken' => null]);
@@ -67,7 +67,7 @@ class ForgetPasswordCommandTest extends TransactionalTestCase
             'email' => '404@example.com',
         ]);
 
-        $token = $this->commandbus->handle($command);
+        $token = $this->commandBus->handle($command);
         self::assertNull($token);
 
         $users = $this->repository->findBy(['resetToken' => null]);

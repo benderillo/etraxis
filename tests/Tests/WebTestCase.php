@@ -32,7 +32,7 @@ class WebTestCase extends SymfonyWebTestCase
     protected $doctrine;
 
     /** @var \League\Tactician\CommandBus */
-    protected $commandbus;
+    protected $commandBus;
 
     /**
      * Boots the kernel and retrieve most often used services.
@@ -44,7 +44,7 @@ class WebTestCase extends SymfonyWebTestCase
         $this->client = static::createClient();
 
         $this->doctrine   = $this->client->getContainer()->get('doctrine');
-        $this->commandbus = $this->client->getContainer()->get('tactician.commandbus.default');
+        $this->commandBus = $this->client->getContainer()->get('tactician.commandbus.default');
     }
 
     /**

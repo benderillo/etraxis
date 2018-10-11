@@ -76,7 +76,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -126,7 +126,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownIssue()
@@ -141,7 +141,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -159,7 +159,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -176,7 +176,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -193,7 +193,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedIssue()
@@ -210,7 +210,7 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testFrozenIssue()
@@ -229,6 +229,6 @@ class AttachFileCommandTest extends TransactionalTestCase
             'file'  => $this->file,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

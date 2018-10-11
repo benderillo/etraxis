@@ -45,7 +45,7 @@ class UpdateProfileCommandTest extends TransactionalTestCase
             'fullname' => 'Chaim Willms',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -62,7 +62,7 @@ class UpdateProfileCommandTest extends TransactionalTestCase
             'fullname' => 'Chaim Willms',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testExternalAccount()
@@ -76,7 +76,7 @@ class UpdateProfileCommandTest extends TransactionalTestCase
             'fullname' => 'Chaim Willms',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUsernameConflict()
@@ -91,6 +91,6 @@ class UpdateProfileCommandTest extends TransactionalTestCase
             'fullname' => 'Chaim Willms',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

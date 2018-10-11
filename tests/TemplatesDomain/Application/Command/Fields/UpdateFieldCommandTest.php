@@ -45,7 +45,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->find($field->id);
@@ -71,7 +71,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -90,7 +90,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownField()
@@ -106,7 +106,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testRemovedField()
@@ -125,7 +125,7 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNameConflict()
@@ -144,6 +144,6 @@ class UpdateFieldCommandTest extends TransactionalTestCase
             'required'    => true,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

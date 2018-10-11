@@ -43,7 +43,7 @@ class ResumeProjectCommandTest extends TransactionalTestCase
             'project' => $project->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($project);
         self::assertFalse($project->isSuspended);
@@ -62,7 +62,7 @@ class ResumeProjectCommandTest extends TransactionalTestCase
             'project' => $project->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($project);
         self::assertFalse($project->isSuspended);
@@ -81,7 +81,7 @@ class ResumeProjectCommandTest extends TransactionalTestCase
             'project' => $project->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownProject()
@@ -94,6 +94,6 @@ class ResumeProjectCommandTest extends TransactionalTestCase
             'project' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

@@ -49,7 +49,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => 'newone',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -74,7 +74,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => 'newone',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -96,7 +96,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => 'secret',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -110,7 +110,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => 'secret',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testExternalUser()
@@ -127,7 +127,7 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => 'secret',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testInvalidPassword()
@@ -145,6 +145,6 @@ class SetPasswordCommandTest extends TransactionalTestCase
             'password' => str_repeat('*', BasePasswordEncoder::MAX_PASSWORD_LENGTH + 1),
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

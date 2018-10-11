@@ -43,7 +43,7 @@ class LockTemplateCommandTest extends TransactionalTestCase
             'template' => $template->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($template);
         self::assertTrue($template->isLocked);
@@ -62,7 +62,7 @@ class LockTemplateCommandTest extends TransactionalTestCase
             'template' => $template->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($template);
         self::assertTrue($template->isLocked);
@@ -81,7 +81,7 @@ class LockTemplateCommandTest extends TransactionalTestCase
             'template' => $template->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownTemplate()
@@ -94,6 +94,6 @@ class LockTemplateCommandTest extends TransactionalTestCase
             'template' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

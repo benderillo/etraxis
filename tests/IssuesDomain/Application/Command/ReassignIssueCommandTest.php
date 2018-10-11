@@ -51,7 +51,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -86,7 +86,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($issue);
 
@@ -110,7 +110,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -128,7 +128,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -149,7 +149,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testResponsibleDenied()
@@ -170,7 +170,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -190,7 +190,7 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -210,6 +210,6 @@ class ReassignIssueCommandTest extends TransactionalTestCase
             'responsible' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

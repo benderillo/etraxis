@@ -41,7 +41,7 @@ class DeleteUserCommandTest extends TransactionalTestCase
             'user' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->clear();
 
@@ -57,7 +57,7 @@ class DeleteUserCommandTest extends TransactionalTestCase
             'user' => self::UNKNOWN_ENTITY_ID,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         self::assertTrue(true);
     }
@@ -75,7 +75,7 @@ class DeleteUserCommandTest extends TransactionalTestCase
             'user' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testForbidden()
@@ -91,6 +91,6 @@ class DeleteUserCommandTest extends TransactionalTestCase
             'user' => $user->id,
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

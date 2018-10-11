@@ -42,7 +42,7 @@ class RegisterExternalAccountCommandTest extends TransactionalTestCase
             'fullname' => 'Anna Rodygina',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var User $user */
         $user = $this->repository->findOneByUsername('anna@example.com');
@@ -75,7 +75,7 @@ class RegisterExternalAccountCommandTest extends TransactionalTestCase
             'fullname' => 'Anna Rodygina',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 
@@ -105,7 +105,7 @@ class RegisterExternalAccountCommandTest extends TransactionalTestCase
             'fullname' => 'Tomas Rodriges',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($user);
 

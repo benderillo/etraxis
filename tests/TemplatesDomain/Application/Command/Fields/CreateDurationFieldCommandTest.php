@@ -54,7 +54,7 @@ class CreateDurationFieldCommandTest extends TransactionalTestCase
             'defaultValue' => '8:00',
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Field $field */
         $field = $this->repository->findOneBy(['name' => 'Time']);

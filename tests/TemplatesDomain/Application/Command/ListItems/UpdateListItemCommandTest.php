@@ -47,7 +47,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'low',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var ListItem $item */
         $item = $this->repository->find($item->id);
@@ -72,7 +72,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'critical',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         /** @var ListItem $item */
         $item = $this->repository->find($item->id);
@@ -96,7 +96,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'critical',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnlockedTemplate()
@@ -114,7 +114,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'critical',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownItem()
@@ -129,7 +129,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'critical',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testValueConflict()
@@ -148,7 +148,7 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'critical',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testTextConflict()
@@ -167,6 +167,6 @@ class UpdateListItemCommandTest extends TransactionalTestCase
             'text'  => 'normal',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

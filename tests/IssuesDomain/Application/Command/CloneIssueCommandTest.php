@@ -74,7 +74,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -175,7 +175,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -256,7 +256,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuccessOnlyRequiredFields()
@@ -281,7 +281,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $result = $this->commandbus->handle($command);
+        $result = $this->commandBus->handle($command);
 
         /** @var Issue $issue */
         $issue = $this->repository->findOneBy(['subject' => 'Test issue']);
@@ -344,7 +344,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             'subject' => 'Test issue',
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownIssue()
@@ -368,7 +368,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testUnknownUser()
@@ -398,7 +398,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testAccessDenied()
@@ -422,7 +422,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testResponsibleDenied()
@@ -459,7 +459,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testSuspendedProject()
@@ -482,7 +482,7 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testLockedTemplate()
@@ -505,6 +505,6 @@ class CloneIssueCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }

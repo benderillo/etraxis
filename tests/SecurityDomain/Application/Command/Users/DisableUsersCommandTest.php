@@ -49,7 +49,7 @@ class DisableUsersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
 
         $this->doctrine->getManager()->refresh($nhills);
         $this->doctrine->getManager()->refresh($tberge);
@@ -73,7 +73,7 @@ class DisableUsersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testNotFound()
@@ -88,7 +88,7 @@ class DisableUsersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 
     public function testForbidden()
@@ -106,6 +106,6 @@ class DisableUsersCommandTest extends TransactionalTestCase
             ],
         ]);
 
-        $this->commandbus->handle($command);
+        $this->commandBus->handle($command);
     }
 }
