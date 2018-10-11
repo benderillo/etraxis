@@ -91,6 +91,7 @@ class RegisterExternalAccountHandler
         $user->account->uid      = $command->uid;
         $user->email             = $command->email;
         $user->fullname          = $command->fullname;
+        $user->password          = null;
 
         $this->repository->persist($user);
 

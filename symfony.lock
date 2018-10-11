@@ -101,11 +101,23 @@
             "ref": "81dee417d2cc60cd1c9d6208dff2ec22a1103e93"
         }
     },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.3"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.4.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
     "league/iso3166": {
         "version": "2.1.0"
+    },
+    "league/oauth2-client": {
+        "version": "2.3.0"
     },
     "league/tactician": {
         "version": "v1.0.3"
