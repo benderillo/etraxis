@@ -20,6 +20,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.0",
         "league/iso3166": "^2.1",
         "league/oauth2-client": "^2.3",
+        "league/oauth2-google": "^2.2",
         "league/tactician-bundle": "^1.1",
         "league/tactician-doctrine": "^1.1",
         "league/uri-components": "^1.8",

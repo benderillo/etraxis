@@ -13,7 +13,10 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -23,4 +26,22 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OAuth2Controller extends Controller
 {
+    /**
+     * OAuth2 callback URL for Google.
+     *
+     * @Route("/google", name="oauth_google")
+     *
+     * @param Request                   $request
+     * @param GoogleOAuth2Authenticator $authenticator
+     *
+     * @return Response
+     */
+    public function callbackGoogle(Request $request, GoogleOAuth2Authenticator $authenticator): Response
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $authenticator->start($request);
+    }
 }

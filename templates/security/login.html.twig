@@ -41,6 +41,11 @@
                         <div class="grid-row">
                             <div class="grid-66 prefix-33">
                                 <button type="submit">{{ 'button.login' | trans }}</button>
+                                <span class="buttonset pull-after">
+                                    {% if googleClientId %}
+                                        <button type="button" class="fa fa-google" title="Google" @click="google"></button>
+                                    {% endif %}
+                                </span>
                             </div>
                         </div>
 

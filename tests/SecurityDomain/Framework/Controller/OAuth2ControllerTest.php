@@ -14,7 +14,21 @@
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\Tests\WebTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class OAuth2ControllerTest extends WebTestCase
 {
+    public function testCallbackGoogle()
+    {
+        $uri = '/oauth/google';
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertSame(Response::HTTP_UNAUTHORIZED, $this->client->getResponse()->getStatusCode());
+
+        $this->loginAs('admin@example.com');
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isRedirect('/'));
+    }
 }

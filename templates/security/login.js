@@ -9,7 +9,8 @@
 //
 //----------------------------------------------------------------------
 
-import ui from 'utilities/ui';
+import ui  from 'utilities/ui';
+import url from 'utilities/url';
 
 /**
  * Login page.
@@ -21,5 +22,12 @@ new Vue({
         if (eTraxis.error) {
             ui.alert(eTraxis.error);
         }
+    },
+
+    methods: {
+
+        google() {
+            location.href = url('/oauth/google');
+        },
     },
 });

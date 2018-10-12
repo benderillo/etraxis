@@ -39,8 +39,9 @@ class LoginController extends Controller
         }
 
         return $this->render('security/login.html.twig', [
-            'error'    => $utils->getLastAuthenticationError(),
-            'username' => $utils->getLastUsername(),
+            'error'          => $utils->getLastAuthenticationError(),
+            'username'       => $utils->getLastUsername(),
+            'googleClientId' => $this->getParameter('google.clientId'),
         ]);
     }
 }

@@ -24,6 +24,7 @@ security:
                 authenticators:
                     - eTraxis\SecurityDomain\Framework\Authenticator\LdapAuthenticator
                     - eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
+                    - eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator
             remember_me:
                 secret:   '%kernel.secret%'
                 lifetime: 2592000
