@@ -221,6 +221,9 @@
             "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
         }
     },
+    "stevenmaguire/oauth2-bitbucket": {
+        "version": "3.0.0"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.0.2"
     },

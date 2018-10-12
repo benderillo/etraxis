@@ -17,6 +17,9 @@ parameters:
     github.clientId:     '%env(GITHUB_CLIENT_ID)%'
     github.clientSecret: '%env(GITHUB_CLIENT_SECRET)%'
 
+    bitbucket.clientId:     '%env(BITBUCKET_CLIENT_ID)%'
+    bitbucket.clientSecret: '%env(BITBUCKET_CLIENT_SECRET)%'
+
     ldap.url:    '%env(LDAP_URL)%'
     ldap.basedn: '%env(LDAP_BASEDN)%'
 
@@ -41,6 +44,11 @@ services:
     # autowiring hints
     eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
         $locale: '%locale%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator:
+        $clientId:     '%bitbucket.clientId%'
+        $clientSecret: '%bitbucket.clientSecret%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator:

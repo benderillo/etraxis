@@ -26,6 +26,7 @@ security:
                     - eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
                     - eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator
                     - eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator
+                    - eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator
             remember_me:
                 secret:   '%kernel.secret%'
                 lifetime: 2592000

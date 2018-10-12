@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator;
 use eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator;
 use eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -57,6 +58,25 @@ class OAuth2Controller extends Controller
      * @return Response
      */
     public function callbackGithub(Request $request, GithubOAuth2Authenticator $authenticator): Response
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $authenticator->start($request);
+    }
+
+    /**
+     * OAuth2 callback URL for Bitbucket.
+     *
+     * @Route("/bitbucket", name="oauth_bitbucket")
+     *
+     * @param Request                      $request
+     * @param BitbucketOAuth2Authenticator $authenticator
+     *
+     * @return Response
+     */
+    public function callbackBitbucket(Request $request, BitbucketOAuth2Authenticator $authenticator): Response
     {
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('homepage');

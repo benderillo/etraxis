@@ -33,5 +33,9 @@ new Vue({
         github() {
             location.href = url('/oauth/github');
         },
+
+        bitbucket() {
+            location.href = url('/oauth/bitbucket');
+        },
     },
 });
