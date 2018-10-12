@@ -306,6 +306,11 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
                 return $this->provider;
             }
 
+            protected function getScope(): array
+            {
+                return [];
+            }
+
             protected function getUserFromToken(AccessToken $token): ?UserInterface
             {
                 return $this->user;

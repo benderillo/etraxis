@@ -42,6 +42,7 @@ class LoginController extends Controller
             'error'          => $utils->getLastAuthenticationError(),
             'username'       => $utils->getLastUsername(),
             'googleClientId' => $this->getParameter('google.clientId'),
+            'githubClientId' => $this->getParameter('github.clientId'),
         ]);
     }
 }

@@ -50,6 +50,14 @@ class GoogleOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertNull($this->callMethod($authenticator, 'getProvider'));
     }
 
+    public function testGetScope()
+    {
+        $expected = [];
+
+        $authenticator = new GoogleOAuth2Authenticator($this->router, $this->session, $this->commandBus, 'id', 'secret', 'example.com');
+        self::assertSame($expected, $this->callMethod($authenticator, 'getScope'));
+    }
+
     public function testGetUserFromToken()
     {
         $owner = new GoogleUser([

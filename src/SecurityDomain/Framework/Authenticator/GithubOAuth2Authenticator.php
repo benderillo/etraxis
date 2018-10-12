@@ -16,24 +16,25 @@ namespace eTraxis\SecurityDomain\Framework\Authenticator;
 use eTraxis\SecurityDomain\Application\Command\Users\RegisterExternalAccountCommand;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use League\OAuth2\Client\Provider\AbstractProvider;
-use League\OAuth2\Client\Provider\Google;
+use League\OAuth2\Client\Provider\Github;
 use League\OAuth2\Client\Token\AccessToken;
 use League\Tactician\CommandBus;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Authenticates user against Google OAuth2 server.
+ * Authenticates user against GitHub OAuth2 server.
  */
-class GoogleOAuth2Authenticator extends AbstractOAuth2Authenticator
+class GithubOAuth2Authenticator extends AbstractOAuth2Authenticator
 {
     // ID to distinguish states of several providers.
-    protected const PROVIDER_ID = AccountProvider::GOOGLE;
+    protected const PROVIDER_ID = AccountProvider::GITHUB;
 
     protected $commandBus;
 
-    /** @var null|Google */
+    /** @var null|Github */
     protected $provider;
 
     /**
@@ -44,15 +45,13 @@ class GoogleOAuth2Authenticator extends AbstractOAuth2Authenticator
      * @param CommandBus       $commandBus
      * @param string           $clientId
      * @param string           $clientSecret
-     * @param string           $clientDomain
      */
     public function __construct(
         RouterInterface  $router,
         SessionInterface $session,
         CommandBus       $commandBus,
         string           $clientId,
-        string           $clientSecret,
-        string           $clientDomain
+        string           $clientSecret
     )
     {
         parent::__construct($router, $session);
@@ -60,13 +59,22 @@ class GoogleOAuth2Authenticator extends AbstractOAuth2Authenticator
         $this->commandBus = $commandBus;
 
         if ($clientId && $clientSecret) {
-            $this->provider = new Google([
+            $this->provider = new Github([
                 'clientId'     => $clientId,
                 'clientSecret' => $clientSecret,
-                'hostedDomain' => $clientDomain,
-                'redirectUri'  => $router->generate('oauth_google', [], RouterInterface::ABSOLUTE_URL),
+                'redirectUri'  => $router->generate('oauth_github', [], RouterInterface::ABSOLUTE_URL),
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getScope(): array
+    {
+        return [
+            'user:email',
+        ];
     }
 
     /**
@@ -80,25 +88,36 @@ class GoogleOAuth2Authenticator extends AbstractOAuth2Authenticator
     /**
      * {@inheritdoc}
      */
-    protected function getScope(): array
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     protected function getUserFromToken(AccessToken $token): ?UserInterface
     {
-        /** @var \League\OAuth2\Client\Provider\GoogleUser $owner */
+        /** @var \League\OAuth2\Client\Provider\GithubResourceOwner $owner */
         $owner = $this->provider->getResourceOwner($token);
 
         $command = new RegisterExternalAccountCommand([
-            'provider' => AccountProvider::GOOGLE,
+            'provider' => AccountProvider::GITHUB,
             'uid'      => $owner->getId(),
             'email'    => $owner->getEmail(),
             'fullname' => $owner->getName(),
         ]);
+
+        if (!$command->email) {
+
+            $request = $this->provider->getAuthenticatedRequest(
+                Request::METHOD_GET,
+                'https://api.github.com/user/emails',
+                $token
+            );
+
+            $response = $this->provider->getResponse($request);
+            $emails   = json_decode($response->getBody()->getContents(), true);
+
+            foreach ($emails as $email) {
+                if ($email['primary'] ?? false) {
+                    $command->email = $email['email'];
+                    break;
+                }
+            }
+        }
 
         return $this->commandBus->handle($command);
     }

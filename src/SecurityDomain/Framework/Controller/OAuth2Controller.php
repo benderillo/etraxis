@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator;
 use eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,6 +38,25 @@ class OAuth2Controller extends Controller
      * @return Response
      */
     public function callbackGoogle(Request $request, GoogleOAuth2Authenticator $authenticator): Response
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $authenticator->start($request);
+    }
+
+    /**
+     * OAuth2 callback URL for GitHub.
+     *
+     * @Route("/github", name="oauth_github")
+     *
+     * @param Request                   $request
+     * @param GithubOAuth2Authenticator $authenticator
+     *
+     * @return Response
+     */
+    public function callbackGithub(Request $request, GithubOAuth2Authenticator $authenticator): Response
     {
         if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirectToRoute('homepage');

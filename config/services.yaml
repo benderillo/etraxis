@@ -14,6 +14,9 @@ parameters:
     google.clientSecret: '%env(GOOGLE_CLIENT_SECRET)%'
     google.clientDomain: '%env(GOOGLE_CLIENT_DOMAIN)%'
 
+    github.clientId:     '%env(GITHUB_CLIENT_ID)%'
+    github.clientSecret: '%env(GITHUB_CLIENT_SECRET)%'
+
     ldap.url:    '%env(LDAP_URL)%'
     ldap.basedn: '%env(LDAP_BASEDN)%'
 
@@ -38,6 +41,11 @@ services:
     # autowiring hints
     eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
         $locale: '%locale%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator:
+        $clientId:     '%github.clientId%'
+        $clientSecret: '%github.clientSecret%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator:

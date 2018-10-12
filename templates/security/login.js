@@ -29,5 +29,9 @@ new Vue({
         google() {
             location.href = url('/oauth/google');
         },
+
+        github() {
+            location.href = url('/oauth/github');
+        },
     },
 });

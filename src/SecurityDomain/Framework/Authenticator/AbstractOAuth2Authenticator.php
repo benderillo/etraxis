@@ -78,7 +78,9 @@ abstract class AbstractOAuth2Authenticator extends AbstractGuardAuthenticator
         }
 
         $statevar = 'oauth@' . static::PROVIDER_ID;
-        $authUrl  = $provider->getAuthorizationUrl();
+        $authUrl  = $provider->getAuthorizationUrl([
+            'scope' => $this->getScope(),
+        ]);
 
         $this->session->set($statevar, $provider->getState());
 
@@ -189,6 +191,13 @@ abstract class AbstractOAuth2Authenticator extends AbstractGuardAuthenticator
      * @return null|AbstractProvider
      */
     abstract protected function getProvider(): ?AbstractProvider;
+
+    /**
+     * Returns list of required scopes.
+     *
+     * @return array
+     */
+    abstract protected function getScope(): array;
 
     /**
      * Returns user by the specified OAuth2 token.

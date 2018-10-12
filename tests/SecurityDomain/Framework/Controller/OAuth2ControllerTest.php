@@ -31,4 +31,17 @@ class OAuth2ControllerTest extends WebTestCase
         $this->client->request(Request::METHOD_GET, $uri);
         self::assertTrue($this->client->getResponse()->isRedirect('/'));
     }
+
+    public function testCallbackGithub()
+    {
+        $uri = '/oauth/github';
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertSame(Response::HTTP_UNAUTHORIZED, $this->client->getResponse()->getStatusCode());
+
+        $this->loginAs('admin@example.com');
+
+        $this->client->request(Request::METHOD_GET, $uri);
+        self::assertTrue($this->client->getResponse()->isRedirect('/'));
+    }
 }
