@@ -1,27 +1,28 @@
 parameters:
 
-    locale: '%env(ETRAXIS_LOCALE)%'
-    theme:  '%env(ETRAXIS_THEME)%'
+    env(MAILER_ADDRESS):  ~
+    env(MAILER_NAME):     eTraxis
+    env(MAILER_DELIVERY): ~
 
-    mailer.address:  '%env(MAILER_ADDRESS)%'
-    mailer.name:     '%env(MAILER_NAME)%'
-    mailer.delivery: '%env(MAILER_DELIVERY)%'
+    env(ETRAXIS_LOCALE): en_US
+    env(ETRAXIS_THEME):  azure
 
-    files.storage: '%env(FILES_STORAGE)%'
-    files.maxsize: '%env(FILES_MAXSIZE)%'
+    env(LDAP_URL):    ~
+    env(LDAP_BASEDN): ~
 
-    google.clientId:     '%env(GOOGLE_CLIENT_ID)%'
-    google.clientSecret: '%env(GOOGLE_CLIENT_SECRET)%'
-    google.clientDomain: '%env(GOOGLE_CLIENT_DOMAIN)%'
+    env(GOOGLE_CLIENT_ID):     ~
+    env(GOOGLE_CLIENT_SECRET): ~
+    env(GOOGLE_CLIENT_DOMAIN): ~
 
-    github.clientId:     '%env(GITHUB_CLIENT_ID)%'
-    github.clientSecret: '%env(GITHUB_CLIENT_SECRET)%'
+    env(GITHUB_CLIENT_ID):     ~
+    env(GITHUB_CLIENT_SECRET): ~
 
-    bitbucket.clientId:     '%env(BITBUCKET_CLIENT_ID)%'
-    bitbucket.clientSecret: '%env(BITBUCKET_CLIENT_SECRET)%'
+    env(BITBUCKET_CLIENT_ID):     ~
+    env(BITBUCKET_CLIENT_SECRET): ~
 
-    ldap.url:    '%env(LDAP_URL)%'
-    ldap.basedn: '%env(LDAP_BASEDN)%'
+    google.clientId:    '%env(GOOGLE_CLIENT_ID)%'
+    github.clientId:    '%env(GITHUB_CLIENT_ID)%'
+    bitbucket.clientId: '%env(BITBUCKET_CLIENT_ID)%'
 
 services:
 
@@ -38,40 +39,44 @@ services:
         exclude:  '../src/SharedDomain/Framework/{Doctrine}'
 
     # autowiring hints
+    eTraxis\IssuesDomain\Application\Voter\IssueVoter:
+        $maxsize: '%env(FILES_MAXSIZE)%'
+
+    # autowiring hints
     eTraxis\IssuesDomain\Model\Repository\FileRepository:
-        $storage: '%files.storage%'
+        $storage: '%env(FILES_STORAGE)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
-        $locale: '%locale%'
+        $locale: '%env(ETRAXIS_LOCALE)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator:
-        $clientId:     '%bitbucket.clientId%'
-        $clientSecret: '%bitbucket.clientSecret%'
+        $clientId:     '%env(BITBUCKET_CLIENT_ID)%'
+        $clientSecret: '%env(BITBUCKET_CLIENT_SECRET)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator:
-        $clientId:     '%github.clientId%'
-        $clientSecret: '%github.clientSecret%'
+        $clientId:     '%env(GITHUB_CLIENT_ID)%'
+        $clientSecret: '%env(GITHUB_CLIENT_SECRET)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator:
-        $clientId:     '%google.clientId%'
-        $clientSecret: '%google.clientSecret%'
-        $clientDomain: '%google.clientDomain%'
+        $clientId:     '%env(GOOGLE_CLIENT_ID)%'
+        $clientSecret: '%env(GOOGLE_CLIENT_SECRET)%'
+        $clientDomain: '%env(GOOGLE_CLIENT_DOMAIN)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Framework\Authenticator\LdapAuthenticator:
-        $url:    '%ldap.url%'
-        $basedn: '%ldap.basedn%'
+        $url:    '%env(LDAP_URL)%'
+        $basedn: '%env(LDAP_BASEDN)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Model\DataFixtures\ProductionFixtures:
-        $locale: '%locale%'
-        $theme:  '%theme%'
+        $locale: '%env(ETRAXIS_LOCALE)%'
+        $theme:  '%env(ETRAXIS_THEME)%'
 
     # autowiring hints
     eTraxis\SharedDomain\Application\Mailer\Mailer:
-        $address: '%mailer.address%'
-        $name:    '%mailer.name%'
+        $address: '%env(MAILER_ADDRESS)%'
+        $name:    '%env(MAILER_NAME)%'

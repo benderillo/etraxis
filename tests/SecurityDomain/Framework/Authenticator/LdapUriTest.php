@@ -21,9 +21,9 @@ class LdapUriTest extends TestCase
 {
     public function testNone()
     {
-        $uri = LdapUri::createFromString('none://example.com');
+        $uri = LdapUri::createFromString('null://example.com');
 
-        self::assertSame(LdapUri::SCHEMA_NONE, $uri->getScheme());
+        self::assertSame(LdapUri::SCHEMA_NULL, $uri->getScheme());
         self::assertSame('example.com', $uri->getHost());
         self::assertEmpty($uri->getPort());
         self::assertSame(LdapServerType::POSIX, $uri->getType());

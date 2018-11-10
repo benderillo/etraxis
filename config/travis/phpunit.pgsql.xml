@@ -15,19 +15,8 @@
         <env name="APP_SECRET" value="s$cretf0rt3st" />
         <env name="SHELL_VERBOSITY" value="-1" />
         <!-- define your env variables for the test env here -->
-        <env name="ETRAXIS_LOCALE" value="en_US" />
-        <env name="ETRAXIS_THEME" value="azure" />
         <env name="FILES_STORAGE" value="var/" />
         <env name="FILES_MAXSIZE" value="2" />
-        <env name="GOOGLE_CLIENT_ID" value="" />
-        <env name="GOOGLE_CLIENT_SECRET" value="" />
-        <env name="GOOGLE_CLIENT_DOMAIN" value="" />
-        <env name="GITHUB_CLIENT_ID" value="" />
-        <env name="GITHUB_CLIENT_SECRET" value="" />
-        <env name="BITBUCKET_CLIENT_ID" value="" />
-        <env name="BITBUCKET_CLIENT_SECRET" value="" />
-        <env name="LDAP_URL" value="none://localhost" />
-        <env name="LDAP_BASEDN" value="dc=example,dc=com" />
 
         <!-- ###+ doctrine/doctrine-bundle ### -->
         <env name="DATABASE_URL" value="pgsql://postgres@127.0.0.1/etraxis?charset=utf8" />

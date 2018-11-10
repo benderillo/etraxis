@@ -1,8 +1,5 @@
-parameters:
-    env(ETRAXIS_LOCALE): en_US
-
 framework:
-    default_locale: '%locale%'
+    default_locale: '%env(ETRAXIS_LOCALE)%'
     translator:
         default_path: '%kernel.project_dir%/translations'
         paths:

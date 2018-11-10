@@ -49,7 +49,7 @@ class IssueVoterTest extends TransactionalTestCase
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
         $manager = $this->doctrine->getManager();
 
-        $voter = new IssueVoter($manager);
+        $voter = new IssueVoter($manager, 10);
         $token = new AnonymousToken('', 'anon.');
 
         $developer  = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'fdooley@example.com']);
@@ -455,6 +455,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueB));
         self::assertTrue($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueC));
         self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $suspended));
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+        $voter   = new IssueVoter($manager, 0);
+        $token   = $this->client->getContainer()->get('security.token_storage')->getToken();
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issueC, [IssueVoter::ATTACH_FILE]));
 
         $this->loginAs('akoepp@example.com');
         self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $issueC));

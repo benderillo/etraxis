@@ -23,7 +23,7 @@ use League\Uri\Components\UserInfo;
  */
 class LdapUri extends AbstractUri
 {
-    public const SCHEMA_NONE  = 'none';
+    public const SCHEMA_NULL  = 'null';
     public const SCHEMA_LDAP  = 'ldap';
     public const SCHEMA_LDAPS = 'ldaps';
 
@@ -32,7 +32,7 @@ class LdapUri extends AbstractUri
     public const ENCRYPTION_TLS  = 'tls';
 
     protected static $supported_schemes = [
-        self::SCHEMA_NONE  => 0,
+        self::SCHEMA_NULL  => 0,
         self::SCHEMA_LDAP  => 0,
         self::SCHEMA_LDAPS => 0,
     ];

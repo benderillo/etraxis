@@ -98,7 +98,7 @@ class LdapAuthenticatorTest extends TransactionalTestCase
             $this->router,
             $this->session,
             $this->commandBus,
-            'none://localhost',
+            'null://localhost',
             'dc=example,dc=com'
         );
 

@@ -1,2 +1,2 @@
 swiftmailer:
-    delivery_addresses: ['%mailer.delivery%']
+    delivery_addresses: ['%env(MAILER_DELIVERY)%']

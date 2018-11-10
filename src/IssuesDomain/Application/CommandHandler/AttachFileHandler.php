@@ -42,7 +42,7 @@ class AttachFileHandler
     protected $fileRepository;
     protected $manager;
 
-    /** @var string Maximum allowed size of a single file. */
+    /** @var int Maximum allowed size of a single file. */
     protected $maxsize;
 
     /**
@@ -54,7 +54,7 @@ class AttachFileHandler
      * @param EventRepository               $eventRepository
      * @param FileRepository                $fileRepository
      * @param EntityManagerInterface        $manager
-     * @param string                        $maxsize
+     * @param int                           $maxsize
      */
     public function __construct(
         AuthorizationCheckerInterface $security,
@@ -63,7 +63,7 @@ class AttachFileHandler
         EventRepository               $eventRepository,
         FileRepository                $fileRepository,
         EntityManagerInterface        $manager,
-        string                        $maxsize
+        int                           $maxsize
     )
     {
         $this->security        = $security;

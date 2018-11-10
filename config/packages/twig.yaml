@@ -1,13 +1,10 @@
-parameters:
-    env(ETRAXIS_THEME): azure
-
 twig:
     default_path: '%kernel.project_dir%/templates'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        locale: '%locale%'
-        theme:  '%theme%'
+        locale: '%env(ETRAXIS_LOCALE)%'
+        theme:  '%env(ETRAXIS_THEME)%'
         theme_color:
             azure:    '#3a8eb7'
             emerald:  '#146c64'

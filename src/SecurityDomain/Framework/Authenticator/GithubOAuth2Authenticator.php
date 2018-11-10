@@ -43,15 +43,15 @@ class GithubOAuth2Authenticator extends AbstractOAuth2Authenticator
      * @param RouterInterface  $router
      * @param SessionInterface $session
      * @param CommandBus       $commandBus
-     * @param string           $clientId
-     * @param string           $clientSecret
+     * @param null|string      $clientId
+     * @param null|string      $clientSecret
      */
     public function __construct(
         RouterInterface  $router,
         SessionInterface $session,
         CommandBus       $commandBus,
-        string           $clientId,
-        string           $clientSecret
+        ?string          $clientId,
+        ?string          $clientSecret
     )
     {
         parent::__construct($router, $session);

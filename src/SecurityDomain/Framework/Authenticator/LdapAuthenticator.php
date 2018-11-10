@@ -50,15 +50,15 @@ class LdapAuthenticator extends AbstractAuthenticator
      * @param RouterInterface  $router
      * @param SessionInterface $session
      * @param CommandBus       $commandBus
-     * @param string           $url
-     * @param string           $basedn
+     * @param null|string      $url
+     * @param null|string      $basedn
      */
     public function __construct(
         RouterInterface  $router,
         SessionInterface $session,
         CommandBus       $commandBus,
-        string           $url,
-        string           $basedn
+        ?string          $url,
+        ?string          $basedn
     )
     {
         parent::__construct($router, $session);
@@ -66,9 +66,9 @@ class LdapAuthenticator extends AbstractAuthenticator
         $this->commandBus = $commandBus;
         $this->basedn     = $basedn;
 
-        $this->uri = LdapUri::createFromString($url);
+        $this->uri = LdapUri::createFromString($url ?? 'null://localhost');
 
-        if ($this->uri->getScheme() !== LdapUri::SCHEMA_NONE) {
+        if ($this->uri->getScheme() !== LdapUri::SCHEMA_NULL) {
             $this->ldap = Ldap::create('ext_ldap', [
                 'host'       => $this->uri->getHost(),
                 'port'       => $this->uri->getPort() ?? 389,
@@ -82,7 +82,7 @@ class LdapAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request)
     {
-        if ($this->uri->getScheme() === LdapUri::SCHEMA_NONE) {
+        if ($this->uri->getScheme() === LdapUri::SCHEMA_NULL) {
             return false;
         }
 

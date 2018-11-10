@@ -73,6 +73,7 @@ class IssueVoter extends Voter
     ];
 
     protected $manager;
+    protected $maxsize;
 
     private $rolesCache  = [];
     private $groupsCache = [];
@@ -81,10 +82,12 @@ class IssueVoter extends Voter
      * Dependency Injection constructor.
      *
      * @param EntityManagerInterface $manager
+     * @param int                    $maxsize
      */
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(EntityManagerInterface $manager, int $maxsize)
     {
         $this->manager = $manager;
+        $this->maxsize = $maxsize;
     }
 
     /**
@@ -490,6 +493,11 @@ class IssueVoter extends Voter
      */
     protected function isAttachFileGranted(Issue $subject, User $user): bool
     {
+        // Attachments should not be disabled.
+        if ($this->maxsize === 0) {
+            return false;
+        }
+
         // Issue must not be suspended or frozen.
         if ($subject->isSuspended || $subject->isFrozen) {
             return false;

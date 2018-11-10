@@ -42,17 +42,17 @@ class GoogleOAuth2Authenticator extends AbstractOAuth2Authenticator
      * @param RouterInterface  $router
      * @param SessionInterface $session
      * @param CommandBus       $commandBus
-     * @param string           $clientId
-     * @param string           $clientSecret
-     * @param string           $clientDomain
+     * @param null|string      $clientId
+     * @param null|string      $clientSecret
+     * @param null|string      $clientDomain
      */
     public function __construct(
         RouterInterface  $router,
         SessionInterface $session,
         CommandBus       $commandBus,
-        string           $clientId,
-        string           $clientSecret,
-        string           $clientDomain
+        ?string          $clientId,
+        ?string          $clientSecret,
+        ?string          $clientDomain
     )
     {
         parent::__construct($router, $session);
