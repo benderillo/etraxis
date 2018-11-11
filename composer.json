@@ -32,6 +32,7 @@
         "symfony/asset": "*",
         "symfony/cache": "*",
         "symfony/console": "*",
+        "symfony/event-dispatcher": "*",
         "symfony/expression-language": "*",
         "symfony/flex": "*",
         "symfony/framework-bundle": "*",

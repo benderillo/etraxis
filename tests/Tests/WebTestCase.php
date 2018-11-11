@@ -34,6 +34,9 @@ class WebTestCase extends SymfonyWebTestCase
     /** @var \League\Tactician\CommandBus */
     protected $commandBus;
 
+    /** @var \eTraxis\SharedDomain\Framework\EventBus\EventBusInterface */
+    protected $eventBus;
+
     /**
      * Boots the kernel and retrieve most often used services.
      */
@@ -43,8 +46,9 @@ class WebTestCase extends SymfonyWebTestCase
 
         $this->client = static::createClient();
 
-        $this->doctrine   = $this->client->getContainer()->get('doctrine');
-        $this->commandBus = $this->client->getContainer()->get('tactician.commandbus.default');
+        $this->doctrine   = self::$container->get('doctrine');
+        $this->commandBus = self::$container->get('tactician.commandbus.default');
+        $this->eventBus   = self::$container->get('eTraxis\\SharedDomain\\Framework\\EventBus\\EventBusInterface');
     }
 
     /**
