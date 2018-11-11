@@ -15,6 +15,7 @@ namespace eTraxis\SecurityDomain\Framework\Authenticator;
 
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\SharedDomain\Framework\EventBus\EventBusInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -65,10 +66,13 @@ class DatabaseAuthenticatorTest extends TestCase
                 [$this->user, 'wrong', false],
             ]);
 
+        $eventBus = $this->createMock(EventBusInterface::class);
+
         /** @var RouterInterface $router */
         /** @var SessionInterface $session */
         /** @var UserPasswordEncoderInterface $encoder */
-        $this->authenticator = new DatabaseAuthenticator($router, $session, $encoder);
+        /** @var EventBusInterface $eventBus */
+        $this->authenticator = new DatabaseAuthenticator($router, $session, $encoder, $eventBus);
     }
 
     public function testGetUserSuccess()

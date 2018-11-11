@@ -13,6 +13,9 @@
 
 namespace eTraxis\SecurityDomain\Framework\Authenticator;
 
+use eTraxis\SecurityDomain\Application\Event\LoginFailedEvent;
+use eTraxis\SecurityDomain\Application\Event\LoginSuccessfulEvent;
+use eTraxis\SharedDomain\Framework\EventBus\EventBusInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -27,6 +30,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class DatabaseAuthenticator extends AbstractAuthenticator
 {
     protected $encoder;
+    protected $eventBus;
 
     /**
      * Dependency Injection constructor.
@@ -34,16 +38,19 @@ class DatabaseAuthenticator extends AbstractAuthenticator
      * @param RouterInterface              $router
      * @param SessionInterface             $session
      * @param UserPasswordEncoderInterface $encoder
+     * @param EventBusInterface            $eventBus
      */
     public function __construct(
         RouterInterface              $router,
         SessionInterface             $session,
-        UserPasswordEncoderInterface $encoder
+        UserPasswordEncoderInterface $encoder,
+        EventBusInterface            $eventBus
     )
     {
         parent::__construct($router, $session);
 
-        $this->encoder = $encoder;
+        $this->encoder  = $encoder;
+        $this->eventBus = $eventBus;
     }
 
     /**
@@ -72,8 +79,15 @@ class DatabaseAuthenticator extends AbstractAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         if (!$this->encoder->isPasswordValid($user, $credentials['password'])) {
+
+            $event = new LoginFailedEvent($credentials);
+            $this->eventBus->notify($event);
+
             throw new AuthenticationException('Bad credentials.');
         }
+
+        $event = new LoginSuccessfulEvent($credentials);
+        $this->eventBus->notify($event);
 
         return true;
     }

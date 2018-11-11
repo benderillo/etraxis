@@ -7,6 +7,9 @@ parameters:
     env(ETRAXIS_LOCALE): en_US
     env(ETRAXIS_THEME):  azure
 
+    env(ETRAXIS_AUTH_FAILURES): ~
+    env(ETRAXIS_LOCK_DURATION): ~
+
     env(LDAP_URL):    ~
     env(LDAP_BASEDN): ~
 
@@ -45,6 +48,11 @@ services:
     # autowiring hints
     eTraxis\IssuesDomain\Model\Repository\FileRepository:
         $storage: '%env(FILES_STORAGE)%'
+
+    # autowiring hints
+    eTraxis\SecurityDomain\Application\EventSubscriber\LockAccount:
+        $authFailures: '%env(ETRAXIS_AUTH_FAILURES)%'
+        $lockDuration: '%env(ETRAXIS_LOCK_DURATION)%'
 
     # autowiring hints
     eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale:
