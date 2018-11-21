@@ -38,7 +38,7 @@ class LoginController extends Controller
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('security/login.html.twig', [
+        return $this->render('security/login/index.html.twig', [
             'error'             => $utils->getLastAuthenticationError(),
             'username'          => $utils->getLastUsername(),
             'googleClientId'    => $this->getParameter('google.clientId'),

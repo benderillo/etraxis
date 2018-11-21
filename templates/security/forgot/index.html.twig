@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'password.forgot' | trans %}
+
+{% block content %}
+
+    <div class="anonymous grid-100" id="vue-forgot" v-cloak>
+        <div class="panel">
+            <div class="panel-header hide-on-mobile">
+                <div class="grid-100">{{ 'password.forgot' | trans }}</div>
+            </div>
+            <div class="panel-body">
+                <div class="grid-100">
+
+                    <div class="grid-row">
+                        <div class="grid-33">
+                            <label for="username" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+                        </div>
+                        <div class="grid-66">
+                            <input class="grid-100 mobile-grid-100" type="text" id="username" placeholder="{{ 'input.required' | trans }}" v-model="values.email">
+                            <p class="attention">${ errors.email }</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="grid-66 prefix-33">
+                            <button type="button" @click="onOk">{{ 'button.ok' | trans }}</button>
+                            <button type="button" @click="onCancel">{{ 'button.cancel' | trans }}</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script src="{{ asset('js/security/forgot/index.js') }}"></script>
+
+{% endblock %}

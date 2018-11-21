@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'password.change' | trans %}
+
+{% block content %}
+
+    <div class="anonymous grid-100" id="vue-reset" v-cloak>
+        <div class="panel">
+            <div class="panel-header hide-on-mobile">
+                <div class="grid-100">{{ 'password.change' | trans }}</div>
+            </div>
+            <div class="panel-body">
+                <div class="grid-100">
+
+                    <div class="grid-row">
+                        <div class="grid-33">
+                            <label for="password_new" title="{{ 'password.new' | trans }}">{{ 'password.new' | trans }}:</label>
+                        </div>
+                        <div class="grid-66">
+                            <input class="grid-100 mobile-grid-100" type="password" id="password_new" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
+                            <p class="attention">${ errors.password }</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="grid-33">
+                            <label for="password_confirm" title="{{ 'password.confirm' | trans }}">{{ 'password.confirm' | trans }}:</label>
+                        </div>
+                        <div class="grid-66">
+                            <input class="grid-100 mobile-grid-100" type="password" id="password_confirm" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
+                            <p class="attention">${ errors.confirm }</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="grid-66 prefix-33">
+                            <button type="button" @click="save">{{ 'button.save' | trans }}</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        eTraxis.token = '{{ token }}';
+    </script>
+
+    <script src="{{ asset('js/security/reset/index.js') }}"></script>
+
+{% endblock %}

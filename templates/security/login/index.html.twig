@@ -35,6 +35,9 @@
                                     <input type="checkbox" id="remember_me" name="_remember_me">
                                     <span>{{ 'security.remember_me' | trans }}</span>
                                 </label>
+                                <label class="pull-after">
+                                    <a href="{{ path('forgot_password') }}">{{ 'password.forgot' | trans }}</a>
+                                </label>
                             </div>
                         </div>
 
@@ -71,6 +74,6 @@
         {% endif %}
     </script>
 
-    <script src="{{ asset('js/security/login.js') }}"></script>
+    <script src="{{ asset('js/security/login/index.js') }}"></script>
 
 {% endblock %}

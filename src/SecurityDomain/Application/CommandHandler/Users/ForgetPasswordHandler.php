@@ -15,6 +15,7 @@ namespace eTraxis\SecurityDomain\Application\CommandHandler\Users;
 
 use eTraxis\SecurityDomain\Application\Command\Users\ForgetPasswordCommand;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
+use eTraxis\SharedDomain\Application\Mailer\MailerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -23,17 +24,20 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ForgetPasswordHandler
 {
     protected $translator;
+    protected $mailer;
     protected $repository;
 
     /**
      * Dependency Injection constructor.
      *
      * @param TranslatorInterface $translator
+     * @param MailerInterface     $mailer
      * @param UserRepository      $repository
      */
-    public function __construct(TranslatorInterface $translator, UserRepository $repository)
+    public function __construct(TranslatorInterface $translator, MailerInterface $mailer, UserRepository $repository)
     {
         $this->translator = $translator;
+        $this->mailer     = $mailer;
         $this->repository = $repository;
     }
 
@@ -58,6 +62,17 @@ class ForgetPasswordHandler
         // Token expires in 2 hours.
         $token = $user->generateResetToken(new \DateInterval('PT2H'));
         $this->repository->persist($user);
+
+        $this->mailer->send(
+            $user->email,
+            $user->fullname,
+            $this->translator->trans('email.forgot_password.subject', [], null, $user->locale),
+            'security/forgot/email.html.twig',
+            [
+                'locale' => $user->locale,
+                'token'  => $token,
+            ]
+        );
 
         return $token;
     }

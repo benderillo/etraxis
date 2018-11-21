@@ -156,3 +156,25 @@ exports.unblock = () => {
         modal.close();
     }
 };
+
+/**
+ * Retrieves all errors caught in the axios `catch` block.
+ *
+ * @param {Object} exception An error from the `catch` block.
+ * @returns {Object}
+ */
+exports.getErrors = (exception) => {
+
+    let errors = {};
+
+    if (typeof exception.response.data === 'object') {
+        for (let entry of exception.response.data) {
+            errors[entry.property] = entry.message;
+        }
+    }
+    else {
+        messageBox(i18n['error'], exception.response.data, 'fa-times-circle', 'attention', true);
+    }
+
+    return errors;
+};
