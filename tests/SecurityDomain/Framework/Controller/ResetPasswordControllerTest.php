@@ -36,6 +36,9 @@ class ResetPasswordControllerTest extends WebTestCase
     {
         $uri = '/reset/9d73b1c922794370903898dae9ee8ada';
 
+        $response = $this->json(Request::METHOD_POST, $uri, ['password' => 'secret']);
+        self::assertSame(Response::HTTP_OK, $response->getStatusCode());
+
         $response = $this->json(Request::METHOD_POST, $uri);
         self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
 

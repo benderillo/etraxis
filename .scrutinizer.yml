@@ -8,11 +8,12 @@ build:
 
 tools:
     external_code_coverage:
-        timeout: 1800
+        timeout: 3600
         runs: 2
 
 filter:
     excluded_paths:
+        - 'assets/'
         - 'bin/'
         - 'config/'
         - 'public/'
