@@ -15,6 +15,7 @@ namespace eTraxis\SecurityDomain\Application\CommandHandler\Users;
 
 use eTraxis\SecurityDomain\Application\Command\Users\UpdateSettingsCommand;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -24,17 +25,20 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class UpdateSettingsHandler
 {
     protected $tokens;
+    protected $session;
     protected $repository;
 
     /**
      * Dependency Injection constructor.
      *
      * @param TokenStorageInterface $tokens
+     * @param SessionInterface      $session
      * @param UserRepository        $repository
      */
-    public function __construct(TokenStorageInterface $tokens, UserRepository $repository)
+    public function __construct(TokenStorageInterface $tokens, SessionInterface $session, UserRepository $repository)
     {
         $this->tokens     = $tokens;
+        $this->session    = $session;
         $this->repository = $repository;
     }
 
@@ -62,5 +66,7 @@ class UpdateSettingsHandler
         $user->timezone = $command->timezone;
 
         $this->repository->persist($user);
+
+        $this->session->set('_locale', $user->locale);
     }
 }

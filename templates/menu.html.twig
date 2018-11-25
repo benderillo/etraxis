@@ -17,6 +17,8 @@
 
 {% else %}
 
+    {{ menu.item('menu.settings' | trans, path('settings'), 'fa-sliders') }}
+
     {% if is_granted('ROLE_ADMIN') %}
         {{ menu.item('menu.administration' | trans, path('admin'), 'fa-cog') }}
     {% endif %}

@@ -1,0 +1,39 @@
+<div class="fieldset" id="vue-timezone" v-cloak>
+    <div class="legend">{{ 'user.timezone' | trans }}</div>
+    <form @submit.prevent>
+
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="country" title="{{ 'user.country' | trans }}">{{ 'user.country' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <select class="grid-100 mobile-grid-100" id="country" v-model="country">
+                    <option value="UTC">UTC</option>
+                    {% for country, name in countries %}
+                        <option value="{{ country }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+                <p class="attention" v-show="country === 'UTC'">${ errors.timezone }</p>
+            </div>
+        </div>
+
+        <div class="grid-row" v-show="country !== 'UTC'">
+            <div class="grid-33">
+                <label for="city" title="{{ 'user.city' | trans }}">{{ 'user.city' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <select class="grid-100 mobile-grid-100" id="city" v-model="values.timezone">
+                    <option v-for="(city, timezone) in cities" :value="timezone">${ city }</option>
+                </select>
+                <p class="attention">${ errors.timezone }</p>
+            </div>
+        </div>
+
+        <div class="grid-row">
+            <div class="grid-66 prefix-33">
+                <button type="submit" @click="saveChanges">{{ 'button.save' | trans }}</button>
+            </div>
+        </div>
+
+    </form>
+</div>

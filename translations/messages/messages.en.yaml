@@ -54,9 +54,11 @@ http_error.suggestion: 'Try loading this page again in few minutes or <a href="%
 input.required: 'required field'
 locale: English
 menu.administration: Administration
+menu.settings: Settings
 password.change: 'Change password'
 password.changed: 'Password was successfully updated.'
 password.confirm: 'Password confirmation'
+password.current: 'Current password'
 password.dont_match: 'Passwords do not match.'
 password.forgot: 'Forgot password?'
 password.forgot.email_sent: 'An email with instructions to choose a new password has been sent to you.'
@@ -85,6 +87,15 @@ template.permission.resume_issues: 'Resume issues'
 template.permission.send_reminders: 'Send reminders'
 template.permission.suspend_issues: 'Suspend issues'
 template.permission.view_issues: 'View issues'
+text.changes_saved: 'Your changes were successfully saved.'
 text.please_wait: 'Please wait...'
+user.appearance: Appearance
+user.city: City
+user.country: Country
 user.email: Email
+user.fullname: 'Full name'
+user.language: Language
 user.password: Password
+user.profile: Profile
+user.theme: Theme
+user.timezone: Timezone

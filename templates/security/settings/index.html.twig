@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'menu.settings' | trans %}
+
+{% block content %}
+
+    <div class="grid-50 mobile-grid-100">
+        <div class="grid-row">
+            {% include 'security/settings/profile.html.twig' %}
+        </div>
+        {% if app.user.isAccountExternal %}
+            <div class="grid-row">
+                {% include 'security/settings/password.html.twig' %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="grid-50 mobile-grid-100">
+        <div class="grid-row">
+            {% include 'security/settings/appearance.html.twig' %}
+        </div>
+        <div class="grid-row">
+            {% include 'security/settings/timezone.html.twig' %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        eTraxis.country  = '{{ country }}';
+        eTraxis.external = {{ app.user.isAccountExternal ? 'true' : 'false' }};
+    </script>
+
+    <script src="{{ asset('js/security/settings/store.js')      }}"></script>
+    <script src="{{ asset('js/security/settings/profile.js')    }}"></script>
+    <script src="{{ asset('js/security/settings/appearance.js') }}"></script>
+    <script src="{{ asset('js/security/settings/timezone.js')   }}"></script>
+
+    {% if app.user.isAccountExternal %}
+        <script src="{{ asset('js/security/settings/password.js') }}"></script>
+    {% endif %}
+
+{% endblock %}
