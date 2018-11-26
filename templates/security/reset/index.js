@@ -17,15 +17,10 @@ import url from 'utilities/url';
  */
 new Vue({
     el: '#vue-reset',
-    delimiters: ['${', '}'],
 
     data: {
-
-        // Form values.
-        values: {},
-
-        // Form errors.
-        errors: {},
+        values: {},     // form values
+        errors: {},     // form errors
     },
 
     methods: {

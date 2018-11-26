@@ -17,15 +17,10 @@ import url from 'utilities/url';
  */
 new Vue({
     el: '#vue-appearance',
-    delimiters: ['${', '}'],
 
     data: {
-
-        // Form values.
-        values: eTraxis.store.profile,
-
-        // Form errors.
-        errors: {},
+        values: eTraxis.store.profile,  // form values
+        errors: {},                     // form errors
     },
 
     methods: {

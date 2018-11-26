@@ -65,6 +65,7 @@ const jsVendor = () => {
     return gulp.src(files)
         .pipe(gulpif(argv.prod, uglify()))
         .pipe(concat('vendor.js'))
+        .pipe(insert.append('Vue.options.delimiters = ["${", "}"];'))
         .pipe(insert.append('axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";'))
         .pipe(insert.append('window.eTraxis = {};'))
         .pipe(gulp.dest('public/js/'));

@@ -72,6 +72,7 @@ class CreateGroupHandler
             throw new AccessDeniedHttpException();
         }
 
+        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Project $project */
         $project = null;
 
         if ($command->project) {

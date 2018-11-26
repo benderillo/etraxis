@@ -17,23 +17,16 @@ import url from 'utilities/url';
  */
 new Vue({
     el: '#vue-timezone',
-    delimiters: ['${', '}'],
 
     created() {
         this.loadCities();
     },
 
     data: {
-
-        // List of all cities of the current country.
-        cities: [],
-
-        // Form values.
-        values: eTraxis.store.profile,
-        country: eTraxis.country,
-
-        // Form errors.
-        errors: {},
+        cities: [],                     // list of all cities of the current country
+        values: eTraxis.store.profile,  // form values (timezone)
+        country: eTraxis.country,       // form values (country)
+        errors: {},                     // form errors
     },
 
     methods: {

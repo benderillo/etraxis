@@ -17,21 +17,15 @@ import url from 'utilities/url';
  */
 new Vue({
     el: '#vue-profile',
-    delimiters: ['${', '}'],
 
     created() {
         eTraxis.store.loadProfile();
     },
 
     data: {
-
-        disabled: eTraxis.external,
-
-        // Form values.
-        values: eTraxis.store.profile,
-
-        // Form errors.
-        errors: {},
+        disabled: eTraxis.external,     // whether the form is disabled
+        values: eTraxis.store.profile,  // form values
+        errors: {},                     // form errors
     },
 
     methods: {
@@ -41,7 +35,7 @@ new Vue({
          */
         saveChanges() {
 
-            if (!this.disabled) {
+            if (this.disabled) {
                 return;
             }
 

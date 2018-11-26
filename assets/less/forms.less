@@ -45,6 +45,10 @@
         padding: 0 5px;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        &.disabled {
+            color: @fieldset;
+        }
     }
 }
 
@@ -57,7 +61,7 @@ label {
     white-space: nowrap;
 
     &.disabled {
-        .opacity(.35);
+        color: @fieldset;
     }
 }
 
