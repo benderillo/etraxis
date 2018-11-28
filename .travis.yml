@@ -11,8 +11,7 @@ before_install:
     - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install:
-    - cp config/travis/.env.$DB .env
-    - cp config/travis/phpunit.$DB.xml phpunit.xml
+    - cat config/travis/.env.$DB >> .env.test
     - composer --optimize-autoloader --no-interaction install
 
 before_script:
