@@ -12,6 +12,7 @@ before_install:
 
 install:
     - cp config/travis/.env.$DB .env.local
+    - cp config/travis/phpunit.$DB.xml phpunit.xml
     - composer --optimize-autoloader --no-interaction install
 
 before_script:
