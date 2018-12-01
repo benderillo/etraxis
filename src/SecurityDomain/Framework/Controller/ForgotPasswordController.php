@@ -15,7 +15,7 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\SecurityDomain\Application\Command\Users\ForgetPasswordCommand;
 use League\Tactician\CommandBus;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/forgot")
  */
-class ForgotPasswordController extends Controller
+class ForgotPasswordController extends AbstractController
 {
     /**
      * 'Forgot password' page.

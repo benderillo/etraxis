@@ -28,7 +28,7 @@ class DateTraitTest extends WebTestCase
 
     protected const SECS_IN_DAY = 86400;
 
-    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    /** @var \Symfony\Contracts\Translation\TranslatorInterface */
     protected $translator;
 
     /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */

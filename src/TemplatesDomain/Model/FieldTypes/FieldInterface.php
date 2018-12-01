@@ -13,7 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Generic field interface.

@@ -26,10 +26,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UnhandledExceptionTest extends TestCase
 {
@@ -54,7 +54,7 @@ class UnhandledExceptionTest extends TestCase
 
         $normalizer = new ConstraintViolationsNormalizer();
 
-        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
+        /** @var \Symfony\Contracts\Translation\TranslatorInterface $translator */
         $this->subscriber = new UnhandledException($logger, $translator, $normalizer);
     }
 

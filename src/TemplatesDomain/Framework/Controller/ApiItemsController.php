@@ -19,7 +19,7 @@ use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,11 +28,11 @@ use Symfony\Component\Routing\Annotation\Route;
  * API controller for '/items' resource.
  *
  * @Route("/api/items")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('ROLE_ADMIN')")
  *
  * @API\Tag(name="List Items")
  */
-class ApiItemsController extends Controller
+class ApiItemsController extends AbstractController
 {
     /**
      * Returns specified list item.

@@ -40,7 +40,7 @@ use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -50,11 +50,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * API controller for '/issues' resource.
  *
  * @Route("/api/issues")
- * @Security("has_role('ROLE_USER')")
+ * @Security("is_granted('ROLE_USER')")
  *
  * @API\Tag(name="Issues")
  */
-class ApiIssuesController extends Controller
+class ApiIssuesController extends AbstractController
 {
     use CollectionTrait;
 

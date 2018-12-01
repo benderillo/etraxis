@@ -20,7 +20,7 @@ use eTraxis\SharedDomain\Model\Collection\CollectionInterface;
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FieldRepository extends ServiceEntityRepository implements CollectionInterface
 {

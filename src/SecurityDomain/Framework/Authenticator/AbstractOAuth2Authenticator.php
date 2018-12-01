@@ -126,6 +126,7 @@ abstract class AbstractOAuth2Authenticator extends AbstractGuardAuthenticator
         try {
             $provider = $this->getProvider();
 
+            /** @var AccessToken $token */
             $token = $provider->getAccessToken('authorization_code', [
                 'code' => $credentials['code'],
             ]);

@@ -14,8 +14,8 @@
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
 use eTraxis\TemplatesDomain\Model\Entity\Field;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Issue field trait.

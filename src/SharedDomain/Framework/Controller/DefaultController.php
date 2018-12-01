@@ -13,14 +13,14 @@
 
 namespace eTraxis\SharedDomain\Framework\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Default controller.
  */
-class DefaultController extends Controller
+class DefaultController extends AbstractController
 {
     /**
      * Default page of public area.

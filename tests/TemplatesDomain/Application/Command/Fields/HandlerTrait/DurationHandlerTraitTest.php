@@ -25,7 +25,7 @@ class DurationHandlerTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
 
-    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    /** @var \Symfony\Contracts\Translation\TranslatorInterface */
     protected $translator;
 
     /** @var \Doctrine\ORM\EntityManagerInterface */

@@ -16,7 +16,7 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 use eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator;
 use eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator;
 use eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,7 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/oauth")
  */
-class OAuth2Controller extends Controller
+class OAuth2Controller extends AbstractController
 {
     /**
      * OAuth2 callback URL for Google.

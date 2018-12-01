@@ -16,7 +16,7 @@ namespace eTraxis\SecurityDomain\Application\CommandHandler\Users;
 use eTraxis\SecurityDomain\Application\Command\Users\ForgetPasswordCommand;
 use eTraxis\SecurityDomain\Model\Repository\UserRepository;
 use eTraxis\SharedDomain\Application\Mailer\MailerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Command handler.

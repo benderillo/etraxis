@@ -16,8 +16,8 @@ namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 use eTraxis\SharedDomain\Framework\Validator\Constraints\DateRange;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\FieldParameters;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Date field trait.

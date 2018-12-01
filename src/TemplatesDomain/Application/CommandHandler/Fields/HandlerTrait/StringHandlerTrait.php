@@ -21,7 +21,7 @@ use eTraxis\TemplatesDomain\Application\Command\Fields\CommandTrait\StringComman
 use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Extension for "Create/update field" command handlers.

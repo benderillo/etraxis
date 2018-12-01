@@ -20,7 +20,7 @@ use eTraxis\IssuesDomain\Model\Repository\FileRepository;
 use League\Tactician\CommandBus;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -30,11 +30,11 @@ use Symfony\Component\Routing\Annotation\Route;
  * API controller for '/files' resource.
  *
  * @Route("/api/files")
- * @Security("has_role('ROLE_USER')")
+ * @Security("is_granted('ROLE_USER')")
  *
  * @API\Tag(name="Files")
  */
-class ApiFilesController extends Controller
+class ApiFilesController extends AbstractController
 {
     /**
      * Downloads specified file.

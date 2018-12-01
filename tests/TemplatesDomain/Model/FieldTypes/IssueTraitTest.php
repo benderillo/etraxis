@@ -26,7 +26,7 @@ class IssueTraitTest extends WebTestCase
 {
     use ReflectionTrait;
 
-    /** @var \Symfony\Component\Translation\TranslatorInterface */
+    /** @var \Symfony\Contracts\Translation\TranslatorInterface */
     protected $translator;
 
     /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */

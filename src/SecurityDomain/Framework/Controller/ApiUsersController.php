@@ -21,7 +21,7 @@ use League\Tactician\CommandBus;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Swagger\Annotations as API;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,11 +31,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * API controller for '/users' resource.
  *
  * @Route("/api/users")
- * @Security("has_role('ROLE_ADMIN')")
+ * @Security("is_granted('ROLE_ADMIN')")
  *
  * @API\Tag(name="Users")
  */
-class ApiUsersController extends Controller
+class ApiUsersController extends AbstractController
 {
     use CollectionTrait;
 

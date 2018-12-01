@@ -15,7 +15,7 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\SecurityDomain\Application\Command\Users\ResetPasswordCommand;
 use League\Tactician\CommandBus;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/reset/{token}")
  */
-class ResetPasswordController extends Controller
+class ResetPasswordController extends AbstractController
 {
     /**
      * 'Reset password' page.
