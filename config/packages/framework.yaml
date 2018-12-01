@@ -2,3 +2,5 @@ framework:
     secret: '%env(APP_SECRET)%'
     session:
         handler_id: ~
+        cookie_secure: auto
+        cookie_samesite: lax

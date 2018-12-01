@@ -1,9 +1,8 @@
 services:
 
     _defaults:
-        autowire:      true
+        autowire: true
         autoconfigure: true
-        public:        false
 
     eTraxis\IssuesDomain\Model\DataFixtures\:
         resource: '../../../src/IssuesDomain/Model/DataFixtures'

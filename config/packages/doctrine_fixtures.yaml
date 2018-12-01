@@ -1,8 +1,7 @@
 services:
 
     _defaults:
-        autowire:      true
+        autowire: true
         autoconfigure: true
-        public:        false
 
     eTraxis\SecurityDomain\Model\DataFixtures\ProductionFixtures: ~
