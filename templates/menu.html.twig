@@ -13,7 +13,8 @@
 
 {% elseif app.request.uri starts with url('admin') %}
 
-    {{ menu.item('button.back' | trans, path('homepage'), 'fa-reply') }}
+    {{ menu.item('users'       | trans, path('admin_users'), 'fa-user')  }}
+    {{ menu.item('button.back' | trans, path('homepage'),    'fa-reply') }}
 
 {% else %}
 

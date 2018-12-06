@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% set title = 'users' | trans %}
+
+{% block content %}
+
+    <div class="grid-row" id="vue-users" v-cloak>
+        <div class="grid-100">
+
+            <datatable name="users" :columns="columns" :data="users">
+            </datatable>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script>
+        eTraxis.currentUser = {{ app.user.id }};
+    </script>
+
+    <script src="{{ asset('js/security/users/index.js') }}"></script>
+
+{% endblock %}

@@ -11,29 +11,16 @@
 //
 //----------------------------------------------------------------------
 
-namespace eTraxis\SharedDomain\Framework\Controller;
+namespace eTraxis\SecurityDomain\Framework\Controller;
 
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultControllerTest extends WebTestCase
+class UsersControllerTest extends WebTestCase
 {
-    public function testHomepage()
+    public function testIndex()
     {
-        $uri = '/';
-
-        $this->client->request(Request::METHOD_GET, $uri);
-        self::assertTrue($this->client->getResponse()->isRedirect('/login'));
-
-        $this->loginAs('artem@example.com');
-
-        $this->client->request(Request::METHOD_GET, $uri);
-        self::assertTrue($this->client->getResponse()->isOk());
-    }
-
-    public function testAdmin()
-    {
-        $uri = '/admin/';
+        $uri = '/admin/users';
 
         $this->client->request(Request::METHOD_GET, $uri);
         self::assertTrue($this->client->getResponse()->isRedirect('/login'));
@@ -46,6 +33,6 @@ class DefaultControllerTest extends WebTestCase
         $this->loginAs('admin@example.com');
 
         $this->client->request(Request::METHOD_GET, $uri);
-        self::assertTrue($this->client->getResponse()->isRedirect('/admin/users'));
+        self::assertTrue($this->client->getResponse()->isOk());
     }
 }

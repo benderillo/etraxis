@@ -70,9 +70,11 @@ password.dont_match: 'Пароли не совпадают.'
 password.forgot: 'Забыли пароль?'
 password.forgot.email_sent: 'Вам выслано письмо с инструкциями о смене пароля.'
 password.new: 'Новый пароль'
+role.admin: Администратор
 role.any: 'Любой пользователь'
 role.author: Автор
 role.responsible: Ответственный
+role.user: Пользователь
 security.remember_me: 'Запомнить меня'
 state.responsible.assign: Назначить
 state.responsible.keep: 'Оставить без изменений'
@@ -101,12 +103,16 @@ template.permission.view_issues: 'Просмотр записей'
 text.changes_saved: 'Ваши изменения успешно сохранены.'
 text.please_wait: 'Пожалуйста, подождите...'
 user.appearance: 'Внешний вид'
+user.authentication: Авторизация
 user.city: Город
 user.country: Страна
+user.description: Описание
 user.email: 'Эл. почта'
 user.fullname: 'Полное имя'
 user.language: Язык
 user.password: Пароль
+user.permissions: Права
 user.profile: Профиль
 user.theme: Оформление
 user.timezone: 'Часовой пояс'
+users: Пользователи
