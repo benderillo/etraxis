@@ -1,0 +1,58 @@
+<template>
+    <div class="tab" v-show="active">
+        <slot></slot>
+    </div>
+</template>
+
+<script>
+
+    /**
+     * A single tab.
+     */
+    export default {
+
+        data: () => ({
+            active: false,      // whether the tab is active
+        }),
+
+        props: {
+
+            /**
+             * Tab's unique ID.
+             */
+            id: {
+                type: String,
+                required: true,
+            },
+
+            /**
+             * Tab's title.
+             */
+            title: {
+                type: String,
+                required: true,
+            },
+
+            /**
+             * Optional counter value to be displayed in the caption.
+             */
+            counter: {
+                type: Number,
+                required: false,
+            },
+        },
+
+        computed: {
+
+            /**
+             * Returns full caption of the tab.
+             */
+            caption() {
+                return typeof this.counter === 'undefined'
+                       ? this.title
+                       : `${this.title} (${this.counter})`;
+            },
+        },
+    };
+
+</script>
