@@ -6,7 +6,10 @@ button.login: Login
 button.logout: Logout
 button.no: No
 button.ok: OK
+button.refresh: Refresh
+button.reset_filters: 'Reset filters'
 button.save: Save
+button.search: Search
 button.yes: Yes
 confirm.logout: 'Are you sure you want exit?'
 email.forgot_password.line1: 'You have requested to reset your password at <a href="%url%">%url%</a>.'
@@ -55,6 +58,10 @@ input.required: 'required field'
 locale: English
 menu.administration: Administration
 menu.settings: Settings
+page.first: 'First page'
+page.last: 'Last page'
+page.next: 'Next page'
+page.previous: 'Previous page'
 password.change: 'Change password'
 password.changed: 'Password was successfully updated.'
 password.confirm: 'Password confirmation'
@@ -73,6 +80,10 @@ state.responsible.remove: 'Remove current'
 state.type.final: Final
 state.type.initial: Initial
 state.type.intermediate: Intermediate
+table.empty: 'No data.'
+table.pages: '%number% pages'
+table.size: '%size% rows'
+table.status: 'Showing %from% to %to% of %total% rows'
 template.permission.add_comments: 'Add comments'
 template.permission.add_dependencies: 'Add dependencies'
 template.permission.attach_files: 'Attach files'

@@ -6,7 +6,10 @@ button.login: Войти
 button.logout: Выйти
 button.no: Нет
 button.ok: ОК
+button.refresh: Обновить
+button.reset_filters: 'Сбросить фильтры'
 button.save: Сохранить
+button.search: Поиск
 button.yes: Да
 confirm.logout: 'Вы уверены что хотите выйти?'
 email.forgot_password.line1: 'Вы запросили смену пароля на <a href="%url%">%url%</a>.'
@@ -55,6 +58,10 @@ input.required: 'обязательное поле'
 locale: Русский
 menu.administration: Администрирование
 menu.settings: Настройки
+page.first: 'Первая страница'
+page.last: 'Последняя страница'
+page.next: 'Следующая страница'
+page.previous: 'Предыдущая страница'
 password.change: 'Смена пароля'
 password.changed: 'Пароль успешно изменен.'
 password.confirm: 'Подтверждение пароля'
@@ -73,6 +80,10 @@ state.responsible.remove: Убрать
 state.type.final: Финальное
 state.type.initial: Исходное
 state.type.intermediate: Промежуточное
+table.empty: 'Нет данных.'
+table.pages: '%number% страниц(ы)'
+table.size: '%size% строк'
+table.status: 'Строки с %from% по %to% из %total%'
 template.permission.add_comments: 'Добавление комментариев'
 template.permission.add_dependencies: 'Добавление зависимостей'
 template.permission.attach_files: 'Добавление файлов'

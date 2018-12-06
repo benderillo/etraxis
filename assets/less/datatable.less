@@ -1,0 +1,304 @@
+/* Data table */
+
+@table-radius: 5px;
+
+@table-gradient-from: #525252;
+@table-gradient-to: #1f1f1f;
+@table-text: #fbfbfb;
+
+@table-border: #c5c5c5;
+@table-hover: #f5f5f5;
+@table-filter-border: #ddd;
+
+@table-header-gradient-from: #f2f2f2;
+@table-header-gradient-to: #e6e6e6;
+@table-header-text: #212121;
+
+.datatable {
+
+    &:not(.simple) {
+
+        > .header,
+        > .footer {
+            .gradient(@table-gradient-from, @table-gradient-to);
+            border: 1px solid @table-gradient-to;
+            color: @table-text;
+            padding: 2px 10px;
+
+            @media (@mobile) {
+                padding: 5px 10px;
+            }
+        }
+
+        > .header {
+            border-top-left-radius: @table-radius;
+            border-top-right-radius: @table-radius;
+        }
+
+        > .footer {
+            border-bottom-left-radius: @table-radius;
+            border-bottom-right-radius: @table-radius;
+            margin-top: -5px;
+        }
+    }
+
+    > .header {
+        padding: 5px 0;
+
+        .search {
+
+            @media (@desktop) {
+                .pull-after;
+            }
+
+            input {
+                margin: 5px 0;
+                width: 200px;
+            }
+        }
+    }
+
+    > .footer {
+
+        .size {
+            .pull-before;
+            margin: 5px 0;
+            .margin-after(10px);
+        }
+
+        .paging {
+            .pull-after;
+            .margin-after(0);
+
+            input.page {
+                border-color: @button-border;
+                border-radius: 0;
+                margin: 5px 0;
+                text-align: center;
+                width: 42px;
+            }
+        }
+
+        .status {
+            padding: 10px 0;
+            text-align: center;
+
+            @media (@mobile) {
+                padding: 5px 0;
+            }
+        }
+    }
+
+    .first-page:before {
+        [dir="ltr"] & {
+            content: "\f04a";
+        }
+        [dir="rtl"] & {
+            content: "\f04e";
+        }
+    }
+
+    .last-page:before {
+        [dir="ltr"] & {
+            content: "\f04e";
+        }
+        [dir="rtl"] & {
+            content: "\f04a";
+        }
+    }
+
+    .previous-page:before {
+        [dir="ltr"] & {
+            content: "\f0d9";
+        }
+        [dir="rtl"] & {
+            content: "\f0da";
+        }
+    }
+
+    .next-page:before {
+        [dir="ltr"] & {
+            content: "\f0da";
+        }
+        [dir="rtl"] & {
+            content: "\f0d9";
+        }
+    }
+
+    > table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        min-width: 100%;
+        max-width: 100%;
+
+        th, td {
+            border: 1px solid @table-border;
+            padding: 7px 10px;
+
+            &:not(.wrappable) {
+                white-space: nowrap;
+            }
+        }
+
+        tbody td {
+
+            &:not(:first-child) {
+                .border-before(none);
+            }
+
+            &:not(:last-child) {
+                .border-after(none);
+            }
+        }
+
+        th {
+            .gradient(@table-header-gradient-from, @table-header-gradient-to);
+            color: @table-header-text;
+
+            &.sortable {
+                cursor: pointer;
+            }
+
+            &:not(.text-center):not(.text-right) {
+                .text-left;
+            }
+
+            .fa {
+                margin: 2px 0;
+                width: 8px;
+            }
+
+            span:last-child {
+                .margin-after(15px);
+            }
+        }
+
+        tbody tr {
+            vertical-align: top;
+
+            &.empty {
+                background-color: @background;
+            }
+        }
+
+        @media (@desktop) {
+
+            &.hover tbody tr:not(.empty):hover {
+                background-color: @table-hover;
+                cursor: pointer;
+            }
+        }
+    }
+
+    // Filters & checkboxes
+    > table {
+
+        tfoot {
+            display: table-row-group;
+
+            td {
+                padding: 2px;
+
+                input[type="text"],
+                select {
+                    border: .5px solid @table-filter-border;
+                    border-radius: 0;
+                    width: 100%;
+                }
+
+                input[type="text"] {
+                    padding: 5.5px 6.5px;
+                }
+
+                select {
+                    padding: 4px 2px !important;
+                }
+            }
+        }
+    }
+
+    > table.checkboxes {
+
+        th, td {
+
+            &:first-child {
+                border: 1px solid @table-border !important;
+                text-align: center;
+            }
+
+            input[type="checkbox"] {
+                margin: 0;
+            }
+        }
+    }
+
+    // Responsive table styles below are inspired by David Bushell
+    // https://dbushell.com/2016/03/04/css-only-responsive-tables/
+    > table {
+        background:
+                -webkit-radial-gradient(left ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center,
+                -webkit-radial-gradient(right ellipse, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+        background:
+                radial-gradient(ellipse at left, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 0 center,
+                radial-gradient(ellipse at right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 75%) 100% center;
+        background-attachment: scroll, scroll;
+        background-repeat: no-repeat;
+        background-size: 10px 100%, 10px 100%;
+        display: inline-block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .responsive {
+
+            &:first-child {
+                [dir="ltr"] & {
+                    background-image: -webkit-linear-gradient(left, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-image: linear-gradient(to right, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-position: 0 0;
+                }
+                [dir="rtl"] & {
+                    background-image: -webkit-linear-gradient(right, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-image: linear-gradient(to left, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-position: 100% 0;
+                }
+                background-repeat: no-repeat;
+                background-size: 20px 100%;
+            }
+
+            &:last-child {
+                [dir="ltr"] & {
+                    background-image: -webkit-linear-gradient(right, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-image: linear-gradient(to left, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-position: 100% 0;
+                }
+                [dir="rtl"] & {
+                    background-image: -webkit-linear-gradient(left, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-image: linear-gradient(to right, @background 50%, rgba(red(@background), green(@background), blue(@background), 0) 100%);
+                    background-position: 0 0;
+                }
+                background-repeat: no-repeat;
+                background-size: 20px 100%;
+            }
+        }
+
+        &.hover {
+            tfoot tr td,
+            tbody tr:not(:hover) td {
+                .responsive;
+            }
+        }
+
+        &:not(.hover) {
+            tfoot tr td,
+            tbody tr td {
+                .responsive;
+            }
+        }
+
+        @media (@mobile) {
+            tbody tr td {
+                .responsive;
+            }
+        }
+    }
+}
