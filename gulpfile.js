@@ -60,14 +60,12 @@ const jsVendor = () => {
         argv.prod ? 'node_modules/vue/dist/vue.min.js' : 'node_modules/vue/dist/vue.js',
         'node_modules/axios/dist/axios.js',
         'node_modules/dialog-polyfill/dialog-polyfill.js',
+        'assets/etraxis.js',
     ];
 
     return gulp.src(files)
         .pipe(gulpif(argv.prod, uglify()))
         .pipe(concat('vendor.js'))
-        .pipe(insert.append('Vue.options.delimiters = ["${", "}"];'))
-        .pipe(insert.append('axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";'))
-        .pipe(insert.append('window.eTraxis = {};'))
         .pipe(gulp.dest('public/js/'));
 };
 
