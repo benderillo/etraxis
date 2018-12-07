@@ -11,6 +11,8 @@
 //
 //----------------------------------------------------------------------
 
+/** @noinspection PhpUndefinedFieldInspection */
+
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
 use eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange;

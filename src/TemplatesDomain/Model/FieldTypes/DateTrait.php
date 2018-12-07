@@ -11,6 +11,8 @@
 //
 //----------------------------------------------------------------------
 
+/** @noinspection PhpUndefinedFieldInspection */
+
 namespace eTraxis\TemplatesDomain\Model\FieldTypes;
 
 use eTraxis\SharedDomain\Framework\Validator\Constraints\DateRange;
@@ -66,7 +68,7 @@ trait DateTrait
              */
             public function getValidationConstraints(TranslatorInterface $translator, ?int $timestamp = null): array
             {
-                /** @noinspection PhpUndefinedClassInspection */
+                /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
                 $formatter = new \IntlDateFormatter($translator->getLocale(), \IntlDateFormatter::SHORT, \IntlDateFormatter::NONE);
 
                 $now = $timestamp ?? time();
