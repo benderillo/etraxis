@@ -21,10 +21,7 @@ new Vue({
     el: '#vue-user',
 
     created() {
-        // Get user's profile.
-        axios.get(url('/api/users/' + eTraxis.userId))
-            .then(response => this.profile = response.data)
-            .catch(exception => ui.getErrors(exception));
+        this.reloadProfile();
     },
 
     components: {
@@ -60,10 +57,61 @@ new Vue({
     methods: {
 
         /**
+         * Reloads user's profile.
+         */
+        reloadProfile() {
+            axios.get(url('/api/users/' + eTraxis.userId))
+                .then(response => this.profile = response.data)
+                .catch(exception => ui.getErrors(exception));
+        },
+
+        /**
          * Redirects back to list of users.
          */
         goBack() {
             location.href = url('/admin/users');
+        },
+
+        /**
+         * Disables the user.
+         */
+        disableUser() {
+
+            ui.block();
+
+            let data = {
+                users: [eTraxis.userId],
+            };
+
+            axios.post(url('/api/users/disable'), data)
+                .then(() => {
+                    this.reloadProfile();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => {
+                    ui.unblock();
+                });
+        },
+
+        /**
+         * Enables the user.
+         */
+        enableUser() {
+
+            ui.block();
+
+            let data = {
+                users: [eTraxis.userId],
+            };
+
+            axios.post(url('/api/users/enable'), data)
+                .then(() => {
+                    this.reloadProfile();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => {
+                    ui.unblock();
+                });
         },
     },
 });

@@ -13,6 +13,7 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Application\Voter\UserVoter;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
 use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
@@ -58,6 +59,10 @@ class UsersController extends AbstractController
             'providers' => AccountProvider::all(),
             'locales'   => Locale::all(),
             'timezones' => Timezone::all(),
+            'can'       => [
+                'disable' => $this->isGranted(UserVoter::DISABLE_USER, $user),
+                'enable'  => $this->isGranted(UserVoter::ENABLE_USER, $user),
+            ],
         ]);
     }
 }

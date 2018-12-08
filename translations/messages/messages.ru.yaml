@@ -2,6 +2,8 @@
 button.back: Назад
 button.cancel: Отмена
 button.close: Закрыть
+button.disable: Деактивировать
+button.enable: Активировать
 button.login: Войти
 button.logout: Выйти
 button.no: Нет

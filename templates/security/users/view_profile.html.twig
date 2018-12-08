@@ -2,6 +2,12 @@
 
     <div class="grid-100">
         <button @click="goBack">{{ 'button.back' | trans }}</button>
+        {% if can.disable %}
+            <button v-if="!profile.disabled" @click="disableUser">{{ 'button.disable' | trans }}</button>
+        {% endif %}
+        {% if can.enable %}
+            <button v-if="profile.disabled" @click="enableUser">{{ 'button.enable' | trans }}</button>
+        {% endif %}
     </div>
 
     <div class="grid-50 mobile-grid-100">

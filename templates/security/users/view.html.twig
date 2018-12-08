@@ -19,9 +19,10 @@
 {% block scripts %}
 
     <script>
-        eTraxis.userId    = {{ user.id }};
-        eTraxis.providers = {{ providers | json_encode | raw }};
-        eTraxis.locales   = {{ locales   | json_encode | raw }};
+        eTraxis.currentUser = {{ app.user.id }};
+        eTraxis.userId      = {{ user.id }};
+        eTraxis.providers   = {{ providers | json_encode | raw }};
+        eTraxis.locales     = {{ locales   | json_encode | raw }};
     </script>
 
     <script src="{{ asset('js/security/users/view.js') }}"></script>

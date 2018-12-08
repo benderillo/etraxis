@@ -2,6 +2,8 @@
 button.back: Back
 button.cancel: Cancel
 button.close: Close
+button.disable: Disable
+button.enable: Enable
 button.login: Login
 button.logout: Logout
 button.no: No
