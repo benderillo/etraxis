@@ -111,7 +111,7 @@ user.email: 'Эл. почта'
 user.fullname: 'Полное имя'
 user.language: Язык
 user.password: Пароль
-user.permissions: Права
+user.permissions: 'Права доступа'
 user.profile: Профиль
 user.theme: Оформление
 user.timezone: 'Часовой пояс'

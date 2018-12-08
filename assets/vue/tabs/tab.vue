@@ -29,7 +29,6 @@
              * Tab's title.
              */
             title: {
-                type: String,
                 required: true,
             },
 

@@ -19,7 +19,7 @@
             <thead>
             <tr>
                 <th v-if="checkboxes" @click="totalFilters === 0 ? checkedAll = !checkedAll : null">
-                    <input v-if="totalFilters === 0 && total !== 0" type="checkbox" :disabled="blocked" v-model="checkedAll" @click.stop>
+                    <input v-if="totalFilters === 0 && total !== 0" type="checkbox" :indeterminate.prop="!checkedAll && checked.length !== 0" :disabled="blocked" v-model="checkedAll" @click.stop>
                 </th>
                 <th v-for="column in columns" :class="{ 'sortable': column.sortable }" :width="column.width" :data-name="column.name" @click="toggleSorting">
                     <span class="pull-after fa" :class="{ 'fa-caret-up': column.sortable && sortDirection(column.name) === 'asc', 'fa-caret-down': column.sortable && sortDirection(column.name) === 'desc' }"></span>
@@ -31,7 +31,7 @@
             <tfoot v-if="totalFilters !== 0">
             <tr>
                 <td v-if="checkboxes" @click="checkedAll = !checkedAll">
-                    <input v-if="total !== 0" type="checkbox" :disabled="blocked" v-model="checkedAll" @click.stop>
+                    <input v-if="total !== 0" type="checkbox" :indeterminate.prop="!checkedAll && checked.length !== 0" :disabled="blocked" v-model="checkedAll" @click.stop>
                 </td>
                 <td v-for="(column, index) in columns">
                     <input v-if="column.filterable && column.filter.length === 0" type="text" :readonly="blocked" v-model.trim="filters[index]">

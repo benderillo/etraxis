@@ -302,15 +302,6 @@ export default {
         },
 
         /**
-         * Returns list of checked rows.
-         *
-         * @returns {Array} Array of associated IDs.
-         */
-        getChecked() {
-            return this.checked;
-        },
-
-        /**
          * Toggles checkbox status of the specified row.
          *
          * @param {string} id
