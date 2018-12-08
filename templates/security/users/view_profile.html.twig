@@ -1,0 +1,47 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <button @click="goBack">{{ 'button.back' | trans }}</button>
+    </div>
+
+    <div class="grid-50 mobile-grid-100">
+        <div class="fieldset">
+            <div class="legend">{{ 'user.profile' | trans }}</div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.fullname' | trans }}:</p></div>
+                <div class="grid-75"><p>${ profile.fullname }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.email' | trans }}:</p></div>
+                <div class="grid-75"><p>${ profile.email }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.permissions' | trans }}:</p></div>
+                <div class="grid-75" v-if="profile.admin"><p>{{ 'role.admin' | trans }}</p></div>
+                <div class="grid-75" v-if="!profile.admin"><p>{{ 'role.user' | trans }}</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.authentication' | trans }}:</p></div>
+                <div class="grid-75"><p>${ provider }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.description' | trans }}:</p></div>
+                <div class="grid-75"><p>${ profile.description || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.status' | trans }}:</p></div>
+                <div class="grid-75" v-if="profile.disabled"><p>{{ 'user.disabled' | trans }}</p></div>
+                <div class="grid-75" v-if="!profile.disabled"><p>{{ 'user.enabled' | trans }}</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.language' | trans }}:</p></div>
+                <div class="grid-75"><p>${ language }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.timezone' | trans }}:</p></div>
+                <div class="grid-75"><p>${ profile.timezone }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

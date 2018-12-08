@@ -13,6 +13,10 @@
 
 namespace eTraxis\SecurityDomain\Framework\Controller;
 
+use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
+use eTraxis\SecurityDomain\Model\Dictionary\Locale;
+use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
+use eTraxis\SecurityDomain\Model\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,5 +40,24 @@ class UsersController extends AbstractController
     public function index(): Response
     {
         return $this->render('security/users/index.html.twig');
+    }
+
+    /**
+     * A user page.
+     *
+     * @Route("/{id}", name="admin_view_user", methods={"GET"}, requirements={"id": "\d+"})
+     *
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function view(User $user): Response
+    {
+        return $this->render('security/users/view.html.twig', [
+            'user'      => $user,
+            'providers' => AccountProvider::all(),
+            'locales'   => Locale::all(),
+            'timezones' => Timezone::all(),
+        ]);
     }
 }

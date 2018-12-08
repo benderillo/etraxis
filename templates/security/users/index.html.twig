@@ -7,7 +7,7 @@
     <div class="grid-row" id="vue-users" v-cloak>
         <div class="grid-100">
 
-            <datatable name="users" :columns="columns" :data="users">
+            <datatable name="users" :columns="columns" :data="users" @click="viewUser">
             </datatable>
 
         </div>

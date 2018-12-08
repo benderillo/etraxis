@@ -107,12 +107,15 @@ user.authentication: Authentication
 user.city: City
 user.country: Country
 user.description: Description
+user.disabled: Disabled
 user.email: Email
+user.enabled: Enabled
 user.fullname: 'Full name'
 user.language: Language
 user.password: Password
 user.permissions: Permissions
 user.profile: Profile
+user.status: Status
 user.theme: Theme
 user.timezone: Timezone
 users: Users
