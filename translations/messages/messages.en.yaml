@@ -12,6 +12,7 @@ button.refresh: Refresh
 button.reset_filters: 'Reset filters'
 button.save: Save
 button.search: Search
+button.unlock: Unlock
 button.yes: Yes
 confirm.logout: 'Are you sure you want exit?'
 email.forgot_password.line1: 'You have requested to reset your password at <a href="%url%">%url%</a>.'

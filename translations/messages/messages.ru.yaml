@@ -12,6 +12,7 @@ button.refresh: Обновить
 button.reset_filters: 'Сбросить фильтры'
 button.save: Сохранить
 button.search: Поиск
+button.unlock: Разблокировать
 button.yes: Да
 confirm.logout: 'Вы уверены что хотите выйти?'
 email.forgot_password.line1: 'Вы запросили смену пароля на <a href="%url%">%url%</a>.'

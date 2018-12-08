@@ -62,6 +62,7 @@ class UsersController extends AbstractController
             'can'       => [
                 'disable' => $this->isGranted(UserVoter::DISABLE_USER, $user),
                 'enable'  => $this->isGranted(UserVoter::ENABLE_USER, $user),
+                'unlock'  => $this->isGranted(UserVoter::UNLOCK_USER, $user),
             ],
         ]);
     }

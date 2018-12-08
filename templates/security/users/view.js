@@ -113,5 +113,22 @@ new Vue({
                     ui.unblock();
                 });
         },
+
+        /**
+         * Unlocks the user.
+         */
+        unlockUser() {
+
+            ui.block();
+
+            axios.post(url(`/api/users/${eTraxis.userId}/unlock`))
+                .then(() => {
+                    this.reloadProfile();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => {
+                    ui.unblock();
+                });
+        },
     },
 });
