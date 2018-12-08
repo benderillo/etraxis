@@ -7,7 +7,11 @@
     <div class="grid-row" id="vue-users" v-cloak>
         <div class="grid-100">
 
-            <datatable name="users" :columns="columns" :data="users" @click="viewUser">
+            <datatable ref="users" name="users" :columns="columns" :data="users" @check="onCheck" @click="viewUser">
+                <span class="buttonset">
+                    <button class="fa fa-lock" title="{{ 'button.disable' | trans }}" :disabled="checked.length === 0" @click="disableUsers"></button>
+                    <button class="fa fa-unlock-alt" title="{{ 'button.enable' | trans }}" :disabled="checked.length === 0" @click="enableUsers"></button>
+                </span>
             </datatable>
 
         </div>

@@ -12,6 +12,7 @@
 import Column    from 'components/datatable/column';
 import DataTable from 'components/datatable/datatable.vue';
 import Request   from 'components/datatable/request';
+import ui        from 'utilities/ui';
 import url       from 'utilities/url';
 
 /**
@@ -49,6 +50,8 @@ new Vue({
             new Column('provider', i18n['user.authentication']),
             new Column('description', i18n['user.description'], '100%'),
         ],
+
+        checked: [],    // list of user IDs whose rows are checked
     },
 
     methods: {
@@ -100,12 +103,63 @@ new Vue({
         },
 
         /**
+         * A set of checked rows in the table is changed.
+         *
+         * @param {Array} ids List of checked rows (user IDs).
+         */
+        onCheck(ids) {
+            this.checked = ids;
+        },
+
+        /**
          * A row with an account is clicked.
          *
          * @param {number} id Account ID.
          */
         viewUser(id) {
             location.href = url('/admin/users/' + id);
+        },
+
+        /**
+         * Disables selected users.
+         */
+        disableUsers() {
+
+            ui.block();
+
+            let data = {
+                users: this.checked,
+            };
+
+            axios.post(url('/api/users/disable'), data)
+                .then(() => {
+                    this.$refs.users.refresh();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => {
+                    ui.unblock();
+                });
+        },
+
+        /**
+         * Enables selected users.
+         */
+        enableUsers() {
+
+            ui.block();
+
+            let data = {
+                users: this.checked,
+            };
+
+            axios.post(url('/api/users/enable'), data)
+                .then(() => {
+                    this.$refs.users.refresh();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => {
+                    ui.unblock();
+                });
         },
     },
 });
