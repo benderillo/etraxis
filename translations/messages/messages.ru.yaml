@@ -2,6 +2,7 @@
 button.back: Назад
 button.cancel: Отмена
 button.close: Закрыть
+button.delete: Удалить
 button.disable: Деактивировать
 button.enable: Активировать
 button.login: Войти
@@ -15,6 +16,7 @@ button.search: Поиск
 button.unlock: Разблокировать
 button.yes: Да
 confirm.logout: 'Вы уверены что хотите выйти?'
+confirm.user.delete: 'Вы уверены что хотите удалить этого пользователя?'
 email.forgot_password.line1: 'Вы запросили смену пароля на <a href="%url%">%url%</a>.'
 email.forgot_password.line2: 'Для смены пароля нажмите ссылку:'
 email.forgot_password.line3: 'Пожалуйста имейте в виду, что ссылка действительна лишь 2 часа.'

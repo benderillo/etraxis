@@ -11,6 +11,9 @@
         {% if can.unlock %}
             <button v-if="profile.locked" @click="unlockUser">{{ 'button.unlock' | trans }}</button>
         {% endif %}
+        {% if can.delete %}
+            <button class="danger" @click="deleteUser">{{ 'button.delete' | trans }}</button>
+        {% endif %}
     </div>
 
     <div class="grid-50 mobile-grid-100">

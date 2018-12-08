@@ -2,6 +2,7 @@
 button.back: Back
 button.cancel: Cancel
 button.close: Close
+button.delete: Delete
 button.disable: Disable
 button.enable: Enable
 button.login: Login
@@ -15,6 +16,7 @@ button.search: Search
 button.unlock: Unlock
 button.yes: Yes
 confirm.logout: 'Are you sure you want exit?'
+confirm.user.delete: 'Are you sure you want delete this user?'
 email.forgot_password.line1: 'You have requested to reset your password at <a href="%url%">%url%</a>.'
 email.forgot_password.line2: 'Please click the link below to do it:'
 email.forgot_password.line3: 'Please note that the link expires in 2 hours.'

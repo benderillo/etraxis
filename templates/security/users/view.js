@@ -60,7 +60,7 @@ new Vue({
          * Reloads user's profile.
          */
         reloadProfile() {
-            axios.get(url('/api/users/' + eTraxis.userId))
+            axios.get(url(`/api/users/${eTraxis.userId}`))
                 .then(response => this.profile = response.data)
                 .catch(exception => ui.getErrors(exception));
         },
@@ -70,6 +70,26 @@ new Vue({
          */
         goBack() {
             location.href = url('/admin/users');
+        },
+
+        /**
+         * Deletes the user.
+         */
+        deleteUser() {
+
+            ui.confirm(i18n['confirm.user.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/users/${eTraxis.userId}`))
+                    .then(() => {
+                        location.href = url('/admin/users');
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => {
+                        ui.unblock();
+                    });
+            });
         },
 
         /**
