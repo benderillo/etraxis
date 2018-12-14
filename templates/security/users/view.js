@@ -138,6 +138,42 @@ new Vue({
         },
 
         /**
+         * Shows 'Change password' dialog.
+         */
+        showPasswordDialog() {
+
+            this.values = {};
+            this.errors = {};
+
+            this.$refs.dlgPassword.open();
+        },
+
+        /**
+         * Sets user's password.
+         */
+        setPassword() {
+
+            if (this.values.password !== this.values.confirm) {
+                ui.alert(i18n['password.dont_match']);
+                return;
+            }
+
+            let data = {
+                password: this.values.password,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/users/${eTraxis.userId}/password`), data)
+                .then(() => {
+                    ui.info(i18n['password.changed']);
+                    this.$refs.dlgPassword.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
+        },
+
+        /**
          * Deletes the user.
          */
         deleteUser() {

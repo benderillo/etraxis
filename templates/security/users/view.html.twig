@@ -17,6 +17,10 @@
                 {% include 'security/users/dlg_user.html.twig' with { 'user': user } %}
             </modal>
 
+            <modal ref="dlgPassword" header="{{ 'password.change' | trans }}" @submit="setPassword">
+                {% include 'security/users/dlg_password.html.twig' %}
+            </modal>
+
         </div>
     </div>
 

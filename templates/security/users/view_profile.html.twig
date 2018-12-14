@@ -5,6 +5,9 @@
         {% if can.update %}
             <button @click="showEditUserDialog">{{ 'button.edit' | trans }}</button>
         {% endif %}
+        {% if can.password %}
+            <button @click="showPasswordDialog">{{ 'password.change' | trans }}</button>
+        {% endif %}
         {% if can.disable %}
             <button v-if="!profile.disabled" @click="disableUser">{{ 'button.disable' | trans }}</button>
         {% endif %}
