@@ -12,6 +12,7 @@
 import Column    from 'components/datatable/column';
 import DataTable from 'components/datatable/datatable.vue';
 import Request   from 'components/datatable/request';
+import Modal     from 'components/modal.vue';
 import ui        from 'utilities/ui';
 import url       from 'utilities/url';
 
@@ -38,6 +39,7 @@ new Vue({
 
     components: {
         'datatable': DataTable,
+        'modal': Modal,
     },
 
     data: {
@@ -52,6 +54,9 @@ new Vue({
         ],
 
         checked: [],    // list of user IDs whose rows are checked
+
+        values: {},     // form values
+        errors: {},     // form errors
     },
 
     methods: {
@@ -118,6 +123,49 @@ new Vue({
          */
         viewUser(id) {
             location.href = url('/admin/users/' + id);
+        },
+
+        /**
+         * Shows 'New user' dialog.
+         */
+        showNewUserDialog() {
+
+            this.values = {
+                locale: eTraxis.defaultLocale,
+                theme: eTraxis.defaultTheme,
+                timezone: eTraxis.defaultTimezone,
+                admin: false,
+                disabled: false,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgNewUser.open();
+        },
+
+        /**
+         * Creates new user.
+         */
+        createUser() {
+
+            if (this.values.password !== this.values.confirm) {
+                ui.alert(i18n['password.dont_match']);
+                return;
+            }
+
+            ui.block();
+
+            axios.post(url('/api/users'), this.values)
+                .then(() => {
+                    this.$refs.dlgNewUser.close();
+                    this.$refs.users.refresh();
+                })
+                .catch(exception => {
+                    this.errors = ui.getErrors(exception);
+                })
+                .then(() => {
+                    ui.unblock();
+                });
         },
 
         /**

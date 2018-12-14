@@ -8,11 +8,16 @@
         <div class="grid-100">
 
             <datatable ref="users" name="users" :columns="columns" :data="users" @check="onCheck" @click="viewUser">
+                {% if can.create %}
+                    <button class="fa fa-plus" title="{{ 'button.create' | trans }}" @click="showNewUserDialog"></button>
+                {% endif %}
                 <span class="buttonset">
                     <button class="fa fa-lock" title="{{ 'button.disable' | trans }}" :disabled="checked.length === 0" @click="disableUsers"></button>
                     <button class="fa fa-unlock-alt" title="{{ 'button.enable' | trans }}" :disabled="checked.length === 0" @click="enableUsers"></button>
                 </span>
             </datatable>
+
+            {% include 'security/users/dlg_new_user.html.twig' %}
 
         </div>
     </div>
@@ -22,7 +27,13 @@
 {% block scripts %}
 
     <script>
-        eTraxis.currentUser = {{ app.user.id }};
+        eTraxis.currentUser     = {{ app.user.id }};
+        eTraxis.defaultLocale   = '{{ locale }}';
+        eTraxis.defaultTheme    = '{{ theme }}';
+        eTraxis.defaultTimezone = '{{ timezone }}';
+        eTraxis.locales         = {{ locales   | json_encode | raw }};
+        eTraxis.themes          = {{ themes    | json_encode | raw }};
+        eTraxis.timezones       = {{ timezones | json_encode | raw }};
     </script>
 
     <script src="{{ asset('js/security/users/index.js') }}"></script>

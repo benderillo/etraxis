@@ -2,6 +2,7 @@
 button.back: Назад
 button.cancel: Отмена
 button.close: Закрыть
+button.create: Создать
 button.delete: Удалить
 button.disable: Деактивировать
 button.enable: Активировать
@@ -117,6 +118,7 @@ user.email: 'Эл. почта'
 user.enabled: Активирован
 user.fullname: 'Полное имя'
 user.language: Язык
+user.new: 'Новый пользователь'
 user.password: Пароль
 user.permissions: 'Права доступа'
 user.profile: Профиль

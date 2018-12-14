@@ -1,0 +1,115 @@
+<modal ref="dlgNewUser" header="{{ 'user.new' | trans }}" @submit="createUser">
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="fullname" title="{{ 'user.fullname' | trans }}">{{ 'user.fullname' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="fullname" placeholder="{{ 'input.required' | trans }}" v-model="values.fullname">
+            <p class="attention">${ errors.fullname }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="email" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="email" placeholder="{{ 'input.required' | trans }}" v-model="values.email">
+            <p class="attention">${ errors.email }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="description" title="{{ 'user.description' | trans }}">{{ 'user.description' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="description" v-model="values.description">
+            <p class="attention">${ errors.description }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="password" id="password" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
+            <p class="attention">${ errors.password }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="confirm" title="{{ 'password.confirm' | trans }}">{{ 'password.confirm' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="password" id="confirm" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
+            <p class="attention">${ errors.confirm }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="locale" title="{{ 'user.language' | trans }}">{{ 'user.language' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <select class="grid-100 mobile-grid-100" id="locale" v-model="values.locale">
+                {% for locale, name in locales %}
+                    <option value="{{ locale }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <p class="attention">${ errors.locale }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="theme" title="{{ 'user.theme' | trans }}">{{ 'user.theme' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <select class="grid-100 mobile-grid-100" id="theme" v-model="values.theme">
+                {% for theme, name in themes %}
+                    <option value="{{ theme }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <p class="attention">${ errors.theme }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="timezone" title="{{ 'user.timezone' | trans }}">{{ 'user.timezone' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <select class="grid-100 mobile-grid-100" id="timezone" v-model="values.timezone">
+                {% for timezone, name in timezones %}
+                    <option value="{{ timezone }}">{{ name }}</option>
+                {% endfor %}
+            </select>
+            <p class="attention">${ errors.timezone }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-66 prefix-33">
+            <label title="{{ 'role.admin' | trans }}">
+                <input type="checkbox" v-model="values.admin">
+                <span>{{ 'role.admin' | trans }}</span>
+            </label>
+            <p class="attention">${ errors.admin }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-66 prefix-33">
+            <label title="{{ 'user.disabled' | trans }}">
+                <input type="checkbox" v-model="values.disabled">
+                <span>{{ 'user.disabled' | trans }}</span>
+            </label>
+            <p class="attention">${ errors.disabled }</p>
+        </div>
+    </div>
+
+</modal>

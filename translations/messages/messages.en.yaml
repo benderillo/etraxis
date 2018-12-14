@@ -2,6 +2,7 @@
 button.back: Back
 button.cancel: Cancel
 button.close: Close
+button.create: Create
 button.delete: Delete
 button.disable: Disable
 button.enable: Enable
@@ -117,6 +118,7 @@ user.email: Email
 user.enabled: Enabled
 user.fullname: 'Full name'
 user.language: Language
+user.new: 'New user'
 user.password: Password
 user.permissions: Permissions
 user.profile: Profile

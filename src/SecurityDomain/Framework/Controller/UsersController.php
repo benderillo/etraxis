@@ -16,6 +16,8 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 use eTraxis\SecurityDomain\Application\Voter\UserVoter;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
+use eTraxis\SecurityDomain\Model\Dictionary\Theme;
+use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,7 +41,15 @@ class UsersController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('security/users/index.html.twig');
+        return $this->render('security/users/index.html.twig', [
+            'locales'   => Locale::all(),
+            'themes'    => Theme::all(),
+            'timezones' => Timezone::all(),
+            'timezone'  => date_default_timezone_get(),
+            'can'       => [
+                'create' => $this->isGranted(UserVoter::CREATE_USER),
+            ],
+        ]);
     }
 
     /**
