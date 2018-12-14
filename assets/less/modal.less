@@ -11,9 +11,11 @@ dialog {
     background: none;
     border: none;
     max-height: 100%;
+    max-width: 100%;
     overflow-y: auto;
     padding: 0;
     top: 50%;
+    width: 640px;
     .transform(translate(0%, -50%));
 
     &.blockui {
@@ -30,6 +32,10 @@ dialog {
         max-width: 90%;
         width: 400px;
 
+        > .modal-body {
+            padding: 15px 20px;
+        }
+
         .message {
             display: flex;
             margin-left: 50px;
@@ -41,7 +47,7 @@ dialog {
         }
     }
 
-    > .modal-header {
+    .modal-header {
         .gradient(@modal-gradient-from, @modal-gradient-to);
         border: 1px solid @modal-gradient-to;
         border-top-left-radius: @modal-radius;
@@ -57,18 +63,18 @@ dialog {
         }
     }
 
-    > .modal-body,
-    > .modal-footer {
+    .modal-body,
+    .modal-footer {
         background-color: @background;
         border: 1px solid @modal-border;
         border-top: none;
     }
 
-    > .modal-body {
-        padding: 15px 20px;
+    .modal-body {
+        padding: 10px 0;
     }
 
-    > .modal-footer {
+    .modal-footer {
         border-bottom-left-radius: @modal-radius;
         border-bottom-right-radius: @modal-radius;
         padding: 5px 10px;
