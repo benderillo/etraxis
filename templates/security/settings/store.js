@@ -38,11 +38,7 @@ eTraxis.store = {
                 this.profile.theme    = response.data.theme;
                 this.profile.timezone = response.data.timezone;
             })
-            .catch(exception => {
-                ui.getErrors(exception);
-            })
-            .then(() => {
-                ui.unblock();
-            });
+            .catch(exception => ui.getErrors(exception))
+            .then(() => ui.unblock());
     },
 };

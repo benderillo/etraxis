@@ -41,14 +41,11 @@ new Vue({
                 .then(() => {
                     ui.info(i18n['password.changed'], () => {
                         this.values = {};
+                        this.errors = {};
                     });
                 })
-                .catch(exception => {
-                    this.errors = ui.getErrors(exception);
-                })
-                .then(() => {
-                    ui.unblock();
-                });
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
         },
     },
 });

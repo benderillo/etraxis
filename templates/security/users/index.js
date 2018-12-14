@@ -153,19 +153,27 @@ new Vue({
                 return;
             }
 
+            let data = {
+                fullname: this.values.fullname,
+                email: this.values.email,
+                description: this.values.description,
+                password: this.values.password,
+                locale: this.values.locale,
+                theme: this.values.theme,
+                timezone: this.values.timezone,
+                admin: this.values.admin,
+                disabled: this.values.disabled,
+            };
+
             ui.block();
 
-            axios.post(url('/api/users'), this.values)
+            axios.post(url('/api/users'), data)
                 .then(() => {
                     this.$refs.dlgNewUser.close();
                     this.$refs.users.refresh();
                 })
-                .catch(exception => {
-                    this.errors = ui.getErrors(exception);
-                })
-                .then(() => {
-                    ui.unblock();
-                });
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
         },
 
         /**
@@ -180,13 +188,9 @@ new Vue({
             };
 
             axios.post(url('/api/users/disable'), data)
-                .then(() => {
-                    this.$refs.users.refresh();
-                })
+                .then(() => this.$refs.users.refresh())
                 .catch(exception => ui.getErrors(exception))
-                .then(() => {
-                    ui.unblock();
-                });
+                .then(() => ui.unblock());
         },
 
         /**
@@ -201,13 +205,9 @@ new Vue({
             };
 
             axios.post(url('/api/users/enable'), data)
-                .then(() => {
-                    this.$refs.users.refresh();
-                })
+                .then(() => this.$refs.users.refresh())
                 .catch(exception => ui.getErrors(exception))
-                .then(() => {
-                    ui.unblock();
-                });
+                .then(() => ui.unblock());
         },
     },
 });

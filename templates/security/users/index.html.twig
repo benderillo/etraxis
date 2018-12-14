@@ -17,7 +17,9 @@
                 </span>
             </datatable>
 
-            {% include 'security/users/dlg_new_user.html.twig' %}
+            <modal ref="dlgNewUser" header="{{ 'user.new' | trans }}" @submit="createUser">
+                {% include 'security/users/dlg_user.html.twig' %}
+            </modal>
 
         </div>
     </div>
@@ -31,9 +33,6 @@
         eTraxis.defaultLocale   = '{{ locale }}';
         eTraxis.defaultTheme    = '{{ theme }}';
         eTraxis.defaultTimezone = '{{ timezone }}';
-        eTraxis.locales         = {{ locales   | json_encode | raw }};
-        eTraxis.themes          = {{ themes    | json_encode | raw }};
-        eTraxis.timezones       = {{ timezones | json_encode | raw }};
     </script>
 
     <script src="{{ asset('js/security/users/index.js') }}"></script>

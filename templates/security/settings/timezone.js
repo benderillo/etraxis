@@ -40,14 +40,11 @@ new Vue({
 
             axios.patch(url('/api/my/profile'), this.values)
                 .then(() => {
+                    this.errors = {};
                     ui.info(i18n['text.changes_saved']);
                 })
-                .catch(exception => {
-                    this.errors = ui.getErrors(exception);
-                })
-                .then(() => {
-                    ui.unblock();
-                });
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
         },
 
         /**
@@ -66,9 +63,7 @@ new Vue({
                         this.cities = response.data;
                         this.values.timezone = (this.country === eTraxis.country) ? this.values.timezone : Object.keys(response.data)[0];
                     })
-                    .catch(exception => {
-                        ui.getErrors(exception);
-                    });
+                    .catch(exception => ui.getErrors(exception));
             }
         },
     },

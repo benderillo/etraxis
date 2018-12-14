@@ -6,11 +6,7 @@
                 <div>{{ header }}</div>
             </div>
             <div class="modal-body">
-                <div class="grid-100">
-                    <div class="fieldset">
-                        <slot></slot>
-                    </div>
-                </div>
+                <slot></slot>
             </div>
             <div class="modal-footer text-right">
                 <button type="submit" @click="onSubmit">{{ text.ok }}</button>

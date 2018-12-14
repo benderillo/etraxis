@@ -43,14 +43,11 @@ new Vue({
 
             axios.patch(url('/api/my/profile'), this.values)
                 .then(() => {
+                    this.errors = {};
                     ui.info(i18n['text.changes_saved']);
                 })
-                .catch(exception => {
-                    this.errors = ui.getErrors(exception);
-                })
-                .then(() => {
-                    ui.unblock();
-                });
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
         },
     },
 });
