@@ -63,40 +63,6 @@ export default {
         this.refreshWithDelay();
     },
 
-    data: () => {
-
-        return {
-            page: 1,                // current page number, one-based
-            userPage: 1,            // manually entered page number, one-based
-            pageSize: 10,           // page size
-            from: 0,                // first row index, zero-based
-            to: 0,                  // last row index, zero-based
-            total: 0,               // total rows
-            rows: [],               // rows data
-            checked: [],            // checked rows (array of associated IDs)
-            checkedAll: false,      // whether all rows are checked
-            blocked: false,         // whether the table is blocked from user's interaction
-            timer: null,            // refresh timer
-            search: '',             // global "Search" value
-            filters: [],            // column filters values
-            sorting: [],            // current columns sorting
-            text: {
-                empty: i18n['table.empty'],
-                first: i18n['page.first'],
-                last: i18n['page.last'],
-                next: i18n['page.next'],
-                pages: i18n['table.pages'],
-                pleaseWait: i18n['text.please_wait'],
-                previous: i18n['page.previous'],
-                refresh: i18n['button.refresh'],
-                resetFilters: i18n['button.reset_filters'],
-                search: i18n['button.search'],
-                size: i18n['table.size'],
-                status: i18n['table.status'],
-            },
-        };
-    },
-
     props: {
 
         /**
@@ -151,6 +117,37 @@ export default {
             default: false,
         },
     },
+
+    data: () => ({
+        page: 1,                // current page number, one-based
+        userPage: 1,            // manually entered page number, one-based
+        pageSize: 10,           // page size
+        from: 0,                // first row index, zero-based
+        to: 0,                  // last row index, zero-based
+        total: 0,               // total rows
+        rows: [],               // rows data
+        checked: [],            // checked rows (array of associated IDs)
+        checkedAll: false,      // whether all rows are checked
+        blocked: false,         // whether the table is blocked from user's interaction
+        timer: null,            // refresh timer
+        search: '',             // global "Search" value
+        filters: [],            // column filters values
+        sorting: [],            // current columns sorting
+        text: {
+            empty: i18n['table.empty'],
+            first: i18n['page.first'],
+            last: i18n['page.last'],
+            next: i18n['page.next'],
+            pages: i18n['table.pages'],
+            pleaseWait: i18n['text.please_wait'],
+            previous: i18n['page.previous'],
+            refresh: i18n['button.refresh'],
+            resetFilters: i18n['button.reset_filters'],
+            search: i18n['button.search'],
+            size: i18n['table.size'],
+            status: i18n['table.status'],
+        },
+    }),
 
     computed: {
 

@@ -28,10 +28,6 @@
             }
         },
 
-        data: () => ({
-            tabs: [],       // list of tabs
-        }),
-
         props: {
 
             /**
@@ -42,6 +38,10 @@
                 required: false,
             },
         },
+
+        data: () => ({
+            tabs: [],       // list of tabs
+        }),
 
         methods: {
 

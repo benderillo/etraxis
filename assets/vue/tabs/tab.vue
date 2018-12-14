@@ -11,10 +11,6 @@
      */
     export default {
 
-        data: () => ({
-            active: false,      // whether the tab is active
-        }),
-
         props: {
 
             /**
@@ -40,6 +36,10 @@
                 required: false,
             },
         },
+
+        data: () => ({
+            active: false,      // whether the tab is active
+        }),
 
         computed: {
 

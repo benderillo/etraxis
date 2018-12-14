@@ -16,7 +16,6 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 use eTraxis\SecurityDomain\Application\Voter\UserVoter;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Dictionary\Locale;
-use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,7 +57,6 @@ class UsersController extends AbstractController
             'user'      => $user,
             'providers' => AccountProvider::all(),
             'locales'   => Locale::all(),
-            'timezones' => Timezone::all(),
             'can'       => [
                 'delete'  => $this->isGranted(UserVoter::DELETE_USER, $user),
                 'disable' => $this->isGranted(UserVoter::DISABLE_USER, $user),
