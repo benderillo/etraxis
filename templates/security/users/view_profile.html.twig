@@ -2,6 +2,9 @@
 
     <div class="grid-100">
         <button @click="goBack">{{ 'button.back' | trans }}</button>
+        {% if can.update %}
+            <button @click="showEditUserDialog">{{ 'button.edit' | trans }}</button>
+        {% endif %}
         {% if can.disable %}
             <button v-if="!profile.disabled" @click="disableUser">{{ 'button.disable' | trans }}</button>
         {% endif %}
@@ -48,6 +51,10 @@
             <div class="grid-row">
                 <div class="grid-25"><p class="label">{{ 'user.language' | trans }}:</p></div>
                 <div class="grid-75"><p>${ language }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'user.theme' | trans }}:</p></div>
+                <div class="grid-75"><p>${ theme }</p></div>
             </div>
             <div class="grid-row">
                 <div class="grid-25"><p class="label">{{ 'user.timezone' | trans }}:</p></div>

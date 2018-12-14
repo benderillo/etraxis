@@ -1,24 +1,28 @@
 <div class="fieldset">
 
-    <div class="grid-row">
-        <div class="grid-33">
-            <label for="fullname" title="{{ 'user.fullname' | trans }}">{{ 'user.fullname' | trans }}:</label>
-        </div>
-        <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="text" id="fullname" placeholder="{{ 'input.required' | trans }}" v-model="values.fullname">
-            <p class="attention">${ errors.fullname }</p>
-        </div>
-    </div>
+    {% if user is not defined or not user.isAccountExternal %}
 
-    <div class="grid-row">
-        <div class="grid-33">
-            <label for="email" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="fullname" title="{{ 'user.fullname' | trans }}">{{ 'user.fullname' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <input class="grid-100 mobile-grid-100" type="text" id="fullname" placeholder="{{ 'input.required' | trans }}" v-model="values.fullname">
+                <p class="attention">${ errors.fullname }</p>
+            </div>
         </div>
-        <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="text" id="email" placeholder="{{ 'input.required' | trans }}" v-model="values.email">
-            <p class="attention">${ errors.email }</p>
+
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="email" title="{{ 'user.email' | trans }}">{{ 'user.email' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <input class="grid-100 mobile-grid-100" type="text" id="email" placeholder="{{ 'input.required' | trans }}" v-model="values.email">
+                <p class="attention">${ errors.email }</p>
+            </div>
         </div>
-    </div>
+
+    {% endif %}
 
     <div class="grid-row">
         <div class="grid-33">
@@ -30,25 +34,29 @@
         </div>
     </div>
 
-    <div class="grid-row">
-        <div class="grid-33">
-            <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
-        </div>
-        <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="password" id="password" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
-            <p class="attention">${ errors.password }</p>
-        </div>
-    </div>
+    {% if user is not defined %}
 
-    <div class="grid-row">
-        <div class="grid-33">
-            <label for="confirm" title="{{ 'password.confirm' | trans }}">{{ 'password.confirm' | trans }}:</label>
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="password" title="{{ 'user.password' | trans }}">{{ 'user.password' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <input class="grid-100 mobile-grid-100" type="password" id="password" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
+                <p class="attention">${ errors.password }</p>
+            </div>
         </div>
-        <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="password" id="confirm" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
-            <p class="attention">${ errors.confirm }</p>
+
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="confirm" title="{{ 'password.confirm' | trans }}">{{ 'password.confirm' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <input class="grid-100 mobile-grid-100" type="password" id="confirm" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
+                <p class="attention">${ errors.confirm }</p>
+            </div>
         </div>
-    </div>
+
+    {% endif %}
 
     <div class="grid-row">
         <div class="grid-33">

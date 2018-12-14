@@ -5,6 +5,7 @@ button.close: Close
 button.create: Create
 button.delete: Delete
 button.disable: Disable
+button.edit: Edit
 button.enable: Enable
 button.login: Login
 button.logout: Logout
@@ -114,6 +115,7 @@ user.city: City
 user.country: Country
 user.description: Description
 user.disabled: Disabled
+user.edit: 'Edit user'
 user.email: Email
 user.enabled: Enabled
 user.fullname: 'Full name'

@@ -67,7 +67,10 @@ class UsersController extends AbstractController
             'user'      => $user,
             'providers' => AccountProvider::all(),
             'locales'   => Locale::all(),
+            'themes'    => Theme::all(),
+            'timezones' => Timezone::all(),
             'can'       => [
+                'update'  => $this->isGranted(UserVoter::UPDATE_USER, $user),
                 'delete'  => $this->isGranted(UserVoter::DELETE_USER, $user),
                 'disable' => $this->isGranted(UserVoter::DISABLE_USER, $user),
                 'enable'  => $this->isGranted(UserVoter::ENABLE_USER, $user),

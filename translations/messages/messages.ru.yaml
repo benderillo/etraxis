@@ -5,6 +5,7 @@ button.close: Закрыть
 button.create: Создать
 button.delete: Удалить
 button.disable: Деактивировать
+button.edit: Редактировать
 button.enable: Активировать
 button.login: Войти
 button.logout: Выйти
@@ -114,6 +115,7 @@ user.city: Город
 user.country: Страна
 user.description: Описание
 user.disabled: Деактивирован
+user.edit: 'Редактирование пользователя'
 user.email: 'Эл. почта'
 user.enabled: Активирован
 user.fullname: 'Полное имя'

@@ -6,11 +6,17 @@
 
     <div class="grid-row" id="vue-user" v-cloak>
         <div class="grid-100">
+
             <tabs>
                 <tab id="profile" :title="profile.fullname">
                     {% include 'security/users/view_profile.html.twig' %}
                 </tab>
             </tabs>
+
+            <modal ref="dlgEditUser" header="{{ 'user.edit' | trans }}" @submit="updateUser">
+                {% include 'security/users/dlg_user.html.twig' with { 'user': user } %}
+            </modal>
+
         </div>
     </div>
 
@@ -23,6 +29,7 @@
         eTraxis.userId      = {{ user.id }};
         eTraxis.providers   = {{ providers | json_encode | raw }};
         eTraxis.locales     = {{ locales   | json_encode | raw }};
+        eTraxis.themes      = {{ themes    | json_encode | raw }};
     </script>
 
     <script src="{{ asset('js/security/users/view.js') }}"></script>

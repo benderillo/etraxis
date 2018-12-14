@@ -9,10 +9,11 @@
 //
 //----------------------------------------------------------------------
 
-import Tab  from 'components/tabs/tab.vue';
-import Tabs from 'components/tabs/tabs.vue';
-import ui   from 'utilities/ui';
-import url  from 'utilities/url';
+import Modal from 'components/modal.vue';
+import Tab   from 'components/tabs/tab.vue';
+import Tabs  from 'components/tabs/tabs.vue';
+import ui    from 'utilities/ui';
+import url   from 'utilities/url';
 
 /**
  * A user page.
@@ -25,12 +26,15 @@ new Vue({
     },
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
 
     data: {
         profile: {},    // user's profile
+        values: {},     // form values
+        errors: {},     // form errors
     },
 
     computed: {
@@ -52,6 +56,15 @@ new Vue({
         language() {
             return eTraxis.locales[this.profile.locale];
         },
+
+        /**
+         * Returns human-readable theme.
+         *
+         * @returns {string}
+         */
+        theme() {
+            return eTraxis.themes[this.profile.theme];
+        },
     },
 
     methods: {
@@ -60,9 +73,13 @@ new Vue({
          * Reloads user's profile.
          */
         reloadProfile() {
+
+            ui.block();
+
             axios.get(url(`/api/users/${eTraxis.userId}`))
                 .then(response => this.profile = response.data)
-                .catch(exception => ui.getErrors(exception));
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
         },
 
         /**
@@ -70,6 +87,54 @@ new Vue({
          */
         goBack() {
             location.href = url('/admin/users');
+        },
+
+        /**
+         * Shows 'Edit user' dialog.
+         */
+        showEditUserDialog() {
+
+            this.values = {
+                fullname: this.profile.fullname,
+                email: this.profile.email,
+                description: this.profile.description,
+                locale: this.profile.locale,
+                theme: this.profile.theme,
+                timezone: this.profile.timezone,
+                admin: this.profile.admin,
+                disabled: this.profile.disabled,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditUser.open();
+        },
+
+        /**
+         * Updates the user.
+         */
+        updateUser() {
+
+            let data = {
+                fullname: this.values.fullname,
+                email: this.values.email,
+                description: this.values.description,
+                locale: this.values.locale,
+                theme: this.values.theme,
+                timezone: this.values.timezone,
+                admin: this.values.admin,
+                disabled: this.values.disabled,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/users/${eTraxis.userId}`), data)
+                .then(() => {
+                    this.reloadProfile();
+                    this.$refs.dlgEditUser.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
         },
 
         /**
