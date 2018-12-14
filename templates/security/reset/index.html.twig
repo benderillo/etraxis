@@ -17,7 +17,7 @@
                             <label for="password_new" title="{{ 'password.new' | trans }}">{{ 'password.new' | trans }}:</label>
                         </div>
                         <div class="grid-66">
-                            <input class="grid-100 mobile-grid-100" type="password" id="password_new" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
+                            <input class="grid-100 mobile-grid-100" type="password" id="password_new" autocomplete="off" placeholder="{{ 'input.required' | trans }}" v-model="values.password">
                             <p class="attention">${ errors.password }</p>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                             <label for="password_confirm" title="{{ 'password.confirm' | trans }}">{{ 'password.confirm' | trans }}:</label>
                         </div>
                         <div class="grid-66">
-                            <input class="grid-100 mobile-grid-100" type="password" id="password_confirm" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
+                            <input class="grid-100 mobile-grid-100" type="password" id="password_confirm" autocomplete="off" placeholder="{{ 'input.required' | trans }}" v-model="values.confirm">
                             <p class="attention">${ errors.confirm }</p>
                         </div>
                     </div>
