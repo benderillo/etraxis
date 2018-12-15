@@ -4,11 +4,22 @@
 
 @panel-gradient-from: #525252;
 @panel-gradient-to: #1f1f1f;
+@panel-hover-gradient-from: #7a7a7a;
+@panel-hover-gradient-to: #525252;
 @panel-text: #fbfbfb;
 @panel-border: #c5c5c5;
+@panel-hover: #f5f5f5;
 
 .panel {
     margin: 10px 0;
+
+    &.collapsed {
+
+        .panel-header {
+            border-bottom-left-radius: @panel-radius;
+            border-bottom-right-radius: @panel-radius;
+        }
+    }
 
     .panel-header {
         .gradient(@panel-gradient-from, @panel-gradient-to);
@@ -16,16 +27,96 @@
         border-top-left-radius: @panel-radius;
         border-top-right-radius: @panel-radius;
         color: @panel-text;
+        cursor: pointer;
         font-weight: bold;
         padding: 7px 10px;
+
+        .fa {
+            .radius(@panel-radius);
+            min-height: 19px;
+            min-width: 19px;
+            padding: 3px;
+            text-align: center;
+
+            &:hover {
+                .gradient(@panel-hover-gradient-from, @panel-hover-gradient-to);
+            }
+        }
     }
 
     .panel-body {
         background-color: @background;
         border: 1px solid @panel-border;
-        border-bottom-left-radius: @panel-radius;
-        border-bottom-right-radius: @panel-radius;
         border-top: none;
         padding: 5px 0;
+
+        &:last-child {
+            border-bottom-left-radius: @panel-radius;
+            border-bottom-right-radius: @panel-radius;
+        }
+
+        .panel-item {
+            padding: 0 10px;
+
+            > * {
+                margin-left: 18px;
+                overflow: hidden;
+                padding: 5px 0;
+                text-overflow: ellipsis;
+            }
+
+            .fa {
+                color: @text;
+                margin: 3px 0;
+                .margin-after(5px);
+
+                &.fa-check {
+                    .pull-before;
+                }
+
+                &.fa-sort {
+                    .pull-after;
+                    .margin-after(-5px);
+                    padding-left: 5px;
+                    padding-right: 5px;
+                }
+            }
+
+            a {
+                color: @text;
+                display: block;
+                text-decoration: none;
+            }
+
+            &:hover:not(.empty) {
+                background-color: @panel-hover;
+            }
+
+            &:not(.selected) {
+                .fa-check {
+                    color: @background;
+                }
+
+                &:hover:not(.empty) .fa-check {
+                    color: @panel-hover;
+                }
+            }
+
+            &.attention a {
+                .attention;
+            }
+
+            &.pending a {
+                .pending;
+            }
+
+            &.muted a {
+                .muted;
+            }
+
+            &.unread a {
+                .unread;
+            }
+        }
     }
 }
