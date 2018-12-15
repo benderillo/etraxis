@@ -22,7 +22,35 @@ new Vue({
     el: '#vue-user',
 
     created() {
+
+        // Load user's profile.
         this.reloadProfile();
+
+        // Load groups the user is a member of.
+        this.reloadGroups();
+
+        // Load all available groups.
+        const loadAllGroups = (offset = 0) => {
+
+            let headers = {
+                'X-Sort': JSON.stringify({'project': 'ASC', 'name': 'ASC'}),
+            };
+
+            axios.get(url(`/api/groups?offset=${offset}`), {headers})
+                .then(response => {
+
+                    for (let group of response.data.data) {
+                        this.allGroups.push(group);
+                    }
+
+                    if (response.data.to + 1 < response.data.total) {
+                        loadPage(response.data.to + 1);
+                    }
+                })
+                .catch(exception => ui.getErrors(exception));
+        };
+
+        loadAllGroups();
     },
 
     components: {
@@ -32,9 +60,16 @@ new Vue({
     },
 
     data: {
-        profile: {},    // user's profile
-        values: {},     // form values
-        errors: {},     // form errors
+        profile: {},            // user's profile
+        values: {},             // form values
+        errors: {},             // form errors
+        allGroups: [],          // all existing groups
+        userGroups: [],         // groups the user is a member of
+        groupsToAdd: [],        // groups selected to add
+        groupsToRemove: [],     // groups selected to remove
+        text: {
+            global: i18n['group.global'],
+        },
     },
 
     computed: {
@@ -65,6 +100,18 @@ new Vue({
         theme() {
             return eTraxis.themes[this.profile.theme];
         },
+
+        /**
+         * Returns list of all groups which the user is not a member of.
+         *
+         * @returns {Array}
+         */
+        otherGroups() {
+
+            let ids = this.userGroups.map(group => group.id);
+
+            return this.allGroups.filter(group => ids.indexOf(group.id) === -1);
+        },
     },
 
     methods: {
@@ -78,6 +125,34 @@ new Vue({
 
             axios.get(url(`/api/users/${eTraxis.userId}`))
                 .then(response => this.profile = response.data)
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Reloads list of groups the user is a member of.
+         */
+        reloadGroups() {
+
+            ui.block();
+
+            axios.get(url(`/api/users/${eTraxis.userId}/groups`))
+                .then(response => {
+                    this.userGroups = response.data.sort((group1, group2) => {
+                        if (group1.project === group2.project) {
+                            return group1.name.localeCompare(group2.name);
+                        }
+                        else {
+                            if (group1.project === null) {
+                                return -1;
+                            }
+                            if (group2.project === null) {
+                                return +1;
+                            }
+                            return group1.project.name.localeCompare(group2.project.name);
+                        }
+                    });
+                })
                 .catch(exception => ui.getErrors(exception))
                 .then(() => ui.unblock());
         },
@@ -234,6 +309,40 @@ new Vue({
 
             axios.post(url(`/api/users/${eTraxis.userId}/unlock`))
                 .then(() => this.reloadProfile())
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Adds the user to selected groups.
+         */
+        addGroups() {
+
+            ui.block();
+
+            let data = {
+                add: this.groupsToAdd,
+            };
+
+            axios.patch(url(`/api/users/${eTraxis.userId}/groups`), data)
+                .then(() => this.reloadGroups())
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Removes the user from selected groups.
+         */
+        removeGroups() {
+
+            ui.block();
+
+            let data = {
+                remove: this.groupsToRemove,
+            };
+
+            axios.patch(url(`/api/users/${eTraxis.userId}/groups`), data)
+                .then(() => this.reloadGroups())
                 .catch(exception => ui.getErrors(exception))
                 .then(() => ui.unblock());
         },

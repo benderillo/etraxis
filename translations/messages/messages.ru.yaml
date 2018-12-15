@@ -1,4 +1,5 @@
 'Authentication required.': 'Ваша сессия истекла.'
+button.add: Добавить
 button.back: Назад
 button.cancel: Отмена
 button.close: Закрыть
@@ -12,6 +13,7 @@ button.logout: Выйти
 button.no: Нет
 button.ok: ОК
 button.refresh: Обновить
+button.remove: Убрать
 button.reset_filters: 'Сбросить фильтры'
 button.save: Сохранить
 button.search: Поиск
@@ -55,6 +57,11 @@ field.type.list: Список
 field.type.number: 'Целое число'
 field.type.string: Строка
 field.type.text: 'Многострочный текст'
+group.global: Глобальная
+group.local: Локальная
+groups: Группы
+groups.other: 'Прочие группы'
+groups.user: 'Группы пользователя'
 http_error.403.description: 'У вас нет прав доступа к этому ресурсу.'
 http_error.403.suggestion: 'Обратитесь к своему руководителю или администратору для получения необходимых прав.'
 http_error.404.description: 'Запрошенная страница не найдена.'

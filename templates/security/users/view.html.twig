@@ -9,7 +9,10 @@
 
             <tabs>
                 <tab id="profile" :title="profile.fullname">
-                    {% include 'security/users/view_profile.html.twig' %}
+                    {% include 'security/users/tab_profile.html.twig' %}
+                </tab>
+                <tab id="groups" title="{{ 'groups' | trans }}" :counter="userGroups.length">
+                    {% include 'security/users/tab_groups.html.twig' %}
                 </tab>
             </tabs>
 

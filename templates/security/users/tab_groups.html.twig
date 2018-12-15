@@ -1,0 +1,48 @@
+<div class="grid-row flex">
+
+    <div class="grid-50 mobile-grid-100">
+        <div class="fieldset">
+            <div class="legend">{{ 'groups.user' | trans }}</div>
+            <div class="grid-row">
+                <div class="grid-100">
+                    <select class="grid-100 mobile-grid-100" size="20" multiple="multiple" :disabled="userGroups.length === 0" v-model="groupsToRemove">
+                        <option v-for="group in userGroups" :value="group.id">${ group.name } (${ group.global ? text.global.toLowerCase() : group.project.name })</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-10 mobile-grid-100 flex-center">
+        <div class="grid-row hide-on-mobile">
+            <div class="grid-100">
+                <button class="full-width fa fa-arrow-right" title="{{ 'button.remove' | trans }}" :disabled="groupsToRemove.length === 0" @click="removeGroups"></button>
+            </div>
+            <div class="grid-100">
+                <button class="full-width fa fa-arrow-left" title="{{ 'button.add' | trans }}" :disabled="groupsToAdd.length === 0" @click="addGroups"></button>
+            </div>
+        </div>
+        <div class="grid-row hide-on-desktop text-center">
+            <div class="mobile-grid-50">
+                <button class="full-width fa fa-arrow-down" title="{{ 'button.remove' | trans }}" :disabled="groupsToRemove.length === 0" @click="removeGroups"></button>
+            </div>
+            <div class="mobile-grid-50">
+                <button class="full-width fa fa-arrow-up" title="{{ 'button.add' | trans }}" :disabled="groupsToAdd.length === 0" @click="addGroups"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-50 mobile-grid-100">
+        <div class="fieldset">
+            <div class="legend">{{ 'groups.other' | trans }}</div>
+            <div class="grid-row">
+                <div class="grid-100">
+                    <select class="grid-100 mobile-grid-100" size="20" multiple="multiple" :disabled="allGroups.length === 0" v-model="groupsToAdd">
+                        <option v-for="group in otherGroups" :value="group.id">${ group.name } (${ group.global ? text.global.toLowerCase() : group.project.name })</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

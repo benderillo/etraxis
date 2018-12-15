@@ -56,6 +56,14 @@ a {
     color: @link;
 }
 
+.full-width {
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
 .attention {
     color: @attention;
 }
@@ -70,4 +78,15 @@ a {
 
 [v-cloak] {
     display: none;
+}
+
+@media (@desktop) {
+
+    .flex {
+        display: flex;
+    }
+
+    .flex-center {
+        align-self: center;
+    }
 }

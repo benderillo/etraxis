@@ -1,4 +1,5 @@
 'Authentication required.': 'Your session has expired. Please log in again.'
+button.add: Add
 button.back: Back
 button.cancel: Cancel
 button.close: Close
@@ -12,6 +13,7 @@ button.logout: Logout
 button.no: No
 button.ok: OK
 button.refresh: Refresh
+button.remove: Remove
 button.reset_filters: 'Reset filters'
 button.save: Save
 button.search: Search
@@ -55,6 +57,11 @@ field.type.list: List
 field.type.number: Number
 field.type.string: String
 field.type.text: Text
+group.global: Global
+group.local: Local
+groups: Groups
+groups.other: 'Other groups'
+groups.user: 'User groups'
 http_error.403.description: 'You don''t have permission to access to this resource.'
 http_error.403.suggestion: 'Ask your manager or system administrator to grant you access to this resource.'
 http_error.404.description: 'We couldn''t find the page you requested.'
