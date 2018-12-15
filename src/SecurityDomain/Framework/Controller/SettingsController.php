@@ -43,7 +43,7 @@ class SettingsController extends AbstractController
         $location = timezone_location_get(new \DateTimeZone($user->timezone));
         $country  = $location['country_code'] === '??' ? 'UTC' : $location['country_code'];
 
-        return $this->render('security/settings/index.html.twig', [
+        return $this->render('settings/index.html.twig', [
             'locales'   => Locale::all(),
             'themes'    => Theme::all(),
             'countries' => Timezone::getCountries(),

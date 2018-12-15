@@ -18,7 +18,7 @@
             </datatable>
 
             <modal ref="dlgNewUser" header="{{ 'user.new' | trans }}" @submit="createUser">
-                {% include 'security/users/dlg_user.html.twig' %}
+                {% include 'users/dlg_user.html.twig' %}
             </modal>
 
         </div>
@@ -35,6 +35,6 @@
         eTraxis.defaultTimezone = '{{ timezone }}';
     </script>
 
-    <script src="{{ asset('js/security/users/index.js') }}"></script>
+    <script src="{{ asset('js/users/index.js') }}"></script>
 
 {% endblock %}

@@ -6,21 +6,21 @@
 
     <div class="grid-50 mobile-grid-100">
         <div class="grid-row">
-            {% include 'security/settings/profile.html.twig' %}
+            {% include 'settings/profile.html.twig' %}
         </div>
         {% if not app.user.isAccountExternal %}
             <div class="grid-row">
-                {% include 'security/settings/password.html.twig' %}
+                {% include 'settings/password.html.twig' %}
             </div>
         {% endif %}
     </div>
 
     <div class="grid-50 mobile-grid-100">
         <div class="grid-row">
-            {% include 'security/settings/appearance.html.twig' %}
+            {% include 'settings/appearance.html.twig' %}
         </div>
         <div class="grid-row">
-            {% include 'security/settings/timezone.html.twig' %}
+            {% include 'settings/timezone.html.twig' %}
         </div>
     </div>
 
@@ -33,13 +33,13 @@
         eTraxis.external = {{ app.user.isAccountExternal ? 'true' : 'false' }};
     </script>
 
-    <script src="{{ asset('js/security/settings/store.js')      }}"></script>
-    <script src="{{ asset('js/security/settings/profile.js')    }}"></script>
-    <script src="{{ asset('js/security/settings/appearance.js') }}"></script>
-    <script src="{{ asset('js/security/settings/timezone.js')   }}"></script>
+    <script src="{{ asset('js/settings/store.js')      }}"></script>
+    <script src="{{ asset('js/settings/profile.js')    }}"></script>
+    <script src="{{ asset('js/settings/appearance.js') }}"></script>
+    <script src="{{ asset('js/settings/timezone.js')   }}"></script>
 
     {% if not app.user.isAccountExternal %}
-        <script src="{{ asset('js/security/settings/password.js') }}"></script>
+        <script src="{{ asset('js/settings/password.js') }}"></script>
     {% endif %}
 
 {% endblock %}

@@ -41,7 +41,7 @@ class UsersController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('security/users/index.html.twig', [
+        return $this->render('users/index.html.twig', [
             'locales'   => Locale::all(),
             'themes'    => Theme::all(),
             'timezones' => Timezone::all(),
@@ -63,7 +63,7 @@ class UsersController extends AbstractController
      */
     public function view(User $user): Response
     {
-        return $this->render('security/users/view.html.twig', [
+        return $this->render('users/view.html.twig', [
             'user'      => $user,
             'providers' => AccountProvider::all(),
             'locales'   => Locale::all(),
