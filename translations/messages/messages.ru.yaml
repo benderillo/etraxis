@@ -59,6 +59,7 @@ field.type.list: Список
 field.type.number: 'Целое число'
 field.type.string: Строка
 field.type.text: 'Многострочный текст'
+fields: Поля
 group.global: Глобальная
 group.local: Локальная
 groups: Группы
@@ -86,6 +87,7 @@ password.dont_match: 'Пароли не совпадают.'
 password.forgot: 'Забыли пароль?'
 password.forgot.email_sent: 'Вам выслано письмо с инструкциями о смене пароля.'
 password.new: 'Новый пароль'
+projects: Проекты
 role.admin: Администратор
 role.any: 'Любой пользователь'
 role.author: Автор
@@ -98,6 +100,7 @@ state.responsible.remove: Убрать
 state.type.final: Финальное
 state.type.initial: Исходное
 state.type.intermediate: Промежуточное
+states: Состояния
 table.empty: 'Нет данных.'
 table.pages: '%number% страниц(ы)'
 table.size: '%size% строк'
@@ -116,6 +119,7 @@ template.permission.resume_issues: 'Возобновление записей'
 template.permission.send_reminders: 'Рассылка напоминаний'
 template.permission.suspend_issues: 'Откладывание записей'
 template.permission.view_issues: 'Просмотр записей'
+templates: Шаблоны
 text.changes_saved: 'Ваши изменения успешно сохранены.'
 text.please_wait: 'Пожалуйста, подождите...'
 user.appearance: 'Внешний вид'

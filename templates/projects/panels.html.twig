@@ -1,0 +1,26 @@
+<div id="vue-panels" v-cloak>
+
+    <panel header="{{ 'projects' | trans }}">
+        <list :items="projects" :selected="projectId" @click="projectId = $event"></list>
+    </panel>
+
+    <panel header="{{ 'groups' | trans }}">
+        <list :items="globalGroups" :selected="groupId" @click="groupId = $event"></list>
+        <list v-if="projectId" :items="localGroups" :selected="groupId" @click="groupId = $event"></list>
+    </panel>
+
+    <panel v-if="projectId" header="{{ 'templates' | trans }}">
+        <list :items="templates" :selected="templateId" @click="templateId = $event"></list>
+    </panel>
+
+    <panel v-if="templateId" header="{{ 'states' | trans }}">
+        <list :items="initialStates" :selected="stateId" @click="stateId = $event"></list>
+        <list :items="intermediateStates" :selected="stateId" @click="stateId = $event"></list>
+        <list :items="finalStates" :selected="stateId" @click="stateId = $event"></list>
+    </panel>
+
+    <panel v-if="stateId" header="{{ 'fields' | trans }}">
+        <list :items="fields" :selected="fieldId" @click="fieldId = $event"></list>
+    </panel>
+
+</div>
