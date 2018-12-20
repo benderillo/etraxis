@@ -57,7 +57,8 @@ const cssVendor = () => {
 const jsVendor = () => {
 
     const files = [
-        argv.prod ? 'node_modules/vue/dist/vue.min.js' : 'node_modules/vue/dist/vue.js',
+        argv.prod ? 'node_modules/vue/dist/vue.min.js'   : 'node_modules/vue/dist/vue.js',
+        argv.prod ? 'node_modules/vuex/dist/vuex.min.js' : 'node_modules/vuex/dist/vuex.js',
         'node_modules/axios/dist/axios.js',
         'node_modules/dialog-polyfill/dialog-polyfill.js',
         'assets/etraxis.js',

@@ -44,7 +44,7 @@
         computed: {
 
             /**
-             * Returns full caption of the tab.
+             * @returns {string} Full caption of the tab.
              */
             caption() {
                 return typeof this.counter === 'undefined'

@@ -44,7 +44,7 @@ new Vue({
                     }
 
                     if (response.data.to + 1 < response.data.total) {
-                        loadPage(response.data.to + 1);
+                        loadAllGroups(response.data.to + 1);
                     }
                 })
                 .catch(exception => ui.getErrors(exception));
@@ -75,36 +75,28 @@ new Vue({
     computed: {
 
         /**
-         * Returns human-readable provider.
-         *
-         * @returns {string}
+         * @returns {string} Human-readable provider.
          */
         provider() {
             return eTraxis.providers[this.profile.provider];
         },
 
         /**
-         * Returns human-readable language.
-         *
-         * @returns {string}
+         * @returns {string} Human-readable language.
          */
         language() {
             return eTraxis.locales[this.profile.locale];
         },
 
         /**
-         * Returns human-readable theme.
-         *
-         * @returns {string}
+         * @returns {string} Human-readable theme.
          */
         theme() {
             return eTraxis.themes[this.profile.theme];
         },
 
         /**
-         * Returns list of all groups which the user is not a member of.
-         *
-         * @returns {Array}
+         * @returns {Array} List of all groups which the user is not a member of.
          */
         otherGroups() {
 

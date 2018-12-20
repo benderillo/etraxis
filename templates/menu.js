@@ -19,11 +19,11 @@ new Vue({
     el: 'nav',
 
     data: {
-        // Whether the main menu is visible.
-        isMenuHidden: true,
+        isMenuHidden: true,     // whether the main menu is visible
     },
 
     methods: {
+
         /**
          * Toggles visibility of the main menu.
          */

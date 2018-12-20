@@ -52,9 +52,9 @@
              */
             selectTab(id) {
 
-                this.tabs.forEach(tab => {
+                for (let tab of this.tabs) {
                     tab.active = (tab.id === id);
-                });
+                }
 
                 this.$emit('activate', id);
             },
@@ -63,7 +63,7 @@
         watch: {
 
             /**
-             * Makes the specified tab active.
+             * Another tab has been selected.
              *
              * @param {string} id Tab's ID.
              */

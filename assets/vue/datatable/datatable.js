@@ -411,10 +411,7 @@ export default {
             }
 
             if (value) {
-                this.checked = [];
-                rows.forEach(row => {
-                    this.checked.push(row.DT_id);
-                });
+                this.checked = rows.map(row => row.DT_id);
             }
         },
 

@@ -71,7 +71,7 @@ new Vue({
     watch: {
 
         /**
-         * Reloads list of cities when the country is changed.
+         * The country has been changed.
          */
         country() {
             this.loadCities();
