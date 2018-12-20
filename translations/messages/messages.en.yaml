@@ -121,6 +121,7 @@ template.permission.suspend_issues: 'Suspend issues'
 template.permission.view_issues: 'View issues'
 templates: Templates
 text.changes_saved: 'Your changes were successfully saved.'
+text.create_project: 'To create new project, click the <span class="fa fa-plus"></span> icon <span class="hide-on-mobile">at left</span><span class="hide-on-desktop">below</span>.'
 text.please_wait: 'Please wait...'
 user.appearance: Appearance
 user.authentication: Authentication

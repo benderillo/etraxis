@@ -4,18 +4,20 @@
 
 {% block content %}
 
-    <div class="grid-70 push-30 mobile-grid-100">
-        &nbsp;
-    </div>
-
-    <div class="grid-30 pull-70 mobile-grid-100">
-        {% include 'projects/panels.html.twig' %}
+    <div id="vue-panels" v-cloak>
+        <div v-if="applicationId === null" class="grid-70 push-30 mobile-grid-100">
+            <p class="grid-row">{{ 'text.create_project' | trans | raw }}</p>
+        </div>
+        <div class="grid-30 pull-70 mobile-grid-100">
+            {% include 'projects/panels.html.twig' %}
+        </div>
     </div>
 
 {% endblock %}
 
 {% block scripts %}
 
+    <script src="{{ asset('js/projects/store.js')  }}"></script>
     <script src="{{ asset('js/projects/panels.js') }}"></script>
 
 {% endblock %}

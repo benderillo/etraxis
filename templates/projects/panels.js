@@ -11,7 +11,6 @@
 
 import List  from 'components/panel/list.vue';
 import Panel from 'components/panel/panel.vue';
-import store from './store';
 
 // State types.
 const STATE_INITIAL      = 'initial';
@@ -25,8 +24,8 @@ new Vue({
     el: '#vue-panels',
 
     created() {
-        store.dispatch('projects/load');
-        store.dispatch('groups/load');
+        eTraxis.store.dispatch('projects/load');
+        eTraxis.store.dispatch('groups/load');
     },
 
     components: {
@@ -37,59 +36,66 @@ new Vue({
     computed: {
 
         /**
+         * @returns {null|string} Current right-side application.
+         */
+        applicationId() {
+            return eTraxis.store.getters.applicationId;
+        },
+
+        /**
          * @returns {Array} All existing projects.
          */
         projects() {
-            return store.state.projects.list;
+            return eTraxis.store.state.projects.list;
         },
 
         /**
          * @returns {Array} All existing global groups.
          */
         globalGroups() {
-            return store.state.groups.global;
+            return eTraxis.store.state.groups.global;
         },
 
         /**
          * @returns {Array} All local groups of the selected project.
          */
         localGroups() {
-            return store.state.groups.local;
+            return eTraxis.store.state.groups.local;
         },
 
         /**
          * @returns {Array} All templates of the current project.
          */
         templates() {
-            return store.state.templates.list;
+            return eTraxis.store.state.templates.list;
         },
 
         /**
          * @returns {Array} Initial states of the current template.
          */
         initialStates() {
-            return store.state.states.list.filter(state => state.type === STATE_INITIAL);
+            return eTraxis.store.state.states.list.filter(state => state.type === STATE_INITIAL);
         },
 
         /**
          * @returns {Array} Intermediate states of the current template.
          */
         intermediateStates() {
-            return store.state.states.list.filter(state => state.type === STATE_INTERMEDIATE);
+            return eTraxis.store.state.states.list.filter(state => state.type === STATE_INTERMEDIATE);
         },
 
         /**
          * @returns {Array} Final states of the current template.
          */
         finalStates() {
-            return store.state.states.list.filter(state => state.type === STATE_FINAL);
+            return eTraxis.store.state.states.list.filter(state => state.type === STATE_FINAL);
         },
 
         /**
          * @returns {Array} All fields of the current state.
          */
         fields() {
-            return store.state.fields.list;
+            return eTraxis.store.state.fields.list;
         },
 
         /**
@@ -97,10 +103,10 @@ new Vue({
          */
         projectId: {
             get() {
-                return store.state.projects.currentId;
+                return eTraxis.store.state.projects.currentId;
             },
             set(value) {
-                store.commit('projects/current', value);
+                eTraxis.store.commit('projects/current', value);
             },
         },
 
@@ -109,10 +115,10 @@ new Vue({
          */
         groupId: {
             get() {
-                return store.state.groups.currentId;
+                return eTraxis.store.state.groups.currentId;
             },
             set(value) {
-                store.commit('groups/current', value);
+                eTraxis.store.commit('groups/current', value);
             },
         },
 
@@ -121,10 +127,10 @@ new Vue({
          */
         templateId: {
             get() {
-                return store.state.templates.currentId;
+                return eTraxis.store.state.templates.currentId;
             },
             set(value) {
-                store.commit('templates/current', value);
+                eTraxis.store.commit('templates/current', value);
             },
         },
 
@@ -133,10 +139,10 @@ new Vue({
          */
         stateId: {
             get() {
-                return store.state.states.currentId;
+                return eTraxis.store.state.states.currentId;
             },
             set(value) {
-                store.commit('states/current', value);
+                eTraxis.store.commit('states/current', value);
             },
         },
 
@@ -145,10 +151,10 @@ new Vue({
          */
         fieldId: {
             get() {
-                return store.state.fields.currentId;
+                return eTraxis.store.state.fields.currentId;
             },
             set(value) {
-                store.commit('fields/current', value);
+                eTraxis.store.commit('fields/current', value);
             },
         },
     },
@@ -165,8 +171,8 @@ new Vue({
             this.groupId    = null;
             this.templateId = null;
 
-            store.dispatch('groups/load', id);
-            store.dispatch('templates/load', id);
+            eTraxis.store.dispatch('groups/load', id);
+            eTraxis.store.dispatch('templates/load', id);
         },
 
         /**
@@ -192,7 +198,7 @@ new Vue({
 
             if (id !== null) {
                 this.groupId = null;
-                store.dispatch('states/load', id);
+                eTraxis.store.dispatch('states/load', id);
             }
         },
 
@@ -206,7 +212,7 @@ new Vue({
             this.fieldId = null;
 
             if (id !== null) {
-                store.dispatch('fields/load', id);
+                eTraxis.store.dispatch('fields/load', id);
             }
         },
     },

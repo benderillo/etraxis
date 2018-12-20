@@ -121,6 +121,7 @@ template.permission.suspend_issues: 'Откладывание записей'
 template.permission.view_issues: 'Просмотр записей'
 templates: Шаблоны
 text.changes_saved: 'Ваши изменения успешно сохранены.'
+text.create_project: 'Чтобы создать новый проект, кликните по иконке <span class="fa fa-plus"></span> <span class="hide-on-mobile">слева</span><span class="hide-on-desktop">ниже</span>.'
 text.please_wait: 'Пожалуйста, подождите...'
 user.appearance: 'Внешний вид'
 user.authentication: Авторизация
