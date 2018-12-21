@@ -48,6 +48,7 @@
 <script src="{{ asset('js/i18n/etraxis-en.js') }}"></script>
 <script src="{{ asset('js/i18n/etraxis-%s.js' | format(app.user.locale ?? locale)) }}"></script>
 <script src="{{ asset('js/menu.js') }}"></script>
+<script>eTraxis.locale = '{{ (app.user.locale ?? locale) | replace({ '_': '-' }) }}'</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
