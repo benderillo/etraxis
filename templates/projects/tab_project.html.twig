@@ -1,0 +1,25 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <div class="fieldset">
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'project.name' | trans }}:</p></div>
+                <div class="grid-75"><p>${ project.name || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'project.start_date' | trans }}:</p></div>
+                <div class="grid-75"><p>${ startDate || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'project.status' | trans }}:</p></div>
+                <div class="grid-75" v-if="project.suspended"><p>{{ 'project.suspended' | trans }}</p></div>
+                <div class="grid-75" v-if="!project.suspended"><p>{{ 'project.active' | trans }}</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'project.description' | trans }}:</p></div>
+                <div class="grid-75"><p>${ project.description || '&mdash;' }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

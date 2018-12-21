@@ -87,6 +87,13 @@ password.dont_match: 'Пароли не совпадают.'
 password.forgot: 'Забыли пароль?'
 password.forgot.email_sent: 'Вам выслано письмо с инструкциями о смене пароля.'
 password.new: 'Новый пароль'
+project: Проект
+project.active: Активный
+project.description: Описание
+project.name: 'Название проекта'
+project.start_date: 'Начало проекта'
+project.status: Состояние
+project.suspended: Приостановлен
 projects: Проекты
 role.admin: Администратор
 role.any: 'Любой пользователь'

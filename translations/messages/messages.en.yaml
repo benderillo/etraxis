@@ -87,6 +87,13 @@ password.dont_match: 'Passwords do not match.'
 password.forgot: 'Forgot password?'
 password.forgot.email_sent: 'An email with instructions to choose a new password has been sent to you.'
 password.new: 'New password'
+project: Project
+project.active: Active
+project.description: Description
+project.name: 'Project name'
+project.start_date: 'Start date'
+project.status: Status
+project.suspended: Suspended
 projects: Projects
 role.admin: Administrator
 role.any: 'Any user'
