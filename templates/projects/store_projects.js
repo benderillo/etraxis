@@ -35,6 +35,22 @@ module.exports = {
         current(state, id) {
             state.currentId = id;
         },
+
+        /**
+         * Updates specified project.
+         *
+         * @param {Object} state Store's state.
+         * @param {Object} data  Project info.
+         */
+        update(state, data) {
+            for (let project of state.list) {
+                if (project.id === data.id) {
+                    project.title = data.name;
+                    project.class = data.suspended ? 'muted' : null;
+                    break;
+                }
+            }
+        },
     },
 
     actions: {

@@ -1,0 +1,33 @@
+<div class="fieldset">
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="name" title="{{ 'project.name' | trans }}">{{ 'project.name' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="name" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
+            <p class="attention">${ errors.name }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="description" title="{{ 'project.description' | trans }}">{{ 'project.description' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="description" v-model="values.description">
+            <p class="attention">${ errors.description }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-66 prefix-33">
+            <label title="{{ 'project.suspended' | trans }}">
+                <input type="checkbox" v-model="values.suspended">
+                <span>{{ 'project.suspended' | trans }}</span>
+            </label>
+            <p class="attention">${ errors.suspended }</p>
+        </div>
+    </div>
+
+</div>

@@ -9,6 +9,7 @@
 //
 //----------------------------------------------------------------------
 
+import Modal from 'components/modal.vue';
 import Tab   from 'components/tabs/tab.vue';
 import Tabs  from 'components/tabs/tabs.vue';
 import epoch from 'utilities/epoch';
@@ -22,12 +23,16 @@ new Vue({
     el: '#vue-project',
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
 
     data: {
-        project: {},    // project info
+        project: {},        // project info
+        permissions: {},    // project permissions
+        values: {},         // form values
+        errors: {},         // form errors
     },
 
     computed: {
@@ -54,6 +59,69 @@ new Vue({
         },
     },
 
+    methods: {
+
+        /**
+         * Reloads project info.
+         */
+        reloadProject() {
+
+            ui.block();
+
+            this.permissions = {};
+
+            axios.get(url(`/api/projects/${this.projectId}`))
+                .then(response => {
+                    this.project = response.data;
+                    eTraxis.store.commit('projects/update', this.project);
+                })
+                .then(() => {
+                    axios.get(url(`/admin/projects/permissions/${this.projectId}`))
+                        .then(response => this.permissions = response.data);
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'Edit project' dialog.
+         */
+        showEditProjectDialog() {
+
+            this.values = {
+                name: this.project.name,
+                description: this.project.description,
+                suspended: this.project.suspended,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditProject.open();
+        },
+
+        /**
+         * Updates the project.
+         */
+        updateProject() {
+
+            let data = {
+                name: this.values.name,
+                description: this.values.description,
+                suspended: this.values.suspended,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/projects/${this.projectId}`), data)
+                .then(() => {
+                    this.reloadProject();
+                    this.$refs.dlgEditProject.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
+        },
+    },
+
     watch: {
 
         /**
@@ -64,9 +132,7 @@ new Vue({
         projectId(id) {
 
             if (id !== null) {
-                axios.get(url(`/api/projects/${this.projectId}`))
-                    .then(response => this.project = response.data)
-                    .catch(exception => ui.getErrors(exception));
+                this.reloadProject();
             }
         }
     },

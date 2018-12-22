@@ -103,6 +103,7 @@ password.new: 'New password'
 project: Project
 project.active: Active
 project.description: Description
+project.edit: 'Edit project'
 project.name: 'Project name'
 project.start_date: 'Start date'
 project.status: Status

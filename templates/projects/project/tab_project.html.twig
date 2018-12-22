@@ -1,6 +1,10 @@
 <div class="grid-row">
 
     <div class="grid-100">
+        <button :disabled="!permissions.update" @click="showEditProjectDialog">{{ 'button.edit' | trans }}</button>
+    </div>
+
+    <div class="grid-100">
         <div class="fieldset">
             <div class="grid-row">
                 <div class="grid-25"><p class="label">{{ 'project.name' | trans }}:</p></div>
