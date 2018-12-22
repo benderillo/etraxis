@@ -4,62 +4,11 @@
 
 {% block content %}
 
-    <div id="vue-project" v-cloak>
-        <div v-if="applicationId === 'project'" class="grid-70 push-30 mobile-grid-100">
-            <div class="grid-row">
-                <tabs>
-                    <tab id="project" title="{{ 'project' | trans }}">
-                        {% include 'projects/tab_project.html.twig' %}
-                    </tab>
-                </tabs>
-            </div>
-        </div>
-    </div>
-
-    <div id="vue-group" v-cloak>
-        <div v-if="applicationId === 'group'" class="grid-70 push-30 mobile-grid-100">
-            <div class="grid-row">
-                <tabs>
-                    <tab id="group" title="{{ 'group' | trans }}">
-                        {% include 'projects/tab_group.html.twig' %}
-                    </tab>
-                </tabs>
-            </div>
-        </div>
-    </div>
-
-    <div id="vue-template" v-cloak>
-        <div v-if="applicationId === 'template'" class="grid-70 push-30 mobile-grid-100">
-            <div class="grid-row">
-                <tabs>
-                    <tab id="template" title="{{ 'template' | trans }}">
-                        {% include 'projects/tab_template.html.twig' %}
-                    </tab>
-                </tabs>
-            </div>
-        </div>
-    </div>
-
-    <div id="vue-state" v-cloak>
-        <div v-if="applicationId === 'state'" class="grid-70 push-30 mobile-grid-100">
-            <div class="grid-row">
-                <tabs>
-                    <tab id="state" title="{{ 'state' | trans }}">
-                        {% include 'projects/tab_state.html.twig' %}
-                    </tab>
-                </tabs>
-            </div>
-        </div>
-    </div>
-
-    <div id="vue-panels" v-cloak>
-        <div v-if="applicationId === null" class="grid-70 push-30 mobile-grid-100">
-            <p class="grid-row">{{ 'text.create_project' | trans | raw }}</p>
-        </div>
-        <div class="grid-30 pull-70 mobile-grid-100">
-            {% include 'projects/panels.html.twig' %}
-        </div>
-    </div>
+    {% include 'projects/project.html.twig'  %}
+    {% include 'projects/group.html.twig'    %}
+    {% include 'projects/template.html.twig' %}
+    {% include 'projects/state.html.twig'    %}
+    {% include 'projects/panels.html.twig'   %}
 
 {% endblock %}
 

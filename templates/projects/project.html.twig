@@ -1,0 +1,13 @@
+<div id="vue-project" v-cloak>
+
+    <div v-if="applicationId === 'project'" class="grid-70 push-30 mobile-grid-100">
+        <div class="grid-row">
+            <tabs>
+                <tab id="project" title="{{ 'project' | trans }}">
+                    {% include 'projects/tab_project.html.twig' %}
+                </tab>
+            </tabs>
+        </div>
+    </div>
+
+</div>
