@@ -116,6 +116,13 @@ table.empty: 'No data.'
 table.pages: '%number% pages'
 table.size: '%size% rows'
 table.status: 'Showing %from% to %to% of %total% rows'
+template: Template
+template.active: Active
+template.critical_age: 'Critical age'
+template.description: Description
+template.frozen_time: 'Frozen time'
+template.locked: Locked
+template.name: 'Template name'
 template.permission.add_comments: 'Add comments'
 template.permission.add_dependencies: 'Add dependencies'
 template.permission.attach_files: 'Attach files'
@@ -130,6 +137,8 @@ template.permission.resume_issues: 'Resume issues'
 template.permission.send_reminders: 'Send reminders'
 template.permission.suspend_issues: 'Suspend issues'
 template.permission.view_issues: 'View issues'
+template.prefix: 'Template prefix'
+template.status: Status
 templates: Templates
 text.changes_saved: 'Your changes were successfully saved.'
 text.create_project: 'To create new project, click the <span class="fa fa-plus"></span> icon <span class="hide-on-mobile">at left</span><span class="hide-on-desktop">below</span>.'

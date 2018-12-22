@@ -1,0 +1,33 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <div class="fieldset">
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.name' | trans }}:</p></div>
+                <div class="grid-75"><p>${ template.name || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.prefix' | trans }}:</p></div>
+                <div class="grid-75"><p>${ template.prefix || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.critical_age' | trans }}:</p></div>
+                <div class="grid-75"><p>${ template.critical || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.frozen_time' | trans }}:</p></div>
+                <div class="grid-75"><p>${ template.frozen || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.status' | trans }}:</p></div>
+                <div class="grid-75" v-if="template.locked"><p>{{ 'template.locked' | trans }}</p></div>
+                <div class="grid-75" v-if="!template.locked"><p>{{ 'template.active' | trans }}</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'template.description' | trans }}:</p></div>
+                <div class="grid-75"><p>${ template.description || '&mdash;' }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -116,6 +116,13 @@ table.empty: 'Нет данных.'
 table.pages: '%number% страниц(ы)'
 table.size: '%size% строк'
 table.status: 'Строки с %from% по %to% из %total%'
+template: Шаблон
+template.active: Активный
+template.critical_age: 'Критический возраст'
+template.description: Описание
+template.frozen_time: 'Время "заморозки"'
+template.locked: Заблокирован
+template.name: 'Название шаблона'
 template.permission.add_comments: 'Добавление комментариев'
 template.permission.add_dependencies: 'Добавление зависимостей'
 template.permission.attach_files: 'Добавление файлов'
@@ -130,6 +137,8 @@ template.permission.resume_issues: 'Возобновление записей'
 template.permission.send_reminders: 'Рассылка напоминаний'
 template.permission.suspend_issues: 'Откладывание записей'
 template.permission.view_issues: 'Просмотр записей'
+template.prefix: Префикс
+template.status: Состояние
 templates: Шаблоны
 text.changes_saved: 'Ваши изменения успешно сохранены.'
 text.create_project: 'Чтобы создать новый проект, кликните по иконке <span class="fa fa-plus"></span> <span class="hide-on-mobile">слева</span><span class="hide-on-desktop">ниже</span>.'
