@@ -4,12 +4,12 @@
 
 {% block content %}
 
-    {% include 'projects/project.html.twig'  %}
-    {% include 'projects/group.html.twig'    %}
-    {% include 'projects/template.html.twig' %}
-    {% include 'projects/state.html.twig'    %}
-    {% include 'projects/field.html.twig'    %}
-    {% include 'projects/panels.html.twig'   %}
+    {% include 'projects/project/project.html.twig'   %}
+    {% include 'projects/group/group.html.twig'       %}
+    {% include 'projects/template/template.html.twig' %}
+    {% include 'projects/state/state.html.twig'       %}
+    {% include 'projects/field/field.html.twig'       %}
+    {% include 'projects/panels/panels.html.twig'     %}
 
 {% endblock %}
 
@@ -21,12 +21,12 @@
         eTraxis.field_types        = {{ field_types        | json_encode | raw }};
     </script>
 
-    <script src="{{ asset('js/projects/store.js')    }}"></script>
-    <script src="{{ asset('js/projects/panels.js')   }}"></script>
-    <script src="{{ asset('js/projects/project.js')  }}"></script>
-    <script src="{{ asset('js/projects/group.js')    }}"></script>
-    <script src="{{ asset('js/projects/template.js') }}"></script>
-    <script src="{{ asset('js/projects/state.js')    }}"></script>
-    <script src="{{ asset('js/projects/field.js')    }}"></script>
+    <script src="{{ asset('js/projects/store.js')             }}"></script>
+    <script src="{{ asset('js/projects/panels/panels.js')     }}"></script>
+    <script src="{{ asset('js/projects/project/project.js')   }}"></script>
+    <script src="{{ asset('js/projects/group/group.js')       }}"></script>
+    <script src="{{ asset('js/projects/template/template.js') }}"></script>
+    <script src="{{ asset('js/projects/state/state.js')       }}"></script>
+    <script src="{{ asset('js/projects/field/field.js')       }}"></script>
 
 {% endblock %}
