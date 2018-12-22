@@ -1,0 +1,20 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <div class="fieldset">
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'state.name' | trans }}:</p></div>
+                <div class="grid-75"><p>${ state.name || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'state.type' | trans }}:</p></div>
+                <div class="grid-75"><p>${ type || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'state.responsible' | trans }}:</p></div>
+                <div class="grid-75"><p>${ responsible || '&mdash;' }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

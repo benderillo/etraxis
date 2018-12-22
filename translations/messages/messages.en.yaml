@@ -105,9 +105,13 @@ role.author: Author
 role.responsible: Responsible
 role.user: User
 security.remember_me: 'Remember me'
+state: State
+state.name: 'State name'
+state.responsible: Responsible
 state.responsible.assign: Assign
 state.responsible.keep: 'Keep current'
 state.responsible.remove: 'Remove current'
+state.type: 'State type'
 state.type.final: Final
 state.type.initial: Initial
 state.type.intermediate: Intermediate

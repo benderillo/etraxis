@@ -13,6 +13,8 @@
 
 namespace eTraxis\TemplatesDomain\Framework\Controller;
 
+use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
+use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,6 +37,9 @@ class ProjectsController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('projects/index.html.twig');
+        return $this->render('projects/index.html.twig', [
+            'state_types'        => StateType::all(),
+            'state_responsibles' => StateResponsible::all(),
+        ]);
     }
 }

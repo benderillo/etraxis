@@ -105,9 +105,13 @@ role.author: Автор
 role.responsible: Ответственный
 role.user: Пользователь
 security.remember_me: 'Запомнить меня'
+state: Состояние
+state.name: 'Название состояния'
+state.responsible: Ответственный
 state.responsible.assign: Назначить
 state.responsible.keep: 'Оставить без изменений'
 state.responsible.remove: Убрать
+state.type: 'Тип состояния'
 state.type.final: Финальное
 state.type.initial: Исходное
 state.type.intermediate: Промежуточное
