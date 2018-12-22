@@ -13,6 +13,7 @@
 
 namespace eTraxis\TemplatesDomain\Framework\Controller;
 
+use eTraxis\TemplatesDomain\Model\Dictionary\FieldType;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateResponsible;
 use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -40,6 +41,7 @@ class ProjectsController extends AbstractController
         return $this->render('projects/index.html.twig', [
             'state_types'        => StateType::all(),
             'state_responsibles' => StateResponsible::all(),
+            'field_types'        => FieldType::all(),
         ]);
     }
 }

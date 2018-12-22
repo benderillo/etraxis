@@ -1,0 +1,13 @@
+<div id="vue-field" v-cloak>
+
+    <div v-if="applicationId === 'field'" class="grid-70 push-30 mobile-grid-100">
+        <div class="grid-row">
+            <tabs>
+                <tab id="field" title="{{ 'field' | trans }}">
+                    {% include 'projects/tab_field.html.twig' %}
+                </tab>
+            </tabs>
+        </div>
+    </div>
+
+</div>

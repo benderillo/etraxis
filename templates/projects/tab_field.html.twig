@@ -1,0 +1,41 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <div class="fieldset">
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.name' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.name || '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.type' | trans }}:</p></div>
+                <div class="grid-75"><p>${ type || '&mdash;' }</p></div>
+            </div>
+            <div v-if="field.type !== 'checkbox'" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.required' | trans }}:</p></div>
+                <div class="grid-75" v-if="field.required"><p>{{ 'text.yes' | trans }}</p></div>
+                <div class="grid-75" v-if="!field.required"><p>{{ 'text.no' | trans }}</p></div>
+            </div>
+            <div v-if="field.maxlength !== undefined" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.maximum_length' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.maxlength !== null ? field.maxlength : '&mdash;' }</p></div>
+            </div>
+            <div v-if="field.minimum !== undefined" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.minimum_value' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.minimum !== null ? field.minimum : '&mdash;' }</p></div>
+            </div>
+            <div v-if="field.maximum !== undefined" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.maximum_value' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.maximum !== null ? field.maximum : '&mdash;' }</p></div>
+            </div>
+            <div v-if="field.type !== 'issue'" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.default_value' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.default !== null ? defaultValue : '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'field.description' | trans }}:</p></div>
+                <div class="grid-75"><p>${ field.description || '&mdash;' }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -43,13 +43,22 @@ event.issue_reopened: 'Состояние изменено на "%value%" (за�
 event.issue_resumed: 'Запись возобновлена.'
 event.issue_suspended: 'Запись отложена.'
 event.state_changed: 'Состояние изменено на "%value%".'
+field: Поле
+field.default_value: 'Значение по умолчанию'
+field.description: Описание
 field.error.default_value_format: 'Неправильный формат значения по умолчанию.'
 field.error.default_value_length: 'Значение по умолчанию не должно быть длиннее %maximum% символов.'
 field.error.default_value_range: 'Значение по умолчанию должно лежать в диапазоне от %minimum% до %maximum%.'
 field.error.min_max_values: 'Максимальное значение должно быть больше минимального.'
 field.error.value_range: 'Значение поля "%name%" должно лежать в диапазоне от %minimum% до %maximum%.'
+field.maximum_length: 'Максимальная длина'
+field.maximum_value: 'Максимальное значение'
+field.minimum_value: 'Минимальное значение'
+field.name: 'Название поля'
 field.permission.read_only: 'только чтение'
 field.permission.read_write: 'чтение и запись'
+field.required: 'Обязательное поле'
+field.type: 'Тип поля'
 field.type.checkbox: '"Флаг"'
 field.type.date: Дата
 field.type.decimal: 'Вещественное число'
@@ -146,7 +155,9 @@ template.status: Состояние
 templates: Шаблоны
 text.changes_saved: 'Ваши изменения успешно сохранены.'
 text.create_project: 'Чтобы создать новый проект, кликните по иконке <span class="fa fa-plus"></span> <span class="hide-on-mobile">слева</span><span class="hide-on-desktop">ниже</span>.'
+text.no: Нет
 text.please_wait: 'Пожалуйста, подождите...'
+text.yes: Да
 user.appearance: 'Внешний вид'
 user.authentication: Авторизация
 user.city: Город

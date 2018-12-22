@@ -8,6 +8,7 @@
     {% include 'projects/group.html.twig'    %}
     {% include 'projects/template.html.twig' %}
     {% include 'projects/state.html.twig'    %}
+    {% include 'projects/field.html.twig'    %}
     {% include 'projects/panels.html.twig'   %}
 
 {% endblock %}
@@ -17,6 +18,7 @@
     <script>
         eTraxis.state_types        = {{ state_types        | json_encode | raw }};
         eTraxis.state_responsibles = {{ state_responsibles | json_encode | raw }};
+        eTraxis.field_types        = {{ field_types        | json_encode | raw }};
     </script>
 
     <script src="{{ asset('js/projects/store.js')    }}"></script>
@@ -25,5 +27,6 @@
     <script src="{{ asset('js/projects/group.js')    }}"></script>
     <script src="{{ asset('js/projects/template.js') }}"></script>
     <script src="{{ asset('js/projects/state.js')    }}"></script>
+    <script src="{{ asset('js/projects/field.js')    }}"></script>
 
 {% endblock %}

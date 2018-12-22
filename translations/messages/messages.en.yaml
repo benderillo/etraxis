@@ -43,13 +43,22 @@ event.issue_reopened: 'State is changed to ''%value%'' (issue is reopened).'
 event.issue_resumed: 'Issue is resumed.'
 event.issue_suspended: 'Issue is suspended.'
 event.state_changed: 'State is changed to ''%value%''.'
+field: Field
+field.default_value: 'Default value'
+field.description: Description
 field.error.default_value_format: 'Invalid format of the default value.'
 field.error.default_value_length: 'Default value should not be longer than %maximum% characters.'
 field.error.default_value_range: 'Default value should be in range from %minimum% to %maximum%.'
 field.error.min_max_values: 'Maximum value should not be less then minimum one.'
 field.error.value_range: '''%name%'' should be in range from %minimum% to %maximum%.'
+field.maximum_length: 'Maximum length'
+field.maximum_value: 'Maximum value'
+field.minimum_value: 'Minimum value'
+field.name: 'Field name'
 field.permission.read_only: 'Read only'
 field.permission.read_write: 'Read and write'
+field.required: 'Required field'
+field.type: 'Field type'
 field.type.checkbox: Checkbox
 field.type.date: Date
 field.type.decimal: Decimal
@@ -146,7 +155,9 @@ template.status: Status
 templates: Templates
 text.changes_saved: 'Your changes were successfully saved.'
 text.create_project: 'To create new project, click the <span class="fa fa-plus"></span> icon <span class="hide-on-mobile">at left</span><span class="hide-on-desktop">below</span>.'
+text.no: No
 text.please_wait: 'Please wait...'
+text.yes: Yes
 user.appearance: Appearance
 user.authentication: Authentication
 user.city: City
