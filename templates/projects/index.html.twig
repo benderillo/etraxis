@@ -16,6 +16,18 @@
         </div>
     </div>
 
+    <div id="vue-group" v-cloak>
+        <div v-if="applicationId === 'group'" class="grid-70 push-30 mobile-grid-100">
+            <div class="grid-row">
+                <tabs>
+                    <tab id="group" title="{{ 'group' | trans }}">
+                        {% include 'projects/tab_group.html.twig' %}
+                    </tab>
+                </tabs>
+            </div>
+        </div>
+    </div>
+
     <div id="vue-panels" v-cloak>
         <div v-if="applicationId === null" class="grid-70 push-30 mobile-grid-100">
             <p class="grid-row">{{ 'text.create_project' | trans | raw }}</p>
@@ -32,5 +44,6 @@
     <script src="{{ asset('js/projects/store.js')   }}"></script>
     <script src="{{ asset('js/projects/panels.js')  }}"></script>
     <script src="{{ asset('js/projects/project.js') }}"></script>
+    <script src="{{ asset('js/projects/group.js')   }}"></script>
 
 {% endblock %}

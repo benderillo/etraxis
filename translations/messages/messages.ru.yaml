@@ -60,8 +60,12 @@ field.type.number: 'Целое число'
 field.type.string: Строка
 field.type.text: 'Многострочный текст'
 fields: Поля
+group: Группа
+group.description: Описание
 group.global: Глобальная
 group.local: Локальная
+group.name: 'Название группы'
+group.type: 'Тип группы'
 groups: Группы
 groups.other: 'Прочие группы'
 groups.user: 'Группы пользователя'

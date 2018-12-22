@@ -1,0 +1,20 @@
+<div class="grid-row">
+
+    <div class="grid-100">
+        <div class="fieldset">
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'group.name' | trans }}:</p></div>
+                <div class="grid-75"><p>${ group.name || '&mdash;' }</p></div>
+            </div>
+            <div v-show="!group.global" class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'project' | trans }}:</p></div>
+                <div class="grid-75"><p>${ !group.global ? group.project.name : '&mdash;' }</p></div>
+            </div>
+            <div class="grid-row">
+                <div class="grid-25"><p class="label">{{ 'group.description' | trans }}:</p></div>
+                <div class="grid-75"><p>${ group.description || '&mdash;' }</p></div>
+            </div>
+        </div>
+    </div>
+
+</div>

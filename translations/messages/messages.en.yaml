@@ -60,8 +60,12 @@ field.type.number: Number
 field.type.string: String
 field.type.text: Text
 fields: Fields
+group: Group
+group.description: Description
 group.global: Global
 group.local: Local
+group.name: 'Group name'
+group.type: 'Group type'
 groups: Groups
 groups.other: 'Other groups'
 groups.user: 'User groups'
