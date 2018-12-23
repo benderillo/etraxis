@@ -2,6 +2,8 @@
 
     <div class="grid-100">
         <button :disabled="!permissions.update" @click="showEditProjectDialog">{{ 'button.edit' | trans }}</button>
+        <button v-show="!project.suspended" :disabled="!permissions.suspend" @click="suspendProject">{{ 'button.suspend' | trans }}</button>
+        <button v-show="project.suspended" :disabled="!permissions.resume" @click="resumeProject">{{ 'button.resume' | trans }}</button>
         <button :disabled="!permissions.delete" class="danger" @click="deleteProject">{{ 'button.delete' | trans }}</button>
     </div>
 

@@ -144,6 +144,36 @@ new Vue({
                     .then(() => ui.unblock());
             });
         },
+
+        /**
+         * Suspends the project.
+         */
+        suspendProject() {
+
+            ui.block();
+
+            axios.post(url(`/api/projects/${this.projectId}/suspend`))
+                .then(() => {
+                    this.reloadProject();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Resumes the project.
+         */
+        resumeProject() {
+
+            ui.block();
+
+            axios.post(url(`/api/projects/${this.projectId}/resume`))
+                .then(() => {
+                    this.reloadProject();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
     },
 
     watch: {

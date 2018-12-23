@@ -17,8 +17,10 @@ button.ok: ОК
 button.refresh: Обновить
 button.remove: Убрать
 button.reset_filters: 'Сбросить фильтры'
+button.resume: Возобновить
 button.save: Сохранить
 button.search: Поиск
+button.suspend: Приостановить
 button.unlock: Разблокировать
 button.yes: Да
 confirm.logout: 'Вы уверены что хотите выйти?'

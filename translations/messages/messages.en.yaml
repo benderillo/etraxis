@@ -17,8 +17,10 @@ button.ok: OK
 button.refresh: Refresh
 button.remove: Remove
 button.reset_filters: 'Reset filters'
+button.resume: Resume
 button.save: Save
 button.search: Search
+button.suspend: Suspend
 button.unlock: Unlock
 button.yes: Yes
 confirm.logout: 'Are you sure you want exit?'
