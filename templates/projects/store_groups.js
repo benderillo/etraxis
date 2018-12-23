@@ -36,6 +36,21 @@ module.exports = {
         current(state, id) {
             state.currentId = id;
         },
+
+        /**
+         * Updates specified group.
+         *
+         * @param {Object} state Store's state.
+         * @param {Object} data  Group info.
+         */
+        update(state, data) {
+            for (let group of (data.global ? state.global : state.local)) {
+                if (group.id === data.id) {
+                    group.title = data.name;
+                    break;
+                }
+            }
+        },
     },
 
     actions: {

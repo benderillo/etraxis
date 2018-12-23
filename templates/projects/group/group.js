@@ -31,6 +31,8 @@ new Vue({
         group: {
             project: {},
         },
+
+        permissions: {},    // group permissions
     },
 
     computed: {
@@ -45,8 +47,62 @@ new Vue({
         /**
          * @returns {null|number} Currently selected group.
          */
-        groupId() {
-            return eTraxis.store.state.groups.currentId;
+        groupId: {
+            get() {
+                return eTraxis.store.state.groups.currentId;
+            },
+            set(value) {
+                eTraxis.store.commit('groups/current', value);
+            },
+        },
+    },
+
+    methods: {
+
+        /**
+         * Reloads group info.
+         */
+        reloadGroup() {
+
+            ui.block();
+
+            this.permissions = {};
+
+            axios.get(url(`/api/groups/${this.groupId}`))
+                .then(response => {
+                    this.group = response.data;
+                    eTraxis.store.commit('groups/update', this.group);
+                })
+                .then(() => {
+                    axios.get(url(`/admin/groups/permissions/${this.groupId}`))
+                        .then(response => this.permissions = response.data);
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Deletes the group.
+         */
+        deleteGroup() {
+
+            ui.confirm(i18n['confirm.group.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/groups/${this.groupId}`))
+                    .then(() => {
+                        if (this.group.global) {
+                            eTraxis.store.dispatch('groups/load');
+                        }
+                        else {
+                            eTraxis.store.dispatch('groups/load', this.group.project.id);
+                        }
+                        this.groupId = null;
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => ui.unblock());
+            });
         },
     },
 
@@ -60,9 +116,7 @@ new Vue({
         groupId(id) {
 
             if (id !== null) {
-                axios.get(url(`/api/groups/${this.groupId}`))
-                    .then(response => this.group = response.data)
-                    .catch(exception => ui.getErrors(exception));
+                this.reloadGroup();
             }
         }
     },
