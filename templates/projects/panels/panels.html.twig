@@ -6,7 +6,7 @@
 
     <div class="grid-30 pull-70 mobile-grid-100">
 
-        <panel header="{{ 'projects' | trans }}">
+        <panel header="{{ 'projects' | trans }}" @create="showNewProjectDialog">
             <list :items="projects" :selected="projectId" @click="projectId = $event"></list>
         </panel>
 
@@ -30,5 +30,9 @@
         </panel>
 
     </div>
+
+    <modal ref="dlgNewProject" header="{{ 'project.new' | trans }}" @submit="createProject">
+        {% include 'projects/project/dlg_project.html.twig' %}
+    </modal>
 
 </div>

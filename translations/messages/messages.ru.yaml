@@ -105,6 +105,7 @@ project.active: Активный
 project.description: Описание
 project.edit: 'Редактирование проекта'
 project.name: 'Название проекта'
+project.new: 'Новый проект'
 project.start_date: 'Начало проекта'
 project.status: Состояние
 project.suspended: Приостановлен
