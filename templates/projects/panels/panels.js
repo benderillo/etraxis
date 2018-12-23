@@ -223,8 +223,10 @@ new Vue({
             this.groupId    = null;
             this.templateId = null;
 
-            eTraxis.store.dispatch('groups/load', id);
-            eTraxis.store.dispatch('templates/load', id);
+            if (id !== null) {
+                eTraxis.store.dispatch('groups/load', id);
+                eTraxis.store.dispatch('templates/load', id);
+            }
         },
 
         /**

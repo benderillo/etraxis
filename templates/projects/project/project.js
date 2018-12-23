@@ -47,8 +47,13 @@ new Vue({
         /**
          * @returns {null|number} Currently selected project.
          */
-        projectId() {
-            return eTraxis.store.state.projects.currentId;
+        projectId: {
+            get() {
+                return eTraxis.store.state.projects.currentId;
+            },
+            set(value) {
+                eTraxis.store.commit('projects/current', value);
+            },
         },
 
         /**
@@ -119,6 +124,25 @@ new Vue({
                 })
                 .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
+        },
+
+        /**
+         * Deletes the project.
+         */
+        deleteProject() {
+
+            ui.confirm(i18n['confirm.project.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/projects/${this.projectId}`))
+                    .then(() => {
+                        this.projectId = null;
+                        eTraxis.store.dispatch('projects/load');
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => ui.unblock());
+            });
         },
     },
 

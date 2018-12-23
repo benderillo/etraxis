@@ -22,6 +22,7 @@ button.search: Поиск
 button.unlock: Разблокировать
 button.yes: Да
 confirm.logout: 'Вы уверены что хотите выйти?'
+confirm.project.delete: 'Вы уверены что хотите удалить этот проект?'
 confirm.user.delete: 'Вы уверены что хотите удалить этого пользователя?'
 email.forgot_password.line1: 'Вы запросили смену пароля на <a href="%url%">%url%</a>.'
 email.forgot_password.line2: 'Для смены пароля нажмите ссылку:'

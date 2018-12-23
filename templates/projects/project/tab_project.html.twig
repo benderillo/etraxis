@@ -2,6 +2,7 @@
 
     <div class="grid-100">
         <button :disabled="!permissions.update" @click="showEditProjectDialog">{{ 'button.edit' | trans }}</button>
+        <button :disabled="!permissions.delete" class="danger" @click="deleteProject">{{ 'button.delete' | trans }}</button>
     </div>
 
     <div class="grid-100">
