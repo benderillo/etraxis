@@ -44,7 +44,6 @@ class ProjectsControllerTest extends WebTestCase
         $project = $this->doctrine->getRepository(Project::class)->findOneBy(['name' => 'Distinctio']);
 
         $expected = [
-            'create'  => true,
             'update'  => true,
             'delete'  => false,
             'suspend' => true,

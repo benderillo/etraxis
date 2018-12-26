@@ -60,7 +60,6 @@ class ProjectsController extends AbstractController
     public function permissions(Project $project): JsonResponse
     {
         return $this->json([
-            'create'  => $this->isGranted(ProjectVoter::CREATE_PROJECT),
             'update'  => $this->isGranted(ProjectVoter::UPDATE_PROJECT, $project),
             'delete'  => $this->isGranted(ProjectVoter::DELETE_PROJECT, $project),
             'suspend' => $this->isGranted(ProjectVoter::SUSPEND_PROJECT, $project),

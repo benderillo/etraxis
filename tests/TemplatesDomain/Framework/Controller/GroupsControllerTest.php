@@ -26,7 +26,6 @@ class GroupsControllerTest extends WebTestCase
         [$group] = $this->doctrine->getRepository(Group::class)->findBy(['name' => 'Developers'], ['id' => 'ASC']);
 
         $expected = [
-            'create'     => true,
             'update'     => true,
             'delete'     => true,
             'membership' => true,

@@ -40,7 +40,6 @@ class GroupsController extends AbstractController
     public function permissions(Group $group): JsonResponse
     {
         return $this->json([
-            'create'     => $this->isGranted(GroupVoter::CREATE_GROUP),
             'update'     => $this->isGranted(GroupVoter::UPDATE_GROUP, $group),
             'delete'     => $this->isGranted(GroupVoter::DELETE_GROUP, $group),
             'membership' => $this->isGranted(GroupVoter::MANAGE_MEMBERSHIP, $group),
