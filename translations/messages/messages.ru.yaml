@@ -78,6 +78,7 @@ group.description: Описание
 group.global: Глобальная
 group.local: Локальная
 group.name: 'Название группы'
+group.new: 'Новая группа'
 group.type: 'Тип группы'
 groups: Группы
 groups.other: 'Прочие группы'

@@ -78,6 +78,7 @@ group.description: Description
 group.global: Global
 group.local: Local
 group.name: 'Group name'
+group.new: 'New group'
 group.type: 'Group type'
 groups: Groups
 groups.other: 'Other groups'

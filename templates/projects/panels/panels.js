@@ -209,6 +209,46 @@ new Vue({
                 .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
+
+        /**
+         * Shows 'New group' dialog.
+         */
+        showNewGroupDialog() {
+
+            this.values = {
+                global: false,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgNewGroup.open();
+        },
+
+        /**
+         * Creates new group.
+         */
+        createGroup() {
+
+            let data = {
+                project: this.values.global ? null : this.projectId,
+                name: this.values.name,
+                description: this.values.description,
+            };
+
+            ui.block();
+
+            axios.post(url('/api/groups'), data)
+                .then(async response => {
+                    this.$refs.dlgNewGroup.close();
+                    await eTraxis.store.dispatch('groups/load', data.project)
+                        .then(() => {
+                            let location = response.headers.location;
+                            this.groupId = parseInt(location.substr(location.lastIndexOf('/') + 1));
+                        });
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
+        },
     },
 
     watch: {
