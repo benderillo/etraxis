@@ -249,6 +249,46 @@ new Vue({
                 .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
+
+        /**
+         * Shows 'New template' dialog.
+         */
+        showNewTemplateDialog() {
+
+            this.values = {};
+            this.errors = {};
+
+            this.$refs.dlgNewTemplate.open();
+        },
+
+        /**
+         * Creates new template.
+         */
+        createTemplate() {
+
+            let data = {
+                project: this.projectId,
+                name: this.values.name,
+                prefix: this.values.prefix,
+                description: this.values.description,
+                criticalAge: this.values.criticalAge,
+                frozenTime: this.values.frozenTime,
+            };
+
+            ui.block();
+
+            axios.post(url('/api/templates'), data)
+                .then(async response => {
+                    this.$refs.dlgNewTemplate.close();
+                    await eTraxis.store.dispatch('templates/load', data.project)
+                        .then(() => {
+                            let location = response.headers.location;
+                            this.templateId = parseInt(location.substr(location.lastIndexOf('/') + 1));
+                        });
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
+        },
     },
 
     watch: {

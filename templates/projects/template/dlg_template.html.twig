@@ -1,0 +1,53 @@
+<div class="fieldset">
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="name" title="{{ 'template.name' | trans }}">{{ 'template.name' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="name" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
+            <p class="attention">${ errors.name }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="prefix" title="{{ 'template.prefix' | trans }}">{{ 'template.prefix' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="prefix" placeholder="{{ 'input.required' | trans }}" v-model="values.prefix">
+            <p class="attention">${ errors.prefix }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="description" title="{{ 'template.description' | trans }}">{{ 'template.description' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="description" v-model="values.description">
+            <p class="attention">${ errors.description }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="critical_age" title="{{ 'template.critical_age' | trans }}">{{ 'template.critical_age' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="critical_age" v-model="values.criticalAge">
+            <p class="attention">${ errors.criticalAge }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="frozen_time" title="{{ 'template.frozen_time' | trans }}">{{ 'template.frozen_time' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="frozen_time" v-model="values.frozenTime">
+            <p class="attention">${ errors.frozenTime }</p>
+        </div>
+    </div>
+
+</div>

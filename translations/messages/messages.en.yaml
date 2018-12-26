@@ -145,6 +145,7 @@ template.description: Description
 template.frozen_time: 'Frozen time'
 template.locked: Locked
 template.name: 'Template name'
+template.new: 'New template'
 template.permission.add_comments: 'Add comments'
 template.permission.add_dependencies: 'Add dependencies'
 template.permission.attach_files: 'Attach files'

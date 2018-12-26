@@ -145,6 +145,7 @@ template.description: Описание
 template.frozen_time: 'Время "заморозки"'
 template.locked: Заблокирован
 template.name: 'Название шаблона'
+template.new: 'Новый шаблон'
 template.permission.add_comments: 'Добавление комментариев'
 template.permission.add_dependencies: 'Добавление зависимостей'
 template.permission.attach_files: 'Добавление файлов'

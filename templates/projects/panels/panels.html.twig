@@ -15,7 +15,7 @@
             <list v-if="projectId" :items="localGroups" :selected="groupId" @click="groupId = $event"></list>
         </panel>
 
-        <panel v-if="projectId" header="{{ 'templates' | trans }}">
+        <panel v-if="projectId" header="{{ 'templates' | trans }}" @create="showNewTemplateDialog">
             <list :items="templates" :selected="templateId" @click="templateId = $event"></list>
         </panel>
 
@@ -37,6 +37,10 @@
 
     <modal ref="dlgNewGroup" header="{{ 'group.new' | trans }}" @submit="createGroup">
         {% include 'projects/group/dlg_group.html.twig' with { new: true } %}
+    </modal>
+
+    <modal ref="dlgNewTemplate" header="{{ 'template.new' | trans }}" @submit="createTemplate">
+        {% include 'projects/template/dlg_template.html.twig' %}
     </modal>
 
 </div>
