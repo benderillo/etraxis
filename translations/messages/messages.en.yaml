@@ -142,6 +142,7 @@ template: Template
 template.active: Active
 template.critical_age: 'Critical age'
 template.description: Description
+template.edit: 'Edit template'
 template.frozen_time: 'Frozen time'
 template.locked: Locked
 template.name: 'Template name'

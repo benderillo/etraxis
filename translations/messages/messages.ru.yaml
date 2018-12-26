@@ -142,6 +142,7 @@ template: Шаблон
 template.active: Активный
 template.critical_age: 'Критический возраст'
 template.description: Описание
+template.edit: 'Редактирование шаблона'
 template.frozen_time: 'Время "заморозки"'
 template.locked: Заблокирован
 template.name: 'Название шаблона'

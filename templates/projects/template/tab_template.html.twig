@@ -1,6 +1,7 @@
 <div class="grid-row">
 
     <div class="grid-100">
+        <button :disabled="!permissions.update" @click="showEditTemplateDialog">{{ 'button.edit' | trans }}</button>
         <button :disabled="!permissions.delete" class="danger" @click="deleteTemplate">{{ 'button.delete' | trans }}</button>
     </div>
 

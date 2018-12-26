@@ -9,10 +9,11 @@
 //
 //----------------------------------------------------------------------
 
-import Tab  from 'components/tabs/tab.vue';
-import Tabs from 'components/tabs/tabs.vue';
-import ui   from 'utilities/ui';
-import url  from 'utilities/url';
+import Modal from 'components/modal.vue';
+import Tab   from 'components/tabs/tab.vue';
+import Tabs  from 'components/tabs/tabs.vue';
+import ui    from 'utilities/ui';
+import url   from 'utilities/url';
 
 /**
  * 'Projects' page (template view).
@@ -21,6 +22,7 @@ new Vue({
     el: '#vue-template',
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
@@ -28,6 +30,8 @@ new Vue({
     data: {
         template: {},       // template info
         permissions: {},    // template permissions
+        values: {},         // form values
+        errors: {},         // form errors
     },
 
     computed: {
@@ -73,6 +77,48 @@ new Vue({
                         .then(response => this.permissions = response.data);
                 })
                 .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'Edit template' dialog.
+         */
+        showEditTemplateDialog() {
+
+            this.values = {
+                name: this.template.name,
+                prefix: this.template.prefix,
+                description: this.template.description,
+                criticalAge: this.template.critical,
+                frozenTime: this.template.frozen,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditTemplate.open();
+        },
+
+        /**
+         * Updates the template.
+         */
+        updateTemplate() {
+
+            let data = {
+                name: this.values.name,
+                prefix: this.values.prefix,
+                description: this.values.description,
+                criticalAge: this.values.criticalAge,
+                frozenTime: this.values.frozenTime,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/templates/${this.templateId}`), data)
+                .then(() => {
+                    this.reloadTemplate();
+                    this.$refs.dlgEditTemplate.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
 
