@@ -27,6 +27,7 @@ new Vue({
 
     data: {
         template: {},       // template info
+        permissions: {},    // template permissions
     },
 
     computed: {
@@ -41,8 +42,57 @@ new Vue({
         /**
          * @returns {null|number} Currently selected template.
          */
-        templateId() {
-            return eTraxis.store.state.templates.currentId;
+        templateId: {
+            get() {
+                return eTraxis.store.state.templates.currentId;
+            },
+            set(value) {
+                eTraxis.store.commit('templates/current', value);
+            },
+        },
+    },
+
+    methods: {
+
+        /**
+         * Reloads template info.
+         */
+        reloadTemplate() {
+
+            ui.block();
+
+            this.permissions = {};
+
+            axios.get(url(`/api/templates/${this.templateId}`))
+                .then(response => {
+                    this.template = response.data;
+                    eTraxis.store.commit('templates/update', this.template);
+                })
+                .then(() => {
+                    axios.get(url(`/admin/templates/permissions/${this.templateId}`))
+                        .then(response => this.permissions = response.data);
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Deletes the template.
+         */
+        deleteTemplate() {
+
+            ui.confirm(i18n['confirm.template.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/templates/${this.templateId}`))
+                    .then(() => {
+                        eTraxis.store.dispatch('templates/load', this.template.project.id);
+                        this.templateId = null;
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => ui.unblock());
+            });
         },
     },
 
@@ -56,9 +106,7 @@ new Vue({
         templateId(id) {
 
             if (id !== null) {
-                axios.get(url(`/api/templates/${this.templateId}`))
-                    .then(response => this.template = response.data)
-                    .catch(exception => ui.getErrors(exception));
+                this.reloadTemplate();
             }
         }
     },

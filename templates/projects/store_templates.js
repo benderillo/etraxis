@@ -35,6 +35,22 @@ module.exports = {
         current(state, id) {
             state.currentId = id;
         },
+
+        /**
+         * Updates specified template.
+         *
+         * @param {Object} state Store's state.
+         * @param {Object} data  Template info.
+         */
+        update(state, data) {
+            for (let template of state.list) {
+                if (template.id === data.id) {
+                    template.title = data.name;
+                    template.class = data.locked ? 'attention' : null;
+                    break;
+                }
+            }
+        },
     },
 
     actions: {
