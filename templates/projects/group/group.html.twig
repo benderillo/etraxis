@@ -10,4 +10,8 @@
         </div>
     </div>
 
+    <modal ref="dlgEditGroup" header="{{ 'group.edit' | trans }}" @submit="updateGroup">
+        {% include 'projects/group/dlg_group.html.twig' with { new: false } %}
+    </modal>
+
 </div>

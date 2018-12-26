@@ -9,10 +9,11 @@
 //
 //----------------------------------------------------------------------
 
-import Tab  from 'components/tabs/tab.vue';
-import Tabs from 'components/tabs/tabs.vue';
-import ui   from 'utilities/ui';
-import url  from 'utilities/url';
+import Modal from 'components/modal.vue';
+import Tab   from 'components/tabs/tab.vue';
+import Tabs  from 'components/tabs/tabs.vue';
+import ui    from 'utilities/ui';
+import url   from 'utilities/url';
 
 /**
  * 'Projects' page (group view).
@@ -21,6 +22,7 @@ new Vue({
     el: '#vue-group',
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
@@ -33,6 +35,8 @@ new Vue({
         },
 
         permissions: {},    // group permissions
+        values: {},         // form values
+        errors: {},         // form errors
     },
 
     computed: {
@@ -78,6 +82,42 @@ new Vue({
                         .then(response => this.permissions = response.data);
                 })
                 .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'Edit group' dialog.
+         */
+        showEditGroupDialog() {
+
+            this.values = {
+                name: this.group.name,
+                description: this.group.description,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditGroup.open();
+        },
+
+        /**
+         * Updates the group.
+         */
+        updateGroup() {
+
+            let data = {
+                name: this.values.name,
+                description: this.values.description,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/groups/${this.groupId}`), data)
+                .then(() => {
+                    this.reloadGroup();
+                    this.$refs.dlgEditGroup.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
 

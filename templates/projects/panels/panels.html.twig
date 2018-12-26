@@ -36,7 +36,7 @@
     </modal>
 
     <modal ref="dlgNewGroup" header="{{ 'group.new' | trans }}" @submit="createGroup">
-        {% include 'projects/group/dlg_group.html.twig' %}
+        {% include 'projects/group/dlg_group.html.twig' with { new: true } %}
     </modal>
 
 </div>

@@ -20,14 +20,18 @@
         </div>
     </div>
 
-    <div v-if="projectId !== null" class="grid-row">
-        <div class="grid-66 prefix-33">
-            <label title="{{ 'group.global' | trans }}">
-                <input type="checkbox" v-model="values.global">
-                <span>{{ 'group.global' | trans }}</span>
-            </label>
-            <p class="attention">${ errors.global }</p>
+    {% if new %}
+
+        <div v-if="projectId !== null" class="grid-row">
+            <div class="grid-66 prefix-33">
+                <label title="{{ 'group.global' | trans }}">
+                    <input type="checkbox" v-model="values.global">
+                    <span>{{ 'group.global' | trans }}</span>
+                </label>
+                <p class="attention">${ errors.global }</p>
+            </div>
         </div>
-    </div>
+
+    {% endif %}
 
 </div>

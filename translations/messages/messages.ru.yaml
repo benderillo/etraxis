@@ -75,6 +75,7 @@ field.type.text: 'Многострочный текст'
 fields: Поля
 group: Группа
 group.description: Описание
+group.edit: 'Редактирование группы'
 group.global: Глобальная
 group.local: Локальная
 group.name: 'Название группы'
