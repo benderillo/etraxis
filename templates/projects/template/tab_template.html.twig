@@ -2,6 +2,8 @@
 
     <div class="grid-100">
         <button :disabled="!permissions.update" @click="showEditTemplateDialog">{{ 'button.edit' | trans }}</button>
+        <button v-show="!template.locked" :disabled="!permissions.lock" @click="lockTemplate">{{ 'button.lock' | trans }}</button>
+        <button v-show="template.locked" :disabled="!permissions.unlock" @click="unlockTemplate">{{ 'button.unlock' | trans }}</button>
         <button :disabled="!permissions.delete" class="danger" @click="deleteTemplate">{{ 'button.delete' | trans }}</button>
     </div>
 

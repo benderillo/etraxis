@@ -140,6 +140,36 @@ new Vue({
                     .then(() => ui.unblock());
             });
         },
+
+        /**
+         * Locks the template.
+         */
+        lockTemplate() {
+
+            ui.block();
+
+            axios.post(url(`/api/templates/${this.templateId}/lock`))
+                .then(() => {
+                    this.reloadTemplate();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Unlocks the template.
+         */
+        unlockTemplate() {
+
+            ui.block();
+
+            axios.post(url(`/api/templates/${this.templateId}/unlock`))
+                .then(() => {
+                    this.reloadTemplate();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
     },
 
     watch: {

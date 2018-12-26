@@ -10,6 +10,7 @@ button.disable: Деактивировать
 button.edit: Редактировать
 button.enable: Активировать
 button.expand: Развернуть
+button.lock: Заблокировать
 button.login: Войти
 button.logout: Выйти
 button.no: Нет

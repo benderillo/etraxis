@@ -10,6 +10,7 @@ button.disable: Disable
 button.edit: Edit
 button.enable: Enable
 button.expand: Expand
+button.lock: Lock
 button.login: Login
 button.logout: Logout
 button.no: No
