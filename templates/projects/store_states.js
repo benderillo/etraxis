@@ -35,6 +35,22 @@ module.exports = {
         current(state, id) {
             state.currentId = id;
         },
+
+        /**
+         * Updates specified state.
+         *
+         * @param {Object} state Store's state.
+         * @param {Object} data  State info.
+         */
+        update(state, data) {
+            for (let entry of state.list) {
+                if (entry.id === data.id) {
+                    entry.title = data.name;
+                    entry.type = data.type;
+                    break;
+                }
+            }
+        },
     },
 
     actions: {

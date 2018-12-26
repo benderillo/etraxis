@@ -27,6 +27,7 @@ button.yes: Да
 confirm.group.delete: 'Вы уверены что хотите удалить эту группу?'
 confirm.logout: 'Вы уверены что хотите выйти?'
 confirm.project.delete: 'Вы уверены что хотите удалить этот проект?'
+confirm.state.delete: 'Вы уверены что хотите удалить это состояние?'
 confirm.template.delete: 'Вы уверены что хотите удалить этот шаблон?'
 confirm.user.delete: 'Вы уверены что хотите удалить этого пользователя?'
 email.forgot_password.line1: 'Вы запросили смену пароля на <a href="%url%">%url%</a>.'

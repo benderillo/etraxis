@@ -26,7 +26,8 @@ new Vue({
     },
 
     data: {
-        state: {},      // state info
+        state: {},          // state info
+        permissions: {},    // state permissions
     },
 
     computed: {
@@ -41,8 +42,13 @@ new Vue({
         /**
          * @returns {null|number} Currently selected state.
          */
-        stateId() {
-            return eTraxis.store.state.states.currentId;
+        stateId: {
+            get() {
+                return eTraxis.store.state.states.currentId;
+            },
+            set(value) {
+                eTraxis.store.commit('states/current', value);
+            },
         },
 
         /**
@@ -60,6 +66,50 @@ new Vue({
         },
     },
 
+    methods: {
+
+        /**
+         * Reloads state info.
+         */
+        reloadState() {
+
+            ui.block();
+
+            this.permissions = {};
+
+            axios.get(url(`/api/states/${this.stateId}`))
+                .then(response => {
+                    this.state = response.data;
+                    eTraxis.store.commit('states/update', this.state);
+                })
+                .then(() => {
+                    axios.get(url(`/admin/states/permissions/${this.stateId}`))
+                        .then(response => this.permissions = response.data);
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Deletes the state.
+         */
+        deleteState() {
+
+            ui.confirm(i18n['confirm.state.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/states/${this.stateId}`))
+                    .then(() => {
+                        eTraxis.store.dispatch('states/load', this.state.template.id);
+                        this.stateId = null;
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => ui.unblock());
+            });
+        },
+    },
+
     watch: {
 
         /**
@@ -70,9 +120,7 @@ new Vue({
         stateId(id) {
 
             if (id !== null) {
-                axios.get(url(`/api/states/${this.stateId}`))
-                    .then(response => this.state = response.data)
-                    .catch(exception => ui.getErrors(exception));
+                this.reloadState();
             }
         }
     },
