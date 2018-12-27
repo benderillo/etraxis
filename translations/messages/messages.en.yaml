@@ -24,6 +24,7 @@ button.search: Search
 button.suspend: Suspend
 button.unlock: Unlock
 button.yes: Yes
+confirm.field.delete: 'Are you sure you want delete this field?'
 confirm.group.delete: 'Are you sure you want delete this group?'
 confirm.logout: 'Are you sure you want exit?'
 confirm.project.delete: 'Are you sure you want delete this project?'

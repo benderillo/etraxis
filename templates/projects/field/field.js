@@ -27,6 +27,7 @@ new Vue({
 
     data: {
         field: {},          // field info
+        permissions: {},    // field permissions
     },
 
     computed: {
@@ -41,8 +42,13 @@ new Vue({
         /**
          * @returns {null|number} Currently selected field.
          */
-        fieldId() {
-            return eTraxis.store.state.fields.currentId;
+        fieldId: {
+            get() {
+                return eTraxis.store.state.fields.currentId;
+            },
+            set(value) {
+                eTraxis.store.commit('fields/current', value);
+            },
         },
 
         /**
@@ -62,6 +68,50 @@ new Vue({
         },
     },
 
+    methods: {
+
+        /**
+         * Reloads field info.
+         */
+        reloadField() {
+
+            ui.block();
+
+            this.permissions = {};
+
+            axios.get(url(`/api/fields/${this.fieldId}`))
+                .then(response => {
+                    this.field = response.data;
+                    eTraxis.store.commit('fields/update', this.field);
+                })
+                .then(() => {
+                    axios.get(url(`/admin/fields/permissions/${this.fieldId}`))
+                        .then(response => this.permissions = response.data);
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Deletes the field.
+         */
+        deleteField() {
+
+            ui.confirm(i18n['confirm.field.delete'], () => {
+
+                ui.block();
+
+                axios.delete(url(`/api/fields/${this.fieldId}`))
+                    .then(() => {
+                        eTraxis.store.dispatch('fields/load', this.field.state.id);
+                        this.fieldId = null;
+                    })
+                    .catch(exception => ui.getErrors(exception))
+                    .then(() => ui.unblock());
+            });
+        },
+    },
+
     watch: {
 
         /**
@@ -72,9 +122,7 @@ new Vue({
         fieldId(id) {
 
             if (id !== null) {
-                axios.get(url(`/api/fields/${this.fieldId}`))
-                    .then(response => this.field = response.data)
-                    .catch(exception => ui.getErrors(exception));
+                this.reloadField();
             }
         }
     },

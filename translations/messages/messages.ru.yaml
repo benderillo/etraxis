@@ -24,6 +24,7 @@ button.search: Поиск
 button.suspend: Приостановить
 button.unlock: Разблокировать
 button.yes: Да
+confirm.field.delete: 'Вы уверены что хотите удалить это поле?'
 confirm.group.delete: 'Вы уверены что хотите удалить эту группу?'
 confirm.logout: 'Вы уверены что хотите выйти?'
 confirm.project.delete: 'Вы уверены что хотите удалить этот проект?'
