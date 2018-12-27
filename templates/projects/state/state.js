@@ -166,6 +166,22 @@ new Vue({
                     .then(() => ui.unblock());
             });
         },
+
+        /**
+         * Makes the state an initial one.
+         */
+        setInitial() {
+
+            ui.block();
+
+            axios.post(url(`/api/states/${this.stateId}/initial`))
+                .then(() => {
+                    eTraxis.store.dispatch('states/load', this.state.template.id);
+                    this.reloadState();
+                })
+                .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
     },
 
     watch: {

@@ -127,6 +127,7 @@ role.user: Пользователь
 security.remember_me: 'Запомнить меня'
 state: Состояние
 state.edit: 'Редактирование состояния'
+state.make_initial: 'Сделать исходным'
 state.name: 'Название состояния'
 state.new: 'Новое состояние'
 state.next: 'Следующее состояние'

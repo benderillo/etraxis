@@ -2,6 +2,7 @@
 
     <div class="grid-100">
         <button :disabled="!permissions.update" @click="showEditStateDialog">{{ 'button.edit' | trans }}</button>
+        <button v-if="state.type === 'intermediate'" :disabled="!permissions.initial" @click="setInitial">{{ 'state.make_initial' | trans }}</button>
         <button :disabled="!permissions.delete" class="danger" @click="deleteState">{{ 'button.delete' | trans }}</button>
     </div>
 
