@@ -126,6 +126,7 @@ role.responsible: Ответственный
 role.user: Пользователь
 security.remember_me: 'Запомнить меня'
 state: Состояние
+state.edit: 'Редактирование состояния'
 state.name: 'Название состояния'
 state.new: 'Новое состояние'
 state.next: 'Следующее состояние'

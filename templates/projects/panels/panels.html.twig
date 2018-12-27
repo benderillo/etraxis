@@ -44,7 +44,7 @@
     </modal>
 
     <modal ref="dlgNewState" header="{{ 'state.new' | trans }}" @submit="createState">
-        {% include 'projects/state/dlg_state.html.twig' %}
+        {% include 'projects/state/dlg_state.html.twig' with { new: true } %}
     </modal>
 
 </div>

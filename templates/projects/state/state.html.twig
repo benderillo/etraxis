@@ -10,4 +10,8 @@
         </div>
     </div>
 
+    <modal ref="dlgEditState" header="{{ 'state.edit' | trans }}" @submit="updateState">
+        {% include 'projects/state/dlg_state.html.twig' with { new: false } %}
+    </modal>
+
 </div>

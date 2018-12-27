@@ -9,10 +9,11 @@
 //
 //----------------------------------------------------------------------
 
-import Tab  from 'components/tabs/tab.vue';
-import Tabs from 'components/tabs/tabs.vue';
-import ui   from 'utilities/ui';
-import url  from 'utilities/url';
+import Modal from 'components/modal.vue';
+import Tab   from 'components/tabs/tab.vue';
+import Tabs  from 'components/tabs/tabs.vue';
+import ui    from 'utilities/ui';
+import url   from 'utilities/url';
 
 /**
  * 'Projects' page (state view).
@@ -21,6 +22,7 @@ new Vue({
     el: '#vue-state',
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
@@ -28,6 +30,8 @@ new Vue({
     data: {
         state: {},          // state info
         permissions: {},    // state permissions
+        values: {},         // form values
+        errors: {},         // form errors
     },
 
     computed: {
@@ -37,6 +41,13 @@ new Vue({
          */
         applicationId() {
             return eTraxis.store.getters.applicationId;
+        },
+
+        /**
+         * @returns {Array} All states of the current template.
+         */
+        states() {
+            return eTraxis.store.state.states.list;
         },
 
         /**
@@ -95,6 +106,45 @@ new Vue({
                         .then(response => this.permissions = response.data);
                 })
                 .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'Edit state' dialog.
+         */
+        showEditStateDialog() {
+
+            this.values = {
+                name: this.state.name,
+                type: this.state.type,
+                responsible: this.state.responsible,
+                nextState: this.state.next_state,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditState.open();
+        },
+
+        /**
+         * Updates the state.
+         */
+        updateState() {
+
+            let data = {
+                name: this.values.name,
+                responsible: this.values.responsible,
+                nextState: this.values.nextState,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/states/${this.stateId}`), data)
+                .then(() => {
+                    this.reloadState();
+                    this.$refs.dlgEditState.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
 

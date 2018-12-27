@@ -10,32 +10,36 @@
         </div>
     </div>
 
-    <div class="grid-row">
-        <div class="grid-33">
-            <label title="{{ 'state.type' | trans }}">{{ 'state.type' | trans }}:</label>
+    {% if new %}
+
+        <div class="grid-row">
+            <div class="grid-33">
+                <label title="{{ 'state.type' | trans }}">{{ 'state.type' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <p>
+                    <label title="{{ 'state.type.initial' | trans }}">
+                        <input type="radio" value="initial" v-model="values.type">
+                        <span>{{ 'state.type.initial' | trans }}</span>
+                    </label>
+                </p>
+                <p>
+                    <label title="{{ 'state.type.intermediate' | trans }}">
+                        <input type="radio" value="intermediate" v-model="values.type">
+                        <span>{{ 'state.type.intermediate' | trans }}</span>
+                    </label>
+                </p>
+                <p>
+                    <label title="{{ 'state.type.final' | trans }}">
+                        <input type="radio" value="final" v-model="values.type">
+                        <span>{{ 'state.type.final' | trans }}</span>
+                    </label>
+                </p>
+                <p class="attention">${ errors.type }</p>
+            </div>
         </div>
-        <div class="grid-66">
-            <p>
-                <label title="{{ 'state.type.initial' | trans }}">
-                    <input type="radio" value="initial" v-model="values.type">
-                    <span>{{ 'state.type.initial' | trans }}</span>
-                </label>
-            </p>
-            <p>
-                <label title="{{ 'state.type.intermediate' | trans }}">
-                    <input type="radio" value="intermediate" v-model="values.type">
-                    <span>{{ 'state.type.intermediate' | trans }}</span>
-                </label>
-            </p>
-            <p>
-                <label title="{{ 'state.type.final' | trans }}">
-                    <input type="radio" value="final" v-model="values.type">
-                    <span>{{ 'state.type.final' | trans }}</span>
-                </label>
-            </p>
-            <p class="attention">${ errors.type }</p>
-        </div>
-    </div>
+
+    {% endif %}
 
     <div v-show="values.type !== 'final'" class="grid-row">
         <div class="grid-33">

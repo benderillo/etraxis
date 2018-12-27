@@ -126,6 +126,7 @@ role.responsible: Responsible
 role.user: User
 security.remember_me: 'Remember me'
 state: State
+state.edit: 'Edit state'
 state.name: 'State name'
 state.new: 'New state'
 state.next: 'Next state'
