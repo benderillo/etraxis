@@ -127,6 +127,8 @@ role.user: User
 security.remember_me: 'Remember me'
 state: State
 state.name: 'State name'
+state.new: 'New state'
+state.next: 'Next state'
 state.responsible: Responsible
 state.responsible.assign: Assign
 state.responsible.keep: 'Keep current'
@@ -147,6 +149,7 @@ template.description: Description
 template.edit: 'Edit template'
 template.frozen_time: 'Frozen time'
 template.locked: Locked
+template.must_be_locked: 'The template must be locked.'
 template.name: 'Template name'
 template.new: 'New template'
 template.permission.add_comments: 'Add comments'

@@ -19,7 +19,7 @@
             <list :items="templates" :selected="templateId" @click="templateId = $event"></list>
         </panel>
 
-        <panel v-if="templateId" header="{{ 'states' | trans }}">
+        <panel v-if="templateId" header="{{ 'states' | trans }}" @create="showNewStateDialog">
             <list :items="initialStates" :selected="stateId" @click="stateId = $event"></list>
             <list :items="intermediateStates" :selected="stateId" @click="stateId = $event"></list>
             <list :items="finalStates" :selected="stateId" @click="stateId = $event"></list>
@@ -41,6 +41,10 @@
 
     <modal ref="dlgNewTemplate" header="{{ 'template.new' | trans }}" @submit="createTemplate">
         {% include 'projects/template/dlg_template.html.twig' %}
+    </modal>
+
+    <modal ref="dlgNewState" header="{{ 'state.new' | trans }}" @submit="createState">
+        {% include 'projects/state/dlg_state.html.twig' %}
     </modal>
 
 </div>

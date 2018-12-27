@@ -127,6 +127,8 @@ role.user: Пользователь
 security.remember_me: 'Запомнить меня'
 state: Состояние
 state.name: 'Название состояния'
+state.new: 'Новое состояние'
+state.next: 'Следующее состояние'
 state.responsible: Ответственный
 state.responsible.assign: Назначить
 state.responsible.keep: 'Оставить без изменений'
@@ -147,6 +149,7 @@ template.description: Описание
 template.edit: 'Редактирование шаблона'
 template.frozen_time: 'Время "заморозки"'
 template.locked: Заблокирован
+template.must_be_locked: 'Шаблон должен быть заблокирован.'
 template.name: 'Название шаблона'
 template.new: 'Новый шаблон'
 template.permission.add_comments: 'Добавление комментариев'

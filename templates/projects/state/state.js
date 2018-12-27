@@ -64,6 +64,14 @@ new Vue({
         responsible() {
             return i18n[eTraxis.state_responsibles[this.state.responsible]];
         },
+
+        /**
+         * @returns {null|string} Human-readable next state.
+         */
+        nextState() {
+            let state = eTraxis.store.state.states.list.filter(state => state.id === this.state.next_state).pop();
+            return state ? state.title : null;
+        },
     },
 
     methods: {

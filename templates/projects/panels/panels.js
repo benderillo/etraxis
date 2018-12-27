@@ -20,6 +20,11 @@ const STATE_INITIAL      = 'initial';
 const STATE_INTERMEDIATE = 'intermediate';
 const STATE_FINAL        = 'final';
 
+// State responsibility values.
+const STATE_KEEP   = 'keep';
+const STATE_ASSIGN = 'assign';
+const STATE_REMOVE = 'remove';
+
 /**
  * 'Projects' page (left side with panels).
  */
@@ -77,6 +82,13 @@ new Vue({
          */
         templates() {
             return eTraxis.store.state.templates.list;
+        },
+
+        /**
+         * @returns {Array} All states of the current template.
+         */
+        states() {
+            return eTraxis.store.state.states.list;
         },
 
         /**
@@ -284,6 +296,58 @@ new Vue({
                         .then(() => {
                             let location = response.headers.location;
                             this.templateId = parseInt(location.substr(location.lastIndexOf('/') + 1));
+                        });
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'New state' dialog.
+         */
+        showNewStateDialog() {
+
+            let template = eTraxis.store.state.templates.list
+                .filter(template => template.id === this.templateId)
+                .pop();
+
+            if (template.class === null) {
+                ui.info(i18n['template.must_be_locked']);
+                return;
+            }
+
+            this.values = {
+                type: STATE_INTERMEDIATE,
+                responsible: STATE_KEEP,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgNewState.open();
+        },
+
+        /**
+         * Creates new state.
+         */
+        createState() {
+
+            let data = {
+                template: this.templateId,
+                name: this.values.name,
+                type: this.values.type,
+                responsible: this.values.type === STATE_FINAL ? STATE_REMOVE : this.values.responsible,
+                nextState: this.values.type === STATE_FINAL ? null : this.values.nextState,
+            };
+
+            ui.block();
+
+            axios.post(url('/api/states'), data)
+                .then(async response => {
+                    this.$refs.dlgNewState.close();
+                    await eTraxis.store.dispatch('states/load', data.template)
+                        .then(() => {
+                            let location = response.headers.location;
+                            this.stateId = parseInt(location.substr(location.lastIndexOf('/') + 1));
                         });
                 })
                 .catch(exception => (this.errors = ui.getErrors(exception)))
