@@ -1,21 +1,23 @@
+{% set id = random() %}
+
 <div class="fieldset">
 
     <div class="grid-row">
         <div class="grid-33">
-            <label for="name" title="{{ 'group.name' | trans }}">{{ 'group.name' | trans }}:</label>
+            <label for="name-{{ id }}" title="{{ 'group.name' | trans }}">{{ 'group.name' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="text" id="name" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
+            <input class="grid-100 mobile-grid-100" type="text" id="name-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
             <p class="attention">${ errors.name }</p>
         </div>
     </div>
 
     <div class="grid-row">
         <div class="grid-33">
-            <label for="description" title="{{ 'group.description' | trans }}">{{ 'group.description' | trans }}:</label>
+            <label for="description-{{ id }}" title="{{ 'group.description' | trans }}">{{ 'group.description' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="text" id="description" v-model="values.description">
+            <input class="grid-100 mobile-grid-100" type="text" id="description-{{ id }}" v-model="values.description">
             <p class="attention">${ errors.description }</p>
         </div>
     </div>

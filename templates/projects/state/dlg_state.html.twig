@@ -1,11 +1,13 @@
+{% set id = random() %}
+
 <div class="fieldset">
 
     <div class="grid-row">
         <div class="grid-33">
-            <label for="name" title="{{ 'state.name' | trans }}">{{ 'state.name' | trans }}:</label>
+            <label for="name-{{ id }}" title="{{ 'state.name' | trans }}">{{ 'state.name' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <input class="grid-100 mobile-grid-100" type="text" id="name" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
+            <input class="grid-100 mobile-grid-100" type="text" id="name-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
             <p class="attention">${ errors.name }</p>
         </div>
     </div>
@@ -17,24 +19,14 @@
                 <label title="{{ 'state.type' | trans }}">{{ 'state.type' | trans }}:</label>
             </div>
             <div class="grid-66">
-                <p>
-                    <label title="{{ 'state.type.initial' | trans }}">
-                        <input type="radio" value="initial" v-model="values.type">
-                        <span>{{ 'state.type.initial' | trans }}</span>
-                    </label>
-                </p>
-                <p>
-                    <label title="{{ 'state.type.intermediate' | trans }}">
-                        <input type="radio" value="intermediate" v-model="values.type">
-                        <span>{{ 'state.type.intermediate' | trans }}</span>
-                    </label>
-                </p>
-                <p>
-                    <label title="{{ 'state.type.final' | trans }}">
-                        <input type="radio" value="final" v-model="values.type">
-                        <span>{{ 'state.type.final' | trans }}</span>
-                    </label>
-                </p>
+                {% for type, prompt in state_types %}
+                    <p>
+                        <label title="{{ prompt | trans }}">
+                            <input type="radio" value="{{ type }}" v-model="values.type">
+                            <span>{{ prompt | trans }}</span>
+                        </label>
+                    </p>
+                {% endfor %}
                 <p class="attention">${ errors.type }</p>
             </div>
         </div>
@@ -46,34 +38,24 @@
             <label title="{{ 'state.responsible' | trans }}">{{ 'state.responsible' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <p>
-                <label title="{{ 'state.responsible.keep' | trans }}">
-                    <input type="radio" value="keep" v-model="values.responsible">
-                    <span>{{ 'state.responsible.keep' | trans }}</span>
-                </label>
-            </p>
-            <p>
-                <label title="{{ 'state.responsible.assign' | trans }}">
-                    <input type="radio" value="assign" v-model="values.responsible">
-                    <span>{{ 'state.responsible.assign' | trans }}</span>
-                </label>
-            </p>
-            <p>
-                <label title="{{ 'state.responsible.remove' | trans }}">
-                    <input type="radio" value="remove" v-model="values.responsible">
-                    <span>{{ 'state.responsible.remove' | trans }}</span>
-                </label>
-            </p>
+            {% for responsible, prompt in state_responsibles %}
+                <p>
+                    <label title="{{ prompt | trans }}">
+                        <input type="radio" value="{{ responsible }}" v-model="values.responsible">
+                        <span>{{ prompt | trans }}</span>
+                    </label>
+                </p>
+            {% endfor %}
             <p class="attention">${ errors.responsible }</p>
         </div>
     </div>
 
     <div v-show="values.type !== 'final'" class="grid-row">
         <div class="grid-33">
-            <label for="next" title="{{ 'state.next' | trans }}">{{ 'state.next' | trans }}:</label>
+            <label for="next-{{ id }}" title="{{ 'state.next' | trans }}">{{ 'state.next' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <select class="grid-100 mobile-grid-100" id="next" v-model="values.nextState">
+            <select class="grid-100 mobile-grid-100" id="next-{{ id }}" v-model="values.nextState">
                 <option :value="null"></option>
                 <option v-for="state in states" :value="state.id">${ state.title }</option>
             </select>
