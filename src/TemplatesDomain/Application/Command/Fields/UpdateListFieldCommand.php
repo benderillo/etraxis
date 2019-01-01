@@ -21,7 +21,7 @@ use Webinarium\DataTransferObjectTrait;
 /**
  * Updates specified "list" field.
  *
- * @property int $defaultValue ListItem ID.
+ * @property int $default ListItem ID.
  */
 class UpdateListFieldCommand extends AbstractUpdateFieldCommand
 {
@@ -34,5 +34,5 @@ class UpdateListFieldCommand extends AbstractUpdateFieldCommand
      * @Groups("api")
      * @API\Property(type="integer", example=123, description="Default value (list item ID).")
      */
-    public $defaultValue;
+    public $default;
 }

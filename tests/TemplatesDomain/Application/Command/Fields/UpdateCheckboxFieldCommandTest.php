@@ -45,10 +45,10 @@ class UpdateCheckboxFieldCommandTest extends TransactionalTestCase
         self::assertFalse($facade->getDefaultValue());
 
         $command = new UpdateCheckboxFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => true,
         ]);
 
         $this->commandBus->handle($command);

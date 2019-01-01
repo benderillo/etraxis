@@ -34,13 +34,13 @@ class CreateFieldTest extends TransactionalTestCase
         self::assertNull($field);
 
         $data = [
-            'state'        => $state->id,
-            'type'         => FieldType::NUMBER,
-            'name'         => 'Week number',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => $state->id,
+            'type'     => FieldType::NUMBER,
+            'name'     => 'Week number',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ];
 
         $uri = '/api/fields';
@@ -71,13 +71,13 @@ class CreateFieldTest extends TransactionalTestCase
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $data = [
-            'state'        => $state->id,
-            'type'         => FieldType::NUMBER,
-            'name'         => 'Week number',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => $state->id,
+            'type'     => FieldType::NUMBER,
+            'name'     => 'Week number',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ];
 
         $uri = '/api/fields';
@@ -95,13 +95,13 @@ class CreateFieldTest extends TransactionalTestCase
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $data = [
-            'state'        => $state->id,
-            'type'         => FieldType::NUMBER,
-            'name'         => 'Week number',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => $state->id,
+            'type'     => FieldType::NUMBER,
+            'name'     => 'Week number',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ];
 
         $uri = '/api/fields';
@@ -116,13 +116,13 @@ class CreateFieldTest extends TransactionalTestCase
         $this->loginAs('admin@example.com');
 
         $data = [
-            'state'        => self::UNKNOWN_ENTITY_ID,
-            'type'         => FieldType::NUMBER,
-            'name'         => 'Week number',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => self::UNKNOWN_ENTITY_ID,
+            'type'     => FieldType::NUMBER,
+            'name'     => 'Week number',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ];
 
         $uri = '/api/fields';
@@ -140,13 +140,13 @@ class CreateFieldTest extends TransactionalTestCase
         [/* skipping */, $state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
 
         $data = [
-            'state'        => $state->id,
-            'type'         => FieldType::NUMBER,
-            'name'         => 'Due date',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => $state->id,
+            'type'     => FieldType::NUMBER,
+            'name'     => 'Due date',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ];
 
         $uri = '/api/fields';

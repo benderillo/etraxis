@@ -49,10 +49,10 @@ class UpdateListFieldCommandTest extends TransactionalTestCase
         self::assertNotSame($item, $facade->getDefaultValue());
 
         $command = new UpdateListFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => $item->id,
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => $item->id,
         ]);
 
         $this->commandBus->handle($command);

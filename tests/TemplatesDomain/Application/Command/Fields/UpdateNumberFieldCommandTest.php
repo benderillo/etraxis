@@ -47,12 +47,12 @@ class UpdateNumberFieldCommandTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new UpdateNumberFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'minimumValue' => 1,
-            'maximumValue' => 999999,
-            'defaultValue' => 10,
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'minimum'  => 1,
+            'maximum'  => 999999,
+            'default'  => 10,
         ]);
 
         $this->commandBus->handle($command);

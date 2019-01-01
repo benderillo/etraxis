@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trait for "checkbox" field commands.
  *
- * @property bool $defaultValue Default value of the field.
+ * @property bool $default Default value of the field.
  */
 trait CheckboxCommandTrait
 {
@@ -30,5 +30,5 @@ trait CheckboxCommandTrait
      * @Groups("api")
      * @API\Property(type="boolean", example=true, description="Default value.")
      */
-    public $defaultValue;
+    public $default;
 }

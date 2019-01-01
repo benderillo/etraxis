@@ -68,9 +68,9 @@ class DateHandlerTraitTest extends TransactionalTestCase
         self::assertSame(14, $facade->getDefaultValue());
 
         $command = new Command\UpdateDateFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '7',
-            'defaultValue' => '3',
+            'minimum' => '1',
+            'maximum' => '7',
+            'default' => '3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -89,9 +89,9 @@ class DateHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Due date'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDateFieldCommand([
-            'minimumValue' => '7',
-            'maximumValue' => '1',
-            'defaultValue' => '3',
+            'minimum' => '7',
+            'maximum' => '1',
+            'default' => '3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -106,9 +106,9 @@ class DateHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Due date'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDateFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '7',
-            'defaultValue' => '0',
+            'minimum' => '1',
+            'maximum' => '7',
+            'default' => '0',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -136,9 +136,9 @@ class DateHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDateFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '7',
-            'defaultValue' => '3',
+            'minimum' => '1',
+            'maximum' => '7',
+            'default' => '3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

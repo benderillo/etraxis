@@ -39,7 +39,7 @@ class CreateStateTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = '/api/states';
@@ -74,7 +74,7 @@ class CreateStateTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = '/api/states';
@@ -96,7 +96,7 @@ class CreateStateTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = '/api/states';
@@ -115,7 +115,7 @@ class CreateStateTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = '/api/states';
@@ -137,7 +137,7 @@ class CreateStateTest extends TransactionalTestCase
             'name'        => 'Completed',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = '/api/states';

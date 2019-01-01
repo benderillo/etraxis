@@ -63,7 +63,7 @@ class GetIssueTest extends TransactionalTestCase
                 'name'        => 'Submitted',
                 'type'        => 'initial',
                 'responsible' => 'keep',
-                'next_state'  => null,
+                'next'        => null,
             ],
             'responsible'  => null,
             'is_cloned'    => false,

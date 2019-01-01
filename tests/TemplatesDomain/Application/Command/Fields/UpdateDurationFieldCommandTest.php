@@ -47,12 +47,12 @@ class UpdateDurationFieldCommandTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new UpdateDurationFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'minimumValue' => '1:00',
-            'maximumValue' => '8:00',
-            'defaultValue' => '1:30',
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'minimum'  => '1:00',
+            'maximum'  => '8:00',
+            'default'  => '1:30',
         ]);
 
         $this->commandBus->handle($command);

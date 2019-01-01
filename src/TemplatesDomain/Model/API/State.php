@@ -49,5 +49,5 @@ class State
     /**
      * @API\Property(type="integer", example=456, description="ID of the next state if specified.")
      */
-    public $next_state;
+    public $next;
 }

@@ -65,7 +65,7 @@ class CheckboxHandlerTraitTest extends TransactionalTestCase
         self::assertFalse($facade->getDefaultValue());
 
         $command = new Command\UpdateCheckboxFieldCommand([
-            'defaultValue' => true,
+            'default' => true,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -95,7 +95,7 @@ class CheckboxHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateCheckboxFieldCommand([
-            'defaultValue' => true,
+            'default' => true,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

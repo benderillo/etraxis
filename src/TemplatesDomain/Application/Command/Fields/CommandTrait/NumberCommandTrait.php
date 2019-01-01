@@ -20,9 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trait for "number" field commands.
  *
- * @property int $minimumValue Minimum allowed value.
- * @property int $maximumValue Maximum allowed value.
- * @property int $defaultValue Default value of the field.
+ * @property int $minimum Minimum allowed value.
+ * @property int $maximum Maximum allowed value.
+ * @property int $default Default value of the field.
  */
 trait NumberCommandTrait
 {
@@ -34,7 +34,7 @@ trait NumberCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-1000000000, maximum=1000000000, example=0, description="Minimum value.")
      */
-    public $minimumValue;
+    public $minimum;
 
     /**
      * @Assert\NotBlank
@@ -44,7 +44,7 @@ trait NumberCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-1000000000, maximum=1000000000, example=100, description="Maximum value.")
      */
-    public $maximumValue;
+    public $maximum;
 
     /**
      * @Assert\Range(min="-1000000000", max="1000000000")
@@ -53,5 +53,5 @@ trait NumberCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-1000000000, maximum=1000000000, example=1, description="Default value.")
      */
-    public $defaultValue;
+    public $default;
 }

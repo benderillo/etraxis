@@ -90,10 +90,10 @@ class CreateStateHandler
         $state->name        = $command->name;
         $state->responsible = $command->responsible;
 
-        if ($command->nextState) {
+        if ($command->next) {
 
             /** @var null|State $nextState */
-            $nextState = $this->stateRepository->find($command->nextState);
+            $nextState = $this->stateRepository->find($command->next);
 
             if (!$nextState || $nextState->template !== $template) {
                 throw new NotFoundHttpException('Unknown next state.');

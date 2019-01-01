@@ -47,7 +47,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => $nextState->id,
+            'next'        => $nextState->id,
         ]);
 
         $this->commandBus->handle($command);
@@ -74,7 +74,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => self::UNKNOWN_ENTITY_ID,
+            'next'        => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandBus->handle($command);
@@ -97,7 +97,7 @@ class UpdateStateCommandTest extends TransactionalTestCase
             'state'       => $state->id,
             'name'        => 'Forwarded',
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => $nextState->id,
+            'next'        => $nextState->id,
         ]);
 
         $this->commandBus->handle($command);

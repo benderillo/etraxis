@@ -30,7 +30,7 @@ class UpdateStateTest extends TransactionalTestCase
         $data = [
             'name'        => 'Forwarded',
             'responsible' => $state->responsible,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', $state->id);
@@ -66,7 +66,7 @@ class UpdateStateTest extends TransactionalTestCase
         $data = [
             'name'        => 'Forwarded',
             'responsible' => $state->responsible,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', $state->id);
@@ -86,7 +86,7 @@ class UpdateStateTest extends TransactionalTestCase
         $data = [
             'name'        => 'Forwarded',
             'responsible' => $state->responsible,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', $state->id);
@@ -106,7 +106,7 @@ class UpdateStateTest extends TransactionalTestCase
         $data = [
             'name'        => 'Forwarded',
             'responsible' => $state->responsible,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', self::UNKNOWN_ENTITY_ID);
@@ -126,7 +126,7 @@ class UpdateStateTest extends TransactionalTestCase
         $data = [
             'name'        => 'Completed',
             'responsible' => $state->responsible,
-            'nextState'   => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', $state->id);

@@ -54,31 +54,31 @@ trait DurationHandlerTrait
         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DurationInterface $facade */
         $facade = $field->getFacade($manager);
 
-        $minimumValue = $facade->toNumber($command->minimumValue);
-        $maximumValue = $facade->toNumber($command->maximumValue);
+        $minimumValue = $facade->toNumber($command->minimum);
+        $maximumValue = $facade->toNumber($command->maximum);
 
         if ($minimumValue > $maximumValue) {
             throw new BadRequestHttpException($translator->trans('field.error.min_max_values'));
         }
 
-        if ($command->defaultValue !== null) {
+        if ($command->default !== null) {
 
-            $default = $facade->toNumber($command->defaultValue);
+            $default = $facade->toNumber($command->default);
 
             if ($default < $minimumValue || $default > $maximumValue) {
 
                 $message = $translator->trans('field.error.default_value_range', [
-                    '%minimum%' => $command->minimumValue,
-                    '%maximum%' => $command->maximumValue,
+                    '%minimum%' => $command->minimum,
+                    '%maximum%' => $command->maximum,
                 ]);
 
                 throw new BadRequestHttpException($message);
             }
         }
 
-        $facade->setMinimumValue($command->minimumValue);
-        $facade->setMaximumValue($command->maximumValue);
-        $facade->setDefaultValue($command->defaultValue);
+        $facade->setMinimumValue($command->minimum);
+        $facade->setMaximumValue($command->maximum);
+        $facade->setDefaultValue($command->default);
 
         return $field;
     }

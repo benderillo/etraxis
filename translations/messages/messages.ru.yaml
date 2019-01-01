@@ -63,11 +63,13 @@ field.maximum_length: 'Максимальная длина'
 field.maximum_value: 'Максимальное значение'
 field.minimum_value: 'Минимальное значение'
 field.name: 'Название поля'
+field.off: Выключено
+field.on: Включено
 field.permission.read_only: 'только чтение'
 field.permission.read_write: 'чтение и запись'
 field.required: 'Обязательное поле'
 field.type: 'Тип поля'
-field.type.checkbox: '"Флаг"'
+field.type.checkbox: 'Переключатель'
 field.type.date: Дата
 field.type.decimal: 'Вещественное число'
 field.type.duration: Длительность

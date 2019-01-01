@@ -46,12 +46,12 @@ class CreateNumberFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateNumberFieldCommand([
-            'state'        => $state->id,
-            'name'         => 'Week number',
-            'required'     => true,
-            'minimumValue' => 1,
-            'maximumValue' => 53,
-            'defaultValue' => 7,
+            'state'    => $state->id,
+            'name'     => 'Week number',
+            'required' => true,
+            'minimum'  => 1,
+            'maximum'  => 53,
+            'default'  => 7,
         ]);
 
         $result = $this->commandBus->handle($command);

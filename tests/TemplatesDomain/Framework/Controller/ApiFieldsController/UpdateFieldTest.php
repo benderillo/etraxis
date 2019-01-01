@@ -35,9 +35,9 @@ class UpdateFieldTest extends TransactionalTestCase
         self::assertFalse($facade->getDefaultValue());
 
         $data = [
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => true,
         ];
 
         $uri = sprintf('/api/fields/%s', $field->id);
@@ -71,9 +71,9 @@ class UpdateFieldTest extends TransactionalTestCase
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
         $data = [
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => true,
         ];
 
         $uri = sprintf('/api/fields/%s', $field->id);
@@ -91,9 +91,9 @@ class UpdateFieldTest extends TransactionalTestCase
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
         $data = [
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => true,
         ];
 
         $uri = sprintf('/api/fields/%s', $field->id);
@@ -111,9 +111,9 @@ class UpdateFieldTest extends TransactionalTestCase
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
         $data = [
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'default'  => true,
         ];
 
         $uri = sprintf('/api/fields/%s', self::UNKNOWN_ENTITY_ID);
@@ -131,9 +131,9 @@ class UpdateFieldTest extends TransactionalTestCase
         [/* skipping */, $field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'New feature']);
 
         $data = [
-            'name'         => 'Priority',
-            'required'     => $field->isRequired,
-            'defaultValue' => true,
+            'name'     => 'Priority',
+            'required' => $field->isRequired,
+            'default'  => true,
         ];
 
         $uri = sprintf('/api/fields/%s', $field->id);

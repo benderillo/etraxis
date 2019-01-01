@@ -20,9 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trait for "date" field commands.
  *
- * @property int $minimumValue Amount of days since current date (negative value shifts to the past).
- * @property int $maximumValue Amount of days since current date (negative value shifts to the past).
- * @property int $defaultValue Amount of days since current date (negative value shifts to the past).
+ * @property int $minimum Amount of days since current date (negative value shifts to the past).
+ * @property int $maximum Amount of days since current date (negative value shifts to the past).
+ * @property int $default Amount of days since current date (negative value shifts to the past).
  */
 trait DateCommandTrait
 {
@@ -34,7 +34,7 @@ trait DateCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-2147483648, maximum=2147483647, example=0, description="Minimum value.")
      */
-    public $minimumValue;
+    public $minimum;
 
     /**
      * @Assert\NotBlank
@@ -44,7 +44,7 @@ trait DateCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-2147483648, maximum=2147483647, example=0, description="Maximum value.")
      */
-    public $maximumValue;
+    public $maximum;
 
     /**
      * @Assert\Range(min="-2147483648", max="2147483647")
@@ -53,5 +53,5 @@ trait DateCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=-2147483648, maximum=2147483647, example=0, description="Default value.")
      */
-    public $defaultValue;
+    public $default;
 }

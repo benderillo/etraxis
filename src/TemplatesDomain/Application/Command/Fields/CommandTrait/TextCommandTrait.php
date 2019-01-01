@@ -20,11 +20,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trait for "text" field commands.
  *
- * @property int    $maximumLength Maximum allowed length of field values.
- * @property string $defaultValue  TextValue ID.
- * @property string $pcreCheck     Perl-compatible regular expression which values of the field must conform to.
- * @property string $pcreSearch    Perl-compatible regular expression to modify values of the field before display them (search for).
- * @property string $pcreReplace   Perl-compatible regular expression to modify values of the field before display them (replace with).
+ * @property int    $maxlength   Maximum allowed length of field values.
+ * @property string $default     TextValue ID.
+ * @property string $pcreCheck   Perl-compatible regular expression which values of the field must conform to.
+ * @property string $pcreSearch  Perl-compatible regular expression to modify values of the field before display them (search for).
+ * @property string $pcreReplace Perl-compatible regular expression to modify values of the field before display them (replace with).
  */
 trait TextCommandTrait
 {
@@ -36,7 +36,7 @@ trait TextCommandTrait
      * @Groups("api")
      * @API\Property(type="integer", minimum=1, maximum=4000, example=10000, description="Maximum length.")
      */
-    public $maximumLength;
+    public $maxlength;
 
     /**
      * @Assert\Length(max="10000")
@@ -44,7 +44,7 @@ trait TextCommandTrait
      * @Groups("api")
      * @API\Property(type="string", maxLength=10000, example="Message body", description="Default value.")
      */
-    public $defaultValue;
+    public $default;
 
     /**
      * @Assert\Length(max="500")

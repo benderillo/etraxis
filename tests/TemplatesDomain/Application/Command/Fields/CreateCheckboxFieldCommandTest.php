@@ -46,10 +46,10 @@ class CreateCheckboxFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateCheckboxFieldCommand([
-            'state'        => $state->id,
-            'name'         => 'Reproduced',
-            'required'     => true,
-            'defaultValue' => true,
+            'state'    => $state->id,
+            'name'     => 'Reproduced',
+            'required' => true,
+            'default'  => true,
         ]);
 
         $result = $this->commandBus->handle($command);

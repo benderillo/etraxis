@@ -31,8 +31,8 @@ class UpdateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => $template->prefix,
             'description' => $template->description,
-            'criticalAge' => $template->criticalAge,
-            'frozenTime'  => $template->frozenTime,
+            'critical'    => $template->criticalAge,
+            'frozen'      => $template->frozenTime,
         ];
 
         $uri = sprintf('/api/templates/%s', $template->id);
@@ -69,8 +69,8 @@ class UpdateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => $template->prefix,
             'description' => $template->description,
-            'criticalAge' => $template->criticalAge,
-            'frozenTime'  => $template->frozenTime,
+            'critical'    => $template->criticalAge,
+            'frozen'      => $template->frozenTime,
         ];
 
         $uri = sprintf('/api/templates/%s', $template->id);
@@ -91,8 +91,8 @@ class UpdateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => $template->prefix,
             'description' => $template->description,
-            'criticalAge' => $template->criticalAge,
-            'frozenTime'  => $template->frozenTime,
+            'critical'    => $template->criticalAge,
+            'frozen'      => $template->frozenTime,
         ];
 
         $uri = sprintf('/api/templates/%s', $template->id);
@@ -113,8 +113,8 @@ class UpdateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => $template->prefix,
             'description' => $template->description,
-            'criticalAge' => $template->criticalAge,
-            'frozenTime'  => $template->frozenTime,
+            'critical'    => $template->criticalAge,
+            'frozen'      => $template->frozenTime,
         ];
 
         $uri = sprintf('/api/templates/%s', self::UNKNOWN_ENTITY_ID);
@@ -135,8 +135,8 @@ class UpdateTemplateTest extends TransactionalTestCase
             'name'        => 'Support',
             'prefix'      => $template->prefix,
             'description' => $template->description,
-            'criticalAge' => $template->criticalAge,
-            'frozenTime'  => $template->frozenTime,
+            'critical'    => $template->criticalAge,
+            'frozen'      => $template->frozenTime,
         ];
 
         $uri = sprintf('/api/templates/%s', $template->id);

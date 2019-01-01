@@ -63,6 +63,8 @@ field.maximum_length: 'Maximum length'
 field.maximum_value: 'Maximum value'
 field.minimum_value: 'Minimum value'
 field.name: 'Field name'
+field.off: Off
+field.on: On
 field.permission.read_only: 'Read only'
 field.permission.read_write: 'Read and write'
 field.required: 'Required field'

@@ -89,8 +89,8 @@ new Vue({
                 name: this.template.name,
                 prefix: this.template.prefix,
                 description: this.template.description,
-                criticalAge: this.template.critical,
-                frozenTime: this.template.frozen,
+                critical: this.template.critical,
+                frozen: this.template.frozen,
             };
 
             this.errors = {};
@@ -107,8 +107,8 @@ new Vue({
                 name: this.values.name,
                 prefix: this.values.prefix,
                 description: this.values.description,
-                criticalAge: this.values.criticalAge,
-                frozenTime: this.values.frozenTime,
+                critical: this.values.critical,
+                frozen: this.values.frozen,
             };
 
             ui.block();

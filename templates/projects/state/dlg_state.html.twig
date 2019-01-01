@@ -55,11 +55,11 @@
             <label for="next-{{ id }}" title="{{ 'state.next' | trans }}">{{ 'state.next' | trans }}:</label>
         </div>
         <div class="grid-66">
-            <select class="grid-100 mobile-grid-100" id="next-{{ id }}" v-model="values.nextState">
+            <select class="grid-100 mobile-grid-100" id="next-{{ id }}" v-model="values.next">
                 <option :value="null"></option>
                 <option v-for="state in states" :value="state.id">${ state.title }</option>
             </select>
-            <p class="attention">${ errors.nextState }</p>
+            <p class="attention">${ errors.next }</p>
         </div>
     </div>
 

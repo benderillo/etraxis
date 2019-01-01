@@ -68,9 +68,9 @@ class DurationHandlerTraitTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateDurationFieldCommand([
-            'minimumValue' => '0:01',
-            'maximumValue' => '0:59',
-            'defaultValue' => '0:30',
+            'minimum' => '0:01',
+            'maximum' => '0:59',
+            'default' => '0:30',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -89,9 +89,9 @@ class DurationHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDurationFieldCommand([
-            'minimumValue' => '0:59',
-            'maximumValue' => '0:01',
-            'defaultValue' => '0:30',
+            'minimum' => '0:59',
+            'maximum' => '0:01',
+            'default' => '0:30',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -106,9 +106,9 @@ class DurationHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Effort'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDurationFieldCommand([
-            'minimumValue' => '0:01',
-            'maximumValue' => '0:59',
-            'defaultValue' => '0:00',
+            'minimum' => '0:01',
+            'maximum' => '0:59',
+            'default' => '0:00',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -136,9 +136,9 @@ class DurationHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDurationFieldCommand([
-            'minimumValue' => '0:01',
-            'maximumValue' => '0:59',
-            'defaultValue' => '0:30',
+            'minimum' => '0:01',
+            'maximum' => '0:59',
+            'default' => '0:30',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

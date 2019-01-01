@@ -60,21 +60,21 @@ trait StringHandlerTrait
         $pcre->search  = $command->pcreSearch;
         $pcre->replace = $command->pcreReplace;
 
-        if (mb_strlen($command->defaultValue) > $command->maximumLength) {
+        if (mb_strlen($command->default) > $command->maxlength) {
 
             $message = $translator->trans('field.error.default_value_length', [
-                '%maximum%' => $command->maximumLength,
+                '%maximum%' => $command->maxlength,
             ]);
 
             throw new BadRequestHttpException($message);
         }
 
-        if (!$pcre->validate($command->defaultValue)) {
+        if (!$pcre->validate($command->default)) {
             throw new BadRequestHttpException($translator->trans('field.error.default_value_format'));
         }
 
-        $facade->setMaximumLength($command->maximumLength);
-        $facade->setDefaultValue($command->defaultValue);
+        $facade->setMaximumLength($command->maxlength);
+        $facade->setDefaultValue($command->default);
 
         return $field;
     }

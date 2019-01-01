@@ -67,7 +67,7 @@ class StateTest extends TestCase
             'name'        => 'New',
             'type'        => 'initial',
             'responsible' => 'remove',
-            'next_state'  => null,
+            'next'        => null,
         ];
 
         $project = new Project();

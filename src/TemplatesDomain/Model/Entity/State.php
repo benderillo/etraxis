@@ -57,7 +57,7 @@ class State implements \JsonSerializable
     public const JSON_NAME        = 'name';
     public const JSON_TYPE        = 'type';
     public const JSON_RESPONSIBLE = 'responsible';
-    public const JSON_NEXT_STATE  = 'next_state';
+    public const JSON_NEXT        = 'next';
 
     /**
      * @var int
@@ -167,7 +167,7 @@ class State implements \JsonSerializable
             self::JSON_NAME        => $this->name,
             self::JSON_TYPE        => $this->type,
             self::JSON_RESPONSIBLE => $this->responsible,
-            self::JSON_NEXT_STATE  => $this->nextState === null ? null : $this->nextState->id,
+            self::JSON_NEXT        => $this->nextState === null ? null : $this->nextState->id,
         ];
     }
 

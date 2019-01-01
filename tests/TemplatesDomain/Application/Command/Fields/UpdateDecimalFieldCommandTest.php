@@ -47,12 +47,12 @@ class UpdateDecimalFieldCommandTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new UpdateDecimalFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'minimumValue' => '0.01',
-            'maximumValue' => '99.99',
-            'defaultValue' => '50.00',
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'minimum'  => '0.01',
+            'maximum'  => '99.99',
+            'default'  => '50.00',
         ]);
 
         $this->commandBus->handle($command);

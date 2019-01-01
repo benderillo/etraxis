@@ -100,7 +100,7 @@ class IssueTest extends TestCase
                 'name'        => 'New',
                 'type'        => 'initial',
                 'responsible' => 'assign',
-                'next_state'  => null,
+                'next'        => null,
             ],
             'responsible'  => [
                 'id'       => 5,

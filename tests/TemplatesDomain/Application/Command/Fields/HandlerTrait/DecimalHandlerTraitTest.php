@@ -68,9 +68,9 @@ class DecimalHandlerTraitTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateDecimalFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '10',
-            'defaultValue' => '5',
+            'minimum' => '1',
+            'maximum' => '10',
+            'default' => '5',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -89,9 +89,9 @@ class DecimalHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Test coverage'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDecimalFieldCommand([
-            'minimumValue' => '10',
-            'maximumValue' => '1',
-            'defaultValue' => '5',
+            'minimum' => '10',
+            'maximum' => '1',
+            'default' => '5',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -106,9 +106,9 @@ class DecimalHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Test coverage'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDecimalFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '10',
-            'defaultValue' => '0',
+            'minimum' => '1',
+            'maximum' => '10',
+            'default' => '0',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -136,9 +136,9 @@ class DecimalHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateDecimalFieldCommand([
-            'minimumValue' => '1',
-            'maximumValue' => '10',
-            'defaultValue' => '5',
+            'minimum' => '1',
+            'maximum' => '10',
+            'default' => '5',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

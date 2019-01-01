@@ -55,28 +55,28 @@ trait DecimalHandlerTrait
         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DecimalInterface $facade */
         $facade = $field->getFacade($manager);
 
-        if (bccomp($command->minimumValue, $command->maximumValue, DecimalValue::PRECISION) > 0) {
+        if (bccomp($command->minimum, $command->maximum, DecimalValue::PRECISION) > 0) {
             throw new BadRequestHttpException($translator->trans('field.error.min_max_values'));
         }
 
-        if ($command->defaultValue !== null) {
+        if ($command->default !== null) {
 
-            if (bccomp($command->defaultValue, $command->minimumValue, DecimalValue::PRECISION) < 0 ||
-                bccomp($command->defaultValue, $command->maximumValue, DecimalValue::PRECISION) > 0)
+            if (bccomp($command->default, $command->minimum, DecimalValue::PRECISION) < 0 ||
+                bccomp($command->default, $command->maximum, DecimalValue::PRECISION) > 0)
             {
 
                 $message = $translator->trans('field.error.default_value_range', [
-                    '%minimum%' => $command->minimumValue,
-                    '%maximum%' => $command->maximumValue,
+                    '%minimum%' => $command->minimum,
+                    '%maximum%' => $command->maximum,
                 ]);
 
                 throw new BadRequestHttpException($message);
             }
         }
 
-        $facade->setMinimumValue($command->minimumValue);
-        $facade->setMaximumValue($command->maximumValue);
-        $facade->setDefaultValue($command->defaultValue);
+        $facade->setMinimumValue($command->minimum);
+        $facade->setMaximumValue($command->maximum);
+        $facade->setDefaultValue($command->default);
 
         return $field;
     }

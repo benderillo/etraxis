@@ -25,8 +25,8 @@ use Webinarium\DataTransferObjectTrait;
  * @property string $name        New name.
  * @property string $prefix      New prefix.
  * @property string $description New description.
- * @property int    $criticalAge New critical age.
- * @property int    $frozenTime  New frozen time.
+ * @property int    $critical    New critical age.
+ * @property int    $frozen      New frozen time.
  */
 class UpdateTemplateCommand
 {
@@ -70,7 +70,7 @@ class UpdateTemplateCommand
      * @Groups("api")
      * @API\Property(type="integer", minimum=1, maximum=100, example=5, description="'Critical Age' value.")
      */
-    public $criticalAge;
+    public $critical;
 
     /**
      * @Assert\Range(min="1", max="100")
@@ -78,5 +78,5 @@ class UpdateTemplateCommand
      * @Groups("api")
      * @API\Property(type="integer", minimum=1, maximum=100, example=10, description="'Frozen Time' value.")
      */
-    public $frozenTime;
+    public $frozen;
 }

@@ -24,7 +24,7 @@ use Webinarium\DataTransferObjectTrait;
  * @property int    $state       State ID.
  * @property string $name        New state name.
  * @property string $responsible New type of responsibility management.
- * @property int    $nextState   ID of the state which is next by default.
+ * @property int    $next        ID of the state which is next by default.
  */
 class UpdateStateCommand
 {
@@ -60,5 +60,5 @@ class UpdateStateCommand
      * @Groups("api")
      * @API\Property(type="integer", example=456, description="ID of the next state.")
      */
-    public $nextState;
+    public $next;
 }

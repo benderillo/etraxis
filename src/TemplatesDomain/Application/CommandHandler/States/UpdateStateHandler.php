@@ -75,10 +75,10 @@ class UpdateStateHandler
         $state->name        = $command->name;
         $state->responsible = $command->responsible;
 
-        if ($command->nextState) {
+        if ($command->next) {
 
             /** @var null|State $nextState */
-            $nextState = $this->repository->find($command->nextState);
+            $nextState = $this->repository->find($command->next);
 
             if (!$nextState || $nextState->template !== $state->template) {
                 throw new NotFoundHttpException('Unknown next state.');

@@ -46,14 +46,14 @@ class CreateStringFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateStringFieldCommand([
-            'state'         => $state->id,
-            'name'          => 'Subject',
-            'required'      => true,
-            'maximumLength' => 100,
-            'defaultValue'  => 'Message subject',
-            'pcreCheck'     => '.+',
-            'pcreSearch'    => 'search',
-            'pcreReplace'   => 'replace',
+            'state'       => $state->id,
+            'name'        => 'Subject',
+            'required'    => true,
+            'maxlength'   => 100,
+            'default'     => 'Message subject',
+            'pcreCheck'   => '.+',
+            'pcreSearch'  => 'search',
+            'pcreReplace' => 'replace',
         ]);
 
         $result = $this->commandBus->handle($command);

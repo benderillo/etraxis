@@ -283,8 +283,8 @@ new Vue({
                 name: this.values.name,
                 prefix: this.values.prefix,
                 description: this.values.description,
-                criticalAge: this.values.criticalAge,
-                frozenTime: this.values.frozenTime,
+                critical: this.values.critical,
+                frozen: this.values.frozen,
             };
 
             ui.block();
@@ -336,7 +336,7 @@ new Vue({
                 name: this.values.name,
                 type: this.values.type,
                 responsible: this.values.type === STATE_FINAL ? STATE_REMOVE : this.values.responsible,
-                nextState: this.values.type === STATE_FINAL ? null : this.values.nextState,
+                next: this.values.type === STATE_FINAL ? null : this.values.next,
             };
 
             ui.block();

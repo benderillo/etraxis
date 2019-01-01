@@ -37,8 +37,8 @@ class CreateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ];
 
         $uri = '/api/templates';
@@ -73,8 +73,8 @@ class CreateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ];
 
         $uri = '/api/templates';
@@ -96,8 +96,8 @@ class CreateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ];
 
         $uri = '/api/templates';
@@ -116,8 +116,8 @@ class CreateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ];
 
         $uri = '/api/templates';
@@ -139,8 +139,8 @@ class CreateTemplateTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'task',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ];
 
         $uri = '/api/templates';

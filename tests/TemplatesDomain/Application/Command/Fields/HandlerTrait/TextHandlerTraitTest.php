@@ -71,11 +71,11 @@ class TextHandlerTraitTest extends TransactionalTestCase
         self::assertNull($facade->getPCRE()->replace);
 
         $command = new Command\UpdateTextFieldCommand([
-            'maximumLength' => 20,
-            'defaultValue'  => '123-456-7890',
-            'pcreCheck'     => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreSearch'    => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreReplace'   => '($1) $2-$3',
+            'maxlength'   => 20,
+            'default'     => '123-456-7890',
+            'pcreCheck'   => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreSearch'  => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreReplace' => '($1) $2-$3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -96,11 +96,11 @@ class TextHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Description'], ['id' => 'ASC']);
 
         $command = new Command\UpdateTextFieldCommand([
-            'maximumLength' => 10,
-            'defaultValue'  => '123-456-7890',
-            'pcreCheck'     => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreSearch'    => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreReplace'   => '($1) $2-$3',
+            'maxlength'   => 10,
+            'default'     => '123-456-7890',
+            'pcreCheck'   => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreSearch'  => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreReplace' => '($1) $2-$3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -115,11 +115,11 @@ class TextHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Description'], ['id' => 'ASC']);
 
         $command = new Command\UpdateTextFieldCommand([
-            'maximumLength' => 20,
-            'defaultValue'  => '1234567890',
-            'pcreCheck'     => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreSearch'    => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreReplace'   => '($1) $2-$3',
+            'maxlength'   => 20,
+            'default'     => '1234567890',
+            'pcreCheck'   => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreSearch'  => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreReplace' => '($1) $2-$3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -147,11 +147,11 @@ class TextHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateTextFieldCommand([
-            'maximumLength' => 20,
-            'defaultValue'  => '123-456-7890',
-            'pcreCheck'     => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreSearch'    => '(\d{3})-(\d{3})-(\d{4})',
-            'pcreReplace'   => '($1) $2-$3',
+            'maxlength'   => 20,
+            'default'     => '123-456-7890',
+            'pcreCheck'   => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreSearch'  => '(\d{3})-(\d{3})-(\d{4})',
+            'pcreReplace' => '($1) $2-$3',
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

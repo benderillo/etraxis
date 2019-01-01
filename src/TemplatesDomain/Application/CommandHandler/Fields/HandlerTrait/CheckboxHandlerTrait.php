@@ -53,7 +53,7 @@ trait CheckboxHandlerTrait
         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\CheckboxInterface $facade */
         $facade = $field->getFacade($manager);
 
-        $facade->setDefaultValue($command->defaultValue);
+        $facade->setDefaultValue($command->default);
 
         return $field;
     }

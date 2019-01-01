@@ -49,14 +49,14 @@ class UpdateTextFieldCommandTest extends TransactionalTestCase
         self::assertNull($facade->getPCRE()->replace);
 
         $command = new UpdateTextFieldCommand([
-            'field'         => $field->id,
-            'name'          => $field->name,
-            'required'      => $field->isRequired,
-            'maximumLength' => 2000,
-            'defaultValue'  => 'How to replicate:',
-            'pcreCheck'     => '.+',
-            'pcreSearch'    => 'search',
-            'pcreReplace'   => 'replace',
+            'field'       => $field->id,
+            'name'        => $field->name,
+            'required'    => $field->isRequired,
+            'maxlength'   => 2000,
+            'default'     => 'How to replicate:',
+            'pcreCheck'   => '.+',
+            'pcreSearch'  => 'search',
+            'pcreReplace' => 'replace',
         ]);
 
         $this->commandBus->handle($command);

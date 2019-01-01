@@ -46,12 +46,12 @@ class CreateDurationFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateDurationFieldCommand([
-            'state'        => $state->id,
-            'name'         => 'Time',
-            'required'     => true,
-            'minimumValue' => '0:00',
-            'maximumValue' => '23:59',
-            'defaultValue' => '8:00',
+            'state'    => $state->id,
+            'name'     => 'Time',
+            'required' => true,
+            'minimum'  => '0:00',
+            'maximum'  => '23:59',
+            'default'  => '8:00',
         ]);
 
         $result = $this->commandBus->handle($command);

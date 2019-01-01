@@ -73,7 +73,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
         self::assertSame(2, $facade->getDefaultValue()->value);
 
         $command = new Command\UpdateListFieldCommand([
-            'defaultValue' => $item->id,
+            'default' => $item->id,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -81,7 +81,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
         self::assertSame(1, $facade->getDefaultValue()->value);
 
         $command = new Command\UpdateListFieldCommand([
-            'defaultValue' => null,
+            'default' => null,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -97,7 +97,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
 
         $command = new Command\UpdateListFieldCommand([
-            'defaultValue' => self::UNKNOWN_ENTITY_ID,
+            'default' => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -117,7 +117,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
         [$item] = $repository->findBy(['value' => 2], ['id' => 'DESC']);
 
         $command = new Command\UpdateListFieldCommand([
-            'defaultValue' => $item->id,
+            'default' => $item->id,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -151,7 +151,7 @@ class ListHandlerTraitTest extends TransactionalTestCase
         [$item] = $repository->findBy(['value' => 2], ['id' => 'ASC']);
 
         $command = new Command\UpdateListFieldCommand([
-            'defaultValue' => $item->id,
+            'default' => $item->id,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

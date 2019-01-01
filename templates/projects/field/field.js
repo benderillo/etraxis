@@ -62,9 +62,19 @@ new Vue({
          * @returns {string} Human-readable field's default value.
          */
         defaultValue() {
-            return this.field.type === 'list' && this.field.default !== null
-                ? `${this.field.default.value} (${this.field.default.text})`
-                : this.field.default;
+
+            if (this.field.default !== null) {
+
+                if (this.field.type === 'checkbox') {
+                    return this.field.default ? i18n['field.on'] : i18n['field.off'];
+                }
+
+                if (this.field.type === 'list') {
+                    return `${this.field.default.value} (${this.field.default.text})`;
+                }
+            }
+
+            return this.field.default;
         },
     },
 

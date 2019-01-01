@@ -47,12 +47,12 @@ class UpdateDateFieldCommandTest extends TransactionalTestCase
         self::assertSame(14, $facade->getDefaultValue());
 
         $command = new UpdateDateFieldCommand([
-            'field'        => $field->id,
-            'name'         => $field->name,
-            'required'     => $field->isRequired,
-            'minimumValue' => 1,
-            'maximumValue' => 7,
-            'defaultValue' => 3,
+            'field'    => $field->id,
+            'name'     => $field->name,
+            'required' => $field->isRequired,
+            'minimum'  => 1,
+            'maximum'  => 7,
+            'default'  => 3,
         ]);
 
         $this->commandBus->handle($command);

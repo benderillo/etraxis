@@ -48,7 +48,7 @@ class GetStateTest extends TransactionalTestCase
             'name'        => 'Submitted',
             'type'        => 'initial',
             'responsible' => 'keep',
-            'next_state'  => null,
+            'next'        => null,
         ];
 
         $uri = sprintf('/api/states/%s', $state->id);

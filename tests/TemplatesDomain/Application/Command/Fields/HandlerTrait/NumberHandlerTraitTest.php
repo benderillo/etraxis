@@ -68,9 +68,9 @@ class NumberHandlerTraitTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
 
         $command = new Command\UpdateNumberFieldCommand([
-            'minimumValue' => -100000,
-            'maximumValue' => +100000,
-            'defaultValue' => 100,
+            'minimum' => -100000,
+            'maximum' => +100000,
+            'default' => 100,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -89,9 +89,9 @@ class NumberHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
 
         $command = new Command\UpdateNumberFieldCommand([
-            'minimumValue' => +100000,
-            'maximumValue' => -100000,
-            'defaultValue' => 100,
+            'minimum' => +100000,
+            'maximum' => -100000,
+            'default' => 100,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -106,9 +106,9 @@ class NumberHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Delta'], ['id' => 'ASC']);
 
         $command = new Command\UpdateNumberFieldCommand([
-            'minimumValue' => -100000,
-            'maximumValue' => +100000,
-            'defaultValue' => 100001,
+            'minimum' => -100000,
+            'maximum' => +100000,
+            'default' => 100001,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
@@ -136,9 +136,9 @@ class NumberHandlerTraitTest extends TransactionalTestCase
         [$field] = $this->repository->findBy(['name' => 'Issue ID'], ['id' => 'ASC']);
 
         $command = new Command\UpdateNumberFieldCommand([
-            'minimumValue' => -100000,
-            'maximumValue' => +100000,
-            'defaultValue' => 100,
+            'minimum' => -100000,
+            'maximum' => +100000,
+            'default' => 100,
         ]);
 
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);

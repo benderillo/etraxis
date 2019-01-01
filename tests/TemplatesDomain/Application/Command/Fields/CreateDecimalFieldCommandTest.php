@@ -46,12 +46,12 @@ class CreateDecimalFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateDecimalFieldCommand([
-            'state'        => $state->id,
-            'name'         => 'Coverage',
-            'required'     => true,
-            'minimumValue' => '0.00',
-            'maximumValue' => '100.00',
-            'defaultValue' => '3.1415',
+            'state'    => $state->id,
+            'name'     => 'Coverage',
+            'required' => true,
+            'minimum'  => '0.00',
+            'maximum'  => '100.00',
+            'default'  => '3.1415',
         ]);
 
         $result = $this->commandBus->handle($command);

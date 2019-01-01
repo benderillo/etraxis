@@ -43,8 +43,8 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ]);
 
         $this->commandBus->handle($command);
@@ -73,8 +73,8 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ]);
 
         $this->commandBus->handle($command);
@@ -91,8 +91,8 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ]);
 
         $this->commandBus->handle($command);
@@ -113,8 +113,8 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
             'name'        => 'Support',
             'prefix'      => 'bug',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ]);
 
         $this->commandBus->handle($command);
@@ -135,8 +135,8 @@ class UpdateTemplateCommandTest extends TransactionalTestCase
             'name'        => 'Bugfix',
             'prefix'      => 'req',
             'description' => 'Error reports',
-            'criticalAge' => 5,
-            'frozenTime'  => 10,
+            'critical'    => 5,
+            'frozen'      => 10,
         ]);
 
         $this->commandBus->handle($command);

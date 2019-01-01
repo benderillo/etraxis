@@ -54,26 +54,26 @@ trait DateHandlerTrait
         /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\DateInterface $facade */
         $facade = $field->getFacade($manager);
 
-        if ($command->minimumValue > $command->maximumValue) {
+        if ($command->minimum > $command->maximum) {
             throw new BadRequestHttpException($translator->trans('field.error.min_max_values'));
         }
 
-        if ($command->defaultValue !== null) {
+        if ($command->default !== null) {
 
-            if ($command->defaultValue < $command->minimumValue || $command->defaultValue > $command->maximumValue) {
+            if ($command->default < $command->minimum || $command->default > $command->maximum) {
 
                 $message = $translator->trans('field.error.default_value_range', [
-                    '%minimum%' => $command->minimumValue,
-                    '%maximum%' => $command->maximumValue,
+                    '%minimum%' => $command->minimum,
+                    '%maximum%' => $command->maximum,
                 ]);
 
                 throw new BadRequestHttpException($message);
             }
         }
 
-        $facade->setMinimumValue($command->minimumValue);
-        $facade->setMaximumValue($command->maximumValue);
-        $facade->setDefaultValue($command->defaultValue);
+        $facade->setMinimumValue($command->minimum);
+        $facade->setMaximumValue($command->maximum);
+        $facade->setDefaultValue($command->default);
 
         return $field;
     }

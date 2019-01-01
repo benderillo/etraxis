@@ -46,12 +46,12 @@ class CreateDateFieldCommandTest extends TransactionalTestCase
         self::assertNull($field);
 
         $command = new CreateDateFieldCommand([
-            'state'        => $state->id,
-            'name'         => 'Deadline',
-            'required'     => true,
-            'minimumValue' => 0,
-            'maximumValue' => 7,
-            'defaultValue' => 3,
+            'state'    => $state->id,
+            'name'     => 'Deadline',
+            'required' => true,
+            'minimum'  => 0,
+            'maximum'  => 7,
+            'default'  => 3,
         ]);
 
         $result = $this->commandBus->handle($command);

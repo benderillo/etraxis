@@ -79,8 +79,8 @@ new Vue({
         /**
          * @returns {null|string} Human-readable next state.
          */
-        nextState() {
-            let state = eTraxis.store.state.states.list.filter(state => state.id === this.state.next_state).pop();
+        next() {
+            let state = eTraxis.store.state.states.list.filter(state => state.id === this.state.next).pop();
             return state ? state.title : null;
         },
     },
@@ -118,7 +118,7 @@ new Vue({
                 name: this.state.name,
                 type: this.state.type,
                 responsible: this.state.responsible,
-                nextState: this.state.next_state,
+                next: this.state.next,
             };
 
             this.errors = {};
@@ -134,7 +134,7 @@ new Vue({
             let data = {
                 name: this.values.name,
                 responsible: this.values.responsible,
-                nextState: this.values.nextState,
+                next: this.values.next,
             };
 
             ui.block();

@@ -109,7 +109,7 @@ class FieldTest extends TestCase
                 'name'        => 'New',
                 'type'        => 'initial',
                 'responsible' => 'remove',
-                'next_state'  => null,
+                'next'        => null,
             ],
             'name'        => 'Customer reported',
             'type'        => 'checkbox',

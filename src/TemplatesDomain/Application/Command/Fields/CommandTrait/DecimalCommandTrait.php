@@ -20,9 +20,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Trait for "decimal" field commands.
  *
- * @property float $minimumValue DecimalValue ID.
- * @property float $maximumValue DecimalValue ID.
- * @property float $defaultValue DecimalValue ID.
+ * @property float $minimum DecimalValue ID.
+ * @property float $maximum DecimalValue ID.
+ * @property float $default DecimalValue ID.
  */
 trait DecimalCommandTrait
 {
@@ -33,7 +33,7 @@ trait DecimalCommandTrait
      * @Groups("api")
      * @API\Property(type="decimal", minimum="-9999999999.9999999999", maximum="9999999999.9999999999", example="3.1415", description="Minimum value.")
      */
-    public $minimumValue;
+    public $minimum;
 
     /**
      * @Assert\NotBlank
@@ -42,7 +42,7 @@ trait DecimalCommandTrait
      * @Groups("api")
      * @API\Property(type="decimal", minimum="-9999999999.9999999999", maximum="9999999999.9999999999", example="3.1415", description="Maximum value.")
      */
-    public $maximumValue;
+    public $maximum;
 
     /**
      * @Assert\Regex("/^(\-|\+)?\d{1,10}(\.\d{1,10})?$/")
@@ -50,5 +50,5 @@ trait DecimalCommandTrait
      * @Groups("api")
      * @API\Property(type="decimal", minimum="-9999999999.9999999999", maximum="9999999999.9999999999", example="3.1415", description="Default value.")
      */
-    public $defaultValue;
+    public $default;
 }

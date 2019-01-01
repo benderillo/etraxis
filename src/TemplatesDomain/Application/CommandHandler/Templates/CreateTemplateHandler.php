@@ -84,8 +84,8 @@ class CreateTemplateHandler
         $template->name        = $command->name;
         $template->prefix      = $command->prefix;
         $template->description = $command->description;
-        $template->criticalAge = $command->criticalAge;
-        $template->frozenTime  = $command->frozenTime;
+        $template->criticalAge = $command->critical;
+        $template->frozenTime  = $command->frozen;
         $template->isLocked    = true;
 
         $errors = $this->validator->validate($template);

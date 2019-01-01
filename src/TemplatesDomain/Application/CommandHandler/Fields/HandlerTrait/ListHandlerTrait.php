@@ -59,12 +59,12 @@ trait ListHandlerTrait
         if (get_parent_class($command) === AbstractUpdateFieldCommand::class) {
 
             /** @var \eTraxis\TemplatesDomain\Application\Command\Fields\UpdateListFieldCommand $command */
-            if ($command->defaultValue === null) {
+            if ($command->default === null) {
                 $facade->setDefaultValue(null);
             }
             else {
                 /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
-                $item = $manager->getRepository(ListItem::class)->find($command->defaultValue);
+                $item = $manager->getRepository(ListItem::class)->find($command->default);
 
                 if (!$item || $item->field !== $field) {
                     throw new NotFoundHttpException();

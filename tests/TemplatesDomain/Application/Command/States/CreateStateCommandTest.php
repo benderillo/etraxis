@@ -53,7 +53,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => $nextState->id,
+            'next'        => $nextState->id,
         ]);
 
         $result = $this->commandBus->handle($command);
@@ -140,7 +140,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => self::UNKNOWN_ENTITY_ID,
+            'next'        => self::UNKNOWN_ENTITY_ID,
         ]);
 
         $this->commandBus->handle($command);
@@ -164,7 +164,7 @@ class CreateStateCommandTest extends TransactionalTestCase
             'name'        => 'Started',
             'type'        => StateType::INTERMEDIATE,
             'responsible' => StateResponsible::KEEP,
-            'nextState'   => $nextState->id,
+            'next'        => $nextState->id,
         ]);
 
         $this->commandBus->handle($command);
