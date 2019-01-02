@@ -353,6 +353,53 @@ new Vue({
                 .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
+
+        /**
+         * Shows 'New field' dialog.
+         */
+        showNewFieldDialog() {
+
+            let template = eTraxis.store.state.templates.list
+                .filter(template => template.id === this.templateId)
+                .pop();
+
+            if (template.class === null) {
+                ui.info(i18n['template.must_be_locked']);
+                return;
+            }
+
+            this.values = {
+                state: this.stateId,
+                required: false,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgNewField.open();
+        },
+
+        /**
+         * Creates new field.
+         */
+        createField() {
+
+            if (this.values.type) {
+
+                ui.block();
+
+                axios.post(url('/api/fields'), this.values)
+                    .then(async response => {
+                        this.$refs.dlgNewField.close();
+                        await eTraxis.store.dispatch('fields/load', this.values.state)
+                            .then(() => {
+                                let location = response.headers.location;
+                                this.fieldId = parseInt(location.substr(location.lastIndexOf('/') + 1));
+                            });
+                    })
+                    .catch(exception => (this.errors = ui.getErrors(exception)))
+                    .then(() => ui.unblock());
+            }
+        },
     },
 
     watch: {
@@ -412,6 +459,15 @@ new Vue({
             if (id !== null) {
                 eTraxis.store.dispatch('fields/load', id);
             }
+        },
+
+        /**
+         * Field type in the 'New field' dialog has been changed.
+         *
+         * @param {string} value New type.
+         */
+        'values.type'(value) {
+            this.values.default = (value === 'checkbox') ? false : null;
         },
     },
 });

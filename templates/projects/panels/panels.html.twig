@@ -25,7 +25,7 @@
             <list :items="finalStates" :selected="stateId" @click="stateId = $event"></list>
         </panel>
 
-        <panel v-if="stateId" header="{{ 'fields' | trans }}">
+        <panel v-if="stateId" header="{{ 'fields' | trans }}" @create="showNewFieldDialog">
             <list :items="fields" :selected="fieldId" @click="fieldId = $event"></list>
         </panel>
 
@@ -45,6 +45,10 @@
 
     <modal ref="dlgNewState" header="{{ 'state.new' | trans }}" @submit="createState">
         {% include 'projects/state/dlg_state.html.twig' with { new: true } %}
+    </modal>
+
+    <modal ref="dlgNewField" header="{{ 'field.new' | trans }}" @submit="createField">
+        {% include 'projects/field/dlg_field.html.twig' with { new: true } %}
     </modal>
 
 </div>

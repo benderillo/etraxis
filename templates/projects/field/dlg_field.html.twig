@@ -1,0 +1,103 @@
+{% set id = random() %}
+
+{% set types = {} %}
+{% for type, prompt in field_types %}
+    {% set types = types | merge({ (type): prompt | trans }) %}
+{% endfor %}
+
+<div class="fieldset">
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="name-{{ id }}" title="{{ 'field.name' | trans }}">{{ 'field.name' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="name-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.name">
+            <p class="attention">${ errors.name }</p>
+        </div>
+    </div>
+
+    <div class="grid-row">
+        <div class="grid-33">
+            <label for="description-{{ id }}" title="{{ 'field.description' | trans }}">{{ 'field.description' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="description-{{ id }}" v-model="values.description">
+            <p class="attention">${ errors.description }</p>
+        </div>
+    </div>
+
+    {% if new %}
+
+        <div class="grid-row">
+            <div class="grid-33">
+                <label for="type-{{ id }}" title="{{ 'field.type' | trans }}">{{ 'field.type' | trans }}:</label>
+            </div>
+            <div class="grid-66">
+                <select class="grid-100 mobile-grid-100" id="type-{{ id }}" v-model="values.type">
+                    {% for type, prompt in types | sort %}
+                        <option value="{{ type }}">{{ prompt }}</option>
+                    {% endfor %}
+                </select>
+                <p class="attention">${ errors.type }</p>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div v-if="values.type && ['string', 'text'].includes(values.type)" class="grid-row">
+        <div class="grid-33">
+            <label for="maxlength-{{ id }}" title="{{ 'field.maximum_length' | trans }}">{{ 'field.maximum_length' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="maxlength-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.maxlength">
+            <p class="attention">${ errors.maxlength }</p>
+        </div>
+    </div>
+
+    <div v-if="values.type && ['date', 'decimal', 'duration', 'number'].includes(values.type)" class="grid-row">
+        <div class="grid-33">
+            <label for="minimum-{{ id }}" title="{{ 'field.minimum_value' | trans }}">{{ 'field.minimum_value' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="minimum-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.minimum">
+            <p class="attention">${ errors.minimum }</p>
+        </div>
+    </div>
+
+    <div v-if="values.type && ['date', 'decimal', 'duration', 'number'].includes(values.type)" class="grid-row">
+        <div class="grid-33">
+            <label for="maximum-{{ id }}" title="{{ 'field.maximum_value' | trans }}">{{ 'field.maximum_value' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <input class="grid-100 mobile-grid-100" type="text" id="maximum-{{ id }}" placeholder="{{ 'input.required' | trans }}" v-model="values.maximum">
+            <p class="attention">${ errors.maximum }</p>
+        </div>
+    </div>
+
+    <div v-if="values.type && !['issue', 'list'].includes(values.type)" class="grid-row">
+        <div class="grid-33">
+            <label for="default-{{ id }}" title="{{ 'field.default_value' | trans }}">{{ 'field.default_value' | trans }}:</label>
+        </div>
+        <div class="grid-66">
+            <label v-if="values.type === 'checkbox'" title="{{ 'field.on' | trans }}">
+                <input type="checkbox" v-model="values.default">
+                <span>{{ 'field.on' | trans }}</span>
+            </label>
+            <textarea v-else-if="values.type === 'text'" class="grid-100 mobile-grid-100" id="default-{{ id }}" v-model="values.default"></textarea>
+            <input v-else class="grid-100 mobile-grid-100" type="text" id="default-{{ id }}" v-model="values.default">
+            <p class="attention">${ errors.default }</p>
+        </div>
+    </div>
+
+    <div v-if="values.type && !['checkbox'].includes(values.type)" class="grid-row">
+        <div class="grid-66 prefix-33">
+            <label title="{{ 'field.required' | trans }}">
+                <input type="checkbox" v-model="values.required">
+                <span>{{ 'field.required' | trans }}</span>
+            </label>
+            <p class="attention">${ errors.required }</p>
+        </div>
+    </div>
+
+</div>

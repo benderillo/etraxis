@@ -63,6 +63,7 @@ field.maximum_length: 'Максимальная длина'
 field.maximum_value: 'Максимальное значение'
 field.minimum_value: 'Минимальное значение'
 field.name: 'Название поля'
+field.new: 'Новое поле'
 field.off: Выключено
 field.on: Включено
 field.permission.read_only: 'только чтение'
