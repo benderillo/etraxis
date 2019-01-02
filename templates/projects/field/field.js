@@ -9,10 +9,11 @@
 //
 //----------------------------------------------------------------------
 
-import Tab  from 'components/tabs/tab.vue';
-import Tabs from 'components/tabs/tabs.vue';
-import ui   from 'utilities/ui';
-import url  from 'utilities/url';
+import Modal from 'components/modal.vue';
+import Tab   from 'components/tabs/tab.vue';
+import Tabs  from 'components/tabs/tabs.vue';
+import ui    from 'utilities/ui';
+import url   from 'utilities/url';
 
 /**
  * 'Projects' page (field view).
@@ -21,6 +22,7 @@ new Vue({
     el: '#vue-field',
 
     components: {
+        'modal': Modal,
         'tab': Tab,
         'tabs': Tabs,
     },
@@ -28,6 +30,9 @@ new Vue({
     data: {
         field: {},          // field info
         permissions: {},    // field permissions
+        items: {},          // field items (for 'list' fields only)
+        values: {},         // form values
+        errors: {},         // form errors
     },
 
     computed: {
@@ -70,7 +75,7 @@ new Vue({
                 }
 
                 if (this.field.type === 'list') {
-                    return `${this.field.default.value} (${this.field.default.text})`;
+                    return this.field.default.text;
                 }
             }
 
@@ -87,6 +92,7 @@ new Vue({
 
             ui.block();
 
+            this.items = {};
             this.permissions = {};
 
             axios.get(url(`/api/fields/${this.fieldId}`))
@@ -98,7 +104,62 @@ new Vue({
                     axios.get(url(`/admin/fields/permissions/${this.fieldId}`))
                         .then(response => this.permissions = response.data);
                 })
+                .then(() => {
+                    if (this.field.type === 'list') {
+                        axios.get(url(`/api/fields/${this.fieldId}/items`))
+                            .then(response => this.items = response.data);
+                    }
+                })
                 .catch(exception => ui.getErrors(exception))
+                .then(() => ui.unblock());
+        },
+
+        /**
+         * Shows 'Edit field' dialog.
+         */
+        showEditFieldDialog() {
+
+            this.values = {
+                type: this.field.type,
+                name: this.field.name,
+                description: this.field.description,
+                required: this.field.required,
+                maxlength: this.field.maxlength,
+                minimum: this.field.minimum,
+                maximum: this.field.maximum,
+                default: (this.field.type === 'list' && this.field.default !== null)
+                         ? this.field.default.id
+                         : this.field.default,
+            };
+
+            this.errors = {};
+
+            this.$refs.dlgEditField.open();
+        },
+
+        /**
+         * Updates the field.
+         */
+        updateField() {
+
+            let data = {
+                name: this.values.name,
+                description: this.values.description,
+                required: this.values.required,
+                maxlength: this.values.maxlength,
+                minimum: this.values.minimum,
+                maximum: this.values.maximum,
+                default: this.values.default,
+            };
+
+            ui.block();
+
+            axios.put(url(`/api/fields/${this.fieldId}`), data)
+                .then(() => {
+                    this.reloadField();
+                    this.$refs.dlgEditField.close();
+                })
+                .catch(exception => (this.errors = ui.getErrors(exception)))
                 .then(() => ui.unblock());
         },
 

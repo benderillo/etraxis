@@ -10,4 +10,8 @@
         </div>
     </div>
 
+    <modal ref="dlgEditField" header="{{ 'field.edit' | trans }}" @submit="updateField">
+        {% include 'projects/field/dlg_field.html.twig' with { new: false } %}
+    </modal>
+
 </div>

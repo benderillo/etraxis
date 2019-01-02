@@ -54,6 +54,7 @@ event.state_changed: 'State is changed to ''%value%''.'
 field: Field
 field.default_value: 'Default value'
 field.description: Description
+field.edit: 'Edit field'
 field.error.default_value_format: 'Invalid format of the default value.'
 field.error.default_value_length: 'Default value should not be longer than %maximum% characters.'
 field.error.default_value_range: 'Default value should be in range from %minimum% to %maximum%.'

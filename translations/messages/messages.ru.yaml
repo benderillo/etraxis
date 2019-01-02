@@ -54,6 +54,7 @@ event.state_changed: 'Состояние изменено на "%value%".'
 field: Поле
 field.default_value: 'Значение по умолчанию'
 field.description: Описание
+field.edit: 'Редактирование поля'
 field.error.default_value_format: 'Неправильный формат значения по умолчанию.'
 field.error.default_value_length: 'Значение по умолчанию не должно быть длиннее %maximum% символов.'
 field.error.default_value_range: 'Значение по умолчанию должно лежать в диапазоне от %minimum% до %maximum%.'
