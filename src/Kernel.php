@@ -51,22 +51,6 @@ class Kernel extends BaseKernel
     /**
      * {@inheritdoc}
      */
-    public function getCacheDir()
-    {
-        return $this->getProjectDir() . '/var/cache/' . $this->environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLogDir()
-    {
-        return $this->getProjectDir() . '/var/log';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function registerBundles()
     {
         /** @noinspection PhpIncludeInspection */
