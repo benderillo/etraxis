@@ -27,12 +27,12 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
-    protected const CONFIG_EXTS = '.{php,xml,yaml,yml}';
+    private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
     /**
      * {@inheritdoc}
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
 
@@ -51,7 +51,7 @@ class Kernel extends BaseKernel
     /**
      * {@inheritdoc}
      */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         /** @noinspection PhpIncludeInspection */
         $contents = require $this->getProjectDir() . '/config/bundles.php';
@@ -65,7 +65,15 @@ class Kernel extends BaseKernel
     /**
      * {@inheritdoc}
      */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    public function getProjectDir(): string
+    {
+        return \dirname(__DIR__);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
         $container->setParameter('container.dumper.inline_class_loader', true);
@@ -80,12 +88,12 @@ class Kernel extends BaseKernel
     /**
      * {@inheritdoc}
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
         $confDir = $this->getProjectDir() . '/config';
 
-        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir . '/{routes}/' . $this->environment . '/**/*' . self::CONFIG_EXTS, '/', 'glob');
+        $routes->import($confDir . '/{routes}/*' . self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
     }
 }

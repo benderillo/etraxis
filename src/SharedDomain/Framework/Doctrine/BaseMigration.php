@@ -52,7 +52,7 @@ abstract class BaseMigration extends AbstractMigration
     /**
      * {@inheritdoc}
      */
-    final public function getDescription()
+    final public function getDescription(): string
     {
         return $this->getVersion();
     }
@@ -60,7 +60,7 @@ abstract class BaseMigration extends AbstractMigration
     /**
      * {@inheritdoc}
      */
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         $platform = $this->platform->getName();
 
@@ -73,7 +73,7 @@ abstract class BaseMigration extends AbstractMigration
     /**
      * {@inheritdoc}
      */
-    public function preDown(Schema $schema)
+    public function preDown(Schema $schema): void
     {
         $platform = $this->platform->getName();
 

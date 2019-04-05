@@ -9,9 +9,9 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <env name="APP_ENV" value="test" />
-        <env name="SHELL_VERBOSITY" value="-1" />
-        <env name="DATABASE_URL" value="mysql://root@127.0.0.1/etraxis?charset=utf8" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="DATABASE_URL" value="mysql://root@127.0.0.1/etraxis?charset=utf8" />
     </php>
 
     <testsuites>

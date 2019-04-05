@@ -95,7 +95,8 @@ class AddCommentHandler
         $event = new Event(
             $command->private ? EventType::PRIVATE_COMMENT : EventType::PUBLIC_COMMENT,
             $issue,
-            $user);
+            $user
+        );
 
         $comment = new Comment($event);
 

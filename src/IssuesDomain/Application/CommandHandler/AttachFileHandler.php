@@ -107,10 +107,12 @@ class AttachFileHandler
 
         $event = new Event(EventType::FILE_ATTACHED, $issue, $user);
 
-        $file = new File($event,
+        $file = new File(
+            $event,
             $command->file->getClientOriginalName(),
             $command->file->getSize(),
-            $command->file->getMimeType());
+            $command->file->getMimeType()
+        );
 
         $this->eventRepository->persist($event);
         $this->fileRepository->persist($file);

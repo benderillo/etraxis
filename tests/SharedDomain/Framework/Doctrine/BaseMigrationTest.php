@@ -14,13 +14,13 @@
 namespace eTraxis\SharedDomain\Framework\Doctrine;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\AbortMigrationException;
-use Doctrine\DBAL\Migrations\Configuration\Configuration;
-use Doctrine\DBAL\Migrations\Version;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Platforms\PostgreSqlPlatform;
 use Doctrine\DBAL\Platforms\SqlitePlatform;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\Configuration\Configuration;
+use Doctrine\Migrations\Exception\AbortMigration;
+use Doctrine\Migrations\Version\Version;
 use PHPUnit\Framework\TestCase;
 
 class BaseMigrationTest extends TestCase
@@ -78,7 +78,7 @@ class BaseMigrationTest extends TestCase
 
     public function testUpFailure()
     {
-        $this->expectException(AbortMigrationException::class);
+        $this->expectException(AbortMigration::class);
         $this->expectExceptionMessage('Unsupported database platform - sqlite');
 
         $schema    = new Schema();
@@ -91,7 +91,7 @@ class BaseMigrationTest extends TestCase
 
     public function testDownFailure()
     {
-        $this->expectException(AbortMigrationException::class);
+        $this->expectException(AbortMigration::class);
         $this->expectExceptionMessage('Unsupported database platform - sqlite');
 
         $schema    = new Schema();
@@ -134,12 +134,12 @@ class BaseMigrationTest extends TestCase
                 return '4.0.0';
             }
 
-            public function up(Schema $schema)
+            public function up(Schema $schema): void
             {
                 echo 'migrating up';
             }
 
-            public function down(Schema $schema)
+            public function down(Schema $schema): void
             {
                 echo 'migrating down';
             }
