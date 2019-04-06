@@ -20,10 +20,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\FieldRolePermission
+ */
 class FieldRolePermissionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -44,6 +50,9 @@ class FieldRolePermissionTest extends TestCase
         self::assertSame(FieldPermission::READ_WRITE, $this->getProperty($permission, 'permission'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionRole()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -64,6 +73,9 @@ class FieldRolePermissionTest extends TestCase
         new FieldRolePermission($field, 'foo', FieldPermission::READ_WRITE);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionPermission()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -84,6 +96,9 @@ class FieldRolePermissionTest extends TestCase
         new FieldRolePermission($field, SystemRole::AUTHOR, 'bar');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

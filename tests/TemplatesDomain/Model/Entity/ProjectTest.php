@@ -16,10 +16,16 @@ namespace eTraxis\TemplatesDomain\Model\Entity;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\Project
+ */
 class ProjectTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -27,6 +33,9 @@ class ProjectTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $project->createdAt);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -47,6 +56,9 @@ class ProjectTest extends TestCase
         self::assertSame($expected, $project->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testGroups()
     {
         $project = new Project();
@@ -60,6 +72,9 @@ class ProjectTest extends TestCase
         self::assertSame(['Group A', 'Group B'], $project->groups);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testTemplates()
     {
         $project = new Project();

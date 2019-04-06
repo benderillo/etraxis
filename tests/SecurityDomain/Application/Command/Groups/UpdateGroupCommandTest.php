@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Groups\UpdateGroupHandler::handle
+ */
 class UpdateGroupCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */

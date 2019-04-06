@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiTemplatesController::getTemplate
+ */
 class GetTemplateTest extends TransactionalTestCase
 {
     public function testSuccess()

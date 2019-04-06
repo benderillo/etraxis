@@ -49,7 +49,7 @@ abstract class AbstractIssueHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TranslatorInterface           $translator
      * @param AuthorizationCheckerInterface $security

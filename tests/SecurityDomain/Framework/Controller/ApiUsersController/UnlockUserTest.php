@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Framework\Controller\ApiUsersController::unlockUser
+ */
 class UnlockUserTest extends TransactionalTestCase
 {
     public function testSuccess()

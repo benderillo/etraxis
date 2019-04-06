@@ -22,6 +22,8 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Extended web test case with an autoboot kernel and few helpers.
+ *
+ * @coversNothing
  */
 class WebTestCase extends SymfonyWebTestCase
 {

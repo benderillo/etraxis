@@ -27,6 +27,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\AbstractAuthenticator
+ */
 class AbstractAuthenticatorTest extends TestCase
 {
     /** @var DatabaseAuthenticator */
@@ -76,6 +79,9 @@ class AbstractAuthenticatorTest extends TestCase
         $this->authenticator = new DatabaseAuthenticator($router, $session, $encoder, $eventBus);
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStart()
     {
         $request = new Request();
@@ -87,6 +93,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame('/login', $response->headers->get('location'));
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStartAjax()
     {
         $request = new Request();
@@ -99,6 +108,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame('Authentication required.', json_decode($response->getContent(), true));
     }
 
+    /**
+     * @covers ::supports
+     */
     public function testSupportsSuccess()
     {
         $request = new Request([], [
@@ -109,6 +121,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertTrue($this->authenticator->supports($request));
     }
 
+    /**
+     * @covers ::supports
+     */
     public function testSupportsMissing()
     {
         $request = new Request();
@@ -116,6 +131,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertFalse($this->authenticator->supports($request));
     }
 
+    /**
+     * @covers ::getCredentials
+     */
     public function testGetCredentials()
     {
         $expected = [
@@ -131,6 +149,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame($expected, $this->authenticator->getCredentials($request));
     }
 
+    /**
+     * @covers ::onAuthenticationSuccess
+     */
     public function testOnAuthenticationSuccess()
     {
         $token = $this->authenticator->createAuthenticatedToken(new User(), 'main');
@@ -143,6 +164,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame('http://localhost/profile', $response->headers->get('Location'));
     }
 
+    /**
+     * @covers ::onAuthenticationSuccess
+     */
     public function testOnAuthenticationSuccessAjax()
     {
         $token = $this->authenticator->createAuthenticatedToken(new User(), 'main');
@@ -157,6 +181,10 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame([], json_decode($response->getContent(), true));
     }
 
+    /**
+     * @covers ::onAuthenticationFailure
+     * @covers ::start
+     */
     public function testOnAuthenticationFailure()
     {
         $request   = new Request();
@@ -169,6 +197,10 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame('/login', $response->headers->get('location'));
     }
 
+    /**
+     * @covers ::onAuthenticationFailure
+     * @covers ::start
+     */
     public function testOnAuthenticationFailureAjax()
     {
         $exception = new AuthenticationException('Bad credentials.');
@@ -196,6 +228,9 @@ class AbstractAuthenticatorTest extends TestCase
         self::assertSame('Bad credentials.', json_decode($response->getContent(), true));
     }
 
+    /**
+     * @covers ::supportsRememberMe
+     */
     public function testSupportsRememberMe()
     {
         self::assertTrue($this->authenticator->supportsRememberMe());

@@ -17,10 +17,16 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\LastRead
+ */
 class LastReadTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -36,6 +42,9 @@ class LastReadTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $read->readAt);
     }
 
+    /**
+     * @covers ::touch
+     */
     public function testTouch()
     {
         $user = new User();

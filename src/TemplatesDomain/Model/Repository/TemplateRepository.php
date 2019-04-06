@@ -35,6 +35,8 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Template $entity): void
@@ -43,6 +45,8 @@ class TemplateRepository extends ServiceEntityRepository implements CollectionIn
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(Template $entity): void

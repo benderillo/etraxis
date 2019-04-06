@@ -17,8 +17,15 @@ use eTraxis\SecurityDomain\Model\Dictionary\LdapServerType;
 use League\Uri\UriException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\LdapUri
+ */
 class LdapUriTest extends TestCase
 {
+    /**
+     * @covers ::getBindPassword
+     * @covers ::getBindUser
+     */
     public function testNone()
     {
         $uri = LdapUri::createFromString('null://example.com');
@@ -32,6 +39,10 @@ class LdapUriTest extends TestCase
         self::assertEmpty($uri->getBindPassword());
     }
 
+    /**
+     * @covers ::getBindPassword
+     * @covers ::getBindUser
+     */
     public function testLdapWithUser()
     {
         $uri = LdapUri::createFromString('ldap://root@example.com');
@@ -45,6 +56,10 @@ class LdapUriTest extends TestCase
         self::assertEmpty($uri->getBindPassword());
     }
 
+    /**
+     * @covers ::getBindPassword
+     * @covers ::getBindUser
+     */
     public function testLdapsWithUserPassword()
     {
         $uri = LdapUri::createFromString('ldaps://root:secret@example.com');
@@ -58,6 +73,9 @@ class LdapUriTest extends TestCase
         self::assertSame('secret', $uri->getBindPassword());
     }
 
+    /**
+     * @coversNothing
+     */
     public function testPort()
     {
         $uri = LdapUri::createFromString('ldap://example.com:389');
@@ -71,6 +89,9 @@ class LdapUriTest extends TestCase
         self::assertEmpty($uri->getBindPassword());
     }
 
+    /**
+     * @covers ::getType
+     */
     public function testType()
     {
         $uri = LdapUri::createFromString('ldap://example.com?type=win2000');
@@ -84,6 +105,9 @@ class LdapUriTest extends TestCase
         self::assertEmpty($uri->getBindPassword());
     }
 
+    /**
+     * @covers ::getEncryption
+     */
     public function testEncryption()
     {
         $uri = LdapUri::createFromString('ldap://example.com?encryption=tls');
@@ -97,6 +121,12 @@ class LdapUriTest extends TestCase
         self::assertEmpty($uri->getBindPassword());
     }
 
+    /**
+     * @covers ::getBindPassword
+     * @covers ::getBindUser
+     * @covers ::getEncryption
+     * @covers ::getType
+     */
     public function testMaximum()
     {
         $uri = LdapUri::createFromString('ldaps://root:secret@example.com:636?type=winnt&encryption=ssl');
@@ -110,6 +140,9 @@ class LdapUriTest extends TestCase
         self::assertSame('secret', $uri->getBindPassword());
     }
 
+    /**
+     * @covers ::isValidUri
+     */
     public function testInvalidSchema()
     {
         self::expectException(UriException::class);
@@ -117,6 +150,9 @@ class LdapUriTest extends TestCase
         LdapUri::createFromString('ssh://root:secret@example.com');
     }
 
+    /**
+     * @covers ::isValidUri
+     */
     public function testEmptyHost()
     {
         self::expectException(UriException::class);
@@ -124,6 +160,9 @@ class LdapUriTest extends TestCase
         LdapUri::createFromString('ldap://root:secret@');
     }
 
+    /**
+     * @covers ::isValidUri
+     */
     public function testInvalidType()
     {
         self::expectException(UriException::class);

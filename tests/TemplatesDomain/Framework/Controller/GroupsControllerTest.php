@@ -18,8 +18,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Framework\Controller\GroupsController
+ */
 class GroupsControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::permissions
+     */
     public function testPermissions()
     {
         /** @var Group $group */

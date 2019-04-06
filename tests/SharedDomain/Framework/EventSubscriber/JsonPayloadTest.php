@@ -18,8 +18,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\EventSubscriber\JsonPayload
+ */
 class JsonPayloadTest extends TestCase
 {
+    /**
+     * @covers ::getSubscribedEvents
+     */
     public function testGetSubscribedEvents()
     {
         $expected = [
@@ -29,6 +35,9 @@ class JsonPayloadTest extends TestCase
         self::assertSame($expected, array_keys(JsonPayload::getSubscribedEvents()));
     }
 
+    /**
+     * @covers ::onJson
+     */
     public function testFormPostRequest()
     {
         $parameters = [
@@ -65,6 +74,9 @@ class JsonPayloadTest extends TestCase
         self::assertSame($expected, $request->request->all());
     }
 
+    /**
+     * @covers ::onJson
+     */
     public function testJsonPostRequest()
     {
         $parameters = [
@@ -104,6 +116,9 @@ class JsonPayloadTest extends TestCase
         self::assertSame($expected, $request->request->all());
     }
 
+    /**
+     * @covers ::onJson
+     */
     public function testJsonGetRequest()
     {
         $parameters = [

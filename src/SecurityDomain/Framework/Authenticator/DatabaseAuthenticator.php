@@ -33,7 +33,7 @@ class DatabaseAuthenticator extends AbstractAuthenticator
     protected $eventBus;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param RouterInterface              $router
      * @param SessionInterface             $session

@@ -40,8 +40,6 @@ class GroupVoter extends Voter
 
     /**
      * {@inheritdoc}
-     *
-     * @codeCoverageIgnore
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {

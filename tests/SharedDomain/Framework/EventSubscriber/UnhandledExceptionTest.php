@@ -31,6 +31,9 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\EventSubscriber\UnhandledException
+ */
 class UnhandledExceptionTest extends TestCase
 {
     /** @var UnhandledException */
@@ -58,6 +61,9 @@ class UnhandledExceptionTest extends TestCase
         $this->subscriber = new UnhandledException($logger, $translator, $normalizer);
     }
 
+    /**
+     * @covers ::getSubscribedEvents
+     */
     public function testGetSubscribedEvents()
     {
         $expected = [
@@ -67,6 +73,9 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame($expected, array_keys(UnhandledException::getSubscribedEvents()));
     }
 
+    /**
+     * @covers ::onException
+     */
     public function testMasterRequest()
     {
         $request = new Request();
@@ -88,6 +97,9 @@ class UnhandledExceptionTest extends TestCase
         self::assertNull($response);
     }
 
+    /**
+     * @covers ::onException
+     */
     public function testInvalidCommandException()
     {
         $expected = [
@@ -138,6 +150,10 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame($expected, json_decode($content, true));
     }
 
+    /**
+     * @covers ::getHttpErrorMessage
+     * @covers ::onException
+     */
     public function testHttp401Exception()
     {
         $request = new Request();
@@ -162,6 +178,10 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame('User-friendly 401 error message.', trim($content, '"'));
     }
 
+    /**
+     * @covers ::getHttpErrorMessage
+     * @covers ::onException
+     */
     public function testHttp403Exception()
     {
         $request = new Request();
@@ -186,6 +206,10 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame('User-friendly 403 error message.', trim($content, '"'));
     }
 
+    /**
+     * @covers ::getHttpErrorMessage
+     * @covers ::onException
+     */
     public function testHttp404Exception()
     {
         $request = new Request();
@@ -210,6 +234,10 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame('User-friendly 404 error message.', trim($content, '"'));
     }
 
+    /**
+     * @covers ::getHttpErrorMessage
+     * @covers ::onException
+     */
     public function testHttpDefaultMessageException()
     {
         $request = new Request();
@@ -234,6 +262,9 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame(Response::$statusTexts[Response::HTTP_INTERNAL_SERVER_ERROR], trim($content, '"'));
     }
 
+    /**
+     * @covers ::onException
+     */
     public function testHttpCustomMessageException()
     {
         $request = new Request();
@@ -258,6 +289,9 @@ class UnhandledExceptionTest extends TestCase
         self::assertSame('You are not allowed for this action.', trim($content, '"'));
     }
 
+    /**
+     * @covers ::onException
+     */
     public function testException()
     {
         $request = new Request();

@@ -22,6 +22,9 @@ use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\HandlerTrait\ListHandlerTrait
+ */
 class ListHandlerTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -51,11 +54,17 @@ class ListHandlerTraitTest extends TransactionalTestCase
         };
     }
 
+    /**
+     * @covers ::getSupportedFieldType
+     */
     public function testGetSupportedFieldType()
     {
         self::assertSame(FieldType::LIST, $this->callMethod($this->handler, 'getSupportedFieldType'));
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldSuccess()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
@@ -89,6 +98,9 @@ class ListHandlerTraitTest extends TransactionalTestCase
         self::assertNull($facade->getDefaultValue());
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnknownItem()
     {
         $this->expectException(NotFoundHttpException::class);
@@ -103,6 +115,9 @@ class ListHandlerTraitTest extends TransactionalTestCase
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldWrongItem()
     {
         $this->expectException(NotFoundHttpException::class);
@@ -123,6 +138,9 @@ class ListHandlerTraitTest extends TransactionalTestCase
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedCommand()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -136,6 +154,9 @@ class ListHandlerTraitTest extends TransactionalTestCase
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedFieldType()
     {
         $this->expectException(\UnexpectedValueException::class);

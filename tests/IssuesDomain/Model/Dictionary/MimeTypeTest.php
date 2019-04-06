@@ -15,8 +15,14 @@ namespace eTraxis\IssuesDomain\Model\Dictionary;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Dictionary\MimeType
+ */
 class MimeTypeTest extends TestCase
 {
+    /**
+     * @covers ::get
+     */
     public function testGet()
     {
         $expected = [
@@ -53,6 +59,9 @@ class MimeTypeTest extends TestCase
         }
     }
 
+    /**
+     * @covers ::has
+     */
     public function testHas()
     {
         $expected = [

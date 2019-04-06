@@ -28,7 +28,7 @@ class DeleteStateHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param StateRepository               $repository

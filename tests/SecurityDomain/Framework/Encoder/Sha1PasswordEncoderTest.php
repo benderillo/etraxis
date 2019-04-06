@@ -16,6 +16,9 @@ namespace eTraxis\SecurityDomain\Framework\Encoder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Encoder\Sha1PasswordEncoder
+ */
 class Sha1PasswordEncoderTest extends TestCase
 {
     /** @var Sha1PasswordEncoder */
@@ -28,11 +31,17 @@ class Sha1PasswordEncoderTest extends TestCase
         $this->encoder = new Sha1PasswordEncoder();
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePassword()
     {
         self::assertSame('mzMEbtOdGC462vqQRa1nh9S7wyE=', $this->encoder->encodePassword('legacy'));
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePasswordMaxLength()
     {
         $raw = str_repeat('*', Sha1PasswordEncoder::MAX_PASSWORD_LENGTH);
@@ -47,6 +56,9 @@ class Sha1PasswordEncoderTest extends TestCase
         self::assertTrue(true);
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePasswordTooLong()
     {
         $this->expectException(BadCredentialsException::class);
@@ -56,6 +68,9 @@ class Sha1PasswordEncoderTest extends TestCase
         $this->encoder->encodePassword($raw);
     }
 
+    /**
+     * @covers ::isPasswordValid
+     */
     public function testIsPasswordValid()
     {
         $encoded = 'mzMEbtOdGC462vqQRa1nh9S7wyE=';

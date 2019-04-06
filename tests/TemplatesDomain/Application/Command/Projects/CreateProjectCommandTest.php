@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Projects\CreateProjectHandler::handle
+ */
 class CreateProjectCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\ProjectRepository */

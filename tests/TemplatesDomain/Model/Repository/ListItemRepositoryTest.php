@@ -17,6 +17,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository
+ */
 class ListItemRepositoryTest extends TransactionalTestCase
 {
     /** @var ListItemRepository */
@@ -29,26 +32,32 @@ class ListItemRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(ListItem::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(ListItemRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::find
+     */
     public function testFind()
     {
         /** @var Field $field */
         [$field] = $this->doctrine->getRepository(Field::class)->findBy(['name' => 'Priority', 'removedAt' => null], ['id' => 'ASC']);
 
-        /** @var ListItemRepository $repository */
-        $repository = $this->doctrine->getRepository(ListItem::class);
-
-        $expected = $repository->findOneBy(['field' => $field, 'text' => 'normal']);
+        $expected = $this->repository->findOneBy(['field' => $field, 'text' => 'high']);
         self::assertNotNull($expected);
 
-        $value = $repository->find($expected->id);
+        $value = $this->repository->find($expected->id);
         self::assertSame($expected, $value);
     }
 
+    /**
+     * @covers ::findAllByField
+     */
     public function testFindAllByField()
     {
         /** @var Field $field */
@@ -70,6 +79,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::findOneByValue
+     */
     public function testFindOneByValueSuccess()
     {
         /** @var Field $field */
@@ -81,6 +93,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertSame('normal', $item->text);
     }
 
+    /**
+     * @covers ::findOneByValue
+     */
     public function testFindOneByValueUnknown()
     {
         /** @var Field $field */
@@ -91,6 +106,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertNull($item);
     }
 
+    /**
+     * @covers ::findOneByValue
+     */
     public function testFindOneByValueWrongField()
     {
         /** @var Field $field */
@@ -101,6 +119,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertNull($item);
     }
 
+    /**
+     * @covers ::findOneByText
+     */
     public function testFindOneByTextSuccess()
     {
         /** @var Field $field */
@@ -112,6 +133,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertSame(2, $item->value);
     }
 
+    /**
+     * @covers ::findOneByText
+     */
     public function testFindOneByTextUnknown()
     {
         /** @var Field $field */
@@ -122,6 +146,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertNull($item);
     }
 
+    /**
+     * @covers ::findOneByText
+     */
     public function testFindOneByTextWrongField()
     {
         /** @var Field $field */
@@ -132,6 +159,9 @@ class ListItemRepositoryTest extends TransactionalTestCase
         self::assertNull($item);
     }
 
+    /**
+     * @covers ::warmup
+     */
     public function testWarmup()
     {
         /** @var Field $field */

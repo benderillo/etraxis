@@ -31,6 +31,8 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(State $entity): void
@@ -39,6 +41,8 @@ class StateRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(State $entity): void

@@ -25,6 +25,9 @@ use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\FieldRepository
+ */
 class FieldRepositoryTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -39,11 +42,17 @@ class FieldRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Field::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(FieldRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::find
+     */
     public function testFind()
     {
         [$field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -51,6 +60,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($field, $this->repository->find($field->id));
     }
 
+    /**
+     * @covers ::findAll
+     */
     public function testFindAll()
     {
         $fields = $this->repository->findAll();
@@ -58,6 +70,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(48, $fields);
     }
 
+    /**
+     * @covers ::findBy
+     */
     public function testFindBy()
     {
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
@@ -70,6 +85,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame('Task ID', $fields[1]->name);
     }
 
+    /**
+     * @covers ::findOneBy
+     */
     public function testFindOneBy()
     {
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Duplicated'], ['id' => 'ASC']);
@@ -80,6 +98,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame('Issue ID', $field->name);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -102,6 +123,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -128,6 +152,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -154,6 +181,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -183,6 +214,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProject()
     {
         $expected = [
@@ -218,6 +253,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProjectNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -231,6 +270,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplate()
     {
         $expected = [
@@ -265,6 +308,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplateNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -278,6 +325,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByState()
     {
         $expected = [
@@ -306,6 +357,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByStateNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -319,6 +374,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -350,6 +409,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByNameNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -363,6 +426,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByType()
     {
         $expected = [
@@ -394,6 +461,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTypeNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -407,6 +478,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -434,6 +509,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescriptionNull()
     {
         $expected = [
@@ -489,6 +568,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByPosition()
     {
         $expected = [
@@ -520,6 +603,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByPositionNull()
     {
         $collection = $this->repository->getCollection(0, FieldRepository::MAX_LIMIT, null, [
@@ -533,6 +620,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByRequired()
     {
         $expected = [
@@ -576,6 +667,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProject()
     {
         $expected = [
@@ -612,6 +707,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByTemplate()
     {
         $expected = [
@@ -649,6 +748,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByState()
     {
         $expected = [
@@ -686,6 +789,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByName()
     {
         $expected = [
@@ -722,6 +829,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByType()
     {
         $expected = [
@@ -759,6 +870,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByDescription()
     {
         $expected = [
@@ -796,6 +911,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByPosition()
     {
         $expected = [
@@ -833,6 +952,10 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByRequired()
     {
         $expected = [
@@ -870,6 +993,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::warmupCache
+     */
     public function testWarmupCache1()
     {
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'New'], ['id' => 'ASC']);
@@ -895,6 +1021,9 @@ class FieldRepositoryTest extends WebTestCase
         self::assertTrue($listCache->has("{$defaultItem->id}"));
     }
 
+    /**
+     * @covers ::warmupCache
+     */
     public function testWarmupCache2()
     {
         [$state] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Completed'], ['id' => 'ASC']);

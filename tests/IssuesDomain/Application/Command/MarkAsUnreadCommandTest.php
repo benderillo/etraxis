@@ -17,6 +17,9 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Entity\LastRead;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\MarkAsUnreadHandler::handle
+ */
 class MarkAsUnreadCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */

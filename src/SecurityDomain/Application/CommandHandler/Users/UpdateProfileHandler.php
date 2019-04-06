@@ -30,7 +30,7 @@ class UpdateProfileHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param ValidatorInterface    $validator
      * @param TokenStorageInterface $tokens

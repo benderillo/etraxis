@@ -16,6 +16,9 @@ namespace eTraxis\SecurityDomain\Application\Command\Users;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\ForgetPasswordHandler::handle
+ */
 class ForgetPasswordCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

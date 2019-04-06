@@ -29,7 +29,7 @@ class ResetPasswordHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param UserPasswordEncoderInterface $encoder
      * @param UserRepository               $repository

@@ -17,6 +17,9 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\Validator\Exception\InvalidOptionsException;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRangeValidator
+ */
 class DecimalRangeValidatorTest extends WebTestCase
 {
     /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
@@ -29,6 +32,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         $this->validator = $this->client->getContainer()->get('validator');
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRange::__construct
+     */
     public function testMissingOptions()
     {
         $this->expectException(MissingOptionsException::class);
@@ -39,6 +45,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         $this->validator->validate('0', [$constraint]);
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRange::__construct
+     */
     public function testInvalidMinOption()
     {
         $this->expectException(InvalidOptionsException::class);
@@ -51,6 +60,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         $this->validator->validate('0', [$constraint]);
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRange::__construct
+     */
     public function testInvalidMaxOption()
     {
         $this->expectException(InvalidOptionsException::class);
@@ -63,6 +75,10 @@ class DecimalRangeValidatorTest extends WebTestCase
         $this->validator->validate('0', [$constraint]);
     }
 
+    /**
+     * @covers ::validate
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DecimalRange::__construct
+     */
     public function testBothOptions()
     {
         $constraint = new DecimalRange([
@@ -112,6 +128,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testMinOptionOnly()
     {
         $constraint = new DecimalRange([
@@ -158,6 +177,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testMaxOptionOnly()
     {
         $constraint = new DecimalRange([
@@ -204,6 +226,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testCustomMinMessage()
     {
         $constraint = new DecimalRange([
@@ -216,6 +241,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         self::assertSame('The value must be >= 1.', $errors->get(0)->getMessage());
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testCustomMaxMessage()
     {
         $constraint = new DecimalRange([
@@ -228,6 +256,9 @@ class DecimalRangeValidatorTest extends WebTestCase
         self::assertSame('The value must be <= 10.', $errors->get(0)->getMessage());
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testCustomInvalidMessage()
     {
         $constraint = new DecimalRange([

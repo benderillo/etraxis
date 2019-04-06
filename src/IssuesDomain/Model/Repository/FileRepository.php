@@ -34,6 +34,8 @@ class FileRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(File $entity): void

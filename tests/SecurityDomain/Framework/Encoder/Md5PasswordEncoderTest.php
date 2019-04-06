@@ -16,6 +16,9 @@ namespace eTraxis\SecurityDomain\Framework\Encoder;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Encoder\Md5PasswordEncoder
+ */
 class Md5PasswordEncoderTest extends TestCase
 {
     /** @var Md5PasswordEncoder */
@@ -28,11 +31,17 @@ class Md5PasswordEncoderTest extends TestCase
         $this->encoder = new Md5PasswordEncoder();
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePassword()
     {
         self::assertSame('8dbdda48fb8748d6746f1965824e966a', $this->encoder->encodePassword('simple'));
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePasswordMaxLength()
     {
         $raw = str_repeat('*', Md5PasswordEncoder::MAX_PASSWORD_LENGTH);
@@ -47,6 +56,9 @@ class Md5PasswordEncoderTest extends TestCase
         self::assertTrue(true);
     }
 
+    /**
+     * @covers ::encodePassword
+     */
     public function testEncodePasswordTooLong()
     {
         $this->expectException(BadCredentialsException::class);
@@ -56,6 +68,9 @@ class Md5PasswordEncoderTest extends TestCase
         $this->encoder->encodePassword($raw);
     }
 
+    /**
+     * @covers ::isPasswordValid
+     */
     public function testIsPasswordValid()
     {
         $encoded = '8dbdda48fb8748d6746f1965824e966a';

@@ -33,8 +33,14 @@ use eTraxis\TemplatesDomain\Application\Command\Fields\UpdateStringFieldCommand;
 use eTraxis\TemplatesDomain\Application\Command\Fields\UpdateTextFieldCommand;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Dictionary\FieldType
+ */
 class FieldTypeTest extends TestCase
 {
+    /**
+     * @covers ::getCreateCommand
+     */
     public function testGetCreateCommand()
     {
         self::assertSame(CreateCheckboxFieldCommand::class, FieldType::getCreateCommand(FieldType::CHECKBOX));
@@ -48,6 +54,9 @@ class FieldTypeTest extends TestCase
         self::assertSame(CreateTextFieldCommand::class, FieldType::getCreateCommand(FieldType::TEXT));
     }
 
+    /**
+     * @covers ::getUpdateCommand
+     */
     public function testGetUpdateCommand()
     {
         self::assertSame(UpdateCheckboxFieldCommand::class, FieldType::getUpdateCommand(FieldType::CHECKBOX));

@@ -24,7 +24,7 @@ class TimingMiddleware implements Middleware
     protected $logger;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface $logger
      */

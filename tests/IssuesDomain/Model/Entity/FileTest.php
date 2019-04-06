@@ -18,10 +18,16 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\File
+ */
 class FileTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -42,6 +48,9 @@ class FileTest extends TestCase
         self::assertRegExp('/^([[:xdigit:]]{32})$/is', $file->uuid);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorFallback()
     {
         $user = new User();
@@ -62,6 +71,9 @@ class FileTest extends TestCase
         self::assertRegExp('/^([[:xdigit:]]{32})$/is', $file->uuid);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -95,6 +107,9 @@ class FileTest extends TestCase
         self::assertSame($expected, $file->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIssue()
     {
         $user = new User();
@@ -111,6 +126,10 @@ class FileTest extends TestCase
         self::assertSame($issue, $file->issue);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::remove
+     */
     public function testIsRemoved()
     {
         $user  = new User();

@@ -17,6 +17,9 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Entity\Watcher;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\WatchIssuesHandler::handle
+ */
 class WatchIssuesCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */

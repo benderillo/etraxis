@@ -31,6 +31,8 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Project $entity): void
@@ -39,6 +41,8 @@ class ProjectRepository extends ServiceEntityRepository implements CollectionInt
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(Project $entity): void

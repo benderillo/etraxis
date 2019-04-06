@@ -18,6 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\LastRead;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\LastReadRepository
+ */
 class LastReadRepositoryTest extends TransactionalTestCase
 {
     /** @var LastReadRepository */
@@ -30,11 +33,17 @@ class LastReadRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(LastRead::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(LastReadRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::markAsRead
+     */
     public function testMarkAsReadExisting()
     {
         /** @var Issue $issue */
@@ -64,6 +73,9 @@ class LastReadRepositoryTest extends TransactionalTestCase
         self::assertLessThanOrEqual(2, time() - $read->readAt);
     }
 
+    /**
+     * @covers ::markAsRead
+     */
     public function testMarkAsReadNew()
     {
         /** @var Issue $issue */

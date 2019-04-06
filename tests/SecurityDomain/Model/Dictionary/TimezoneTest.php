@@ -15,8 +15,14 @@ namespace eTraxis\SecurityDomain\Model\Dictionary;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Dictionary\Timezone
+ */
 class TimezoneTest extends TestCase
 {
+    /**
+     * @covers ::getCountries
+     */
     public function testCountries()
     {
         $countries = Timezone::getCountries();
@@ -26,6 +32,9 @@ class TimezoneTest extends TestCase
         self::assertSame('New Zealand', $countries['NZ']);
     }
 
+    /**
+     * @covers ::getCities
+     */
     public function testCitiesAustralia()
     {
         $expected = [
@@ -47,6 +56,9 @@ class TimezoneTest extends TestCase
         self::assertSame($expected, Timezone::getCities('AU'));
     }
 
+    /**
+     * @covers ::getCities
+     */
     public function testCitiesArgentina()
     {
         $expected = [
@@ -67,6 +79,9 @@ class TimezoneTest extends TestCase
         self::assertSame($expected, Timezone::getCities('AR'));
     }
 
+    /**
+     * @covers ::dictionary
+     */
     public function testDictionary()
     {
         self::assertSame(timezone_identifiers_list(), Timezone::keys());

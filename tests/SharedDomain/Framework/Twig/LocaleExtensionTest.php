@@ -15,8 +15,14 @@ namespace eTraxis\SharedDomain\Framework\Twig;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Twig\LocaleExtension
+ */
 class LocaleExtensionTest extends TestCase
 {
+    /**
+     * @covers ::getFilters
+     */
     public function testFilters()
     {
         $expected = [
@@ -33,6 +39,9 @@ class LocaleExtensionTest extends TestCase
         self::assertSame($expected, $filters);
     }
 
+    /**
+     * @covers ::filterDirection
+     */
     public function testFilterDirection()
     {
         $extension = new LocaleExtension();
@@ -43,6 +52,9 @@ class LocaleExtensionTest extends TestCase
         self::assertSame(LocaleExtension::RIGHT_TO_LEFT, $extension->filterDirection('he'));
     }
 
+    /**
+     * @covers ::filterLanguage
+     */
     public function testFilterLanguage()
     {
         $extension = new LocaleExtension();

@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::listComments
+ */
 class ListCommentsTest extends TransactionalTestCase
 {
     public function testSuccess()

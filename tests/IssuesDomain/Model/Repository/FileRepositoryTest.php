@@ -17,6 +17,9 @@ use eTraxis\IssuesDomain\Model\Entity\File;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\FileRepository
+ */
 class FileRepositoryTest extends WebTestCase
 {
     /** @var FileRepository */
@@ -29,11 +32,17 @@ class FileRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(File::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(FileRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getFullPath
+     */
     public function testFullPath()
     {
         /** @var File $file */
@@ -44,6 +53,9 @@ class FileRepositoryTest extends WebTestCase
         self::assertSame($expected, $this->repository->getFullPath($file));
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueWithRemoved()
     {
         $expected = [
@@ -62,6 +74,9 @@ class FileRepositoryTest extends WebTestCase
         self::assertSame($expected, $files);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueNoRemoved()
     {
         $expected = [

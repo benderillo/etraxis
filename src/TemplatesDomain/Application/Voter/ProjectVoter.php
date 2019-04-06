@@ -45,7 +45,7 @@ class ProjectVoter extends Voter
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param EntityManagerInterface $manager
      */
@@ -56,8 +56,6 @@ class ProjectVoter extends Voter
 
     /**
      * {@inheritdoc}
-     *
-     * @codeCoverageIgnore
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {

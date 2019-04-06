@@ -17,6 +17,9 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\Validator\Exception\InvalidOptionsException;
 use Symfony\Component\Validator\Exception\MissingOptionsException;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRangeValidator
+ */
 class DurationRangeValidatorTest extends WebTestCase
 {
     /** @var \Symfony\Component\Validator\Validator\ValidatorInterface */
@@ -29,6 +32,9 @@ class DurationRangeValidatorTest extends WebTestCase
         $this->validator = $this->client->getContainer()->get('validator');
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange::__construct
+     */
     public function testMissingOptions()
     {
         $this->expectException(MissingOptionsException::class);
@@ -39,6 +45,9 @@ class DurationRangeValidatorTest extends WebTestCase
         $this->validator->validate('0:00', [$constraint]);
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange::__construct
+     */
     public function testInvalidMinOption()
     {
         $this->expectException(InvalidOptionsException::class);
@@ -51,6 +60,9 @@ class DurationRangeValidatorTest extends WebTestCase
         $this->validator->validate('0:00', [$constraint]);
     }
 
+    /**
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange::__construct
+     */
     public function testInvalidMaxOption()
     {
         $this->expectException(InvalidOptionsException::class);
@@ -63,6 +75,11 @@ class DurationRangeValidatorTest extends WebTestCase
         $this->validator->validate('0:00', [$constraint]);
     }
 
+    /**
+     * @covers ::str2int
+     * @covers ::validate
+     * @covers \eTraxis\SharedDomain\Framework\Validator\Constraints\DurationRange::__construct
+     */
     public function testBothOptions()
     {
         $constraint = new DurationRange([
@@ -92,6 +109,10 @@ class DurationRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::str2int
+     * @covers ::validate
+     */
     public function testMinOptionOnly()
     {
         $constraint = new DurationRange([
@@ -116,6 +137,10 @@ class DurationRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::str2int
+     * @covers ::validate
+     */
     public function testMaxOptionOnly()
     {
         $constraint = new DurationRange([
@@ -140,6 +165,10 @@ class DurationRangeValidatorTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::str2int
+     * @covers ::validate
+     */
     public function testCustomMinMessage()
     {
         $constraint = new DurationRange([
@@ -152,6 +181,10 @@ class DurationRangeValidatorTest extends WebTestCase
         self::assertSame('The value must be >= 1:00.', $errors->get(0)->getMessage());
     }
 
+    /**
+     * @covers ::str2int
+     * @covers ::validate
+     */
     public function testCustomMaxMessage()
     {
         $constraint = new DurationRange([
@@ -164,6 +197,9 @@ class DurationRangeValidatorTest extends WebTestCase
         self::assertSame('The value must be <= 10:00.', $errors->get(0)->getMessage());
     }
 
+    /**
+     * @covers ::validate
+     */
     public function testCustomInvalidMessage()
     {
         $constraint = new DurationRange([

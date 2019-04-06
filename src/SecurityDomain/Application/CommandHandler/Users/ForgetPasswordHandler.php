@@ -28,7 +28,7 @@ class ForgetPasswordHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TranslatorInterface $translator
      * @param MailerInterface     $mailer

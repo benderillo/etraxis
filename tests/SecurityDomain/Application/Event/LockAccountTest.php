@@ -18,6 +18,9 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 use Psr\Log\NullLogger;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Application\EventSubscriber\LockAccount
+ */
 class LockAccountTest extends TransactionalTestCase
 {
     /** @var \Psr\Log\LoggerInterface */
@@ -34,12 +37,18 @@ class LockAccountTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(User::class);
     }
 
+    /**
+     * @covers ::getSubscribedEvents
+     */
     public function testSubscribedEvents()
     {
         $events = LockAccount::getSubscribedEvents();
         self::assertArrayHasKey(LoginFailedEvent::class, $events);
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testLockUser()
     {
         $event = new LoginFailedEvent([
@@ -64,6 +73,9 @@ class LockAccountTest extends TransactionalTestCase
         self::assertFalse($user->isAccountNonLocked());
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testLockUserForever()
     {
         $event = new LoginFailedEvent([
@@ -88,6 +100,9 @@ class LockAccountTest extends TransactionalTestCase
         self::assertFalse($user->isAccountNonLocked());
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testNoLock()
     {
         $event = new LoginFailedEvent([

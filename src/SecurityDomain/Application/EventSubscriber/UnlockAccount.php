@@ -25,7 +25,7 @@ class UnlockAccount implements EventSubscriberInterface
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param UserRepository $repository
      */

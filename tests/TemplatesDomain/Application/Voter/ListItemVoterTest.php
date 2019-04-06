@@ -15,11 +15,17 @@ namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\ListItem;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\Voter\ListItemVoter
+ */
 class ListItemVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -34,6 +40,9 @@ class ListItemVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(ListItem::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         [/* skipping */, $item] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
@@ -42,6 +51,27 @@ class ListItemVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $item));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new ListItemVoter($manager);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(ListItemVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -59,6 +89,10 @@ class ListItemVoterTest extends TransactionalTestCase
         self::assertSame(ListItemVoter::ACCESS_DENIED, $voter->vote($token, $item, [ListItemVoter::DELETE_ITEM]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository $repository */
@@ -79,6 +113,10 @@ class ListItemVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ListItemVoter::CREATE_ITEM, $fieldW));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         [/* skipping */, $itemB, $itemC] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);
@@ -92,6 +130,10 @@ class ListItemVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ListItemVoter::UPDATE_ITEM, $itemC));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         [/* skipping */, $highB, $highC] = $this->repository->findBy(['value' => 1], ['id' => 'ASC']);

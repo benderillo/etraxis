@@ -28,6 +28,9 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\AbstractOAuth2Authenticator
+ */
 class AbstractOAuth2AuthenticatorTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -46,6 +49,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         $this->session = $this->client->getContainer()->get('session');
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStart()
     {
         $provider = $this->createMock(AbstractProvider::class);
@@ -64,6 +70,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame('https://oauth.example.com/authorize', $response->headers->get('location'));
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStartAjax()
     {
         $provider = $this->createMock(AbstractProvider::class);
@@ -83,6 +92,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame('Authentication required.', json_decode($response->getContent(), true));
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStartException()
     {
         $provider = $this->createMock(AbstractProvider::class);
@@ -102,6 +114,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame('Security exception.', $response->getContent());
     }
 
+    /**
+     * @covers ::start
+     */
     public function testStartNoProvider()
     {
         $authenticator = $this->getAuthenticator(null);
@@ -115,6 +130,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame('Authentication required.', $response->getContent());
     }
 
+    /**
+     * @covers ::supports
+     */
     public function testSupportsSuccess()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -127,6 +145,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertTrue($authenticator->supports($request));
     }
 
+    /**
+     * @covers ::supports
+     */
     public function testSupportsMissing()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -136,6 +157,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertFalse($authenticator->supports($request));
     }
 
+    /**
+     * @covers ::supports
+     */
     public function testSupportsNoProvider()
     {
         $authenticator = $this->getAuthenticator(null);
@@ -148,6 +172,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertFalse($authenticator->supports($request));
     }
 
+    /**
+     * @covers ::getCredentials
+     */
     public function testGetCredentials()
     {
         $expected = [
@@ -166,6 +193,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame($expected, $authenticator->getCredentials($request));
     }
 
+    /**
+     * @covers ::getCredentials
+     */
     public function testGetCredentialsWrongState()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -180,6 +210,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertFalse($authenticator->getCredentials($request));
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUser()
     {
         $credentials = [
@@ -205,6 +238,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame($user, $authenticator->getUser($credentials, $userProvider));
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserException()
     {
         $this->expectException(AuthenticationException::class);
@@ -230,6 +266,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         $authenticator->getUser($credentials, $userProvider);
     }
 
+    /**
+     * @covers ::checkCredentials
+     */
     public function testCheckCredentials()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -237,6 +276,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertTrue($authenticator->checkCredentials([], new User()));
     }
 
+    /**
+     * @covers ::onAuthenticationSuccess
+     */
     public function testOnAuthenticationSuccess()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -251,6 +293,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertSame('/', $response->headers->get('Location'));
     }
 
+    /**
+     * @covers ::onAuthenticationSuccess
+     */
     public function testOnAuthenticationSuccessAjax()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -265,6 +310,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertNull($response);
     }
 
+    /**
+     * @covers ::onAuthenticationFailure
+     */
     public function testOnAuthenticationFailure()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));
@@ -280,6 +328,9 @@ class AbstractOAuth2AuthenticatorTest extends WebTestCase
         self::assertTrue($this->session->has(Security::AUTHENTICATION_ERROR));
     }
 
+    /**
+     * @covers ::supportsRememberMe
+     */
     public function testSupportsRememberMe()
     {
         $authenticator = $this->getAuthenticator($this->createMock(AbstractProvider::class));

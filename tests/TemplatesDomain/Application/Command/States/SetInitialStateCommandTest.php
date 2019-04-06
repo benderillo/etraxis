@@ -19,6 +19,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\States\SetInitialStateHandler::handle
+ */
 class SetInitialStateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */

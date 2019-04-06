@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\DisableUsersHandler::handle
+ */
 class DisableUsersCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

@@ -22,6 +22,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\States\CreateStateHandler::handle
+ */
 class CreateStateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository */

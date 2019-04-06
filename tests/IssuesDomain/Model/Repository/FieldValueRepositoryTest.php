@@ -24,6 +24,9 @@ use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\FieldValueRepository
+ */
 class FieldValueRepositoryTest extends TransactionalTestCase
 {
     /** @var FieldValueRepository */
@@ -36,11 +39,17 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(FieldValue::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(FieldValueRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetNullFieldValue()
     {
         /** @var User $user */
@@ -58,6 +67,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertNull($this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetCheckboxFieldValue()
     {
         /** @var User $user */
@@ -75,6 +87,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertTrue($this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetDateFieldValue()
     {
         /** @var User $user */
@@ -94,6 +109,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame($date->format('Y-m-d'), $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetDecimalFieldValue()
     {
         /** @var User $user */
@@ -111,6 +129,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('98.49', $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetDurationFieldValue()
     {
         /** @var User $user */
@@ -128,6 +149,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('1:20', $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetIssueFieldValue()
     {
         /** @var User $user */
@@ -148,6 +172,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame($duplicate->id, $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetListFieldValue()
     {
         /** @var User $user */
@@ -165,6 +192,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame(2, $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetNumberFieldValue()
     {
         /** @var User $user */
@@ -182,6 +212,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame(5173, $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetStringFieldValue()
     {
         /** @var User $user */
@@ -199,6 +232,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('940059027173b8e8e1e3e874681f012f1f3bcf1d', $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::getFieldValue
+     */
     public function testGetTextFieldValue()
     {
         /** @var User $user */
@@ -216,6 +252,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('Quas sunt reprehenderit vero accusantium.', $this->repository->getFieldValue($value, $user));
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetCheckboxFieldValue()
     {
         /** @var Issue $issue */
@@ -241,6 +280,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame(0, $value->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetDateFieldValue()
     {
         /** @var Issue $issue */
@@ -268,6 +310,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('2015-04-23', $date->format('Y-m-d'));
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetDecimalFieldValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository $repository */
@@ -296,6 +341,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('3.1415', $repository->find($value->value)->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetDurationFieldValue()
     {
         /** @var Issue $issue */
@@ -321,6 +369,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame(712, $value->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetIssueFieldValue()
     {
         /** @var Issue $issue */
@@ -351,6 +402,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame($duplicate2->id, $value->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetIssueFieldValueFailure()
     {
         /** @var Issue $issue */
@@ -379,6 +433,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame($duplicate1->id, $value->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetListFieldValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
@@ -407,6 +464,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('low', $repository->find($value->value)->text);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetListFieldValueFailure()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository $repository */
@@ -435,6 +495,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('normal', $repository->find($value->value)->text);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetNumberFieldValue()
     {
         /** @var Issue $issue1 */
@@ -498,6 +561,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertNull($change->newValue);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetNumberFieldSameValue()
     {
         /** @var Issue $issue */
@@ -530,6 +596,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertCount($changes, $this->doctrine->getRepository(Change::class)->findAll());
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetStringFieldValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository $repository */
@@ -558,6 +627,9 @@ class FieldValueRepositoryTest extends TransactionalTestCase
         self::assertSame('fb6c40d246aeeb8934884febcd18d19555fd7725', $repository->find($value->value)->value);
     }
 
+    /**
+     * @covers ::setFieldValue
+     */
     public function testSetTextFieldValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository $repository */

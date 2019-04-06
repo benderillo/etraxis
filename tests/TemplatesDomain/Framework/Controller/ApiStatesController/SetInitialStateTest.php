@@ -19,6 +19,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiStatesController::setInitialState
+ */
 class SetInitialStateTest extends TransactionalTestCase
 {
     public function testSuccess()

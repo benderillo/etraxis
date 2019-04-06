@@ -30,6 +30,8 @@ class LastReadRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(LastRead $entity): void

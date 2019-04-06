@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\UpdateSettingsHandler::handle
+ */
 class UpdateSettingsCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

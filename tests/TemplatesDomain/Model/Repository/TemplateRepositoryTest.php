@@ -18,6 +18,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository
+ */
 class TemplateRepositoryTest extends WebTestCase
 {
     /** @var TemplateRepository */
@@ -30,11 +33,17 @@ class TemplateRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Template::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(TemplateRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getTemplatesByUser
+     */
     public function testGetTemplatesByUser()
     {
         /** @var User $ldoyle */
@@ -55,6 +64,9 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertEmpty($this->repository->getTemplatesByUser($clegros));
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -77,6 +89,9 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -101,6 +116,9 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -127,6 +145,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -153,6 +175,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProject()
     {
         $expected = [
@@ -180,6 +206,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProjectNull()
     {
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
@@ -193,6 +223,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -220,6 +254,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByNameNull()
     {
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
@@ -233,6 +271,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByPrefix()
     {
         $expected = [
@@ -260,6 +302,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByPrefixNull()
     {
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
@@ -273,6 +319,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -298,6 +348,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescriptionNull()
     {
         $collection = $this->repository->getCollection(0, TemplateRepository::MAX_LIMIT, null, [
@@ -311,6 +365,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByCriticalAge()
     {
         $expected = [
@@ -338,6 +396,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByCriticalAgeNull()
     {
         $expected = [
@@ -365,6 +427,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByFrozenTime()
     {
         $expected = [
@@ -392,6 +458,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByFrozenTimeNull()
     {
         $expected = [
@@ -419,6 +489,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByLocked()
     {
         $expected = [
@@ -446,6 +520,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProject()
     {
         $expected = [
@@ -475,6 +553,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByName()
     {
         $expected = [
@@ -504,6 +586,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByPrefix()
     {
         $expected = [
@@ -533,6 +619,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByDescription()
     {
         $expected = [
@@ -561,6 +651,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByCritical()
     {
         $expected = [
@@ -590,6 +684,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByFrozen()
     {
         $expected = [
@@ -619,6 +717,10 @@ class TemplateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByLocked()
     {
         $expected = [

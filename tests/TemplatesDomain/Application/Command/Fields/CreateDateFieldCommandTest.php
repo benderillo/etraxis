@@ -18,6 +18,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\CreateDateFieldHandler::handle
+ */
 class CreateDateFieldCommandTest extends TransactionalTestCase
 {
     /** @var \Doctrine\ORM\EntityManagerInterface */

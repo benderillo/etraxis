@@ -79,7 +79,7 @@ class IssueVoter extends Voter
     private $groupsCache = [];
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param EntityManagerInterface $manager
      * @param int                    $maxsize
@@ -92,8 +92,6 @@ class IssueVoter extends Voter
 
     /**
      * {@inheritdoc}
-     *
-     * @codeCoverageIgnore
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {

@@ -17,10 +17,16 @@ use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Entity\Group
+ */
 class GroupTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -33,6 +39,9 @@ class GroupTest extends TestCase
         self::assertNull($this->getProperty($group, 'project'));
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeLocalGroup()
     {
         $expected = [
@@ -64,6 +73,11 @@ class GroupTest extends TestCase
         self::assertSame($expected, $group->jsonSerialize());
     }
 
+    /**
+     * @covers ::addMember
+     * @covers ::getters
+     * @covers ::removeMember
+     */
     public function testMembers()
     {
         $group = new Group(new Project());
@@ -85,6 +99,9 @@ class GroupTest extends TestCase
         self::assertSame([$user2], $group->members);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsGlobal()
     {
         $group = new Group(new Project());

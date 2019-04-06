@@ -33,6 +33,8 @@ class ListItemRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(ListItem $entity): void
@@ -42,6 +44,8 @@ class ListItemRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(ListItem $entity): void

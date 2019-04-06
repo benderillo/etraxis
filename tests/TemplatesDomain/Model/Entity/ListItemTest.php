@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\ListItem
+ */
 class ListItemTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -34,6 +40,9 @@ class ListItemTest extends TestCase
         self::assertSame($field, $item->field);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -48,6 +57,9 @@ class ListItemTest extends TestCase
         new ListItem($field);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\DeleteUserHandler::handle
+ */
 class DeleteUserCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

@@ -16,8 +16,14 @@ namespace eTraxis\SecurityDomain\Framework\Controller;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\LoginController
+ */
 class LoginControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/login';

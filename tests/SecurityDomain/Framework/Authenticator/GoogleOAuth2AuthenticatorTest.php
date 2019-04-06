@@ -23,6 +23,9 @@ use League\OAuth2\Client\Token\AccessToken;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\GoogleOAuth2Authenticator
+ */
 class GoogleOAuth2AuthenticatorTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -41,6 +44,10 @@ class GoogleOAuth2AuthenticatorTest extends TransactionalTestCase
         $this->session = $this->client->getContainer()->get('session');
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getProvider
+     */
     public function testGetProvider()
     {
         $authenticator = new GoogleOAuth2Authenticator($this->router, $this->session, $this->commandBus, 'id', 'secret', 'example.com');
@@ -50,6 +57,9 @@ class GoogleOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertNull($this->callMethod($authenticator, 'getProvider'));
     }
 
+    /**
+     * @covers ::getScope
+     */
     public function testGetScope()
     {
         $expected = [];
@@ -58,6 +68,9 @@ class GoogleOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertSame($expected, $this->callMethod($authenticator, 'getScope'));
     }
 
+    /**
+     * @covers ::getUserFromToken
+     */
     public function testGetUserFromToken()
     {
         $owner = new GoogleUser([

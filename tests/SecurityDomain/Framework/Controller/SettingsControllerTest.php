@@ -17,8 +17,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\SettingsController
+ */
 class SettingsControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/settings';
@@ -32,6 +38,9 @@ class SettingsControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isOk());
     }
 
+    /**
+     * @covers ::cities
+     */
     public function testCitiesSuccess()
     {
         $this->loginAs('artem@example.com');
@@ -49,6 +58,9 @@ class SettingsControllerTest extends WebTestCase
         self::assertSame($expected, json_decode($response->getContent(), true));
     }
 
+    /**
+     * @covers ::cities
+     */
     public function testCities401()
     {
         $uri = '/settings/cities/NZ';

@@ -23,8 +23,15 @@ use Doctrine\Migrations\Exception\AbortMigration;
 use Doctrine\Migrations\Version\Version;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Doctrine\BaseMigration
+ */
 class BaseMigrationTest extends TestCase
 {
+    /**
+     * @covers ::getDescription
+     * @covers ::getVersion
+     */
     public function testVersion()
     {
         $expected = '4.0.0';
@@ -36,6 +43,10 @@ class BaseMigrationTest extends TestCase
         self::assertSame($expected, $migration->getDescription());
     }
 
+    /**
+     * @covers ::isMysql
+     * @covers ::isPostgresql
+     */
     public function testIsMysql()
     {
         $version   = $this->getVersion(MySqlPlatform::class);
@@ -45,6 +56,10 @@ class BaseMigrationTest extends TestCase
         self::assertFalse($migration->isPostgresql());
     }
 
+    /**
+     * @covers ::isMysql
+     * @covers ::isPostgresql
+     */
     public function testIsPostgresql()
     {
         $version   = $this->getVersion(PostgreSqlPlatform::class);
@@ -54,6 +69,9 @@ class BaseMigrationTest extends TestCase
         self::assertFalse($migration->isMysql());
     }
 
+    /**
+     * @covers ::preUp
+     */
     public function testUpSuccess()
     {
         $schema    = new Schema();
@@ -65,6 +83,9 @@ class BaseMigrationTest extends TestCase
         $migration->up($schema);
     }
 
+    /**
+     * @covers ::preDown
+     */
     public function testDownSuccess()
     {
         $schema    = new Schema();
@@ -76,6 +97,9 @@ class BaseMigrationTest extends TestCase
         $migration->down($schema);
     }
 
+    /**
+     * @covers ::preUp
+     */
     public function testUpFailure()
     {
         $this->expectException(AbortMigration::class);
@@ -89,6 +113,9 @@ class BaseMigrationTest extends TestCase
         $migration->up($schema);
     }
 
+    /**
+     * @covers ::preDown
+     */
     public function testDownFailure()
     {
         $this->expectException(AbortMigration::class);

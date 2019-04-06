@@ -16,8 +16,14 @@ namespace eTraxis\SecurityDomain\Model\Entity;
 use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Entity\AccountInfo
+ */
 class AccountInfoTest extends TestCase
 {
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $account = new AccountInfo();
@@ -26,6 +32,9 @@ class AccountInfoTest extends TestCase
         self::assertRegExp('/^([[:xdigit:]]{32})$/is', $account->uid);
     }
 
+    /**
+     * @covers ::setters
+     */
     public function testProvider()
     {
         $account = new AccountInfo();
@@ -35,6 +44,9 @@ class AccountInfoTest extends TestCase
         self::assertSame(AccountProvider::LDAP, $account->provider);
     }
 
+    /**
+     * @covers ::setters
+     */
     public function testProviderException()
     {
         $this->expectException(\UnexpectedValueException::class);

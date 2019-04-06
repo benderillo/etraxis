@@ -35,7 +35,7 @@ abstract class AbstractAuthenticator extends AbstractGuardAuthenticator
     protected $session;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param RouterInterface  $router
      * @param SessionInterface $session

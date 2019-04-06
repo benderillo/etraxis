@@ -24,6 +24,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::listChanges
+ */
 class ListChangesTest extends TransactionalTestCase
 {
     public function testSuccess()

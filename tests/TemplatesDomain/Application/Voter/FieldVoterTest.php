@@ -15,11 +15,17 @@ namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\TemplatesDomain\Model\Entity\State;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\Voter\FieldVoter
+ */
 class FieldVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -34,6 +40,9 @@ class FieldVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Field::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         [/* skipping */, $field] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -42,6 +51,27 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $field));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new FieldVoter($manager);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -61,6 +91,10 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertSame(FieldVoter::ACCESS_DENIED, $voter->vote($token, $field, [FieldVoter::MANAGE_PERMISSIONS]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\StateRepository $repository */
@@ -77,6 +111,10 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(FieldVoter::CREATE_FIELD, $stateC));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -90,6 +128,10 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(FieldVoter::UPDATE_FIELD, $fieldC));
     }
 
+    /**
+     * @covers ::isRemoveGranted
+     * @covers ::voteOnAttribute
+     */
     public function testRemove()
     {
         [/* skipping */, $fieldB, $fieldC, $fieldD] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -105,6 +147,10 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(FieldVoter::REMOVE_FIELD, $fieldD));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         [/* skipping */, $fieldB, $fieldC, $fieldD] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);
@@ -120,6 +166,10 @@ class FieldVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(FieldVoter::DELETE_FIELD, $fieldD));
     }
 
+    /**
+     * @covers ::isManagePermissionsGranted
+     * @covers ::voteOnAttribute
+     */
     public function testManagePermissions()
     {
         [/* skipping */, $fieldB, $fieldC] = $this->repository->findBy(['name' => 'Priority'], ['id' => 'ASC']);

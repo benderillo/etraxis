@@ -33,7 +33,7 @@ class SetGroupsPermissionHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TemplateRepository            $repository

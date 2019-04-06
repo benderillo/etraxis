@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\UpdateProfileHandler::handle
+ */
 class UpdateProfileCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

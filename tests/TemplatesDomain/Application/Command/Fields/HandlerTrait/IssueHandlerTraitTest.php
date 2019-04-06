@@ -20,6 +20,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\HandlerTrait\IssueHandlerTrait
+ */
 class IssueHandlerTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -49,11 +52,17 @@ class IssueHandlerTraitTest extends TransactionalTestCase
         };
     }
 
+    /**
+     * @covers ::getSupportedFieldType
+     */
     public function testGetSupportedFieldType()
     {
         self::assertSame(FieldType::ISSUE, $this->callMethod($this->handler, 'getSupportedFieldType'));
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldSuccess()
     {
         /** @var Field $field */
@@ -66,6 +75,9 @@ class IssueHandlerTraitTest extends TransactionalTestCase
         self::assertTrue(true);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedCommand()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -81,6 +93,9 @@ class IssueHandlerTraitTest extends TransactionalTestCase
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedFieldType()
     {
         $this->expectException(\UnexpectedValueException::class);

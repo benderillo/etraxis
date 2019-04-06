@@ -20,6 +20,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\HandlerTrait\CheckboxHandlerTrait
+ */
 class CheckboxHandlerTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -49,11 +52,17 @@ class CheckboxHandlerTraitTest extends TransactionalTestCase
         };
     }
 
+    /**
+     * @covers ::getSupportedFieldType
+     */
     public function testGetSupportedFieldType()
     {
         self::assertSame(FieldType::CHECKBOX, $this->callMethod($this->handler, 'getSupportedFieldType'));
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldSuccess()
     {
         /** @var Field $field */
@@ -73,6 +82,9 @@ class CheckboxHandlerTraitTest extends TransactionalTestCase
         self::assertTrue($facade->getDefaultValue());
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedCommand()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -86,6 +98,9 @@ class CheckboxHandlerTraitTest extends TransactionalTestCase
         $this->callMethod($this->handler, 'copyCommandToField', [$this->translator, $this->manager, $command, $field]);
     }
 
+    /**
+     * @covers ::copyCommandToField
+     */
     public function testCopyCommandToFieldUnsupportedFieldType()
     {
         $this->expectException(\UnexpectedValueException::class);

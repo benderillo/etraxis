@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\TemplateGroupPermission
+ */
 class TemplateGroupPermissionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -39,6 +45,9 @@ class TemplateGroupPermissionTest extends TestCase
         self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionGroup()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -60,6 +69,9 @@ class TemplateGroupPermissionTest extends TestCase
         new TemplateGroupPermission($template, $group, TemplatePermission::EDIT_ISSUES);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionPermission()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -77,6 +89,9 @@ class TemplateGroupPermissionTest extends TestCase
         new TemplateGroupPermission($template, $group, 'bar');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

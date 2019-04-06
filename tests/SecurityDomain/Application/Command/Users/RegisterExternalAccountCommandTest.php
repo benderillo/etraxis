@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\RegisterExternalAccountHandler::handle
+ */
 class RegisterExternalAccountCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

@@ -29,7 +29,7 @@ class ProductionFixtures extends Fixture
     protected $theme;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param UserPasswordEncoderInterface $encoder
      * @param string                       $locale

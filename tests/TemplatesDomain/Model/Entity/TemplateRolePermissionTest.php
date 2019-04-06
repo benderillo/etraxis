@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\TemplatePermission;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\TemplateRolePermission
+ */
 class TemplateRolePermissionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -36,6 +42,9 @@ class TemplateRolePermissionTest extends TestCase
         self::assertSame(TemplatePermission::EDIT_ISSUES, $this->getProperty($permission, 'permission'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionRole()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -50,6 +59,9 @@ class TemplateRolePermissionTest extends TestCase
         new TemplateRolePermission($template, 'foo', TemplatePermission::EDIT_ISSUES);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionPermission()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -64,6 +76,9 @@ class TemplateRolePermissionTest extends TestCase
         new TemplateRolePermission($template, SystemRole::AUTHOR, 'bar');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

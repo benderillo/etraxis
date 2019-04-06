@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Templates\UnlockTemplateHandler::handle
+ */
 class UnlockTemplateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */

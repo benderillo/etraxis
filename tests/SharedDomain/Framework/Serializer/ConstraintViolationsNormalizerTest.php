@@ -18,8 +18,14 @@ use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Serializer\ConstraintViolationsNormalizer
+ */
 class ConstraintViolationsNormalizerTest extends TestCase
 {
+    /**
+     * @covers ::normalize
+     */
     public function testNormalize()
     {
         $object = new class() {
@@ -53,6 +59,9 @@ class ConstraintViolationsNormalizerTest extends TestCase
         self::assertSame($expected, $normalizer->normalize($violations));
     }
 
+    /**
+     * @covers ::supportsNormalization
+     */
     public function testSupportsNormalization()
     {
         $normalizer = new ConstraintViolationsNormalizer();

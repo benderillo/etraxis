@@ -38,7 +38,7 @@ class ChangeStateHandler extends AbstractIssueHandler
     protected $stateRepository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TranslatorInterface           $translator
      * @param AuthorizationCheckerInterface $security

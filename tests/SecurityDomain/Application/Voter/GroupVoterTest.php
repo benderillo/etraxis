@@ -14,11 +14,17 @@
 namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\Group;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Application\Voter\GroupVoter
+ */
 class GroupVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -33,6 +39,9 @@ class GroupVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Group::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
@@ -41,6 +50,24 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $group));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        $voter = new GroupVoter();
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         $voter = new GroupVoter();
@@ -54,6 +81,10 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertSame(GroupVoter::ACCESS_DENIED, $voter->vote($token, $group, [GroupVoter::MANAGE_MEMBERSHIP]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         $this->loginAs('admin@example.com');
@@ -63,6 +94,10 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(GroupVoter::CREATE_GROUP));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
@@ -74,6 +109,10 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(GroupVoter::UPDATE_GROUP, $group));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);
@@ -85,6 +124,10 @@ class GroupVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(GroupVoter::DELETE_GROUP, $group));
     }
 
+    /**
+     * @covers ::isManageMembershipGranted
+     * @covers ::voteOnAttribute
+     */
     public function testManageMembership()
     {
         [$group] = $this->repository->findBy(['name' => 'Developers'], ['id' => 'ASC']);

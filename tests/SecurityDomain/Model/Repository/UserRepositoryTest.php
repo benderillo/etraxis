@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Dictionary\AccountProvider;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Repository\UserRepository
+ */
 class UserRepositoryTest extends WebTestCase
 {
     /** @var UserRepository */
@@ -29,11 +32,17 @@ class UserRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(User::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(UserRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::findOneByUsername
+     */
     public function testFindOneByUsernameSuccess()
     {
         /** @var User $user */
@@ -43,6 +52,9 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame('eTraxis Admin', $user->fullname);
     }
 
+    /**
+     * @covers ::findOneByUsername
+     */
     public function testFindOneByUsernameUnknown()
     {
         /** @var User $user */
@@ -51,6 +63,9 @@ class UserRepositoryTest extends WebTestCase
         self::assertNull($user);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -73,6 +88,9 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -98,6 +116,9 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -128,6 +149,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -159,6 +184,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByEmail()
     {
         $expected = [
@@ -183,6 +212,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByFullname()
     {
         $expected = [
@@ -207,6 +240,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -238,6 +275,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByAdmin()
     {
         $expected = [
@@ -261,6 +302,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDisabled()
     {
         $expected = [
@@ -284,6 +329,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByLockedOn()
     {
         $expected = [
@@ -307,6 +356,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByLockedOff()
     {
         $expected = [
@@ -364,6 +417,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProvider()
     {
         $expected = [
@@ -387,6 +444,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionCombinedFilter()
     {
         $expected = [
@@ -415,6 +476,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByEmail()
     {
         $expected = [
@@ -460,6 +525,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByFullname()
     {
         $expected = [
@@ -505,6 +574,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByDescription()
     {
         $expected = [
@@ -551,6 +624,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByAdmin()
     {
         $expected = [
@@ -597,6 +674,10 @@ class UserRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProvider()
     {
         $expected = [

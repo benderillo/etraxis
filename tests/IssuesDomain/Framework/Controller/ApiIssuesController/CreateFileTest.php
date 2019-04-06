@@ -20,6 +20,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::createFile
+ */
 class CreateFileTest extends TransactionalTestCase
 {
     /** @var UploadedFile */

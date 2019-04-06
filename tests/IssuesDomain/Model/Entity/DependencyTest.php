@@ -17,10 +17,16 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\Dependency
+ */
 class DependencyTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();

@@ -16,6 +16,9 @@ namespace eTraxis\TemplatesDomain\Application\Command\Fields;
 use eTraxis\TemplatesDomain\Model\Entity\Field;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\UpdateDurationFieldHandler::handle
+ */
 class UpdateDurationFieldCommandTest extends TransactionalTestCase
 {
     /** @var \Doctrine\ORM\EntityManagerInterface */

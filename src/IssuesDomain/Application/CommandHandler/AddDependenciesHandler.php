@@ -40,7 +40,7 @@ class AddDependenciesHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TokenStorageInterface         $tokens

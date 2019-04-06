@@ -16,6 +16,9 @@ namespace eTraxis\TemplatesDomain\Model\Repository;
 use eTraxis\TemplatesDomain\Model\Entity\DecimalValue;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\DecimalValueRepository
+ */
 class DecimalValueRepositoryTest extends TransactionalTestCase
 {
     /** @var DecimalValueRepository */
@@ -28,11 +31,17 @@ class DecimalValueRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(DecimalValue::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(DecimalValueRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::find
+     */
     public function testFind()
     {
         $expected = $this->repository->findOneBy(['value' => '98.49']);
@@ -42,6 +51,9 @@ class DecimalValueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $value);
     }
 
+    /**
+     * @covers ::get
+     */
     public function testFindOne()
     {
         $expected = '3.14159292';
@@ -70,6 +82,9 @@ class DecimalValueRepositoryTest extends TransactionalTestCase
         self::assertCount($count + 1, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::warmup
+     */
     public function testWarmup()
     {
         /** @var DecimalValue $value1 */

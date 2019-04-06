@@ -29,7 +29,7 @@ class Mailer implements MailerInterface
     protected $senderName;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface  $logger  Debug logger.
      * @param Twig_Environment $twig    Templates renderer.

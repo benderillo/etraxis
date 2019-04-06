@@ -34,6 +34,8 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(User $entity): void
@@ -42,6 +44,8 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(User $entity): void
@@ -50,6 +54,8 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function refresh(User $entity): void

@@ -21,6 +21,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\CreateUserHandler::handle
+ */
 class CreateUserCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

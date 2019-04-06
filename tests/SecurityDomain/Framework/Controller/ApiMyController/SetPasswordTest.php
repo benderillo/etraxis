@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Framework\Controller\ApiMyController::setPassword
+ */
 class SetPasswordTest extends TransactionalTestCase
 {
     public function testSuccess()

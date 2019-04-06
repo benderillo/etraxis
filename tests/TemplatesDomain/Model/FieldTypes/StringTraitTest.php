@@ -23,6 +23,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\StringTrait
+ */
 class StringTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -54,6 +57,9 @@ class StringTraitTest extends TransactionalTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asString
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -69,6 +75,9 @@ class StringTraitTest extends TransactionalTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asString
+     */
     public function testValidationConstraints()
     {
         $this->facade->setMaximumLength(12);
@@ -97,6 +106,9 @@ class StringTraitTest extends TransactionalTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asString
+     */
     public function testMaximumLength()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -116,6 +128,9 @@ class StringTraitTest extends TransactionalTestCase
         self::assertSame(StringInterface::MAX_LENGTH, $this->facade->getMaximumLength());
     }
 
+    /**
+     * @covers ::asString
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -137,6 +152,9 @@ class StringTraitTest extends TransactionalTestCase
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 
+    /**
+     * @covers ::asString
+     */
     public function testPCRE()
     {
         self::assertInstanceOf(FieldPCRE::class, $this->facade->getPCRE());

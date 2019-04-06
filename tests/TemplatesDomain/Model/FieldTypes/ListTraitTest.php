@@ -18,6 +18,9 @@ use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\ListTrait
+ */
 class ListTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -51,6 +54,9 @@ class ListTraitTest extends TransactionalTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asList
+     */
     public function testJsonSerialize()
     {
         /** @var ListItem $item */
@@ -72,6 +78,9 @@ class ListTraitTest extends TransactionalTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asList
+     */
     public function testValidationConstraints()
     {
         $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));
@@ -112,6 +121,9 @@ class ListTraitTest extends TransactionalTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asList
+     */
     public function testDefaultValue()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository $fieldRepository */

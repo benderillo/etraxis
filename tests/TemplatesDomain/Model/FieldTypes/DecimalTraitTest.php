@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\DecimalTrait
+ */
 class DecimalTraitTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -53,6 +56,9 @@ class DecimalTraitTest extends TransactionalTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asDecimal
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -64,6 +70,9 @@ class DecimalTraitTest extends TransactionalTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asDecimal
+     */
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
@@ -107,6 +116,9 @@ class DecimalTraitTest extends TransactionalTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asDecimal
+     */
     public function testMinimumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -126,6 +138,9 @@ class DecimalTraitTest extends TransactionalTestCase
         self::assertSame(DecimalInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
+    /**
+     * @covers ::asDecimal
+     */
     public function testMaximumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -145,6 +160,9 @@ class DecimalTraitTest extends TransactionalTestCase
         self::assertSame(DecimalInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
+    /**
+     * @covers ::asDecimal
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');

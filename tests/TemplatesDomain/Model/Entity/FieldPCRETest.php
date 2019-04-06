@@ -15,8 +15,14 @@ namespace eTraxis\TemplatesDomain\Model\Entity;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\FieldPCRE
+ */
 class FieldPCRETest extends TestCase
 {
+    /**
+     * @covers ::validate
+     */
     public function testValidate()
     {
         $pcre = new FieldPCRE();
@@ -30,6 +36,9 @@ class FieldPCRETest extends TestCase
         self::assertFalse($pcre->validate(null));
     }
 
+    /**
+     * @covers ::transform
+     */
     public function testTransform()
     {
         $expected = [
@@ -50,6 +59,9 @@ class FieldPCRETest extends TestCase
         }
     }
 
+    /**
+     * @covers ::transform
+     */
     public function testTransform1()
     {
         $expected = '123-456-7890';
@@ -63,6 +75,9 @@ class FieldPCRETest extends TestCase
         self::assertNotSame($expected, $pcre->transform($expected));
     }
 
+    /**
+     * @covers ::transform
+     */
     public function testTransform2()
     {
         $expected = '123-456-7890';
@@ -76,6 +91,9 @@ class FieldPCRETest extends TestCase
         self::assertNotSame($expected, $pcre->transform($expected));
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

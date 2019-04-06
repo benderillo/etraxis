@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\IssueRepository
+ */
 class IssueRepositoryTest extends TransactionalTestCase
 {
     /** @var IssueRepository */
@@ -34,11 +37,17 @@ class IssueRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Issue::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(IssueRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::changeSubject
+     */
     public function testChangeSubject()
     {
         /** @var Issue $issue */
@@ -66,6 +75,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame('Development task X', $repository->find($change->newValue)->value);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $this->loginAs('ldoyle@example.com');
@@ -89,6 +101,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionByDeveloperB()
     {
         $expected = [
@@ -136,6 +151,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionBySupportB()
     {
         $expected = [
@@ -175,6 +193,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionByClientB()
     {
         $this->loginAs('aschinner@example.com');
@@ -186,6 +207,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionByAuthor()
     {
         $expected = [
@@ -213,6 +237,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionByResponsible()
     {
         $expected = [
@@ -253,6 +280,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -290,6 +320,9 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -321,6 +354,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -362,6 +399,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterById()
     {
         $this->loginAs('ldoyle@example.com');
@@ -394,6 +435,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterBySubject()
     {
         $expected = [
@@ -425,6 +470,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByAuthor()
     {
         $expected = [
@@ -453,6 +502,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByAuthorName()
     {
         $expected = [
@@ -488,6 +541,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProject()
     {
         $expected = [
@@ -528,6 +585,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProjectName()
     {
         $expected = [
@@ -571,6 +632,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplate()
     {
         $expected = [
@@ -603,6 +668,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplateName()
     {
         $expected = [
@@ -634,6 +703,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByState()
     {
         $expected = [
@@ -663,6 +736,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByStateName()
     {
         $expected = [
@@ -697,6 +774,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByResponsible()
     {
         $expected = [
@@ -726,6 +807,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByResponsibleNull()
     {
         $expected = [
@@ -764,6 +849,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByResponsibleName()
     {
         $expected = [
@@ -797,6 +886,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsClonedYes()
     {
         $expected = [
@@ -821,6 +914,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsClonedNo()
     {
         $expected = [
@@ -869,6 +966,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByAge()
     {
         $expected = [
@@ -902,6 +1003,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsCriticalYes()
     {
         $expected = [
@@ -937,6 +1042,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsCriticalNo()
     {
         $expected = [
@@ -974,6 +1083,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsSuspendedYes()
     {
         $expected = [
@@ -1001,6 +1114,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsSuspendedNo()
     {
         $expected = [
@@ -1046,6 +1163,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsClosedYes()
     {
         $expected = [
@@ -1079,6 +1200,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByIsClosedNo()
     {
         $expected = [
@@ -1118,6 +1243,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDependency()
     {
         $expected = [
@@ -1146,6 +1275,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortById()
     {
         $expected = [
@@ -1193,6 +1326,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortBySubject()
     {
         $expected = [
@@ -1241,6 +1378,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByCreatedAt()
     {
         $expected = [
@@ -1289,6 +1430,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByChangedAt()
     {
         $expected = [
@@ -1337,6 +1482,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByClosedAt()
     {
         $expected = [
@@ -1387,6 +1536,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByAuthor()
     {
         $expected = [
@@ -1439,6 +1592,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProject()
     {
         $expected = [
@@ -1487,6 +1644,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByTemplate()
     {
         $expected = [
@@ -1539,6 +1700,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByState()
     {
         $expected = [
@@ -1591,6 +1756,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByResponsible()
     {
         $expected = [
@@ -1643,6 +1812,10 @@ class IssueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByAge()
     {
         $expected = [

@@ -65,6 +65,8 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Issue $entity): void
@@ -73,6 +75,8 @@ class IssueRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(Issue $entity): void

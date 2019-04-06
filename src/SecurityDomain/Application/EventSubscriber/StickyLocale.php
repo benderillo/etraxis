@@ -29,7 +29,7 @@ class StickyLocale implements EventSubscriberInterface
     protected $locale;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param SessionInterface $session
      * @param string           $locale

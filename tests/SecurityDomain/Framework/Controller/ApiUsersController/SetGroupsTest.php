@@ -19,6 +19,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Framework\Controller\ApiUsersController::setGroups
+ */
 class SetGroupsTest extends TransactionalTestCase
 {
     public function testSuccess()

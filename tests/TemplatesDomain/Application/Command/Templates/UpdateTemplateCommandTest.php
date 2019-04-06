@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Templates\UpdateTemplateHandler::handle
+ */
 class UpdateTemplateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */

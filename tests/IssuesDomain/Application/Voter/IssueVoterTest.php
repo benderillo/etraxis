@@ -17,11 +17,17 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Application\Voter\IssueVoter
+ */
 class IssueVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -36,6 +42,9 @@ class IssueVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Issue::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         [$issue] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
@@ -44,6 +53,27 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $issue));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new IssueVoter($manager, 10);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('lucas.oconnell@example.com');
+        self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -79,6 +109,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertSame(IssueVoter::ACCESS_DENIED, $voter->vote($token, $issue2, [IssueVoter::REMOVE_DEPENDENCY]));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isViewGranted
+     * @covers ::voteOnAttribute
+     */
     public function testViewByAuthor()
     {
         [$issue1] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
@@ -89,6 +125,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::VIEW_ISSUE, $issue2));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isViewGranted
+     * @covers ::voteOnAttribute
+     */
     public function testViewByResponsible()
     {
         [$issue] = $this->repository->findBy(['subject' => 'Development task 8'], ['id' => 'ASC']);
@@ -100,6 +142,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::VIEW_ISSUE, $issue));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isViewGranted
+     * @covers ::voteOnAttribute
+     */
     public function testViewByLocalGroup()
     {
         [$issue] = $this->repository->findBy(['subject' => 'Development task 1'], ['id' => 'ASC']);
@@ -111,6 +159,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::VIEW_ISSUE, $issue));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isViewGranted
+     * @covers ::voteOnAttribute
+     */
     public function testViewByGlobalGroup()
     {
         [$issue] = $this->repository->findBy(['subject' => 'Support request 1'], ['id' => 'ASC']);
@@ -122,6 +176,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::VIEW_ISSUE, $issue));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         // Template B is locked, template C is not.
@@ -141,6 +201,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::CREATE_ISSUE, $templateC));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         // Template B is locked, template C is not.
@@ -170,6 +235,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::UPDATE_ISSUE, $issueC));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         // Template B is locked, template C is not.
@@ -199,6 +269,10 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::DELETE_ISSUE, $issueC));
     }
 
+    /**
+     * @covers ::isChangeStateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testChangeState()
     {
         [$stateA, $stateB, $stateC] = $this->doctrine->getRepository(State::class)->findBy(['name' => 'Resolved'], ['id' => 'ASC']);
@@ -240,6 +314,10 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::CHANGE_STATE, [$createdByClient1, $reopen]));
     }
 
+    /**
+     * @covers ::isAssignGranted
+     * @covers ::voteOnAttribute
+     */
     public function testAssign()
     {
         /** @var State $state */
@@ -253,6 +331,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::ASSIGN_ISSUE, [$state, $support]));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isReassignGranted
+     * @covers ::voteOnAttribute
+     */
     public function testReassign()
     {
         // Template B is locked, template C is not.
@@ -289,6 +372,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::REASSIGN_ISSUE, [$issueC, $developer]));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isSuspendGranted
+     * @covers ::voteOnAttribute
+     */
     public function testSuspend()
     {
         // Template B is locked, template C is not.
@@ -319,6 +407,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::SUSPEND_ISSUE, $assignedToDev3));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isResumeGranted
+     * @covers ::voteOnAttribute
+     */
     public function testResume()
     {
         // Template B is locked, template C is not.
@@ -355,6 +448,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::RESUME_ISSUE, $assignedToDev3));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isAddPublicCommentGranted
+     * @covers ::voteOnAttribute
+     */
     public function testAddPublicComment()
     {
         // Template B is locked, template C is not.
@@ -385,6 +483,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::ADD_PUBLIC_COMMENT, $closed));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isAddPrivateCommentGranted
+     * @covers ::voteOnAttribute
+     */
     public function testAddPrivateComment()
     {
         // Template B is locked, template C is not.
@@ -415,6 +518,12 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::ADD_PRIVATE_COMMENT, $closed));
     }
 
+    /**
+     * @covers ::hasGroupPermission
+     * @covers ::hasRolePermission
+     * @covers ::isReadPrivateCommentGranted
+     * @covers ::voteOnAttribute
+     */
     public function testReadPrivateComment()
     {
         // Template B is locked, template C is not.
@@ -438,6 +547,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::READ_PRIVATE_COMMENT, $assignedToDev3));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isAttachFileGranted
+     * @covers ::voteOnAttribute
+     */
     public function testAttachFile()
     {
         // Template B is locked, template C is not.
@@ -474,6 +588,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::ATTACH_FILE, $closed));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isDeleteFileGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDeleteFile()
     {
         // Template B is locked, template C is not.
@@ -504,6 +623,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(IssueVoter::DELETE_FILE, $closed));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isAddDependencyGranted
+     * @covers ::voteOnAttribute
+     */
     public function testAddDependency()
     {
         // Template B is locked, template C is not.
@@ -534,6 +658,11 @@ class IssueVoterTest extends TransactionalTestCase
         self::assertTrue($this->security->isGranted(IssueVoter::ADD_DEPENDENCY, $assignedToDev3));
     }
 
+    /**
+     * @covers ::hasPermission
+     * @covers ::isRemoveDependencyGranted
+     * @covers ::voteOnAttribute
+     */
     public function testRemoveDependency()
     {
         // Template B is locked, template C is not.

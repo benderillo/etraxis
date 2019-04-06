@@ -21,6 +21,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\CacheTrait
+ */
 class CacheTraitTest extends TransactionalTestCase
 {
     /** @var ServiceEntityRepository */
@@ -74,11 +77,17 @@ class CacheTraitTest extends TransactionalTestCase
         };
     }
 
+    /**
+     * @covers ::createCache
+     */
     public function testCreateCache()
     {
         self::assertNotNull($this->repository->getCache());
     }
 
+    /**
+     * @covers ::findInCache
+     */
     public function testFindInCache()
     {
         /** @var User $user */
@@ -96,6 +105,9 @@ class CacheTraitTest extends TransactionalTestCase
         self::assertSame(1, $this->repository->getCalls());
     }
 
+    /**
+     * @covers ::deleteFromCache
+     */
     public function testDeleteFromCache()
     {
         /** @var User $user */
@@ -115,6 +127,9 @@ class CacheTraitTest extends TransactionalTestCase
         self::assertSame(2, $this->repository->getCalls());
     }
 
+    /**
+     * @covers ::warmupCache
+     */
     public function testWarmupCache()
     {
         /** @var User $user1 */

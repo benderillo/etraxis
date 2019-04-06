@@ -20,6 +20,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\User\User;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Application\Voter\VoterTrait
+ */
 class VoterTraitTest extends TestCase
 {
     /** @var Voter */
@@ -49,6 +52,10 @@ class VoterTraitTest extends TestCase
         };
     }
 
+    /**
+     * @covers ::isValid
+     * @covers ::supports
+     */
     public function testSupportedAttribute()
     {
         $user = new User('artem', 'secret');
@@ -62,6 +69,10 @@ class VoterTraitTest extends TestCase
         self::assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, [$user, $role], ['delete']));
     }
 
+    /**
+     * @covers ::isValid
+     * @covers ::supports
+     */
     public function testUnsupportedAttribute()
     {
         $user = new User('artem', 'secret');
@@ -75,6 +86,10 @@ class VoterTraitTest extends TestCase
         self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [$user, $role], ['unknown']));
     }
 
+    /**
+     * @covers ::isValid
+     * @covers ::supports
+     */
     public function testMissingClass()
     {
         $user = new User('artem', 'secret');
@@ -93,6 +108,10 @@ class VoterTraitTest extends TestCase
         self::assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, [null, $role], ['delete']));
     }
 
+    /**
+     * @covers ::isValid
+     * @covers ::supports
+     */
     public function testWrongClass()
     {
         $user = new User('artem', 'secret');

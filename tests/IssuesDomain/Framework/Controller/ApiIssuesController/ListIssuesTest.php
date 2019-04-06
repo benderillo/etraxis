@@ -18,6 +18,9 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::listIssues
+ */
 class ListIssuesTest extends WebTestCase
 {
     public function testSuccess()

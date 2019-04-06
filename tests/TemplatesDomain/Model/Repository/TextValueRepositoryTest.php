@@ -16,6 +16,9 @@ namespace eTraxis\TemplatesDomain\Model\Repository;
 use eTraxis\TemplatesDomain\Model\Entity\TextValue;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\TextValueRepository
+ */
 class TextValueRepositoryTest extends TransactionalTestCase
 {
     /** @var TextValueRepository */
@@ -28,11 +31,17 @@ class TextValueRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(TextValue::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(TextValueRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::find
+     */
     public function testFind()
     {
         $expected = $this->repository->findOneBy(['value' => 'Quas sunt reprehenderit vero accusantium.']);
@@ -42,6 +51,9 @@ class TextValueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $value);
     }
 
+    /**
+     * @covers ::get
+     */
     public function testFindOne()
     {
         $expected = 'Issue tracking system with customizable workflows.';
@@ -70,6 +82,9 @@ class TextValueRepositoryTest extends TransactionalTestCase
         self::assertCount($count + 1, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::warmup
+     */
     public function testWarmup()
     {
         /** @var TextValue $value1 */

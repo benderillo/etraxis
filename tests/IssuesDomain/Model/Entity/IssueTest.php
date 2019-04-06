@@ -22,10 +22,16 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\Issue
+ */
 class IssueTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -46,6 +52,9 @@ class IssueTest extends TestCase
         self::assertSame($issue, $clone->origin);
     }
 
+    /**
+     * @covers ::touch
+     */
     public function testTouch()
     {
         $project = new Project();
@@ -66,6 +75,9 @@ class IssueTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $changedAt);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -160,6 +172,9 @@ class IssueTest extends TestCase
         self::assertSame($expected, $issue->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testFullId()
     {
         $project = new Project();
@@ -183,6 +198,9 @@ class IssueTest extends TestCase
         self::assertSame('bug-1234', $issue->fullId);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testProject()
     {
         $project = new Project();
@@ -201,6 +219,9 @@ class IssueTest extends TestCase
         self::assertSame($project, $issue->project);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testTemplate()
     {
         $project = new Project();
@@ -219,6 +240,9 @@ class IssueTest extends TestCase
         self::assertSame($template, $issue->template);
     }
 
+    /**
+     * @covers ::setters
+     */
     public function testState()
     {
         $project = new Project();
@@ -242,6 +266,9 @@ class IssueTest extends TestCase
         self::assertSame($final, $issue->state);
     }
 
+    /**
+     * @covers ::setters
+     */
     public function testStateException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -270,6 +297,9 @@ class IssueTest extends TestCase
         $issue->state = $state2;
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testAge()
     {
         $project = new Project();
@@ -289,6 +319,9 @@ class IssueTest extends TestCase
         self::assertSame(2, $issue->age);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsCloned()
     {
         $issue = new Issue(new User());
@@ -298,6 +331,9 @@ class IssueTest extends TestCase
         self::assertTrue($clone->isCloned);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsCritical()
     {
         $project = new Project();
@@ -325,6 +361,9 @@ class IssueTest extends TestCase
         self::assertFalse($issue->isCritical);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsFrozen()
     {
         $project = new Project();
@@ -354,6 +393,9 @@ class IssueTest extends TestCase
         self::assertFalse($issue->isFrozen);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsClosed()
     {
         $project = new Project();
@@ -381,6 +423,11 @@ class IssueTest extends TestCase
         self::assertFalse($issue->isClosed);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::resume
+     * @covers ::suspend
+     */
     public function testIsSuspended()
     {
         $issue = new Issue(new User());
@@ -396,6 +443,9 @@ class IssueTest extends TestCase
         self::assertFalse($issue->isSuspended);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testEvents()
     {
         $issue = new Issue(new User());
@@ -409,6 +459,9 @@ class IssueTest extends TestCase
         self::assertSame(['Event A', 'Event B'], $issue->events);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testValues()
     {
         $issue = new Issue(new User());
@@ -422,6 +475,9 @@ class IssueTest extends TestCase
         self::assertSame(['Value A', 'Value B'], $issue->values);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testDependencies()
     {
         $issue = new Issue(new User());

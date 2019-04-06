@@ -28,6 +28,8 @@ class DependencyRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Dependency $entity): void

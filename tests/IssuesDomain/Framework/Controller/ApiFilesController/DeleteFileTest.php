@@ -18,6 +18,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiFilesController::deleteFile
+ */
 class DeleteFileTest extends TransactionalTestCase
 {
     public function testSuccess()

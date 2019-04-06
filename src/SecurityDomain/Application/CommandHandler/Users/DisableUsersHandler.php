@@ -31,7 +31,7 @@ class DisableUsersHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param UserRepository                $repository

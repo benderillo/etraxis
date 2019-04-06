@@ -14,11 +14,17 @@
 namespace eTraxis\SecurityDomain\Application\Voter;
 
 use eTraxis\SecurityDomain\Model\Entity\User;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Application\Voter\UserVoter
+ */
 class UserVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -33,6 +39,9 @@ class UserVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(User::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -41,6 +50,27 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $nhills));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new UserVoter($manager);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -60,6 +90,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertSame(UserVoter::ACCESS_DENIED, $voter->vote($token, $nhills, [UserVoter::SET_PASSWORD]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         $this->loginAs('admin@example.com');
@@ -69,6 +103,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::CREATE_USER));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -80,6 +118,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::UPDATE_USER, $nhills));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         $amarvin = $this->repository->findOneByUsername('amarvin@example.com');
@@ -95,6 +137,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::DELETE_USER, $amarvin));
     }
 
+    /**
+     * @covers ::isDisableGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDisable()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -111,6 +157,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::DISABLE_USER, $tberge));
     }
 
+    /**
+     * @covers ::isEnableGranted
+     * @covers ::voteOnAttribute
+     */
     public function testEnable()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -127,6 +177,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::ENABLE_USER, $tberge));
     }
 
+    /**
+     * @covers ::isUnlockGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUnlock()
     {
         $nhills = $this->repository->findOneByUsername('nhills@example.com');
@@ -141,6 +195,10 @@ class UserVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(UserVoter::UNLOCK_USER, $zapp));
     }
 
+    /**
+     * @covers ::isSetPasswordGranted
+     * @covers ::voteOnAttribute
+     */
     public function testSetPassword()
     {
         $nhills   = $this->repository->findOneByUsername('nhills@example.com');

@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\DateTrait
+ */
 class DateTraitTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -55,6 +58,9 @@ class DateTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asDate
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -66,6 +72,9 @@ class DateTraitTest extends WebTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asDate
+     */
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
@@ -105,6 +114,9 @@ class DateTraitTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asDate
+     */
     public function testMinimumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -124,6 +136,9 @@ class DateTraitTest extends WebTestCase
         self::assertSame(DateInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
+    /**
+     * @covers ::asDate
+     */
     public function testMaximumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -143,6 +158,9 @@ class DateTraitTest extends WebTestCase
         self::assertSame(DateInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
+    /**
+     * @covers ::asDate
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');

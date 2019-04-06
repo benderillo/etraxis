@@ -22,6 +22,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiStatesController::setTransitions
+ */
 class SetTransitionsTest extends TransactionalTestCase
 {
     public function testSuccessAll()

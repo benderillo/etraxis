@@ -54,6 +54,8 @@ class ChangeRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Change $entity): void

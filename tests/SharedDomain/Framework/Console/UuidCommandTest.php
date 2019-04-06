@@ -17,8 +17,15 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Console\UuidCommand
+ */
 class UuidCommandTest extends WebTestCase
 {
+    /**
+     * @covers ::configure
+     * @covers ::execute
+     */
     public function testUuid()
     {
         static::bootKernel();
@@ -32,6 +39,10 @@ class UuidCommandTest extends WebTestCase
         self::assertRegExp('/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[\r\n]{1}$)/', $commandTester->getDisplay());
     }
 
+    /**
+     * @covers ::configure
+     * @covers ::execute
+     */
     public function testUuidHexOnly()
     {
         static::bootKernel();

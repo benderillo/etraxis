@@ -16,8 +16,14 @@ namespace eTraxis\SharedDomain\Framework\Controller;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Controller\DefaultController
+ */
 class DefaultControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::homepage
+     */
     public function testHomepage()
     {
         $uri = '/';
@@ -31,6 +37,9 @@ class DefaultControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isOk());
     }
 
+    /**
+     * @covers ::admin
+     */
     public function testAdmin()
     {
         $uri = '/admin/';

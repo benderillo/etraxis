@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\StateResponsibleGroup
+ */
 class StateResponsibleGroupTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -41,6 +47,9 @@ class StateResponsibleGroupTest extends TestCase
         self::assertSame($group, $this->getProperty($transition, 'group'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionGroup()
     {
         $this->expectException(\UnexpectedValueException::class);

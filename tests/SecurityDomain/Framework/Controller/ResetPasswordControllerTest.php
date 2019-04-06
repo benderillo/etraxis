@@ -17,8 +17,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\ResetPasswordController
+ */
 class ResetPasswordControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/reset/9d73b1c922794370903898dae9ee8ada';
@@ -32,6 +38,9 @@ class ResetPasswordControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isRedirect('/'));
     }
 
+    /**
+     * @covers ::resetPassword
+     */
     public function testResetPassword()
     {
         $uri = '/reset/9d73b1c922794370903898dae9ee8ada';

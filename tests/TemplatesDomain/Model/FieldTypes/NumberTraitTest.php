@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\NumberTrait
+ */
 class NumberTraitTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -53,6 +56,9 @@ class NumberTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asNumber
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -64,6 +70,9 @@ class NumberTraitTest extends WebTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asNumber
+     */
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
@@ -105,6 +114,9 @@ class NumberTraitTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asNumber
+     */
     public function testMinimumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -124,6 +136,9 @@ class NumberTraitTest extends WebTestCase
         self::assertSame(NumberInterface::MAX_VALUE, $this->facade->getMinimumValue());
     }
 
+    /**
+     * @covers ::asNumber
+     */
     public function testMaximumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -143,6 +158,9 @@ class NumberTraitTest extends WebTestCase
         self::assertSame(NumberInterface::MAX_VALUE, $this->facade->getMaximumValue());
     }
 
+    /**
+     * @covers ::asNumber
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');

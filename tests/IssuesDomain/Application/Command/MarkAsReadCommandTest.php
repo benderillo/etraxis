@@ -18,6 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\LastRead;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\MarkAsReadHandler::handle
+ */
 class MarkAsReadCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */

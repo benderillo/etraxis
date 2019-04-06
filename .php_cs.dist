@@ -41,7 +41,6 @@ return PhpCsFixer\Config::create()
         'no_extra_blank_lines'                   => true,
         'php_unit_internal_class'                => false,
         'php_unit_test_case_static_method_calls' => ['call_type' => 'self', 'methods' => []],
-        'php_unit_test_class_requires_covers'    => false,
         'phpdoc_align'                           => ['tags' => ['param', 'return', 'throws', 'type', 'var', 'method']],
         'phpdoc_annotation_without_dot'          => false,
         'phpdoc_no_alias_tag'                    => ['replacements' => ['link' => 'see', 'type' => 'var']],

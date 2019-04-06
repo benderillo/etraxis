@@ -17,8 +17,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\OAuth2Controller
+ */
 class OAuth2ControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::callbackGoogle
+     */
     public function testCallbackGoogle()
     {
         $uri = '/oauth/google';
@@ -32,6 +38,9 @@ class OAuth2ControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isRedirect('/'));
     }
 
+    /**
+     * @covers ::callbackGithub
+     */
     public function testCallbackGithub()
     {
         $uri = '/oauth/github';
@@ -45,6 +54,9 @@ class OAuth2ControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isRedirect('/'));
     }
 
+    /**
+     * @covers ::callbackBitbucket
+     */
     public function testCallbackBitbucket()
     {
         $uri = '/oauth/bitbucket';

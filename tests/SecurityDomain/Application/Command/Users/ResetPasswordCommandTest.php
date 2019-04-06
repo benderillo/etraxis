@@ -20,6 +20,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\BasePasswordEncoder;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Users\ResetPasswordHandler::handle
+ */
 class ResetPasswordCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository */

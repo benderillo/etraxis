@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\TemplatesDomain\Model\Entity\Project;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Repository\GroupRepository
+ */
 class GroupRepositoryTest extends WebTestCase
 {
     /** @var GroupRepository */
@@ -29,11 +32,17 @@ class GroupRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Group::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(GroupRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -56,6 +65,9 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -85,6 +97,9 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -116,6 +131,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -142,6 +161,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProject()
     {
         $expected = [
@@ -171,6 +194,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProjectNull()
     {
         $expected = [
@@ -196,6 +223,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -231,6 +262,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByNameNull()
     {
         $collection = $this->repository->getCollection(0, GroupRepository::MAX_LIMIT, null, [
@@ -244,6 +279,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescription()
     {
         $expected = [
@@ -270,6 +309,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByDescriptionNull()
     {
         $expected = [
@@ -295,6 +338,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByGlobal()
     {
         $expected = [
@@ -334,6 +381,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProject()
     {
         $expected = [
@@ -374,6 +425,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByName()
     {
         $expected = [
@@ -413,6 +468,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByDescription()
     {
         $expected = [
@@ -452,6 +511,10 @@ class GroupRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByGlobal()
     {
         $expected = [

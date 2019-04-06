@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\IssueTrait
+ */
 class IssueTraitTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -53,6 +56,9 @@ class IssueTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asIssue
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -61,6 +67,9 @@ class IssueTraitTest extends WebTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asIssue
+     */
     public function testValidationConstraints()
     {
         $errors = $this->validator->validate(1, $this->facade->getValidationConstraints($this->translator));

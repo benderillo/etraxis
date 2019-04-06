@@ -18,10 +18,16 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\Comment
+ */
 class CommentTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -38,6 +44,9 @@ class CommentTest extends TestCase
         self::assertSame($event, $comment->event);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -73,6 +82,9 @@ class CommentTest extends TestCase
         self::assertSame($expected, $comment->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIssue()
     {
         $user = new User();

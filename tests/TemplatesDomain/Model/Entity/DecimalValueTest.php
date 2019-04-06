@@ -15,8 +15,14 @@ namespace eTraxis\TemplatesDomain\Model\Entity;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\DecimalValue
+ */
 class DecimalValueTest extends TestCase
 {
+    /**
+     * @covers ::__construct
+     */
     public function testConstruct()
     {
         $expected = '1234567890.0987654321';
@@ -25,6 +31,9 @@ class DecimalValueTest extends TestCase
         self::assertSame($expected, $decimal->value);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = '1234567890.0987654321';
@@ -33,6 +42,10 @@ class DecimalValueTest extends TestCase
         self::assertSame($expected, $decimal->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::trim
+     */
     public function testTrim()
     {
         $decimal = new DecimalValue('0100');

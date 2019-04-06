@@ -17,8 +17,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\ForgotPasswordController
+ */
 class ForgotPasswordControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/forgot';
@@ -32,6 +38,9 @@ class ForgotPasswordControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isRedirect('/'));
     }
 
+    /**
+     * @covers ::forgotPassword
+     */
     public function testForgotPassword()
     {
         $uri = '/forgot';

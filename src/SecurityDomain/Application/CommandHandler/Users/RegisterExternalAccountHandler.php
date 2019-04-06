@@ -32,7 +32,7 @@ class RegisterExternalAccountHandler
     protected $theme;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface $logger
      * @param UserRepository  $repository

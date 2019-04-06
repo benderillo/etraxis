@@ -17,6 +17,9 @@ use eTraxis\TemplatesDomain\Model\Entity\ListItem;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\ListItems\DeleteListItemHandler::handle
+ */
 class DeleteListItemCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\ListItemRepository */

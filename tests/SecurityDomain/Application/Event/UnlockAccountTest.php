@@ -17,14 +17,23 @@ use eTraxis\SecurityDomain\Application\EventSubscriber\UnlockAccount;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Application\EventSubscriber\UnlockAccount
+ */
 class UnlockAccountTest extends TransactionalTestCase
 {
+    /**
+     * @covers ::getSubscribedEvents
+     */
     public function testSubscribedEvents()
     {
         $events = UnlockAccount::getSubscribedEvents();
         self::assertArrayHasKey(LoginSuccessfulEvent::class, $events);
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testUnlockUser()
     {
         /** @var \eTraxis\SecurityDomain\Model\Repository\UserRepository $repository */

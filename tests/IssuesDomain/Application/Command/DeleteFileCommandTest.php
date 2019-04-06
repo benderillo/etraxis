@@ -20,6 +20,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\DeleteFileHandler::handle
+ */
 class DeleteFileCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\IssuesDomain\Model\Repository\FileRepository */

@@ -30,7 +30,7 @@ class EventBus implements EventBusInterface
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface          $logger
      * @param EventDispatcherInterface $dispatcher

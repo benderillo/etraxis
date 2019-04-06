@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\StateGroupTransition
+ */
 class StateGroupTransitionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -45,6 +51,9 @@ class StateGroupTransitionTest extends TestCase
         self::assertSame($group, $this->getProperty($transition, 'group'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionStates()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -71,6 +80,9 @@ class StateGroupTransitionTest extends TestCase
         new StateGroupTransition($from, $to, $group);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionGroup()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -98,6 +110,9 @@ class StateGroupTransitionTest extends TestCase
         new StateGroupTransition($from, $to, $group);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

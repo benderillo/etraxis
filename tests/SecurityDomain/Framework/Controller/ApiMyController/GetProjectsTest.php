@@ -18,6 +18,9 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Framework\Controller\ApiMyController::getProjects
+ */
 class GetProjectsTest extends WebTestCase
 {
     public function testSuccess()

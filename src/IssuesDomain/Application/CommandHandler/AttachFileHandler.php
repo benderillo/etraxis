@@ -46,7 +46,7 @@ class AttachFileHandler
     protected $maxsize;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TokenStorageInterface         $tokens

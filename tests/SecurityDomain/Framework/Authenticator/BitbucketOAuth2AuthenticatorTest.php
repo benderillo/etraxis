@@ -26,6 +26,9 @@ use Stevenmaguire\OAuth2\Client\Provider\BitbucketResourceOwner;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\BitbucketOAuth2Authenticator
+ */
 class BitbucketOAuth2AuthenticatorTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -44,6 +47,10 @@ class BitbucketOAuth2AuthenticatorTest extends TransactionalTestCase
         $this->session = $this->client->getContainer()->get('session');
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getProvider
+     */
     public function testGetProvider()
     {
         $authenticator = new BitbucketOAuth2Authenticator($this->router, $this->session, $this->commandBus, 'id', 'secret');
@@ -53,6 +60,9 @@ class BitbucketOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertNull($this->callMethod($authenticator, 'getProvider'));
     }
 
+    /**
+     * @covers ::getScope
+     */
     public function testGetScope()
     {
         $expected = [
@@ -64,6 +74,9 @@ class BitbucketOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertSame($expected, $this->callMethod($authenticator, 'getScope'));
     }
 
+    /**
+     * @covers ::getUserFromToken
+     */
     public function testGetUserFromToken()
     {
         $owner = new BitbucketResourceOwner([

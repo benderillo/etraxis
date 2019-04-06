@@ -35,7 +35,7 @@ class CreateGroupHandler
     protected $groupRepository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator

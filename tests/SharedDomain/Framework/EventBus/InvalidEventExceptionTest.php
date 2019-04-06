@@ -18,8 +18,16 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\EventBus\InvalidEventException
+ */
 class InvalidEventExceptionTest extends TestCase
 {
+    /**
+     * @covers ::__construct
+     * @covers ::getEvent
+     * @covers ::getViolations
+     */
     public function testException()
     {
         $violation = $this->createMock(ConstraintViolation::class);

@@ -17,6 +17,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Application\CommandHandler\Templates\DeleteTemplateHandler::handle
+ */
 class DeleteTemplateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository */

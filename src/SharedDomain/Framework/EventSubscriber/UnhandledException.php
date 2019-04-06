@@ -33,7 +33,7 @@ class UnhandledException implements EventSubscriberInterface
     protected $normalizer;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface     $logger
      * @param TranslatorInterface $translator

@@ -35,7 +35,7 @@ class DeleteFileHandler
     protected $fileRepository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TokenStorageInterface         $tokens

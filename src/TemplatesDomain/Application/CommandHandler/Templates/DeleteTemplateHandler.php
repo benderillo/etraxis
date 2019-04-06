@@ -28,7 +28,7 @@ class DeleteTemplateHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TemplateRepository            $repository

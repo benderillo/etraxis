@@ -20,6 +20,9 @@ use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\StateRepository
+ */
 class StateRepositoryTest extends WebTestCase
 {
     /** @var StateRepository */
@@ -32,11 +35,17 @@ class StateRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(State::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(StateRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -59,6 +68,9 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -83,6 +95,9 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -109,6 +124,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -138,6 +157,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProject()
     {
         $expected = [
@@ -170,6 +193,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByProjectNull()
     {
         $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
@@ -183,6 +210,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplate()
     {
         $expected = [
@@ -211,6 +242,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTemplateNull()
     {
         $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
@@ -224,6 +259,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByName()
     {
         $expected = [
@@ -259,6 +298,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByNameNull()
     {
         $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
@@ -272,6 +315,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByType()
     {
         $expected = [
@@ -304,6 +351,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByTypeNull()
     {
         $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
@@ -317,6 +368,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByResponsible()
     {
         $expected = [
@@ -344,6 +399,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByResponsibleNull()
     {
         $collection = $this->repository->getCollection(0, StateRepository::MAX_LIMIT, null, [
@@ -357,6 +416,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertCount(0, $collection->data);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByProject()
     {
         $expected = [
@@ -389,6 +452,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByTemplate()
     {
         $expected = [
@@ -421,6 +488,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByName()
     {
         $expected = [
@@ -452,6 +523,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByType()
     {
         $expected = [
@@ -484,6 +559,10 @@ class StateRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByResponsible()
     {
         $expected = [

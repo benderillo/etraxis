@@ -26,6 +26,9 @@ use Psr\Http\Message\StreamInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\GithubOAuth2Authenticator
+ */
 class GithubOAuth2AuthenticatorTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -44,6 +47,10 @@ class GithubOAuth2AuthenticatorTest extends TransactionalTestCase
         $this->session = $this->client->getContainer()->get('session');
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::getProvider
+     */
     public function testGetProvider()
     {
         $authenticator = new GithubOAuth2Authenticator($this->router, $this->session, $this->commandBus, 'id', 'secret');
@@ -53,6 +60,9 @@ class GithubOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertNull($this->callMethod($authenticator, 'getProvider'));
     }
 
+    /**
+     * @covers ::getScope
+     */
     public function testGetScope()
     {
         $expected = [
@@ -63,6 +73,9 @@ class GithubOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertSame($expected, $this->callMethod($authenticator, 'getScope'));
     }
 
+    /**
+     * @covers ::getUserFromToken
+     */
     public function testGetUserFromTokenWithPublicEmail()
     {
         $owner = new GithubResourceOwner([
@@ -90,6 +103,9 @@ class GithubOAuth2AuthenticatorTest extends TransactionalTestCase
         self::assertSame($entity, $user);
     }
 
+    /**
+     * @covers ::getUserFromToken
+     */
     public function testGetUserFromTokenWithPrivateEmail()
     {
         $owner = new GithubResourceOwner([

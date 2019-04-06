@@ -26,6 +26,9 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\DatabaseAuthenticator
+ */
 class DatabaseAuthenticatorTest extends TestCase
 {
     /** @var DatabaseAuthenticator */
@@ -75,6 +78,9 @@ class DatabaseAuthenticatorTest extends TestCase
         $this->authenticator = new DatabaseAuthenticator($router, $session, $encoder, $eventBus);
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserSuccess()
     {
         $credentials = [
@@ -92,6 +98,9 @@ class DatabaseAuthenticatorTest extends TestCase
         self::assertSame($this->user, $this->authenticator->getUser($credentials, $provider));
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserExternal()
     {
         $this->expectException(AuthenticationException::class);
@@ -114,6 +123,9 @@ class DatabaseAuthenticatorTest extends TestCase
         $this->authenticator->getUser($credentials, $provider);
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserNotFound()
     {
         $this->expectException(AuthenticationException::class);
@@ -134,6 +146,9 @@ class DatabaseAuthenticatorTest extends TestCase
         $this->authenticator->getUser($credentials, $provider);
     }
 
+    /**
+     * @covers ::checkCredentials
+     */
     public function testCheckCredentialsSuccess()
     {
         $credentials = [
@@ -144,6 +159,9 @@ class DatabaseAuthenticatorTest extends TestCase
         self::assertTrue($this->authenticator->checkCredentials($credentials, $this->user));
     }
 
+    /**
+     * @covers ::checkCredentials
+     */
     public function testCheckCredentialsFailure()
     {
         $this->expectException(AuthenticationException::class);

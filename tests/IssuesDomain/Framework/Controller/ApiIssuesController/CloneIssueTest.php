@@ -19,6 +19,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::cloneIssue
+ */
 class CloneIssueTest extends TransactionalTestCase
 {
     public function testSuccess()

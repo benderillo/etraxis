@@ -18,6 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\Event;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\EventRepository
+ */
 class EventRepositoryTest extends WebTestCase
 {
     /** @var EventRepository */
@@ -30,11 +33,17 @@ class EventRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Event::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(EventRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueWithPrivate()
     {
         $expected = [
@@ -64,6 +73,9 @@ class EventRepositoryTest extends WebTestCase
         self::assertSame($expected, $changes);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueNoPrivate()
     {
         $expected = [

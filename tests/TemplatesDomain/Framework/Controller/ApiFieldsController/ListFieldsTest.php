@@ -18,6 +18,9 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiFieldsController::listFields
+ */
 class ListFieldsTest extends WebTestCase
 {
     public function testSuccess()

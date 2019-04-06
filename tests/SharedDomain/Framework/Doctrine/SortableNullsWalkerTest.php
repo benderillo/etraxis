@@ -16,8 +16,14 @@ namespace eTraxis\SharedDomain\Framework\Doctrine;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\Doctrine\SortableNullsWalker
+ */
 class SortableNullsWalkerTest extends WebTestCase
 {
+    /**
+     * @covers ::walkOrderByItem
+     */
     public function testAsc()
     {
         /** @var \Doctrine\ORM\EntityRepository $repository */
@@ -43,6 +49,9 @@ class SortableNullsWalkerTest extends WebTestCase
         self::assertSame($expected, array_slice($actual, 0, 3));
     }
 
+    /**
+     * @covers ::walkOrderByItem
+     */
     public function testDesc()
     {
         /** @var \Doctrine\ORM\EntityRepository $repository */

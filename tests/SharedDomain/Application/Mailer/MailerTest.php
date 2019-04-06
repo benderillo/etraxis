@@ -16,6 +16,9 @@ namespace eTraxis\SharedDomain\Application\Mailer;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Application\Mailer\Mailer
+ */
 class MailerTest extends WebTestCase
 {
     /** @var \Psr\Log\LoggerInterface */
@@ -36,6 +39,9 @@ class MailerTest extends WebTestCase
         $this->mailer = $client->getContainer()->get('mailer');
     }
 
+    /**
+     * @covers ::send
+     */
     public function testFullSender()
     {
         $service = new Mailer($this->logger, $this->twig, $this->mailer, 'noreply@example.com', 'Test Mailer');
@@ -59,6 +65,9 @@ class MailerTest extends WebTestCase
         self::assertTrue($result);
     }
 
+    /**
+     * @covers ::send
+     */
     public function testAddressOnlySender()
     {
         $service = new Mailer($this->logger, $this->twig, $this->mailer, 'noreply@example.com');
@@ -82,6 +91,9 @@ class MailerTest extends WebTestCase
         self::assertTrue($result);
     }
 
+    /**
+     * @covers ::send
+     */
     public function testNoSender()
     {
         $service = new Mailer($this->logger, $this->twig, $this->mailer);

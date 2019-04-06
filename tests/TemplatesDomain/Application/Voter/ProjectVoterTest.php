@@ -14,11 +14,17 @@
 namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\TemplatesDomain\Model\Entity\Project;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\Voter\ProjectVoter
+ */
 class ProjectVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -33,6 +39,9 @@ class ProjectVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Project::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         $project = $this->repository->findOneBy(['name' => 'Distinctio']);
@@ -41,6 +50,27 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $project));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new ProjectVoter($manager);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -58,6 +88,10 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertSame(ProjectVoter::ACCESS_DENIED, $voter->vote($token, $project, [ProjectVoter::RESUME_PROJECT]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         $this->loginAs('admin@example.com');
@@ -67,6 +101,10 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ProjectVoter::CREATE_PROJECT));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         $project = $this->repository->findOneBy(['name' => 'Distinctio']);
@@ -78,6 +116,10 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ProjectVoter::UPDATE_PROJECT, $project));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);
@@ -92,6 +134,10 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ProjectVoter::DELETE_PROJECT, $projectD));
     }
 
+    /**
+     * @covers ::isSuspendGranted
+     * @covers ::voteOnAttribute
+     */
     public function testSuspend()
     {
         $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);
@@ -106,6 +152,10 @@ class ProjectVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(ProjectVoter::SUSPEND_PROJECT, $projectB));
     }
 
+    /**
+     * @covers ::isResumeGranted
+     * @covers ::voteOnAttribute
+     */
     public function testResume()
     {
         $projectA = $this->repository->findOneBy(['name' => 'Distinctio']);

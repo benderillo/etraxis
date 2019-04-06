@@ -32,7 +32,7 @@ class CreateProjectHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param ValidatorInterface            $validator

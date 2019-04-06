@@ -33,7 +33,7 @@ class WatchIssuesHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TokenStorageInterface  $tokens
      * @param WatcherRepository      $repository

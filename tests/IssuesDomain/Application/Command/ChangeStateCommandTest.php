@@ -24,6 +24,10 @@ use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\AbstractIssueHandler::validateState
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\ChangeStateHandler::handle
+ */
 class ChangeStateCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\IssuesDomain\Model\Repository\IssueRepository */

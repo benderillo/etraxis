@@ -30,6 +30,10 @@ use League\Tactician\Bundle\Middleware\InvalidCommandException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\AbstractIssueHandler::validateState
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\CloneIssueHandler::handle
+ */
 class CloneIssueCommandTest extends TransactionalTestCase
 {
     use ReflectionTrait;

@@ -18,6 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\Watcher;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\WatcherRepository
+ */
 class WatcherRepositoryTest extends WebTestCase
 {
     /** @var WatcherRepository */
@@ -30,11 +33,17 @@ class WatcherRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Watcher::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(WatcherRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionDefault()
     {
         $collection = $this->repository->getCollection();
@@ -57,6 +66,9 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionOffset()
     {
         $expected = [
@@ -89,6 +101,9 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testGetCollectionLimit()
     {
         $expected = [
@@ -119,6 +134,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::querySearch
+     */
     public function testGetCollectionSearch()
     {
         $expected = [
@@ -148,6 +167,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterById()
     {
         $expected = [
@@ -174,6 +197,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByEmail()
     {
         $expected = [
@@ -205,6 +232,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryFilter
+     */
     public function testGetCollectionFilterByFullname()
     {
         $expected = [
@@ -236,6 +267,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByEmail()
     {
         $expected = [
@@ -262,6 +297,10 @@ class WatcherRepositoryTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     * @covers ::queryOrder
+     */
     public function testGetCollectionSortByFullname()
     {
         $expected = [

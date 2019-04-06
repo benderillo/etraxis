@@ -18,8 +18,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Framework\Controller\FieldsController
+ */
 class FieldsControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::permissions
+     */
     public function testPermissions()
     {
         /** @var Field $field */

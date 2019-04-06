@@ -20,10 +20,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\FieldGroupPermission
+ */
 class FieldGroupPermissionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -47,6 +53,9 @@ class FieldGroupPermissionTest extends TestCase
         self::assertSame(FieldPermission::READ_WRITE, $this->getProperty($permission, 'permission'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionGroup()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -74,6 +83,9 @@ class FieldGroupPermissionTest extends TestCase
         new FieldGroupPermission($field, $group, FieldPermission::READ_WRITE);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionPermission()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -97,6 +109,9 @@ class FieldGroupPermissionTest extends TestCase
         new FieldGroupPermission($field, $group, 'bar');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

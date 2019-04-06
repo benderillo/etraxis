@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Entity\Group;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
+/**
+ * @covers \eTraxis\SecurityDomain\Application\CommandHandler\Groups\DeleteGroupHandler::handle
+ */
 class DeleteGroupCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\SecurityDomain\Model\Repository\GroupRepository */

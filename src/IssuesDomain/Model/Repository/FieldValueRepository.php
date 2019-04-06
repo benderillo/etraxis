@@ -60,6 +60,8 @@ class FieldValueRepository extends ServiceEntityRepository
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(FieldValue $entity): void

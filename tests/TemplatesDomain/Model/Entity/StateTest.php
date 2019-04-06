@@ -19,10 +19,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\State
+ */
 class StateTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $template = new Template(new Project());
@@ -33,6 +39,9 @@ class StateTest extends TestCase
         self::assertSame(StateType::INITIAL, $state->type);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -44,6 +53,9 @@ class StateTest extends TestCase
         new State($template, 'foo');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -92,6 +104,10 @@ class StateTest extends TestCase
         self::assertSame($expected, $state->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testResponsible()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -100,6 +116,10 @@ class StateTest extends TestCase
         self::assertSame(StateResponsible::ASSIGN, $state->responsible);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testResponsibleFinal()
     {
         $state = new State(new Template(new Project()), StateType::FINAL);
@@ -108,6 +128,10 @@ class StateTest extends TestCase
         self::assertSame(StateResponsible::REMOVE, $state->responsible);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testResponsibleException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -118,6 +142,10 @@ class StateTest extends TestCase
         $state->responsible = 'bar';
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testNextState()
     {
         $template = new Template(new Project());
@@ -136,6 +164,10 @@ class StateTest extends TestCase
         self::assertNull($state->nextState);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testNextStateFinal()
     {
         $template = new Template(new Project());
@@ -151,6 +183,10 @@ class StateTest extends TestCase
         self::assertNull($state->nextState);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testNextStateException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -170,6 +206,9 @@ class StateTest extends TestCase
         $state->nextState = $nextState;
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testIsFinal()
     {
         $template = new Template(new Project());
@@ -184,6 +223,9 @@ class StateTest extends TestCase
         self::assertTrue($final->isFinal);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testFields()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -208,6 +250,9 @@ class StateTest extends TestCase
         self::assertSame([$field2], $state->fields);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testRolePermissions()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -221,6 +266,9 @@ class StateTest extends TestCase
         self::assertSame(['Role transition A', 'Role transition B'], $state->roleTransitions);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testGroupPermissions()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -234,6 +282,9 @@ class StateTest extends TestCase
         self::assertSame(['Group transition A', 'Group transition B'], $state->groupTransitions);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testResponsibleGroups()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);

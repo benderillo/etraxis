@@ -29,7 +29,7 @@ class UpdateSettingsHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TokenStorageInterface $tokens
      * @param SessionInterface      $session

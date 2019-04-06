@@ -16,6 +16,9 @@ namespace eTraxis\TemplatesDomain\Model\Repository;
 use eTraxis\TemplatesDomain\Model\Entity\StringValue;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Repository\StringValueRepository
+ */
 class StringValueRepositoryTest extends TransactionalTestCase
 {
     /** @var StringValueRepository */
@@ -28,11 +31,17 @@ class StringValueRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(StringValue::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(StringValueRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::find
+     */
     public function testFind()
     {
         $expected = $this->repository->findOneBy(['value' => 'Development task 1']);
@@ -42,6 +51,9 @@ class StringValueRepositoryTest extends TransactionalTestCase
         self::assertSame($expected, $value);
     }
 
+    /**
+     * @covers ::get
+     */
     public function testFindOne()
     {
         $expected = 'eTraxis';
@@ -70,6 +82,9 @@ class StringValueRepositoryTest extends TransactionalTestCase
         self::assertCount($count + 1, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::warmup
+     */
     public function testWarmup()
     {
         /** @var StringValue $value1 */

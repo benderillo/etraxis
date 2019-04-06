@@ -17,10 +17,16 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\Watcher
+ */
 class WatcherTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -35,6 +41,9 @@ class WatcherTest extends TestCase
         self::assertSame($user, $watcher->user);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

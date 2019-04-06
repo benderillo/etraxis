@@ -19,7 +19,10 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class SetOrderFieldCommandTest extends TransactionalTestCase
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\CommandHandler\Fields\SetFieldPositionHandler
+ */
+class SetFieldPositionCommandTest extends TransactionalTestCase
 {
     /** @var \eTraxis\TemplatesDomain\Model\Repository\FieldRepository */
     protected $repository;
@@ -31,6 +34,10 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Field::class);
     }
 
+    /**
+     * @covers ::handle
+     * @covers ::setPosition
+     */
     public function testSuccessUp()
     {
         $this->loginAs('admin@example.com');
@@ -55,6 +62,10 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         self::assertSame($expected, $this->getFields($field->state));
     }
 
+    /**
+     * @covers ::handle
+     * @covers ::setPosition
+     */
     public function testSuccessDown()
     {
         $this->loginAs('admin@example.com');
@@ -79,6 +90,10 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         self::assertSame($expected, $this->getFields($field->state));
     }
 
+    /**
+     * @covers ::handle
+     * @covers ::setPosition
+     */
     public function testSuccessTop()
     {
         $this->loginAs('admin@example.com');
@@ -103,6 +118,10 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         self::assertSame($expected, $this->getFields($field->state));
     }
 
+    /**
+     * @covers ::handle
+     * @covers ::setPosition
+     */
     public function testSuccessBottom()
     {
         $this->loginAs('admin@example.com');
@@ -127,6 +146,9 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         self::assertSame($expected, $this->getFields($field->state));
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testAccessDenied()
     {
         $this->expectException(AccessDeniedHttpException::class);
@@ -144,6 +166,9 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->commandBus->handle($command);
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testUnlockedTemplate()
     {
         $this->expectException(AccessDeniedHttpException::class);
@@ -161,6 +186,9 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->commandBus->handle($command);
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testUnknownField()
     {
         $this->expectException(NotFoundHttpException::class);
@@ -175,6 +203,9 @@ class SetOrderFieldCommandTest extends TransactionalTestCase
         $this->commandBus->handle($command);
     }
 
+    /**
+     * @covers ::handle
+     */
     public function testRemovedField()
     {
         $this->expectException(NotFoundHttpException::class);

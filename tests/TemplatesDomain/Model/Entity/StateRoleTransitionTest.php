@@ -18,10 +18,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\SystemRole;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\StateRoleTransition
+ */
 class StateRoleTransitionTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -42,6 +48,9 @@ class StateRoleTransitionTest extends TestCase
         self::assertSame(SystemRole::AUTHOR, $this->getProperty($transition, 'role'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionStates()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -65,6 +74,9 @@ class StateRoleTransitionTest extends TestCase
         new StateRoleTransition($from, $to, 'foo');
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorExceptionRole()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -85,6 +97,9 @@ class StateRoleTransitionTest extends TestCase
         new StateRoleTransition($from, $to, 'foo');
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [

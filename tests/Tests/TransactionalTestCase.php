@@ -15,6 +15,8 @@ namespace eTraxis\Tests;
 
 /**
  * Extended web test case with every test wrapped into database transaction.
+ *
+ * @coversNothing
  */
 class TransactionalTestCase extends WebTestCase
 {

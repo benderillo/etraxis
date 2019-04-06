@@ -16,10 +16,16 @@ namespace eTraxis\TemplatesDomain\Model\Entity;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\StringValue
+ */
 class StringValueTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstruct()
     {
         $expected = str_pad(null, 250, '_');
@@ -29,6 +35,9 @@ class StringValueTest extends TestCase
         self::assertSame($expected, $string->value);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = 'Lorem ipsum';

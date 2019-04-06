@@ -23,6 +23,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Application\CommandHandler\AttachFileHandler::handle
+ */
 class AttachFileCommandTest extends TransactionalTestCase
 {
     protected const MEGABYTE = 1024 * 1024;

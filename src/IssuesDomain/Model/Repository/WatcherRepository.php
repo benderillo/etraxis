@@ -33,6 +33,8 @@ class WatcherRepository extends ServiceEntityRepository implements CollectionInt
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Watcher $entity): void

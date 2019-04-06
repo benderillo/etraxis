@@ -20,8 +20,14 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Validator\Constraints as Assert;
 use Webinarium\DataTransferObjectTrait;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\EventBus\EventBus
+ */
 class EventBusTest extends WebTestCase
 {
+    /**
+     * @covers ::notify
+     */
     public function testTiming()
     {
         $logger = new class() extends AbstractLogger {
@@ -58,6 +64,9 @@ class EventBusTest extends WebTestCase
         self::assertTrue($logger->contains('Event processing time'));
     }
 
+    /**
+     * @covers ::notify
+     */
     public function testViolations()
     {
         $this->expectException(InvalidEventException::class);

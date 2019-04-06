@@ -31,6 +31,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Authenticator\LdapAuthenticator
+ */
 class LdapAuthenticatorTest extends TransactionalTestCase
 {
     use ReflectionTrait;
@@ -70,6 +73,10 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         $this->firewall   = $this->createMock(FirewallMap::class);
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::supports
+     */
     public function testSupportsWithLdap()
     {
         $authenticator = new LdapAuthenticator(
@@ -92,6 +99,10 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertFalse($authenticator->supports($request));
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::supports
+     */
     public function testSupportsNoLdap()
     {
         $authenticator = new LdapAuthenticator(
@@ -110,6 +121,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertFalse($authenticator->supports($request));
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserNew()
     {
         $entry = $this->createMock(Entry::class);
@@ -162,6 +176,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertCount($count + 1, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserExisting()
     {
         $entry = $this->createMock(Entry::class);
@@ -222,6 +239,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertCount($count, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserIncomplete()
     {
         $this->expectException(UsernameNotFoundException::class);
@@ -271,6 +291,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertCount($count, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::getUser
+     */
     public function testGetUserUnknown()
     {
         $this->expectException(UsernameNotFoundException::class);
@@ -312,6 +335,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertCount($count, $this->repository->findAll());
     }
 
+    /**
+     * @covers ::checkCredentials
+     */
     public function testCheckCredentialsValid()
     {
         $ldap = $this->createMock(LdapInterface::class);
@@ -340,6 +366,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertTrue($authenticator->checkCredentials($credentials, $user));
     }
 
+    /**
+     * @covers ::checkCredentials
+     */
     public function testCheckCredentialsWrong()
     {
         $ldap = $this->createMock(LdapInterface::class);
@@ -368,6 +397,9 @@ class LdapAuthenticatorTest extends TransactionalTestCase
         self::assertFalse($authenticator->checkCredentials($credentials, $user));
     }
 
+    /**
+     * @covers ::onAuthenticationFailure
+     */
     public function testOnAuthenticationFailure()
     {
         $authenticator = new LdapAuthenticator(

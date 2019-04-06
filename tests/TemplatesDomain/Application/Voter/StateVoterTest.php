@@ -15,11 +15,17 @@ namespace eTraxis\TemplatesDomain\Application\Voter;
 
 use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Entity\Template;
+use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Application\Voter\StateVoter
+ */
 class StateVoterTest extends TransactionalTestCase
 {
+    use ReflectionTrait;
+
     /** @var \Symfony\Component\Security\Core\Authorization\AuthorizationChecker */
     protected $security;
 
@@ -34,6 +40,9 @@ class StateVoterTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(State::class);
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testUnsupportedAttribute()
     {
         [/* skipping */, $state] = $this->repository->findBy(['name' => 'New'], ['id' => 'ASC']);
@@ -42,6 +51,27 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted('UNKNOWN', $state));
     }
 
+    /**
+     * @covers ::voteOnAttribute
+     */
+    public function testUnexpectedAttribute()
+    {
+        /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $token_storage */
+        $tokens = self::$container->get('security.token_storage');
+
+        /** @var \Doctrine\ORM\EntityManagerInterface $manager */
+        $manager = $this->doctrine->getManager();
+
+        $voter = new StateVoter($manager);
+        $this->setProperty($voter, 'attributes', ['UNKNOWN' => null]);
+
+        $this->loginAs('admin@example.com');
+        self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($tokens->getToken(), null, ['UNKNOWN']));
+    }
+
+    /**
+     * @covers ::voteOnAttribute
+     */
     public function testAnonymous()
     {
         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
@@ -62,6 +92,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertSame(StateVoter::ACCESS_DENIED, $voter->vote($token, $state, [StateVoter::MANAGE_RESPONSIBLE_GROUPS]));
     }
 
+    /**
+     * @covers ::isCreateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testCreate()
     {
         /** @var \eTraxis\TemplatesDomain\Model\Repository\TemplateRepository $repository */
@@ -78,6 +112,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::CREATE_STATE, $templateC));
     }
 
+    /**
+     * @covers ::isUpdateGranted
+     * @covers ::voteOnAttribute
+     */
     public function testUpdate()
     {
         [/* skipping */, $stateB, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
@@ -91,6 +129,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::UPDATE_STATE, $stateC));
     }
 
+    /**
+     * @covers ::isDeleteGranted
+     * @covers ::voteOnAttribute
+     */
     public function testDelete()
     {
         [/* skipping */, $stateB, $stateC, $stateD] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
@@ -106,6 +148,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::DELETE_STATE, $stateD));
     }
 
+    /**
+     * @covers ::isSetInitialGranted
+     * @covers ::voteOnAttribute
+     */
     public function testSetInitial()
     {
         [/* skipping */, $stateB, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
@@ -119,6 +165,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::SET_INITIAL, $stateC));
     }
 
+    /**
+     * @covers ::isManageTransitionsGranted
+     * @covers ::voteOnAttribute
+     */
     public function testManageTransitions()
     {
         [/* skipping */, $stateB, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);
@@ -142,6 +192,10 @@ class StateVoterTest extends TransactionalTestCase
         self::assertFalse($this->security->isGranted(StateVoter::MANAGE_TRANSITIONS, $stateC));
     }
 
+    /**
+     * @covers ::isManageResponsibleGroupsGranted
+     * @covers ::voteOnAttribute
+     */
     public function testManageResponsibleGroups()
     {
         [/* skipping */, $stateB, $stateC] = $this->repository->findBy(['name' => 'Assigned'], ['id' => 'ASC']);

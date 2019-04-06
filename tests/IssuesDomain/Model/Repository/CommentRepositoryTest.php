@@ -17,6 +17,9 @@ use eTraxis\IssuesDomain\Model\Entity\Comment;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\CommentRepository
+ */
 class CommentRepositoryTest extends WebTestCase
 {
     /** @var CommentRepository */
@@ -29,11 +32,17 @@ class CommentRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Comment::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(CommentRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueWithPrivate()
     {
         $expected = [
@@ -54,6 +63,9 @@ class CommentRepositoryTest extends WebTestCase
         }
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueNoPrivate()
     {
         $expected = [

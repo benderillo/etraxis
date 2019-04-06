@@ -23,10 +23,16 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\FieldValue
+ */
 class FieldValueTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $template = new Template(new Project());
@@ -57,6 +63,9 @@ class FieldValueTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $value->createdAt);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorException()
     {
         $this->expectException(\UnexpectedValueException::class);

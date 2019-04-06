@@ -17,10 +17,16 @@ use eTraxis\TemplatesDomain\Model\Dictionary\StateType;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\Template
+ */
 class TemplateTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $project = new Project();
@@ -30,6 +36,9 @@ class TemplateTest extends TestCase
         self::assertSame($project, $this->getProperty($template, 'project'));
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -66,6 +75,9 @@ class TemplateTest extends TestCase
         self::assertSame($expected, $template->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testInitialState()
     {
         $template = new Template(new Project());
@@ -91,6 +103,9 @@ class TemplateTest extends TestCase
         self::assertSame($initial, $template->initialState);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testStates()
     {
         $template = new Template(new Project());
@@ -104,6 +119,9 @@ class TemplateTest extends TestCase
         self::assertSame(['State A', 'State B'], $template->states);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testRolePermissions()
     {
         $template = new Template(new Project());
@@ -117,6 +135,9 @@ class TemplateTest extends TestCase
         self::assertSame(['Role permission A', 'Role permission B'], $template->rolePermissions);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testGroupPermissions()
     {
         $template = new Template(new Project());

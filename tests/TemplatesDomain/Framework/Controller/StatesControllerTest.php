@@ -18,8 +18,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Framework\Controller\StatesController
+ */
 class StatesControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::permissions
+     */
     public function testPermissions()
     {
         /** @var State $state */

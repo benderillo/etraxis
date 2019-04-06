@@ -20,6 +20,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiFieldsController::createField
+ */
 class CreateFieldTest extends TransactionalTestCase
 {
     public function testSuccess()

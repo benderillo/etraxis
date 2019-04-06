@@ -18,6 +18,9 @@ use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\ChangeRepository
+ */
 class ChangeRepositoryTest extends WebTestCase
 {
     /** @var ChangeRepository */
@@ -30,11 +33,17 @@ class ChangeRepositoryTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(Change::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(ChangeRepository::class, $this->repository);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssue()
     {
         $expected = [
@@ -56,6 +65,9 @@ class ChangeRepositoryTest extends WebTestCase
         self::assertSame($expected, $changes);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueByRole()
     {
         $expected1 = [
@@ -90,6 +102,9 @@ class ChangeRepositoryTest extends WebTestCase
         self::assertSame($expected2, $changes2);
     }
 
+    /**
+     * @covers ::findAllByIssue
+     */
     public function testFindAllByIssueWithSubject()
     {
         $expected = [

@@ -16,6 +16,9 @@ namespace eTraxis\IssuesDomain\Model\Repository;
 use eTraxis\IssuesDomain\Model\Entity\Dependency;
 use eTraxis\Tests\TransactionalTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Repository\DependencyRepository
+ */
 class DependencyRepositoryTest extends TransactionalTestCase
 {
     /** @var DependencyRepository */
@@ -28,6 +31,9 @@ class DependencyRepositoryTest extends TransactionalTestCase
         $this->repository = $this->doctrine->getRepository(Dependency::class);
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testRepository()
     {
         self::assertInstanceOf(DependencyRepository::class, $this->repository);

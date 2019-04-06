@@ -39,7 +39,7 @@ class CloneIssueHandler extends AbstractIssueHandler
     protected $templateRepository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TranslatorInterface           $translator
      * @param AuthorizationCheckerInterface $security

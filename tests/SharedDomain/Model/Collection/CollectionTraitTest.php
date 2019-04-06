@@ -17,6 +17,9 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Model\Collection\CollectionTrait
+ */
 class CollectionTraitTest extends WebTestCase
 {
     use CollectionTrait;
@@ -31,6 +34,9 @@ class CollectionTraitTest extends WebTestCase
         $this->repository = $this->doctrine->getRepository(User::class);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testDefaults()
     {
         $expected = [
@@ -90,6 +96,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testOffset()
     {
         $request = new Request(['offset' => 30]);
@@ -102,6 +111,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testOffsetNegative()
     {
         $request = new Request(['offset' => PHP_INT_MIN]);
@@ -116,6 +128,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testOffsetHuge()
     {
         $request = new Request(['offset' => PHP_INT_MAX]);
@@ -129,6 +144,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testLimit()
     {
         $request = new Request(['limit' => 5]);
@@ -141,6 +159,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testLimitNegative()
     {
         $request = new Request(['limit' => PHP_INT_MIN]);
@@ -155,6 +176,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testLimitHuge()
     {
         $request = new Request(['limit' => PHP_INT_MAX]);
@@ -169,6 +193,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame(35, $collection->total);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testSearch()
     {
         $expected = [
@@ -204,6 +231,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testFilter()
     {
         $expected = [
@@ -237,6 +267,9 @@ class CollectionTraitTest extends WebTestCase
         self::assertSame($expected, $actual);
     }
 
+    /**
+     * @covers ::getCollection
+     */
     public function testSort()
     {
         $expected = [

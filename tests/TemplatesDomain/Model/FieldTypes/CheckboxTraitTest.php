@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\CheckboxTrait
+ */
 class CheckboxTraitTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -53,6 +56,9 @@ class CheckboxTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asCheckbox
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -62,6 +68,9 @@ class CheckboxTraitTest extends WebTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asCheckbox
+     */
     public function testValidationConstraints()
     {
         $value = false;
@@ -71,6 +80,9 @@ class CheckboxTraitTest extends WebTestCase
         self::assertCount(0, $this->validator->validate($value, $this->facade->getValidationConstraints($this->translator)));
     }
 
+    /**
+     * @covers ::asCheckbox
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');

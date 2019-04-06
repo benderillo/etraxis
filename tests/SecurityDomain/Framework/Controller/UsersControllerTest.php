@@ -17,8 +17,14 @@ use eTraxis\SecurityDomain\Model\Entity\User;
 use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Framework\Controller\UsersController
+ */
 class UsersControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/admin/users';
@@ -37,6 +43,9 @@ class UsersControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isOk());
     }
 
+    /**
+     * @covers ::view
+     */
     public function testView()
     {
         /** @var User $user */

@@ -29,7 +29,7 @@ class LockAccount implements EventSubscriberInterface
     protected $lockDuration;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param LoggerInterface $logger
      * @param UserRepository  $repository

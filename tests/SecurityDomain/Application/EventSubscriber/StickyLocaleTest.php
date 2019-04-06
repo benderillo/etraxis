@@ -19,6 +19,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Application\EventSubscriber\StickyLocale
+ */
 class StickyLocaleTest extends TransactionalTestCase
 {
     /** @var \Symfony\Component\HttpFoundation\RequestStack */
@@ -35,6 +38,9 @@ class StickyLocaleTest extends TransactionalTestCase
         $this->session       = $this->client->getContainer()->get('session');
     }
 
+    /**
+     * @covers ::getSubscribedEvents
+     */
     public function testGetSubscribedEvents()
     {
         $expected = [
@@ -45,6 +51,9 @@ class StickyLocaleTest extends TransactionalTestCase
         self::assertSame($expected, array_keys(StickyLocale::getSubscribedEvents()));
     }
 
+    /**
+     * @covers ::saveLocale
+     */
     public function testSaveLocale()
     {
         /** @var User $user */
@@ -63,6 +72,9 @@ class StickyLocaleTest extends TransactionalTestCase
         self::assertSame('ru', $this->session->get('_locale'));
     }
 
+    /**
+     * @covers ::setLocale
+     */
     public function testSetDefaultLocale()
     {
         $request = new Request();
@@ -81,6 +93,9 @@ class StickyLocaleTest extends TransactionalTestCase
         self::assertSame('ru', $event->getRequest()->getLocale());
     }
 
+    /**
+     * @covers ::setLocale
+     */
     public function testSetLocaleBySession()
     {
         $request = new Request();

@@ -33,7 +33,7 @@ class MarkAsReadHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TokenStorageInterface  $tokens
      * @param LastReadRepository     $repository

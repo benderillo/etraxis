@@ -24,10 +24,16 @@ use eTraxis\TemplatesDomain\Model\Repository\TextValueRepository;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\Entity\Field
+ */
 class FieldTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
@@ -38,6 +44,9 @@ class FieldTest extends TestCase
         self::assertSame(FieldType::LIST, $this->getProperty($field, 'type'));
     }
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructorException()
     {
         $this->expectException(\UnexpectedValueException::class);
@@ -49,6 +58,9 @@ class FieldTest extends TestCase
         new Field($state, 'foo');
     }
 
+    /**
+     * @covers ::getFacade
+     */
     public function testGetFacade()
     {
         $expected = [
@@ -84,6 +96,9 @@ class FieldTest extends TestCase
         self::assertNull($field->getFacade($manager));
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -147,6 +162,10 @@ class FieldTest extends TestCase
         self::assertSame($expected, $field->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::remove
+     */
     public function testIsRemoved()
     {
         $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);
@@ -156,6 +175,9 @@ class FieldTest extends TestCase
         self::assertTrue($field->isRemoved);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testRolePermissions()
     {
         $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);
@@ -169,6 +191,9 @@ class FieldTest extends TestCase
         self::assertSame(['Role permission A', 'Role permission B'], $field->rolePermissions);
     }
 
+    /**
+     * @covers ::getters
+     */
     public function testGroupPermissions()
     {
         $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), FieldType::LIST);

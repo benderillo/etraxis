@@ -22,10 +22,16 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\IssuesDomain\Model\Entity\Event
+ */
 class EventTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -43,6 +49,9 @@ class EventTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $event->createdAt);
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueCreated()
     {
         $expected = [
@@ -71,6 +80,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueEdited()
     {
         $expected = [
@@ -95,6 +107,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeStateChanged()
     {
         $expected = [
@@ -123,6 +138,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueReopened()
     {
         $expected = [
@@ -151,6 +169,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueClosed()
     {
         $expected = [
@@ -179,6 +200,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueAssigned()
     {
         $expected = [
@@ -207,6 +231,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueSuspended()
     {
         $expected = [
@@ -231,6 +258,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeIssueResumed()
     {
         $expected = [
@@ -255,6 +285,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializePublicComment()
     {
         $expected = [
@@ -279,6 +312,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializePrivateComment()
     {
         $expected = [
@@ -303,6 +339,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeFileAttached()
     {
         $expected = [
@@ -333,6 +372,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeFileDeleted()
     {
         $expected = [
@@ -362,6 +404,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeDependencyAdded()
     {
         $expected = [
@@ -390,6 +435,9 @@ class EventTest extends TestCase
         self::assertSame($expected, $event->jsonSerialize());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerializeDependencyRemoved()
     {
         $expected = [

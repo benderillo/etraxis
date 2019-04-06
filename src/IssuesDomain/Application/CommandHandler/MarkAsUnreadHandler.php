@@ -27,7 +27,7 @@ class MarkAsUnreadHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param TokenStorageInterface  $tokens
      * @param EntityManagerInterface $manager

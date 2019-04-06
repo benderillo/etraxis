@@ -28,7 +28,7 @@ class DeleteListItemHandler
     protected $repository;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param ListItemRepository            $repository

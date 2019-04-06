@@ -23,6 +23,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\TemplatesDomain\Framework\Controller\ApiFieldsController::setPermissions
+ */
 class SetPermissionsTest extends TransactionalTestCase
 {
     public function testSuccessAll()

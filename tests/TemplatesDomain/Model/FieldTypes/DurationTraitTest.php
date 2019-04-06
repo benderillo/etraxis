@@ -22,6 +22,9 @@ use eTraxis\TemplatesDomain\Model\Entity\Template;
 use eTraxis\Tests\ReflectionTrait;
 use eTraxis\Tests\WebTestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Model\FieldTypes\DurationTrait
+ */
 class DurationTraitTest extends WebTestCase
 {
     use ReflectionTrait;
@@ -53,6 +56,9 @@ class DurationTraitTest extends WebTestCase
         $this->facade = $this->callMethod($this->object, 'getFacade', [$this->doctrine->getManager()]);
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -64,6 +70,9 @@ class DurationTraitTest extends WebTestCase
         self::assertSame($expected, $this->facade->jsonSerialize());
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testValidationConstraints()
     {
         $this->object->name = 'Custom field';
@@ -97,6 +106,9 @@ class DurationTraitTest extends WebTestCase
         self::assertCount(0, $errors);
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testMinimumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -117,6 +129,9 @@ class DurationTraitTest extends WebTestCase
         self::assertSame($max, $this->facade->getMinimumValue());
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testMaximumValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -137,6 +152,9 @@ class DurationTraitTest extends WebTestCase
         self::assertSame($max, $this->facade->getMaximumValue());
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testDefaultValue()
     {
         $parameters = $this->getProperty($this->object, 'parameters');
@@ -161,6 +179,9 @@ class DurationTraitTest extends WebTestCase
         self::assertNull($this->getProperty($parameters, 'defaultValue'));
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testToNumber()
     {
         self::assertNull($this->facade->toNumber(null));
@@ -168,6 +189,9 @@ class DurationTraitTest extends WebTestCase
         self::assertSame(866, $this->facade->toNumber('14:26'));
     }
 
+    /**
+     * @covers ::asDuration
+     */
     public function testToString()
     {
         self::assertNull($this->facade->toString(null));

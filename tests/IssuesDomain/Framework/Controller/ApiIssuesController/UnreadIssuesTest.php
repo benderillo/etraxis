@@ -20,6 +20,9 @@ use eTraxis\Tests\TransactionalTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @covers \eTraxis\IssuesDomain\Framework\Controller\ApiIssuesController::unreadIssues
+ */
 class UnreadIssuesTest extends TransactionalTestCase
 {
     public function testSuccess()

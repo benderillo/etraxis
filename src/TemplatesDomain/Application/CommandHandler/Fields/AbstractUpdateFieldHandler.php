@@ -38,7 +38,7 @@ abstract class AbstractUpdateFieldHandler
     protected $manager;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param AuthorizationCheckerInterface $security
      * @param TranslatorInterface           $translator

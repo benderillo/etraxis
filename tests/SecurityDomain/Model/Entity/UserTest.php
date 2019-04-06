@@ -20,10 +20,16 @@ use eTraxis\SecurityDomain\Model\Dictionary\Timezone;
 use eTraxis\Tests\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \eTraxis\SecurityDomain\Model\Entity\User
+ */
 class UserTest extends TestCase
 {
     use ReflectionTrait;
 
+    /**
+     * @covers ::__construct
+     */
     public function testConstructor()
     {
         $user = new User();
@@ -33,6 +39,9 @@ class UserTest extends TestCase
         self::assertRegExp('/^([[:xdigit:]]{32})$/is', $user->account->uid);
     }
 
+    /**
+     * @covers ::getUsername
+     */
     public function testUsername()
     {
         $user = new User();
@@ -42,6 +51,10 @@ class UserTest extends TestCase
         self::assertSame('anna@example.com', $user->getUsername());
     }
 
+    /**
+     * @covers ::getPassword
+     * @covers ::setters
+     */
     public function testPassword()
     {
         $user = new User();
@@ -55,6 +68,9 @@ class UserTest extends TestCase
         self::assertFalse($user->isResetTokenValid($token));
     }
 
+    /**
+     * @covers ::getRoles
+     */
     public function testRoles()
     {
         $user = new User();
@@ -67,6 +83,9 @@ class UserTest extends TestCase
         self::assertSame(['ROLE_USER'], $user->getRoles());
     }
 
+    /**
+     * @covers ::isAccountExternal
+     */
     public function testIsAccountExternal()
     {
         $user = new User();
@@ -79,6 +98,9 @@ class UserTest extends TestCase
         self::assertFalse($user->isAccountExternal());
     }
 
+    /**
+     * @covers ::getEncoderName
+     */
     public function testEncoderName()
     {
         $user = new User();
@@ -96,6 +118,9 @@ class UserTest extends TestCase
         self::assertNull($user->getEncoderName());
     }
 
+    /**
+     * @covers ::jsonSerialize
+     */
     public function testJsonSerialize()
     {
         $expected = [
@@ -122,6 +147,10 @@ class UserTest extends TestCase
         self::assertSame($expected, $user->jsonSerialize());
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testIsAdmin()
     {
         $user = new User();
@@ -134,6 +163,10 @@ class UserTest extends TestCase
         self::assertFalse($user->isAdmin);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testLocale()
     {
         $user = new User();
@@ -146,6 +179,10 @@ class UserTest extends TestCase
         self::assertSame('ru', $user->locale);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testTheme()
     {
         $user = new User();
@@ -158,6 +195,10 @@ class UserTest extends TestCase
         self::assertSame('emerald', $user->theme);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testTimezone()
     {
         $user = new User();
@@ -170,6 +211,10 @@ class UserTest extends TestCase
         self::assertSame('Pacific/Auckland', $user->timezone);
     }
 
+    /**
+     * @covers ::getters
+     * @covers ::setters
+     */
     public function testGroups()
     {
         $user = new User();
@@ -183,6 +228,9 @@ class UserTest extends TestCase
         self::assertSame(['Group A', 'Group B'], $user->groups);
     }
 
+    /**
+     * @covers ::canAccountBeLocked
+     */
     public function testCanAccountBeLocked()
     {
         $user = new User();

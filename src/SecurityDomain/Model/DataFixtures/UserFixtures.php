@@ -28,7 +28,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     protected $encoder;
 
     /**
-     * Dependency Injection constructor.
+     * @codeCoverageIgnore Dependency Injection constructor.
      *
      * @param UserPasswordEncoderInterface $encoder
      */

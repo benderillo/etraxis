@@ -16,8 +16,14 @@ namespace eTraxis\SharedDomain\Framework\CommandBus;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\AbstractLogger;
 
+/**
+ * @coversDefaultClass \eTraxis\SharedDomain\Framework\CommandBus\TimingMiddleware
+ */
 class TimingMiddlewareTest extends TestCase
 {
+    /**
+     * @covers ::execute
+     */
     public function testTiming()
     {
         $logger = new class() extends AbstractLogger {

@@ -18,8 +18,14 @@ use eTraxis\Tests\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @coversDefaultClass \eTraxis\TemplatesDomain\Framework\Controller\ProjectsController
+ */
 class ProjectsControllerTest extends WebTestCase
 {
+    /**
+     * @covers ::index
+     */
     public function testIndex()
     {
         $uri = '/admin/projects';
@@ -38,6 +44,9 @@ class ProjectsControllerTest extends WebTestCase
         self::assertTrue($this->client->getResponse()->isOk());
     }
 
+    /**
+     * @covers ::permissions
+     */
     public function testPermissions()
     {
         /** @var Project $project */

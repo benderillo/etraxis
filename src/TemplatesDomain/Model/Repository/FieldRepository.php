@@ -52,6 +52,8 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Field $entity): void
@@ -60,6 +62,8 @@ class FieldRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(Field $entity): void

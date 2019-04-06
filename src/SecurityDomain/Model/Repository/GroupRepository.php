@@ -31,6 +31,8 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function persist(Group $entity): void
@@ -39,6 +41,8 @@ class GroupRepository extends ServiceEntityRepository implements CollectionInter
     }
 
     /**
+     * @codeCoverageIgnore Proxy method.
+     *
      * {@inheritdoc}
      */
     public function remove(Group $entity): void
