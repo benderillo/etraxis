@@ -61,7 +61,6 @@ const jsVendor = () => {
         argv.prod ? 'node_modules/vuex/dist/vuex.min.js' : 'node_modules/vuex/dist/vuex.js',
         'node_modules/axios/dist/axios.js',
         'node_modules/dialog-polyfill/dialog-polyfill.js',
-        'assets/etraxis.js',
     ];
 
     return gulp.src(files)

@@ -9,6 +9,7 @@ module.exports = {
     entry: () => {
         let files = {
             'polyfill.js': 'babel-polyfill/dist/polyfill',
+            'etraxis.js': './assets/etraxis.js',
         };
 
         for (let entry of glob.sync('./templates/**/*.js')) {
