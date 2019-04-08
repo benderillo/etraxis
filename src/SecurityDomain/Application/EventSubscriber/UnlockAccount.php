@@ -52,7 +52,9 @@ class UnlockAccount implements EventSubscriberInterface
     public function handle(LoginSuccessfulEvent $event): void
     {
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
-        if ($user = $this->repository->findOneByUsername($event->username)) {
+        $user = $this->repository->findOneByUsername($event->username);
+
+        if ($user) {
 
             $user->unlockAccount();
 

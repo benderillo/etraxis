@@ -11,6 +11,8 @@
 //
 //----------------------------------------------------------------------
 
+/** @noinspection PhpInternalEntityUsedInspection */
+
 namespace eTraxis\SharedDomain\Framework\Doctrine;
 
 use Doctrine\DBAL\Connection;

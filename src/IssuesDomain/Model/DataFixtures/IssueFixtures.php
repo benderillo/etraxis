@@ -206,7 +206,7 @@ class IssueFixtures extends Fixture implements DependentFixtureInterface
             $issue->responsible = $row['responsible'][$pref] ? $this->getReference($row['responsible'][$pref]) : null;
 
             if ($row['origin'] ?? false) {
-                /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $origin */
+                /** @var Issue $origin */
                 $origin = $this->getReference(sprintf($row['origin'], $pref));
                 $this->setProperty($issue, 'origin', $origin);
             }

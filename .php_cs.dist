@@ -34,7 +34,6 @@ return PhpCsFixer\Config::create()
         'braces'                                 => false,
         'concat_space'                           => ['spacing' => 'one'],
         'doctrine_annotation_indentation'        => false,
-        'final_internal_class'                   => false,
         'increment_style'                        => ['style' => 'post'],
         'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
         'native_function_invocation'             => false,

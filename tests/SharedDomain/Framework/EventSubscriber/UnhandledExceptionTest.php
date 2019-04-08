@@ -57,7 +57,7 @@ class UnhandledExceptionTest extends TestCase
 
         $normalizer = new ConstraintViolationsNormalizer();
 
-        /** @var \Symfony\Contracts\Translation\TranslatorInterface $translator */
+        /** @var TranslatorInterface $translator */
         $this->subscriber = new UnhandledException($logger, $translator, $normalizer);
     }
 

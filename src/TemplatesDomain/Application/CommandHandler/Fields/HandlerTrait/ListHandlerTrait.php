@@ -63,7 +63,7 @@ trait ListHandlerTrait
                 $facade->setDefaultValue(null);
             }
             else {
-                /** @var null|\eTraxis\TemplatesDomain\Model\Entity\ListItem $item */
+                /** @var null|ListItem $item */
                 $item = $manager->getRepository(ListItem::class)->find($command->default);
 
                 if (!$item || $item->field !== $field) {

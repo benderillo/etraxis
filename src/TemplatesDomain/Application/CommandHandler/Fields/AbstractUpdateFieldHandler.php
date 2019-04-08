@@ -84,7 +84,7 @@ abstract class AbstractUpdateFieldHandler
      */
     protected function update(AbstractUpdateFieldCommand $command): void
     {
-        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Field $field */
+        /** @var null|Field $field */
         $field = $this->repository->find($command->field);
 
         if (!$field || $field->isRemoved) {

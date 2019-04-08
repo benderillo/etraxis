@@ -71,7 +71,7 @@ class RemoveDependenciesHandler
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
         $user = $this->tokens->getToken()->getUser();
 
-        /** @var null|\eTraxis\IssuesDomain\Model\Entity\Issue $issue */
+        /** @var null|Issue $issue */
         $issue = $this->issueRepository->find($command->issue);
 
         if (!$issue) {

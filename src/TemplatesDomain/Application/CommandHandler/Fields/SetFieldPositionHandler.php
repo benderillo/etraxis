@@ -55,7 +55,7 @@ class SetFieldPositionHandler
      */
     public function handle(SetFieldPositionCommand $command)
     {
-        /** @var null|\eTraxis\TemplatesDomain\Model\Entity\Field $field */
+        /** @var null|Field $field */
         $field = $this->repository->find($command->field);
 
         if (!$field || $field->isRemoved) {

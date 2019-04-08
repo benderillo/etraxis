@@ -14,6 +14,7 @@
 namespace eTraxis\SharedDomain\Framework\Twig;
 
 use PHPUnit\Framework\TestCase;
+use Twig\TwigFilter;
 
 /**
  * @coversDefaultClass \eTraxis\SharedDomain\Framework\Twig\LocaleExtension
@@ -32,7 +33,7 @@ class LocaleExtensionTest extends TestCase
 
         $extension = new LocaleExtension();
 
-        $filters = array_map(function (\Twig_Filter $filter) {
+        $filters = array_map(function (TwigFilter $filter) {
             return $filter->getName();
         }, $extension->getFilters());
 

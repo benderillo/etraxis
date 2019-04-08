@@ -60,6 +60,8 @@ class UnhandledException implements EventSubscriberInterface
      * In case of AJAX: logs the exception and converts it into JSON response with HTTP error.
      *
      * @param GetResponseForExceptionEvent $event
+     *
+     * @throws \Symfony\Component\Serializer\Exception\ExceptionInterface
      */
     public function onException(GetResponseForExceptionEvent $event): void
     {

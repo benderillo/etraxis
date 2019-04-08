@@ -17,7 +17,6 @@ use eTraxis\IssuesDomain\Application\Command as Command;
 use eTraxis\IssuesDomain\Application\Voter\IssueVoter;
 use eTraxis\IssuesDomain\Model\Entity\Change;
 use eTraxis\IssuesDomain\Model\Entity\Event;
-use eTraxis\IssuesDomain\Model\Entity\File;
 use eTraxis\IssuesDomain\Model\Entity\Issue;
 use eTraxis\IssuesDomain\Model\Repository\ChangeRepository;
 use eTraxis\IssuesDomain\Model\Repository\CommentRepository;
@@ -507,16 +506,16 @@ class ApiIssuesController extends AbstractController
             }, $data);
         }
 
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $states */
+        /** @var State[] $states */
         $states = $stateRepository->findBy(['id' => array_unique($ids[Event::JSON_STATE])]);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $users */
+        /** @var State[] $users */
         $users = $userRepository->findBy(['id' => array_unique($ids[Event::JSON_ASSIGNEE])]);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $files */
+        /** @var State[] $files */
         $files = $fileRepository->findBy(['id' => array_unique($ids[Event::JSON_FILE])]);
 
-        /** @var \eTraxis\TemplatesDomain\Model\Entity\State[] $issues */
+        /** @var State[] $issues */
         $issues = $issueRepository->createQueryBuilder('issue')
             ->innerJoin('issue.state', 'state')
             ->addSelect('state')
@@ -545,7 +544,7 @@ class ApiIssuesController extends AbstractController
 
         // Convert users to JSON representation.
         foreach ($users as $user) {
-            /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
+            /** @var User $user */
             $values[Event::JSON_ASSIGNEE][$user->id] = [
                 User::JSON_ID       => $user->id,
                 User::JSON_EMAIL    => $user->email,
@@ -561,7 +560,7 @@ class ApiIssuesController extends AbstractController
 
         // Convert issues to JSON representation.
         foreach ($issues as $issue) {
-            /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue */
+            /** @var Issue $issue */
             $values[Event::JSON_ISSUE][$issue->id] = $issue->jsonSerialize();
             unset($values[Event::JSON_ISSUE][$issue->id][Issue::JSON_READ_AT]);
         }
@@ -834,7 +833,7 @@ class ApiIssuesController extends AbstractController
             'file'  => $attachment,
         ]);
 
-        /** @var File $file */
+        /** @var \eTraxis\IssuesDomain\Model\Entity\File $file */
         $file = $commandBus->handle($command);
 
         $url = $this->generateUrl('api_files_download', [

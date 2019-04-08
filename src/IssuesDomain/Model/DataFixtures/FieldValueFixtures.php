@@ -209,7 +209,7 @@ class FieldValueFixtures extends Fixture implements DependentFixtureInterface
                     /** @var \eTraxis\IssuesDomain\Model\Entity\Issue $issue */
                     $issue = $this->getReference(sprintf($iref, $pref));
 
-                    /** @var \eTraxis\IssuesDomain\Model\Entity\Event $event */
+                    /** @var Event $event */
                     [$event] = $manager->getRepository(Event::class)->findBy([
                         'type'  => $event_type,
                         'issue' => $issue,

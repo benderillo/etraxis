@@ -73,7 +73,9 @@ class LockAccount implements EventSubscriberInterface
         }
 
         /** @var \eTraxis\SecurityDomain\Model\Entity\User $user */
-        if ($user = $this->repository->findOneByUsername($event->username)) {
+        $user = $this->repository->findOneByUsername($event->username);
+
+        if ($user) {
 
             $this->logger->info('Authentication failure', [$event->username]);
 

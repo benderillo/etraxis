@@ -35,14 +35,10 @@ class VoterTraitTest extends TestCase
         $this->voter = new class() extends Voter {
             use VoterTrait;
 
-            public const CREATE = 'create';
-            public const UPDATE = 'update';
-            public const DELETE = 'delete';
-
             protected $attributes = [
-                self::CREATE => null,
-                self::UPDATE => User::class,
-                self::DELETE => [User::class, Role::class],
+                'create' => null,
+                'update' => User::class,
+                'delete' => [User::class, Role::class],
             ];
 
             protected function voteOnAttribute($attribute, $subject, TokenInterface $token)

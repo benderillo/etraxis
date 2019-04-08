@@ -57,7 +57,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'position'   => 2,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
-                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+                        /** @var TextInterface $facade */
                         $facade = $field->getFacade($manager);
                         $facade
                             ->setMaximumLength(TextInterface::MAX_LENGTH)
@@ -120,7 +120,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'position'    => 2,
                     'parameters'  => function (Field $field) use ($manager) {
                         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
-                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\NumberInterface $facade */
+                        /** @var NumberInterface $facade */
                         $facade = $field->getFacade($manager);
                         $facade
                             ->setMinimumValue(0)
@@ -182,7 +182,7 @@ class FieldFixtures extends Fixture implements DependentFixtureInterface
                     'position'   => 1,
                     'parameters' => function (Field $field) use ($manager) {
                         /** @var \Doctrine\ORM\EntityManagerInterface $manager */
-                        /** @var \eTraxis\TemplatesDomain\Model\FieldTypes\TextInterface $facade */
+                        /** @var TextInterface $facade */
                         $facade = $field->getFacade($manager);
                         $facade
                             ->setMaximumLength(250);

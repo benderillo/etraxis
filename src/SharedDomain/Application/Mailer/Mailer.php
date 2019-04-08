@@ -15,7 +15,7 @@ namespace eTraxis\SharedDomain\Application\Mailer;
 
 use Psr\Log\LoggerInterface;
 use Swift_Mailer;
-use Twig_Environment;
+use Twig\Environment;
 
 /**
  * Shortcut service for standard mailer.
@@ -31,18 +31,18 @@ class Mailer implements MailerInterface
     /**
      * @codeCoverageIgnore Dependency Injection constructor.
      *
-     * @param LoggerInterface  $logger  Debug logger.
-     * @param Twig_Environment $twig    Templates renderer.
-     * @param Swift_Mailer     $mailer  Mailer service.
-     * @param string           $address Email address of the sender.
-     * @param string           $name    Name of the sender.
+     * @param LoggerInterface $logger  Debug logger.
+     * @param Environment     $twig    Templates renderer.
+     * @param Swift_Mailer    $mailer  Mailer service.
+     * @param string          $address Email address of the sender.
+     * @param string          $name    Name of the sender.
      */
     public function __construct(
-        LoggerInterface  $logger,
-        Twig_Environment $twig,
-        Swift_Mailer     $mailer,
-        ?string          $address = null,
-        ?string          $name    = null
+        LoggerInterface $logger,
+        Environment     $twig,
+        Swift_Mailer    $mailer,
+        ?string         $address = null,
+        ?string         $name    = null
     )
     {
         $this->logger        = $logger;

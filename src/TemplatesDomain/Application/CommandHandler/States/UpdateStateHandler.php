@@ -15,7 +15,6 @@ namespace eTraxis\TemplatesDomain\Application\CommandHandler\States;
 
 use eTraxis\TemplatesDomain\Application\Command\States\UpdateStateCommand;
 use eTraxis\TemplatesDomain\Application\Voter\StateVoter;
-use eTraxis\TemplatesDomain\Model\Entity\State;
 use eTraxis\TemplatesDomain\Model\Repository\StateRepository;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -77,7 +76,7 @@ class UpdateStateHandler
 
         if ($command->next) {
 
-            /** @var null|State $nextState */
+            /** @var null|\eTraxis\TemplatesDomain\Model\Entity\State $nextState */
             $nextState = $this->repository->find($command->next);
 
             if (!$nextState || $nextState->template !== $state->template) {

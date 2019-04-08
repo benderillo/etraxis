@@ -69,7 +69,9 @@ class WebTestCase extends SymfonyWebTestCase
         $repository = $this->client->getContainer()->get('doctrine')->getRepository(User::class);
 
         /** @var User $user */
-        if ($user = $repository->findOneByUsername($email)) {
+        $user = $repository->findOneByUsername($email);
+
+        if ($user) {
 
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
             $this->client->getContainer()->get('security.token_storage')->setToken($token);
