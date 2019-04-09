@@ -15,13 +15,13 @@
     <div class="grid-container grid-parent">
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             <div class="hide-on-mobile">
-                <span class="logo"><a href="{{ path('homepage') }}"><img src="{{ asset('etraxis.svg') }}"></a></span>
+                <span class="logo"><a href="{{ path('homepage') }}"><img alt="eTraxis" src="{{ asset('etraxis.svg') }}"></a></span>
                 <span class="username">{{ app.user.fullname ?? null }}</span>
             </div>
         {% endif %}
         <div class="hide-on-desktop">
             <span class="bars" @click="toggleMenu"><i class="fa fa-bars fa-lg" aria-hidden="true"></i></span>
-            <span class="logo"><a href="{{ path('homepage') }}"><img src="{{ asset('etraxis.svg') }}"></a></span>
+            <span class="logo"><a href="{{ path('homepage') }}"><img alt="eTraxis" src="{{ asset('etraxis.svg') }}"></a></span>
             <span class="title">{{ title ?? 'eTraxis' }}</span>
         </div>
         <div class="menu {{ is_granted('IS_AUTHENTICATED_REMEMBERED') ? null : 'hide-on-desktop' }}" :class="{ 'hide-on-mobile': isMenuHidden }">

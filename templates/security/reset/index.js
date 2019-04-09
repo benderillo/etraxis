@@ -25,6 +25,9 @@ new Vue({
 
     methods: {
 
+        /**
+         * Submits the form.
+         */
         save() {
 
             if (this.values.password !== this.values.confirm) {

@@ -49,7 +49,7 @@
             </tr>
             <tr v-for="row in rows" :class="row.DT_class">
                 <td v-if="checkboxes" @click="row.DT_checkable !== false ? toggleCheck(row.DT_id) : null">
-                    <input type="checkbox" :disabled="blocked || row.DT_checkable == false" :value="row.DT_id" v-model="checked" @click.stop>
+                    <input type="checkbox" :disabled="blocked || row.DT_checkable === false" :value="row.DT_id" v-model="checked" @click.stop>
                 </td>
                 <td v-for="column in columns" :class="{ 'wrappable': column.width }" @click="clickable ? $emit('click', row.DT_id, column.name) : null">
                     <span>{{ row[column.name] ? row[column.name] : '&mdash;' }}</span>
@@ -67,11 +67,11 @@
                 <option :value="100">{{ text.size.replace('%size%', 100) }}</option>
             </select>
             <span class="buttonset paging">
-                <button class="fa first-page" :disabled="blocked || pages == 0 || page === 1" :title="text.first" @click="page = 1"></button>
-                <button class="fa fa-lg previous-page" :disabled="blocked || pages == 0 || page === 1" :title="text.previous" @click="page -= 1"></button>
-                <input class="page" type="text" :readonly="blocked" :disabled="pages == 0" :title="text.pages.replace('%number%', pages)" v-model.trim.lazy.number="userPage">
-                <button class="fa fa-lg next-page" :disabled="blocked || pages == 0 || page === pages" :title="text.next" @click="page += 1"></button>
-                <button class="fa last-page" :disabled="blocked || pages == 0 || page === pages" :title="text.last" @click="page = pages"></button>
+                <button class="fa first-page" :disabled="blocked || pages === 0 || page === 1" :title="text.first" @click="page = 1"></button>
+                <button class="fa fa-lg previous-page" :disabled="blocked || pages === 0 || page === 1" :title="text.previous" @click="page -= 1"></button>
+                <input class="page" type="text" :readonly="blocked" :disabled="pages === 0" :title="text.pages.replace('%number%', pages)" v-model.trim.lazy.number="userPage">
+                <button class="fa fa-lg next-page" :disabled="blocked || pages === 0 || page === pages" :title="text.next" @click="page += 1"></button>
+                <button class="fa last-page" :disabled="blocked || pages === 0 || page === pages" :title="text.last" @click="page = pages"></button>
             </span>
             <p class="status">{{ status }}</p>
             <div class="clear"></div>
